@@ -78,6 +78,9 @@
    http://localhost/G2_Education_Curriculum_Exam/41249CS2027/
    ```
 
-### การเข้าใช้งานระบบเซิร์ฟเวอร์จริง
+### การเข้าใช้งานระบบบน GitHub Pages (Live Website)
+* **URL:** 👉 **[https://tsanaphysics.github.io/cs2027/](https://tsanaphysics.github.io/cs2027/)**
+
+### การเข้าใช้งานระบบเซิร์ฟเวอร์มหาวิทยาลัย
 * **URL:** `https://chewa.rbru.ac.th/cs2027/`
 
