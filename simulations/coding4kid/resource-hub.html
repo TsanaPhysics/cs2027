@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="th" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resource Hub | แหล่งรวมเครื่องมือสร้างเกมสำหรับเด็ก</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@300;400;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .hub-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 2.5rem;
+            margin-top: 3rem;
+        }
+        .hub-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 25px;
+            padding: 2.5rem;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            display: flex;
+            flex-direction: column;
+            text-decoration: none;
+            color: inherit;
+        }
+        .hub-card:hover {
+            transform: translateY(-15px);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--clr-accent);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+        .hub-icon {
+            font-size: 3.5rem;
+            margin-bottom: 1.5rem;
+        }
+        .hub-tag {
+            display: inline-block;
+            padding: 0.3rem 1rem;
+            border-radius: 50px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            background: rgba(99, 102, 241, 0.2);
+            color: var(--clr-accent);
+        }
+        .hub-title {
+            font-size: 1.5rem;
+            font-weight: 800;
+            margin-bottom: 1rem;
+            color: white;
+        }
+        .hub-desc {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #94a3b8;
+            flex-grow: 1;
+            margin-bottom: 2rem;
+        }
+        .hub-btn {
+            background: var(--clr-primary);
+            color: white;
+            padding: 0.8rem;
+            border-radius: 12px;
+            text-align: center;
+            font-weight: 700;
+            transition: all 0.3s;
+        }
+        .hub-card:hover .hub-btn {
+            background: var(--clr-accent);
+        }
+    </style>
+</head>
+<body class="site">
+    <header class="site-header">
+        <nav class="nav glass-nav">
+            <div class="container nav__container">
+                <a href="index.html" class="nav__logo">Game<span>Design</span>4Kids</a>
+                <a href="index.html" class="btn btn--outline btn--small">← กลับหน้าหลัก</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="site-main">
+        <section class="hero-small" style="padding-top: 10rem; text-align: center;">
+            <div class="container">
+                <h1 class="hero__title">Creative <span>Resource Hub</span></h1>
+                <p class="hero__lead">รวมสุดยอดเครื่องมือสร้างเกมและแอปพลิเคชันสำหรับนักสร้างรุ่นเยาว์</p>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="container">
+                <div class="hub-grid">
+                    
+                    <!-- MakeCode Arcade -->
+                    <a href="makecode-arcade-guide.html" class="hub-card">
+                        <span class="hub-tag">Block-Based / Retro</span>
+                        <div class="hub-icon">🎮</div>
+                        <h3 class="hub-title">MakeCode Arcade</h3>
+                        <p class="hub-desc">สร้างเกมแนว Retro 16-bit พร้อม Simulator เครื่องเกมพกพา เรียนรู้ตรรกะผ่านการสร้างเกมลุยด่านและยิงยาน</p>
+                        <div class="hub-btn">ดูคู่มือและสไลด์สอน →</div>
+                    </a>
+
+                    <!-- Code.org -->
+                    <a href="https://code.org" target="_blank" class="hub-card">
+                        <span class="hub-tag">Curriculum / Beginners</span>
+                        <div class="hub-icon">💻</div>
+                        <h3 class="hub-title">Code.org</h3>
+                        <p class="hub-desc">แหล่งเรียนรู้ระดับโลกที่มีบทเรียนธีม Minecraft และ Star Wars ช่วยให้เด็กๆ เริ่มต้นเขียนโค้ดได้ตั้งแต่ศูนย์จนเป็นมืออาชีพ</p>
+                        <div class="hub-btn">เปิดเว็บไซต์ →</div>
+                    </a>
+
+                    <!-- Tynker -->
+                    <a href="https://tynker.com" target="_blank" class="hub-card">
+                        <span class="hub-tag">Gamified / Advanced</span>
+                        <div class="hub-icon">🚀</div>
+                        <h3 class="hub-title">Tynker</h3>
+                        <p class="hub-desc">เรียนโค้ดดิ้งผ่านการผจญภัย รองรับการสร้าง Mod ใน Minecraft และการควบคุมโดรน รวมถึงแอนิเมชันที่สวยงาม</p>
+                        <div class="hub-btn">เปิดเว็บไซต์ →</div>
+                    </a>
+
+                    <!-- GDevelop -->
+                    <a href="https://gdevelop.io" target="_blank" class="hub-card">
+                        <span class="hub-tag">No-Code / Professional</span>
+                        <div class="hub-icon">🛠️</div>
+                        <h3 class="hub-title">GDevelop</h3>
+                        <p class="hub-desc">เครื่องมือสร้างเกม 2D ที่ไม่ต้องเขียนโค้ด แต่ใช้ระบบ Event เหมาะสำหรับเด็กโตที่ต้องการสร้างผลงานส่งออกไปเล่นบนมือถือจริง</p>
+                        <div class="hub-btn">เปิดเว็บไซต์ →</div>
+                    </a>
+
+                    <!-- Roblox Studio -->
+                    <a href="https://www.roblox.com/create" target="_blank" class="hub-card">
+                        <span class="hub-tag">3D / Multiplayer</span>
+                        <div class="hub-icon">🌎</div>
+                        <h3 class="hub-title">Roblox Studio</h3>
+                        <p class="hub-desc">ก้าวเข้าสู่โลก 3 มิติ สร้างจักรวาลของตัวเองใน Roblox และเรียนรู้การเขียนสคริปต์เพื่อสร้างระบบเกมที่ซับซ้อน</p>
+                        <div class="hub-btn">เปิดเว็บไซต์ →</div>
+                    </a>
+
+                    <!-- Scratch -->
+                    <a href="https://scratch.mit.edu" target="_blank" class="hub-card">
+                        <span class="hub-tag">Block-Based / Global Standard</span>
+                        <div class="hub-icon">🐱</div>
+                        <h3 class="hub-title">Scratch Online</h3>
+                        <p class="hub-desc">มาตรฐานระดับโลกสำหรับการเรียนโค้ดดิ้งเด็กประถม มีชุมชนนักสร้างขนาดใหญ่และโปรเจกต์ตัวอย่างให้ศึกษามากมาย</p>
+                        <div class="hub-btn">เปิดเว็บไซต์ →</div>
+                    </a>
+
+                </div>
+            </div>
+        </section>
+
+        <section class="section bg-alt" style="border-radius: 50px 50px 0 0; padding: 4rem 0;">
+            <div class="container text-center">
+                <h2>ต้องการคำแนะนำเพิ่มเติม?</h2>
+                <p class="hero__lead">ถามพี่เลี้ยง AI ของเราได้ที่มุมขวาล่างของหน้าจอได้ตลอดเวลาครับ!</p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container text-center">
+            <p>© 2026 วิทย์ในวัง - Coding Workshop Resource Hub</p>
+        </div>
+    </footer>
+
+    <script src="js/main.js" defer></script>
+</body>
+</html>

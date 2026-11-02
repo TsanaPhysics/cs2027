@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ห้องทดลองการตรวจหาข้อผิดพลาดและปรับปรุงโค้ด (Scientific Debugging & Refactoring)</title>
+
+  <!-- Google Fonts & FontAwesome 6 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    :root {
+      --bg-dark: #030712;
+      --card-bg: rgba(11, 19, 43, 0.94);
+      --card-border: rgba(0, 240, 255, 0.25);
+      --cyan: #00f0ff;
+      --emerald: #10b981;
+      --amber: #f59e0b;
+      --rose: #f43f5e;
+      --indigo: #6366f1;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+    body {
+      background: var(--bg-dark);
+      color: #f8fafc;
+      font-family: 'Prompt', 'Sarabun', sans-serif;
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* Top Bar */
+    .top-header {
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--card-border);
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+      z-index: 10;
+    }
+    .header-title h1 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Chakra Petch', sans-serif;
+    }
+    .header-title h1 i { color: var(--cyan); }
+    .header-sub { font-size: 0.8rem; color: #94a3b8; margin-top: 2px; }
+    .header-btns { display: flex; gap: 8px; }
+    .btn-h {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: #e2e8f0;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-family: inherit;
+      cursor: pointer;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .btn-h:hover {
+      background: rgba(0, 240, 255, 0.15);
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+
+    /* Main Grid */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 280px 1fr 340px;
+      flex: 1;
+      height: calc(100vh - 120px);
+      gap: 16px;
+      padding: 16px;
+      overflow: hidden;
+    }
+
+    .panel-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 16px;
+      backdrop-filter: blur(12px);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      overflow-y: auto;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+    }
+    .section-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--cyan);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .bug-btn {
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      padding: 10px 12px;
+      cursor: pointer;
+      text-align: left;
+      color: #cbd5e1;
+      font-family: inherit;
+      font-size: 0.82rem;
+      transition: all 0.2s;
+    }
+    .bug-btn:hover {
+      background: rgba(244, 63, 94, 0.2);
+      border-color: var(--rose);
+    }
+    .bug-btn.active {
+      background: linear-gradient(135deg, rgba(244, 63, 94, 0.35), rgba(0, 240, 255, 0.2));
+      border: 1.5px solid var(--rose);
+      color: #fff;
+      font-weight: 600;
+    }
+
+    /* Code View Area */
+    .code-view {
+      background: #020617;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      padding: 14px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      line-height: 1.8;
+      color: #94a3b8;
+      flex: 1;
+      overflow: auto;
+    }
+    .code-line {
+      display: flex;
+      gap: 12px;
+      padding: 2px 8px;
+      border-radius: 4px;
+      transition: all 0.2s;
+    }
+    .code-line.error-line {
+      background: rgba(244, 63, 94, 0.25);
+      border-left: 3px solid var(--rose);
+      color: #fca5a5;
+    }
+    .code-line.fixed-line {
+      background: rgba(16, 185, 129, 0.25);
+      border-left: 3px solid var(--emerald);
+      color: #86efac;
+    }
+    .line-no { color: #475569; width: 20px; user-select: none; }
+
+    /* Action Buttons */
+    .btn-action {
+      background: var(--cyan);
+      color: #030712;
+      border: none;
+      padding: 10px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+    .btn-action:hover { filter: brightness(1.15); box-shadow: 0 0 14px var(--cyan); }
+
+    /* Terminal Output */
+    .terminal-box {
+      background: #020617;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      padding: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      color: #f8fafc;
+      min-height: 120px;
+      line-height: 1.6;
+    }
+
+    /* Bottom Bar */
+    .bottom-bar {
+      height: 48px;
+      background: var(--card-bg);
+      border-top: 1px solid var(--card-border);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 0 20px;
+      font-size: 0.82rem;
+    }
+    .badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+  <header class="top-header">
+    <div class="header-title">
+      <h1><i class="fas fa-bug"></i> การตรวจหาข้อผิดพลาดและปรับปรุงโค้ด (Scientific Debugging & Refactoring)</h1>
+      <div class="header-sub">วิชา 4124941 วิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์ | ผศ.ดร.ชีวะ ทัศนา (มรภ.รำไพพรรณี)</div>
+    </div>
+    <div class="header-btns">
+      <a href="../lessons/week_07.html" class="btn-h"><i class="fas fa-arrow-left"></i> กลับสู่บทเรียน สัปดาห์ที่ 7</a>
+    </div>
+  </header>
+
+  <main class="main-grid">
+    <!-- Left: Bug Cases -->
+    <section class="panel-card">
+      <div class="section-title"><i class="fas fa-biohazard"></i> เลือกกรณีศึกษาข้อผิดพลาด</div>
+      <button class="bug-btn active" onclick="loadBugCase('divzero')">
+        <strong>1. ZeroDivisionError</strong>
+        <div style="font-size: 0.72rem; color: #94a3b8; margin-top: 3px;">คำนวณความเร่ง a = F / m เมื่อมวล m = 0</div>
+      </button>
+      <button class="bug-btn" onclick="loadBugCase('index')">
+        <strong>2. IndexError (Off-by-One)</strong>
+        <div style="font-size: 0.72rem; color: #94a3b8; margin-top: 3px;">ลูปเกินขนาดข้อมูลเซนเซอร์ range(0, len+1)</div>
+      </button>
+      <button class="bug-btn" onclick="loadBugCase('type')">
+        <strong>3. TypeError (Unit String)</strong>
+        <div style="font-size: 0.72rem; color: #94a3b8; margin-top: 3px;">นำสตริงหน่วยวัด "25.5 cm" มาคูณตัวเลขตรงๆ</div>
+      </button>
+
+      <div style="margin-top: auto; display: flex; flex-direction: column; gap: 8px;">
+        <button class="btn-action" style="background: var(--rose); color: #fff;" onclick="runBuggyCode()"><i class="fas fa-play"></i> 1. รันโค้ดที่ติดบั๊ก (Trigger Bug)</button>
+        <button class="btn-action" style="background: var(--emerald); color: #fff;" onclick="applyRefactor()"><i class="fas fa-wrench"></i> 2. ปรับปรุงโค้ด (Refactor Fix)</button>
+      </div>
+    </section>
+
+    <!-- Center: Code Viewer -->
+    <section class="panel-card" style="padding: 0; overflow: hidden;">
+      <div class="code-view" id="code-content">
+        <!-- Injected via JS -->
+      </div>
+    </section>
+
+    <!-- Right: Terminal & Explanations -->
+    <section class="panel-card">
+      <div class="section-title"><i class="fas fa-terminal"></i> ผลลัพธ์คอนโซล (Console / Traceback)</div>
+      <div class="terminal-box" id="terminal-out">
+        <span style="color: #64748b;">[Ready] กดปุ่ม "รันโค้ดที่ติดบั๊ก" เพื่อจำลองการตรวจจับ Error</span>
+      </div>
+
+      <div class="section-title" style="margin-top: 10px;"><i class="fas fa-shield-alt"></i> การแก้ไขที่ถูกต้อง (Clean Code)</div>
+      <div style="background: rgba(16, 185, 129, 0.15); border: 1px solid var(--emerald); border-radius: 8px; padding: 12px; font-size: 0.76rem; color: #a7f3d0;" id="fix-explanation">
+        <!-- Injected via JS -->
+      </div>
+    </section>
+  </main>
+
+  <footer class="bottom-bar">
+    <div>กรณีทดสอบ: <span class="badge" id="botCase" style="color: var(--cyan);">ZeroDivisionError in F=ma</span></div>
+    <div>สถานะโค้ด: <span class="badge" id="botStatus" style="color: var(--amber);">รอการตรวจสอบ (Unchecked)</span></div>
+    <div>ความปลอดภัยในการสอน: <span class="badge" id="botSafety" style="color: #94a3b8;">Normal</span></div>
+  </footer>
+
+  <script>
+    const cases = {
+      divzero: {
+        title: "ZeroDivisionError in F=ma",
+        buggy: [
+          "def calculate_acceleration(force, mass):",
+          "    # บั๊ก: ไม่ได้ตรวจสอบกรณีมวลเป็นศูนย์",
+          "    accel = force / mass",
+          "    return accel",
+          "",
+          "# ทดสอบกับข้อมูลจริง",
+          "f = 100.0",
+          "m = 0.0  # ค่าเซนเซอร์หลุดการเชื่อมต่อ",
+          "print('Acceleration:', calculate_acceleration(f, m))"
+        ],
+        fixed: [
+          "def calculate_acceleration(force, mass):",
+          "    # ปรับปรุง: เพิ่ม Defensive Checking",
+          "    if mass <= 0:",
+          "        raise ValueError('มวลต้องมากกว่า 0 เสมอตามหลักฟิสิกส์')",
+          "    return force / mass",
+          "",
+          "# ทดสอบด้วย try-except ดักจับข้อผิดพลาด",
+          "try:",
+          "    print('Acceleration:', calculate_acceleration(100.0, 0.0))",
+          "except ValueError as e:",
+          "    print('[Handled Safe]:', e)"
+        ],
+        errorTrace: "Traceback (most recent call last):\n  File 'physics_sim.py', line 3, in calculate_acceleration\n    accel = force / mass\nZeroDivisionError: float division by zero",
+        fixTrace: "[Handled Safe]: มวลต้องมากกว่า 0 เสมอตามหลักฟิสิกส์\n[SUCCESS] โปรแกรมไม่แครช สามารถทำงานต่อเนื่องได้!",
+        errorLine: 2,
+        explanation: "<strong>หลักการ Defensive Programming:</strong> ในการเขียนโปรแกรมควบคุมการทดลองวิทยาศาสตร์ ตัวแปรตัวหารจะต้องถูกตรวจสอบค่า (Validation) เสมอ เพื่อป้องกันระบบหยุดทำงานกะทันหัน"
+      },
+      index: {
+        title: "IndexError in Sensor Array",
+        buggy: [
+          "sensor_data = [24.5, 25.0, 26.2, 25.8]",
+          "# บั๊ก: range เกินขนาด index (Off-by-One)",
+          "for i in range(0, len(sensor_data) + 1):",
+          "    temp = sensor_data[i]",
+          "    print(f'Sensor {i}: {temp}')"
+        ],
+        fixed: [
+          "sensor_data = [24.5, 25.0, 26.2, 25.8]",
+          "# ปรับปรุง: ใช้ for-in loop มาตรฐาน Python (Pythonic)",
+          "for i, temp in enumerate(sensor_data):",
+          "    print(f'Sensor {i}: {temp} °C')",
+          "",
+          "# [SUCCESS] วนลูปครบถ้วน ไม่เกินขอบเขตอาร์เรย์"
+        ],
+        errorTrace: "Sensor 0: 24.5\nSensor 1: 25.0\nSensor 2: 26.2\nSensor 3: 25.8\nTraceback (most recent call last):\n  File 'sensor_logger.py', line 4\n    temp = sensor_data[i]\nIndexError: list index out of range",
+        fixTrace: "Sensor 0: 24.5 °C\nSensor 1: 25.0 °C\nSensor 2: 26.2 °C\nSensor 3: 25.8 °C\n[SUCCESS] ประมวลผลเซนเซอร์ครบ 4 จุดอย่างปลอดภัย",
+        errorLine: 3,
+        explanation: "<strong>Off-by-One Error:</strong> เป็นบั๊กยอดนิยมของนักเรียน มักสับสนระหว่าง <em>'ความยาวอาร์เรย์ (Length)'</em> กับ <em>'ดัชนีสุดท้าย (Last Index = Length - 1)'</em>"
+      },
+      type: {
+        title: "TypeError with Units String",
+        buggy: [
+          "raw_reading = '45.8 cm'  # ข้อมูลที่ได้จาก Serial Port",
+          "# บั๊ก: คูณสตริงกับตัวเลขตรงๆ",
+          "meters = raw_reading * 0.01",
+          "print('Distance:', meters)"
+        ],
+        fixed: [
+          "raw_reading = '45.8 cm'",
+          "# ปรับปรุง: สกัดเฉพาะตัวเลขด้วย String Parsing และแปลงเป็น float",
+          "numeric_part = float(raw_reading.replace('cm', '').strip())",
+          "meters = numeric_part * 0.01",
+          "print('Distance in Meters:', meters, 'm')"
+        ],
+        errorTrace: "Traceback (most recent call last):\n  File 'serial_read.py', line 3\n    meters = raw_reading * 0.01\nTypeError: can't multiply sequence by non-int of type 'float'",
+        fixTrace: "Distance in Meters: 0.458 m\n[SUCCESS] แปลงหน่วยและคำนวณถูกต้องตามระบบ SI Units",
+        errorLine: 2,
+        explanation: "<strong>Type Casting:</strong> ข้อมูลดิบที่รับจากเซนเซอร์ IoT หรือไฟล์ข้อความจะเข้ามาเป็น String เสมอ ต้องใช้ทักษะการสกัดและแปลงชนิดข้อมูล (Type Casting) ก่อนนำไปคำนวณ"
+      }
+    };
+
+    let curKey = 'divzero';
+
+    function loadBugCase(k) {
+      curKey = k;
+      document.querySelectorAll('.bug-btn').forEach((b, i) => {
+        b.classList.toggle('active', (k === 'divzero' && i === 0) || (k === 'index' && i === 1) || (k === 'type' && i === 2));
+      });
+
+      const c = cases[k];
+      renderCode(c.buggy, -1);
+      document.getElementById('terminal-out').innerHTML = '<span style="color: #64748b;">[Ready] กดปุ่ม "รันโค้ดที่ติดบั๊ก" เพื่อเริ่มทดสอบ</span>';
+      document.getElementById('fix-explanation').innerHTML = c.explanation;
+      document.getElementById('botCase').innerText = c.title;
+      document.getElementById('botStatus').innerText = 'รอการตรวจสอบ (Unchecked)';
+      document.getElementById('botStatus').style.color = 'var(--amber)';
+    }
+
+    function renderCode(lines, errIdx, isFixed = false) {
+      const div = document.getElementById('code-content');
+      div.innerHTML = lines.map((l, idx) => {
+        let cls = 'code-line';
+        if (idx === errIdx) cls += isFixed ? ' fixed-line' : ' error-line';
+        return `
+          <div class="${cls}">
+            <span class="line-no">${idx + 1}</span>
+            <span>${escapeHTML(l)}</span>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function escapeHTML(str) {
+      return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    function runBuggyCode() {
+      const c = cases[curKey];
+      renderCode(c.buggy, c.errorLine, false);
+      document.getElementById('terminal-out').innerHTML = `<pre style="color: var(--rose); margin: 0; font-family: inherit;">${c.errorTrace}</pre>`;
+      document.getElementById('botStatus').innerText = 'พบข้อผิดพลาด (Runtime Error Caught!)';
+      document.getElementById('botStatus').style.color = 'var(--rose)';
+    }
+
+    function applyRefactor() {
+      const c = cases[curKey];
+      renderCode(c.fixed, 2, true);
+      document.getElementById('terminal-out').innerHTML = `<pre style="color: var(--emerald); margin: 0; font-family: inherit;">${c.fixTrace}</pre>`;
+      document.getElementById('botStatus').innerText = 'ปรับปรุงเรียบร้อย (Refactored Clean Code)';
+      document.getElementById('botStatus').style.color = 'var(--emerald)';
+    }
+
+    window.onload = () => loadBugCase('divzero');
+  </script>
+</body>
+</html>

@@ -1,0 +1,954 @@
+[
+  {
+    "file": "chapter01_ipst_ct_games.html",
+    "path": "simulations/chapter01_ipst_ct_games.html",
+    "prefix": "chapter01",
+    "category": "บทที่ 1: แนวคิดเชิงคำนวณ & อันปลั๊ก (CT & Unplugged)",
+    "title": "ห้องทดลอง 3D: เกมจำลอง 4 เสาหลักแนวคิดเชิงคำนวณ สสวท. (IPST CT Games)"
+  },
+  {
+    "file": "chapter01_abstraction_point_mass.html",
+    "path": "simulations/chapter01_abstraction_point_mass.html",
+    "prefix": "chapter01",
+    "category": "บทที่ 1: แนวคิดเชิงคำนวณ & อันปลั๊ก (CT & Unplugged)",
+    "title": "ห้องทดลอง 3D: การคิดเชิงนามธรรมและมวลจุด (Point-Mass Abstraction)"
+  },
+  {
+    "file": "chapter01_abstraction_sandbox.html",
+    "path": "simulations/chapter01_abstraction_sandbox.html",
+    "prefix": "chapter01",
+    "category": "บทที่ 1: แนวคิดเชิงคำนวณ & อันปลั๊ก (CT & Unplugged)",
+    "title": "ห้องทดลอง 3D: การคิดเชิงนามธรรมและมวลจุด (Point-Mass Abstraction Sandbox)"
+  },
+  {
+    "file": "chapter01_decomposition_tree.html",
+    "path": "simulations/chapter01_decomposition_tree.html",
+    "prefix": "chapter01",
+    "category": "บทที่ 1: แนวคิดเชิงคำนวณ & อันปลั๊ก (CT & Unplugged)",
+    "title": "ห้องทดลอง 3D: การแยกส่วนประกอบแบบจำลอง (Exploded-View Decomposition Tree)"
+  },
+  {
+    "file": "chapter01_pattern_explorer.html",
+    "path": "simulations/chapter01_pattern_explorer.html",
+    "prefix": "chapter01",
+    "category": "บทที่ 1: แนวคิดเชิงคำนวณ & อันปลั๊ก (CT & Unplugged)",
+    "title": "ห้องทดลอง 3D: การค้นหารูปแบบคลื่นและการกรองสัญญาณ (Pattern Explorer)"
+  },
+  {
+    "file": "chapter01_pattern_recognition.html",
+    "path": "simulations/chapter01_pattern_recognition.html",
+    "prefix": "chapter01",
+    "category": "บทที่ 1: แนวคิดเชิงคำนวณ & อันปลั๊ก (CT & Unplugged)",
+    "title": "ห้องทดลอง 3D: การรู้จำรูปแบบสัญญาณและคลื่นวิทยาศาสตร์ (Pattern Recognition Lab)"
+  },
+  {
+    "file": "chapter01_river_crossing.html",
+    "path": "simulations/chapter01_river_crossing.html",
+    "prefix": "chapter01",
+    "category": "บทที่ 1: แนวคิดเชิงคำนวณ & อันปลั๊ก (CT & Unplugged)",
+    "title": "LAB 1.0: ปริศนาข้ามแม่น้ำเชิงตรรกะและการสำรวจปริภูมิสถานะ (River Crossing) (Hybrid 2D/3D AR)"
+  },
+  {
+    "file": "chapter01_robot_grid_navigator.html",
+    "path": "simulations/chapter01_robot_grid_navigator.html",
+    "prefix": "chapter01",
+    "category": "บทที่ 1: แนวคิดเชิงคำนวณ & อันปลั๊ก (CT & Unplugged)",
+    "title": "LAB 1.4: การนำทางหุ่นยนต์บนตารางกริดและการออกแบบขั้นตอนวิธี (Robot Grid 5x5) (Hybrid 2D/3D AR)"
+  },
+  {
+    "file": "chapter01_sec0_ar_metrology.html",
+    "path": "simulations/chapter01_sec0_ar_metrology.html",
+    "prefix": "chapter01",
+    "category": "บทที่ 1: แนวคิดเชิงคำนวณ & อันปลั๊ก (CT & Unplugged)",
+    "title": "LAB 1.0: ปริศนาข้ามแม่น้ำเชิงตรรกะและการสำรวจปริภูมิสถานะ (River Crossing) (Hybrid 2D/3D AR)"
+  },
+  {
+    "file": "chapter01_sec1_ar_si_units.html",
+    "path": "simulations/chapter01_sec1_ar_si_units.html",
+    "prefix": "chapter01",
+    "category": "บทที่ 1: แนวคิดเชิงคำนวณ & อันปลั๊ก (CT & Unplugged)",
+    "title": "LAB 1.1: ผังต้นไม้ย่อยปัญหาและสถาปัตยกรรมเชิงโมดูล (Decomposition Tree) (Hybrid 2D/3D AR)"
+  },
+  {
+    "file": "chapter01_sec2_ar_imu_sensor.html",
+    "path": "simulations/chapter01_sec2_ar_imu_sensor.html",
+    "prefix": "chapter01",
+    "category": "บทที่ 1: แนวคิดเชิงคำนวณ & อันปลั๊ก (CT & Unplugged)",
+    "title": "LAB 1.2: การค้นหารูปแบบลำดับและคลื่นคณิตศาสตร์ (Pattern Recognition) (Hybrid 2D/3D AR)"
+  },
+  {
+    "file": "chapter01_sec3_ar_gps_trilateration.html",
+    "path": "simulations/chapter01_sec3_ar_gps_trilateration.html",
+    "prefix": "chapter01",
+    "category": "บทที่ 1: แนวคิดเชิงคำนวณ & อันปลั๊ก (CT & Unplugged)",
+    "title": "LAB 1.3: แบบจำลองมวลจุดเชิงนามธรรมและการลดทอนความซับซ้อน (Abstraction Sandbox) (Hybrid 2D/3D AR)"
+  },
+  {
+    "file": "chapter01_sec4_ar_kalman_filter.html",
+    "path": "simulations/chapter01_sec4_ar_kalman_filter.html",
+    "prefix": "chapter01",
+    "category": "บทที่ 1: แนวคิดเชิงคำนวณ & อันปลั๊ก (CT & Unplugged)",
+    "title": "LAB 1.4: การนำทางหุ่นยนต์บนตารางกริดและการออกแบบขั้นตอนวิธี (Robot Grid 5x5) (Hybrid 2D/3D AR)"
+  },
+  {
+    "file": "chapter01_unplugged_grid.html",
+    "path": "simulations/chapter01_unplugged_grid.html",
+    "prefix": "chapter01",
+    "category": "บทที่ 1: แนวคิดเชิงคำนวณ & อันปลั๊ก (CT & Unplugged)",
+    "title": "LAB 1.4: การนำทางหุ่นยนต์บนตารางกริดและการออกแบบขั้นตอนวิธี (Robot Grid 5x5) (Hybrid 2D/3D AR)"
+  },
+  {
+    "file": "chapter02_animated_trace_table.html",
+    "path": "simulations/chapter02_animated_trace_table.html",
+    "prefix": "chapter02",
+    "category": "บทที่ 2: ผังงานและรหัสลำลอง (Flowchart & Pseudocode)",
+    "title": "ห้องทดลอง: การไล่สายรหัสแอนิเมชัน (Animated Trace Table)"
+  },
+  {
+    "file": "chapter02_decision_branching.html",
+    "path": "simulations/chapter02_decision_branching.html",
+    "prefix": "chapter02",
+    "category": "บทที่ 2: ผังงานและรหัสลำลอง (Flowchart & Pseudocode)",
+    "title": "LAB 2.3: ประตูตรรกะและการตัดสินใจหลายเงื่อนไข (Multi-Branch Decision Gates) (Hybrid 2D/3D AR)"
+  },
+  {
+    "file": "chapter02_decision_gates.html",
+    "path": "simulations/chapter02_decision_gates.html",
+    "prefix": "chapter02",
+    "category": "บทที่ 2: ผังงานและรหัสลำลอง (Flowchart & Pseudocode)",
+    "title": "LAB 2.3: ประตูตรรกะและการตัดสินใจหลายเงื่อนไข (Multi-Branch Decision Gates) (Hybrid 2D/3D AR)"
+  },
+  {
+    "file": "chapter02_flowchart_builder.html",
+    "path": "simulations/chapter02_flowchart_builder.html",
+    "prefix": "chapter02",
+    "category": "บทที่ 2: ผังงานและรหัสลำลอง (Flowchart & Pseudocode)",
+    "title": "ห้องทดลอง 3D: ผังงานและรหัสลำลองทางวิทยาศาสตร์ (Flowchart & Pseudocode Stepper)"
+  },
+  {
+    "file": "chapter02_mars_unit_converter.html",
+    "path": "simulations/chapter02_mars_unit_converter.html",
+    "prefix": "chapter02",
+    "category": "บทที่ 2: ผังงานและรหัสลำลอง (Flowchart & Pseudocode)",
+    "title": "LAB 2.0: แบบจำลองการแปลงหน่วยวิถียานอวกาศดาวอังคาร (Mars Unit Converter) (Hybrid 2D/3D AR)"
+  },
+  {
+    "file": "chapter02_pseudocode_ast.html",
+    "path": "simulations/chapter02_pseudocode_ast.html",
+    "prefix": "chapter02",
+    "category": "บทที่ 2: ผังงานและรหัสลำลอง (Flowchart & Pseudocode)",
+    "title": "LAB 2.1: ตัววิเคราะห์รหัสลำลองและต้นไม้ไวยากรณ์ (Pseudocode AST Linter) (Hybrid 2D/3D AR)"
+  },
+  {
+    "file": "chapter02_pseudocode_linter.html",
+    "path": "simulations/chapter02_pseudocode_linter.html",
+    "prefix": "chapter02",
+    "category": "บทที่ 2: ผังงานและรหัสลำลอง (Flowchart & Pseudocode)",
+    "title": "LAB 2.1: ตัววิเคราะห์รหัสลำลองและต้นไม้ไวยากรณ์ (Pseudocode AST Linter) (Hybrid 2D/3D AR)"
+  },
+  {
+    "file": "chapter02_trace_table_runner.html",
+    "path": "simulations/chapter02_trace_table_runner.html",
+    "prefix": "chapter02",
+    "category": "บทที่ 2: ผังงานและรหัสลำลอง (Flowchart & Pseudocode)",
+    "title": "ห้องทดลอง: การไล่สายรหัสและตารางรันอัลกอริทึม (Trace Table Runner)"
+  },
+  {
+    "file": "chapter02_visual_flowchart_intro.html",
+    "path": "simulations/chapter02_visual_flowchart_intro.html",
+    "prefix": "chapter02",
+    "category": "บทที่ 2: ผังงานและรหัสลำลอง (Flowchart & Pseudocode)",
+    "title": "ห้องทดลอง 3D: ผังงานและการทำงานตามลำดับ (Visual Flowchart Intro)"
+  },
+  {
+    "file": "chapter03_data_types_matrix.html",
+    "path": "simulations/chapter03_data_types_matrix.html",
+    "prefix": "chapter03",
+    "category": "บทที่ 3: พื้นฐานไพทอนและหน่วยความจำ (Python Basics & Memory)",
+    "title": "LAB 3.1: เมทริกซ์ชนิดข้อมูลและการแปลงชนิด (Data Types & Type Casting) (Hybrid 2D/3D AR)"
+  },
+  {
+    "file": "chapter03_datatype_casting_lab.html",
+    "path": "simulations/chapter03_datatype_casting_lab.html",
+    "prefix": "chapter03",
+    "category": "บทที่ 3: พื้นฐานไพทอนและหน่วยความจำ (Python Basics & Memory)",
+    "title": "3.2 ห้องทดลองแปลงชนิดข้อมูล (Datatype Typecasting Lab) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter03_inbrowser_python_sandbox.html",
+    "path": "simulations/chapter03_inbrowser_python_sandbox.html",
+    "prefix": "chapter03",
+    "category": "บทที่ 3: พื้นฐานไพทอนและหน่วยความจำ (Python Basics & Memory)",
+    "title": "3.0 แซนด์บ็อกซ์รันโค้ด Python บนเบราว์เซอร์ (In-Browser Python AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter03_interactive_io.html",
+    "path": "simulations/chapter03_interactive_io.html",
+    "prefix": "chapter03",
+    "category": "บทที่ 3: พื้นฐานไพทอนและหน่วยความจำ (Python Basics & Memory)",
+    "title": "LAB 3.4: ระบบจัดการข้อมูลนำเข้าและแสดงผล (Interactive I/O & Formatting) (Hybrid 2D/3D AR)"
+  },
+  {
+    "file": "chapter03_kinetic_energy.html",
+    "path": "simulations/chapter03_kinetic_energy.html",
+    "prefix": "chapter03",
+    "category": "บทที่ 3: พื้นฐานไพทอนและหน่วยความจำ (Python Basics & Memory)",
+    "title": "3.4 เครื่องคำนวณพลังงานจลน์และฟิสิกส์ (Kinetic Energy Calculator) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter03_kinetic_energy_calc.html",
+    "path": "simulations/chapter03_kinetic_energy_calc.html",
+    "prefix": "chapter03",
+    "category": "บทที่ 3: พื้นฐานไพทอนและหน่วยความจำ (Python Basics & Memory)",
+    "title": "3.4 เครื่องคำนวณพลังงานจลน์และฟิสิกส์ (Kinetic Energy Calculator) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter03_memory_model.html",
+    "path": "simulations/chapter03_memory_model.html",
+    "prefix": "chapter03",
+    "category": "บทที่ 3: พื้นฐานไพทอนและหน่วยความจำ (Python Basics & Memory)",
+    "title": "ห้องทดลอง 3D: แบบจำลองหน่วยความจำและตัวแปร (RAM & Variable Memory Model)"
+  },
+  {
+    "file": "chapter03_pemdas_evaluator.html",
+    "path": "simulations/chapter03_pemdas_evaluator.html",
+    "prefix": "chapter03",
+    "category": "บทที่ 3: พื้นฐานไพทอนและหน่วยความจำ (Python Basics & Memory)",
+    "title": "LAB 3.2: ลำดับความสำคัญของตัวดำเนินการ (PEMDAS Operator Hierarchy) (Hybrid 2D/3D AR)"
+  },
+  {
+    "file": "chapter03_pemdas_tree.html",
+    "path": "simulations/chapter03_pemdas_tree.html",
+    "prefix": "chapter03",
+    "category": "บทที่ 3: พื้นฐานไพทอนและหน่วยความจำ (Python Basics & Memory)",
+    "title": "3.3 เครื่องมือวิเคราะห์ลำดับคำนวณ PEMDAS (PEMDAS Evaluator AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter03_pyodide_terminal.html",
+    "path": "simulations/chapter03_pyodide_terminal.html",
+    "prefix": "chapter03",
+    "category": "บทที่ 3: พื้นฐานไพทอนและหน่วยความจำ (Python Basics & Memory)",
+    "title": "3.0 แซนด์บ็อกซ์รันโค้ด Python บนเบราว์เซอร์ (In-Browser Python AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter03_ram_inspector.html",
+    "path": "simulations/chapter03_ram_inspector.html",
+    "prefix": "chapter03",
+    "category": "บทที่ 3: พื้นฐานไพทอนและหน่วยความจำ (Python Basics & Memory)",
+    "title": "ห้องทดลอง 3D: เครื่องมือตรวจสอบแอดเดรสใน RAM (RAM Inspector)"
+  },
+  {
+    "file": "chapter03_string_slicing.html",
+    "path": "simulations/chapter03_string_slicing.html",
+    "prefix": "chapter03",
+    "category": "บทที่ 3: พื้นฐานไพทอนและหน่วยความจำ (Python Basics & Memory)",
+    "title": "LAB 3.3: การสไลซ์และจัดกระทำสตริง (String Slicing & Indexing) (Hybrid 2D/3D AR)"
+  },
+  {
+    "file": "chapter03_type_casting.html",
+    "path": "simulations/chapter03_type_casting.html",
+    "prefix": "chapter03",
+    "category": "บทที่ 3: พื้นฐานไพทอนและหน่วยความจำ (Python Basics & Memory)",
+    "title": "3.2 ห้องทดลองแปลงชนิดข้อมูล (Datatype Typecasting Lab) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter03_variable_memory_model.html",
+    "path": "simulations/chapter03_variable_memory_model.html",
+    "prefix": "chapter03",
+    "category": "บทที่ 3: พื้นฐานไพทอนและหน่วยความจำ (Python Basics & Memory)",
+    "title": "ห้องทดลอง 3D: แบบจำลองตัวแปรในหน่วยความจำ RAM (Variable Memory Model)"
+  },
+  {
+    "file": "chapter04_automated_decision_intro.html",
+    "path": "simulations/chapter04_automated_decision_intro.html",
+    "prefix": "chapter04",
+    "category": "บทที่ 4: การตัดสินใจและการวนซ้ำ (Conditionals & Loops)",
+    "title": "4.0 ระบบตัดสินใจอัตโนมัติ (Automated Decision Controller AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter04_automated_decision_system.html",
+    "path": "simulations/chapter04_automated_decision_system.html",
+    "prefix": "chapter04",
+    "category": "บทที่ 4: การตัดสินใจและการวนซ้ำ (Conditionals & Loops)",
+    "title": "4.0 ระบบตัดสินใจอัตโนมัติ (Automated Decision Controller AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter04_branching_sandbox.html",
+    "path": "simulations/chapter04_branching_sandbox.html",
+    "prefix": "chapter04",
+    "category": "บทที่ 4: การตัดสินใจและการวนซ้ำ (Conditionals & Loops)",
+    "title": "4.1 แซนด์บ็อกซ์โครงสร้างทางเลือก (Branching If-Else Sandbox) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter04_ev_regenerative_braking.html",
+    "path": "simulations/chapter04_ev_regenerative_braking.html",
+    "prefix": "chapter04",
+    "category": "บทที่ 4: การตัดสินใจและการวนซ้ำ (Conditionals & Loops)",
+    "title": "4.0 ระบบตัดสินใจอัตโนมัติ (Automated Decision Controller AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter04_for_loop_range_visualizer.html",
+    "path": "simulations/chapter04_for_loop_range_visualizer.html",
+    "prefix": "chapter04",
+    "category": "บทที่ 4: การตัดสินใจและการวนซ้ำ (Conditionals & Loops)",
+    "title": "ห้องทดลอง 3D: แบบจำลองการวนซ้ำ For-Loop และ Range ทางวิทยาศาสตร์"
+  },
+  {
+    "file": "chapter04_greenhouse_climate_controller.html",
+    "path": "simulations/chapter04_greenhouse_climate_controller.html",
+    "prefix": "chapter04",
+    "category": "บทที่ 4: การตัดสินใจและการวนซ้ำ (Conditionals & Loops)",
+    "title": "4.2 ตัวควบคุมสภาพแวดล้อมโรงเรือนเกษตร (Greenhouse Climate Lab) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter04_greenhouse_controller.html",
+    "path": "simulations/chapter04_greenhouse_controller.html",
+    "prefix": "chapter04",
+    "category": "บทที่ 4: การตัดสินใจและการวนซ้ำ (Conditionals & Loops)",
+    "title": "4.2 ตัวควบคุมสภาพแวดล้อมโรงเรือนเกษตร (Greenhouse Climate Lab) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter04_loop_visualizer.html",
+    "path": "simulations/chapter04_loop_visualizer.html",
+    "prefix": "chapter04",
+    "category": "บทที่ 4: การตัดสินใจและการวนซ้ำ (Conditionals & Loops)",
+    "title": "LAB 4.0: แบบจำลองการวนซ้ำและการควบคุมลูป (Loop Visualizer & Automation) (Hybrid 2D/3D AR)"
+  },
+  {
+    "file": "chapter04_power_calorimeter.html",
+    "path": "simulations/chapter04_power_calorimeter.html",
+    "prefix": "chapter04",
+    "category": "บทที่ 4: การตัดสินใจและการวนซ้ำ (Conditionals & Loops)",
+    "title": "4.2 ตัวควบคุมสภาพแวดล้อมโรงเรือนเกษตร (Greenhouse Climate Lab) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter04_roller_coaster.html",
+    "path": "simulations/chapter04_roller_coaster.html",
+    "prefix": "chapter04",
+    "category": "บทที่ 4: การตัดสินใจและการวนซ้ำ (Conditionals & Loops)",
+    "title": "4.4 วงรอบการอ่านค่าเซนเซอร์แบบ Real-Time (Sensor Polling While-Loop) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter04_sensor_polling_loop.html",
+    "path": "simulations/chapter04_sensor_polling_loop.html",
+    "prefix": "chapter04",
+    "category": "บทที่ 4: การตัดสินใจและการวนซ้ำ (Conditionals & Loops)",
+    "title": "4.4 วงรอบการอ่านค่าเซนเซอร์แบบ Real-Time (Sensor Polling While-Loop) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter04_sensor_polling_while.html",
+    "path": "simulations/chapter04_sensor_polling_while.html",
+    "prefix": "chapter04",
+    "category": "บทที่ 4: การตัดสินใจและการวนซ้ำ (Conditionals & Loops)",
+    "title": "4.4 วงรอบการอ่านค่าเซนเซอร์แบบ Real-Time (Sensor Polling While-Loop) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter04_solar_smart_grid.html",
+    "path": "simulations/chapter04_solar_smart_grid.html",
+    "prefix": "chapter04",
+    "category": "บทที่ 4: การตัดสินใจและการวนซ้ำ (Conditionals & Loops)",
+    "title": "4.1 แซนด์บ็อกซ์โครงสร้างทางเลือก (Branching If-Else Sandbox) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter04_spring_work_energy.html",
+    "path": "simulations/chapter04_spring_work_energy.html",
+    "prefix": "chapter04",
+    "category": "บทที่ 4: การตัดสินใจและการวนซ้ำ (Conditionals & Loops)",
+    "title": "4.3 แอนิเมชันการทำงานของลูป For และ Range (For-Loop Visualizer AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter05_ballistic_pendulum.html",
+    "path": "simulations/chapter05_ballistic_pendulum.html",
+    "prefix": "chapter05",
+    "category": "บทที่ 5: การค้นหาและโครงสร้างข้อมูล (Search & Data Structures)",
+    "title": "5.3 เครื่องมือจำลองการค้นหาแบบเชิงเส้น (Linear Search Visualizer AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter05_binary_search.html",
+    "path": "simulations/chapter05_binary_search.html",
+    "prefix": "chapter05",
+    "category": "บทที่ 5: การค้นหาและโครงสร้างข้อมูล (Search & Data Structures)",
+    "title": "LAB 5.0: แบบจำลองการค้นหาแบบทวิภาคและโครงสร้างข้อมูล (Binary Search Sandbox) (Hybrid 2D/3D AR)"
+  },
+  {
+    "file": "chapter05_binary_search_race.html",
+    "path": "simulations/chapter05_binary_search_race.html",
+    "prefix": "chapter05",
+    "category": "บทที่ 5: การค้นหาและโครงสร้างข้อมูล (Search & Data Structures)",
+    "title": "5.4 การประลองความเร็วการค้นหา 10 ล้านข้อมูล (Binary vs Linear Race AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter05_binary_search_speed_race.html",
+    "path": "simulations/chapter05_binary_search_speed_race.html",
+    "prefix": "chapter05",
+    "category": "บทที่ 5: การค้นหาและโครงสร้างข้อมูล (Search & Data Structures)",
+    "title": "5.4 การประลองความเร็วการค้นหา 10 ล้านข้อมูล (Binary vs Linear Race AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter05_collision_arena.html",
+    "path": "simulations/chapter05_collision_arena.html",
+    "prefix": "chapter05",
+    "category": "บทที่ 5: การค้นหาและโครงสร้างข้อมูล (Search & Data Structures)",
+    "title": "5.0 ตัวสำรวจโครงสร้างข้อมูลเชิงลึก (Data Storage Architecture AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter05_crash_test_telemetry.html",
+    "path": "simulations/chapter05_crash_test_telemetry.html",
+    "prefix": "chapter05",
+    "category": "บทที่ 5: การค้นหาและโครงสร้างข้อมูล (Search & Data Structures)",
+    "title": "5.4 การประลองความเร็วการค้นหา 10 ล้านข้อมูล (Binary vs Linear Race AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter05_data_storage_arch.html",
+    "path": "simulations/chapter05_data_storage_arch.html",
+    "prefix": "chapter05",
+    "category": "บทที่ 5: การค้นหาและโครงสร้างข้อมูล (Search & Data Structures)",
+    "title": "5.0 ตัวสำรวจโครงสร้างข้อมูลเชิงลึก (Data Storage Architecture AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter05_data_storage_explorer.html",
+    "path": "simulations/chapter05_data_storage_explorer.html",
+    "prefix": "chapter05",
+    "category": "บทที่ 5: การค้นหาและโครงสร้างข้อมูล (Search & Data Structures)",
+    "title": "5.0 ตัวสำรวจโครงสร้างข้อมูลเชิงลึก (Data Storage Architecture AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter05_dictionary_hash_table.html",
+    "path": "simulations/chapter05_dictionary_hash_table.html",
+    "prefix": "chapter05",
+    "category": "บทที่ 5: การค้นหาและโครงสร้างข้อมูล (Search & Data Structures)",
+    "title": "5.2 แซนด์บ็อกซ์ตารางแฮชและ Dictionary (Hash Table Sandbox AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter05_dynamic_list_visualizer.html",
+    "path": "simulations/chapter05_dynamic_list_visualizer.html",
+    "prefix": "chapter05",
+    "category": "บทที่ 5: การค้นหาและโครงสร้างข้อมูล (Search & Data Structures)",
+    "title": "5.1 ตัวจำลองไดนามิกอาร์เรย์และ List Comprehension (Dynamic List AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter05_hash_table_sandbox.html",
+    "path": "simulations/chapter05_hash_table_sandbox.html",
+    "prefix": "chapter05",
+    "category": "บทที่ 5: การค้นหาและโครงสร้างข้อมูล (Search & Data Structures)",
+    "title": "5.2 แซนด์บ็อกซ์ตารางแฮชและ Dictionary (Hash Table Sandbox AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter05_impulse_crumple_zone.html",
+    "path": "simulations/chapter05_impulse_crumple_zone.html",
+    "prefix": "chapter05",
+    "category": "บทที่ 5: การค้นหาและโครงสร้างข้อมูล (Search & Data Structures)",
+    "title": "5.1 ตัวจำลองไดนามิกอาร์เรย์และ List Comprehension (Dynamic List AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter05_linear_search_race.html",
+    "path": "simulations/chapter05_linear_search_race.html",
+    "prefix": "chapter05",
+    "category": "บทที่ 5: การค้นหาและโครงสร้างข้อมูล (Search & Data Structures)",
+    "title": "5.3 เครื่องมือจำลองการค้นหาแบบเชิงเส้น (Linear Search Visualizer AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter05_linear_search_visualizer.html",
+    "path": "simulations/chapter05_linear_search_visualizer.html",
+    "prefix": "chapter05",
+    "category": "บทที่ 5: การค้นหาและโครงสร้างข้อมูล (Search & Data Structures)",
+    "title": "5.3 เครื่องมือจำลองการค้นหาแบบเชิงเส้น (Linear Search Visualizer AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter05_smart_airbag_aeb.html",
+    "path": "simulations/chapter05_smart_airbag_aeb.html",
+    "prefix": "chapter05",
+    "category": "บทที่ 5: การค้นหาและโครงสร้างข้อมูล (Search & Data Structures)",
+    "title": "5.2 แซนด์บ็อกซ์ตารางแฮชและ Dictionary (Hash Table Sandbox AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter06_ai_weather_cfd.html",
+    "path": "simulations/chapter06_ai_weather_cfd.html",
+    "prefix": "chapter06",
+    "category": "บทที่ 6: อัลกอริทึมการเรียงลำดับและพลศาสตร์ (Sorting & Dynamics)",
+    "title": "6.4 แผนผังต้นไม้การแบ่งแยกเพื่อพิชิต Merge Sort (Divide & Conquer AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter06_airfoil_wind_tunnel.html",
+    "path": "simulations/chapter06_airfoil_wind_tunnel.html",
+    "prefix": "chapter06",
+    "category": "บทที่ 6: อัลกอริทึมการเรียงลำดับและพลศาสตร์ (Sorting & Dynamics)",
+    "title": "6.3 สนามทดลองจัดเรียงไพ่ด้วย Insertion Sort (Card Insertion AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter06_archimedes_buoyancy.html",
+    "path": "simulations/chapter06_archimedes_buoyancy.html",
+    "prefix": "chapter06",
+    "category": "บทที่ 6: อัลกอริทึมการเรียงลำดับและพลศาสตร์ (Sorting & Dynamics)",
+    "title": "6.1 กราฟเปรียบเทียบอัตราการเติบโต Big-O (Big-O Curve Comparator AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter06_bernoulli_venturi.html",
+    "path": "simulations/chapter06_bernoulli_venturi.html",
+    "prefix": "chapter06",
+    "category": "บทที่ 6: อัลกอริทึมการเรียงลำดับและพลศาสตร์ (Sorting & Dynamics)",
+    "title": "6.0 โปรแกรมจำลองการใช้พลังงานจัดเรียงข้อมูล (Data Center Energy AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter06_big_o_curve_comparator.html",
+    "path": "simulations/chapter06_big_o_curve_comparator.html",
+    "prefix": "chapter06",
+    "category": "บทที่ 6: อัลกอริทึมการเรียงลำดับและพลศาสตร์ (Sorting & Dynamics)",
+    "title": "6.1 กราฟเปรียบเทียบอัตราการเติบโต Big-O (Big-O Curve Comparator AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter06_bubble_selection_3d.html",
+    "path": "simulations/chapter06_bubble_selection_3d.html",
+    "prefix": "chapter06",
+    "category": "บทที่ 6: อัลกอริทึมการเรียงลำดับและพลศาสตร์ (Sorting & Dynamics)",
+    "title": "6.2 แอนิเมชันเปรียบเทียบ Bubble และ Selection Sort (Sorting 3D AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter06_bubble_selection_visualizer.html",
+    "path": "simulations/chapter06_bubble_selection_visualizer.html",
+    "prefix": "chapter06",
+    "category": "บทที่ 6: อัลกอริทึมการเรียงลำดับและพลศาสตร์ (Sorting & Dynamics)",
+    "title": "6.2 แอนิเมชันเปรียบเทียบ Bubble และ Selection Sort (Sorting 3D AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter06_card_insertion_playground.html",
+    "path": "simulations/chapter06_card_insertion_playground.html",
+    "prefix": "chapter06",
+    "category": "บทที่ 6: อัลกอริทึมการเรียงลำดับและพลศาสตร์ (Sorting & Dynamics)",
+    "title": "6.3 สนามทดลองจัดเรียงไพ่ด้วย Insertion Sort (Card Insertion AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter06_data_center_sorting.html",
+    "path": "simulations/chapter06_data_center_sorting.html",
+    "prefix": "chapter06",
+    "category": "บทที่ 6: อัลกอริทึมการเรียงลำดับและพลศาสตร์ (Sorting & Dynamics)",
+    "title": "6.0 โปรแกรมจำลองการใช้พลังงานจัดเรียงข้อมูล (Data Center Energy AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter06_datacenter_sorting_energy.html",
+    "path": "simulations/chapter06_datacenter_sorting_energy.html",
+    "prefix": "chapter06",
+    "category": "บทที่ 6: อัลกอริทึมการเรียงลำดับและพลศาสตร์ (Sorting & Dynamics)",
+    "title": "6.0 โปรแกรมจำลองการใช้พลังงานจัดเรียงข้อมูล (Data Center Energy AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter06_divide_and_conquer_tree.html",
+    "path": "simulations/chapter06_divide_and_conquer_tree.html",
+    "prefix": "chapter06",
+    "category": "บทที่ 6: อัลกอริทึมการเรียงลำดับและพลศาสตร์ (Sorting & Dynamics)",
+    "title": "6.4 แผนผังต้นไม้การแบ่งแยกเพื่อพิชิต Merge Sort (Divide & Conquer AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter06_divide_conquer_merge_tree.html",
+    "path": "simulations/chapter06_divide_conquer_merge_tree.html",
+    "prefix": "chapter06",
+    "category": "บทที่ 6: อัลกอริทึมการเรียงลำดับและพลศาสตร์ (Sorting & Dynamics)",
+    "title": "6.4 แผนผังต้นไม้การแบ่งแยกเพื่อพิชิต Merge Sort (Divide & Conquer AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter06_drone_aerodynamics.html",
+    "path": "simulations/chapter06_drone_aerodynamics.html",
+    "prefix": "chapter06",
+    "category": "บทที่ 6: อัลกอริทึมการเรียงลำดับและพลศาสตร์ (Sorting & Dynamics)",
+    "title": "6.2 แอนิเมชันเปรียบเทียบ Bubble และ Selection Sort (Sorting 3D AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter06_sorting_arena.html",
+    "path": "simulations/chapter06_sorting_arena.html",
+    "prefix": "chapter06",
+    "category": "บทที่ 6: อัลกอริทึมการเรียงลำดับและพลศาสตร์ (Sorting & Dynamics)",
+    "title": "LAB 6.0: สมรภูมิเปรียบเทียบขั้นตอนวิธีการจัดเรียงข้อมูล (Sorting & Big-O Arena) (Hybrid 2D/3D AR)"
+  },
+  {
+    "file": "chapter07_3d_tower_of_hanoi.html",
+    "path": "simulations/chapter07_3d_tower_of_hanoi.html",
+    "prefix": "chapter07",
+    "category": "บทที่ 7: ฟังก์ชันและการประมวลผลไฟล์ (Functions & Thermodynamics)",
+    "title": "7.4 โปรแกรมแก้ปัญหาหอคอยฮานอย 3 มิติ (3D Tower of Hanoi AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter07_carnot_heat_pump.html",
+    "path": "simulations/chapter07_carnot_heat_pump.html",
+    "prefix": "chapter07",
+    "category": "บทที่ 7: ฟังก์ชันและการประมวลผลไฟล์ (Functions & Thermodynamics)",
+    "title": "7.1 โปรแกรมจำลองขอบเขตตัวแปร LEGB (Scope Resolution AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter07_clean_code_visualizer.html",
+    "path": "simulations/chapter07_clean_code_visualizer.html",
+    "prefix": "chapter07",
+    "category": "บทที่ 7: ฟังก์ชันและการประมวลผลไฟล์ (Functions & Thermodynamics)",
+    "title": "7.0 เครื่องมือประเมินความซับซ้อนของโค้ด (Clean Code Visualizer AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter07_csv_json_parser.html",
+    "path": "simulations/chapter07_csv_json_parser.html",
+    "prefix": "chapter07",
+    "category": "บทที่ 7: ฟังก์ชันและการประมวลผลไฟล์ (Functions & Thermodynamics)",
+    "title": "7.3 เครื่องมือแยกวิเคราะห์ข้อมูล CSV และ JSON (Live File Parser AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter07_hanoi_recursion_3d.html",
+    "path": "simulations/chapter07_hanoi_recursion_3d.html",
+    "prefix": "chapter07",
+    "category": "บทที่ 7: ฟังก์ชันและการประมวลผลไฟล์ (Functions & Thermodynamics)",
+    "title": "7.4 โปรแกรมแก้ปัญหาหอคอยฮานอย 3 มิติ (3D Tower of Hanoi AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter07_heat_transfer_modes.html",
+    "path": "simulations/chapter07_heat_transfer_modes.html",
+    "prefix": "chapter07",
+    "category": "บทที่ 7: ฟังก์ชันและการประมวลผลไฟล์ (Functions & Thermodynamics)",
+    "title": "7.3 เครื่องมือแยกวิเคราะห์ข้อมูล CSV และ JSON (Live File Parser AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter07_heat_vs_temp_calorimeter.html",
+    "path": "simulations/chapter07_heat_vs_temp_calorimeter.html",
+    "prefix": "chapter07",
+    "category": "บทที่ 7: ฟังก์ชันและการประมวลผลไฟล์ (Functions & Thermodynamics)",
+    "title": "7.0 เครื่องมือประเมินความซับซ้อนของโค้ด (Clean Code Visualizer AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter07_immersion_cooling_ai.html",
+    "path": "simulations/chapter07_immersion_cooling_ai.html",
+    "prefix": "chapter07",
+    "category": "บทที่ 7: ฟังก์ชันและการประมวลผลไฟล์ (Functions & Thermodynamics)",
+    "title": "7.2 ตัวทดสอบโมดูลเวกเตอร์ฟิสิกส์ (Vector Math Module Runner AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter07_legb_scope_simulator.html",
+    "path": "simulations/chapter07_legb_scope_simulator.html",
+    "prefix": "chapter07",
+    "category": "บทที่ 7: ฟังก์ชันและการประมวลผลไฟล์ (Functions & Thermodynamics)",
+    "title": "7.1 โปรแกรมจำลองขอบเขตตัวแปร LEGB (Scope Resolution AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter07_live_file_stats_parser.html",
+    "path": "simulations/chapter07_live_file_stats_parser.html",
+    "prefix": "chapter07",
+    "category": "บทที่ 7: ฟังก์ชันและการประมวลผลไฟล์ (Functions & Thermodynamics)",
+    "title": "7.3 เครื่องมือแยกวิเคราะห์ข้อมูล CSV และ JSON (Live File Parser AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter07_recursion_hanoi.html",
+    "path": "simulations/chapter07_recursion_hanoi.html",
+    "prefix": "chapter07",
+    "category": "บทที่ 7: ฟังก์ชันและการประมวลผลไฟล์ (Functions & Thermodynamics)",
+    "title": "LAB 7.0: หอคอยแห่งฮานอยและการเรียกซ้ำเชิงโมดูล (Recursion & Tower of Hanoi) (Hybrid 2D/3D AR)"
+  },
+  {
+    "file": "chapter07_refactoring_visualizer.html",
+    "path": "simulations/chapter07_refactoring_visualizer.html",
+    "prefix": "chapter07",
+    "category": "บทที่ 7: ฟังก์ชันและการประมวลผลไฟล์ (Functions & Thermodynamics)",
+    "title": "ห้องทดลอง: การตรวจหาข้อผิดพลาดและปรับปรุงโค้ด (Scientific Debugging & Refactoring)"
+  },
+  {
+    "file": "chapter07_thermal_imaging_building.html",
+    "path": "simulations/chapter07_thermal_imaging_building.html",
+    "prefix": "chapter07",
+    "category": "บทที่ 7: ฟังก์ชันและการประมวลผลไฟล์ (Functions & Thermodynamics)",
+    "title": "7.4 โปรแกรมแก้ปัญหาหอคอยฮานอย 3 มิติ (3D Tower of Hanoi AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter07_vector_math_module_runner.html",
+    "path": "simulations/chapter07_vector_math_module_runner.html",
+    "prefix": "chapter07",
+    "category": "บทที่ 7: ฟังก์ชันและการประมวลผลไฟล์ (Functions & Thermodynamics)",
+    "title": "7.2 ตัวทดสอบโมดูลเวกเตอร์ฟิสิกส์ (Vector Math Module Runner AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter08_3d_projectile_cannon.html",
+    "path": "simulations/chapter08_3d_projectile_cannon.html",
+    "prefix": "chapter08",
+    "category": "บทที่ 8: ฟิสิกส์เชิงคำนวณและคลื่น (Computational Physics & Waves)",
+    "title": "ห้องทดลอง 3D: การเคลื่อนที่แบบโพรเจกไทล์และแบบจำลองเชิงคำนวณ (3D Projectile Cannon)"
+  },
+  {
+    "file": "chapter08_3d_spring_oscillator.html",
+    "path": "simulations/chapter08_3d_spring_oscillator.html",
+    "prefix": "chapter08",
+    "category": "บทที่ 8: ฟิสิกส์เชิงคำนวณและคลื่น (Computational Physics & Waves)",
+    "title": "8.4 สปริงฮาร์มอนิกและออสซิลโลสโคป 3 มิติ (3D Spring Oscillator AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter08_active_noise_cancelling.html",
+    "path": "simulations/chapter08_active_noise_cancelling.html",
+    "prefix": "chapter08",
+    "category": "บทที่ 8: ฟิสิกส์เชิงคำนวณและคลื่น (Computational Physics & Waves)",
+    "title": "8.1 แซนด์บ็อกซ์เร่งความเร็วเวกเตอร์ NumPy (NumPy Parallel Sandbox AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter08_fft_speech_spectrum.html",
+    "path": "simulations/chapter08_fft_speech_spectrum.html",
+    "prefix": "chapter08",
+    "category": "บทที่ 8: ฟิสิกส์เชิงคำนวณและคลื่น (Computational Physics & Waves)",
+    "title": "8.2 เครื่องมือพล็อตกราฟวิทยาศาสตร์เชิงโต้ตอบ (2D Plotter AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter08_harmonic_synthesizer.html",
+    "path": "simulations/chapter08_harmonic_synthesizer.html",
+    "prefix": "chapter08",
+    "category": "บทที่ 8: ฟิสิกส์เชิงคำนวณและคลื่น (Computational Physics & Waves)",
+    "title": "8.3 ปืนใหญ่โพรเจกไทล์ 3 มิติ (3D Projectile Cannon Simulator AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter08_matplotlib_2d_plotter.html",
+    "path": "simulations/chapter08_matplotlib_2d_plotter.html",
+    "prefix": "chapter08",
+    "category": "บทที่ 8: ฟิสิกส์เชิงคำนวณและคลื่น (Computational Physics & Waves)",
+    "title": "8.2 เครื่องมือพล็อตกราฟวิทยาศาสตร์เชิงโต้ตอบ (2D Plotter AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter08_multiscale_universe.html",
+    "path": "simulations/chapter08_multiscale_universe.html",
+    "prefix": "chapter08",
+    "category": "บทที่ 8: ฟิสิกส์เชิงคำนวณและคลื่น (Computational Physics & Waves)",
+    "title": "8.0 เอกภพฟิสิกส์หลากมาตราส่วน (Multi-Scale Universe Simulation AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter08_multiscale_universe_simulator.html",
+    "path": "simulations/chapter08_multiscale_universe_simulator.html",
+    "prefix": "chapter08",
+    "category": "บทที่ 8: ฟิสิกส์เชิงคำนวณและคลื่น (Computational Physics & Waves)",
+    "title": "8.0 เอกภพฟิสิกส์หลากมาตราส่วน (Multi-Scale Universe Simulation AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter08_numpy_speed_sandbox.html",
+    "path": "simulations/chapter08_numpy_speed_sandbox.html",
+    "prefix": "chapter08",
+    "category": "บทที่ 8: ฟิสิกส์เชิงคำนวณและคลื่น (Computational Physics & Waves)",
+    "title": "8.1 แซนด์บ็อกซ์เร่งความเร็วเวกเตอร์ NumPy (NumPy Parallel Sandbox AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter08_projectile_motion.html",
+    "path": "simulations/chapter08_projectile_motion.html",
+    "prefix": "chapter08",
+    "category": "บทที่ 8: ฟิสิกส์เชิงคำนวณและคลื่น (Computational Physics & Waves)",
+    "title": "ห้องทดลอง 3D: การจำลองการเคลื่อนที่แบบโพรเจกไทล์ (Projectile Motion)"
+  },
+  {
+    "file": "chapter08_sound_decibel_dosimeter.html",
+    "path": "simulations/chapter08_sound_decibel_dosimeter.html",
+    "prefix": "chapter08",
+    "category": "บทที่ 8: ฟิสิกส์เชิงคำนวณและคลื่น (Computational Physics & Waves)",
+    "title": "8.4 สปริงฮาร์มอนิกและออสซิลโลสโคป 3 มิติ (3D Spring Oscillator AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter08_wave_superposition.html",
+    "path": "simulations/chapter08_wave_superposition.html",
+    "prefix": "chapter08",
+    "category": "บทที่ 8: ฟิสิกส์เชิงคำนวณและคลื่น (Computational Physics & Waves)",
+    "title": "ห้องทดลอง 3D: การซ้อนทับและการแทรกสอดของคลื่น (Wave Superposition Lab)"
+  },
+  {
+    "file": "chapter09_3d_cyber_skeleton_tracker.html",
+    "path": "simulations/chapter09_3d_cyber_skeleton_tracker.html",
+    "prefix": "chapter09",
+    "category": "บทที่ 9: ปัญญาประดิษฐ์และเซนเซอร์ (AI, Vision & IoT)",
+    "title": "9.3 ตรวจจับโครงกระดูกมือ 3 มิติ MediaPipe (3D Cyber Skeleton Tracker AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter09_cloud_iot_telemetry.html",
+    "path": "simulations/chapter09_cloud_iot_telemetry.html",
+    "prefix": "chapter09",
+    "category": "บทที่ 9: ปัญญาประดิษฐ์และเซนเซอร์ (AI, Vision & IoT)",
+    "title": "9.4 แดชบอร์ดโทรมาตร IoT และระบบสปริงเกลอร์ (Cloud IoT Dashboard AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter09_cloud_iot_telemetry_dashboard.html",
+    "path": "simulations/chapter09_cloud_iot_telemetry_dashboard.html",
+    "prefix": "chapter09",
+    "category": "บทที่ 9: ปัญญาประดิษฐ์และเซนเซอร์ (AI, Vision & IoT)",
+    "title": "9.4 แดชบอร์ดโทรมาตร IoT และระบบสปริงเกลอร์ (Cloud IoT Dashboard AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter09_cyber_skeleton_tracker.html",
+    "path": "simulations/chapter09_cyber_skeleton_tracker.html",
+    "prefix": "chapter09",
+    "category": "บทที่ 9: ปัญญาประดิษฐ์และเซนเซอร์ (AI, Vision & IoT)",
+    "title": "9.3 ตรวจจับโครงกระดูกมือ 3 มิติ MediaPipe (3D Cyber Skeleton Tracker AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter09_edge_convolution.html",
+    "path": "simulations/chapter09_edge_convolution.html",
+    "prefix": "chapter09",
+    "category": "บทที่ 9: ปัญญาประดิษฐ์และเซนเซอร์ (AI, Vision & IoT)",
+    "title": "9.4 แดชบอร์ดโทรมาตร IoT และระบบสปริงเกลอร์ (Cloud IoT Dashboard AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter09_face_lidar_scanner.html",
+    "path": "simulations/chapter09_face_lidar_scanner.html",
+    "prefix": "chapter09",
+    "category": "บทที่ 9: ปัญญาประดิษฐ์และเซนเซอร์ (AI, Vision & IoT)",
+    "title": "9.1 แซนด์บ็อกซ์เทรนโมเดล AI จำแนกประเภท (ML Classifier Sandbox AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter09_mediapipe_vision.html",
+    "path": "simulations/chapter09_mediapipe_vision.html",
+    "prefix": "chapter09",
+    "category": "บทที่ 9: ปัญญาประดิษฐ์และเซนเซอร์ (AI, Vision & IoT)",
+    "title": "LAB 9.0: คอมพิวเตอร์วิทัศน์และการรู้จำท่าทางมือ 21 ข้อต่อ (MediaPipe Hands AI) (Hybrid 2D/3D AR)"
+  },
+  {
+    "file": "chapter09_ml_classifier_sandbox.html",
+    "path": "simulations/chapter09_ml_classifier_sandbox.html",
+    "prefix": "chapter09",
+    "category": "บทที่ 9: ปัญญาประดิษฐ์และเซนเซอร์ (AI, Vision & IoT)",
+    "title": "9.1 แซนด์บ็อกซ์เทรนโมเดล AI จำแนกประเภท (ML Classifier Sandbox AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter09_pancake_lens.html",
+    "path": "simulations/chapter09_pancake_lens.html",
+    "prefix": "chapter09",
+    "category": "บทที่ 9: ปัญญาประดิษฐ์และเซนเซอร์ (AI, Vision & IoT)",
+    "title": "9.2 ตรวจจับสีและติดตามวัตถุผ่านกล้องสด (Real-Time Color Tracker AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter09_realtime_color_tracker.html",
+    "path": "simulations/chapter09_realtime_color_tracker.html",
+    "prefix": "chapter09",
+    "category": "บทที่ 9: ปัญญาประดิษฐ์และเซนเซอร์ (AI, Vision & IoT)",
+    "title": "9.2 ตรวจจับสีและติดตามวัตถุผ่านกล้องสด (Real-Time Color Tracker AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter09_smart_agro_factory_map.html",
+    "path": "simulations/chapter09_smart_agro_factory_map.html",
+    "prefix": "chapter09",
+    "category": "บทที่ 9: ปัญญาประดิษฐ์และเซนเซอร์ (AI, Vision & IoT)",
+    "title": "9.0 แผนที่โรงงานเกษตรอัจฉริยะ 4.0 (Smart Agro-Factory Map AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter09_snell_refraction.html",
+    "path": "simulations/chapter09_snell_refraction.html",
+    "prefix": "chapter09",
+    "category": "บทที่ 9: ปัญญาประดิษฐ์และเซนเซอร์ (AI, Vision & IoT)",
+    "title": "9.0 แผนที่โรงงานเกษตรอัจฉริยะ 4.0 (Smart Agro-Factory Map AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter09_thin_lens_ray_tracing.html",
+    "path": "simulations/chapter09_thin_lens_ray_tracing.html",
+    "prefix": "chapter09",
+    "category": "บทที่ 9: ปัญญาประดิษฐ์และเซนเซอร์ (AI, Vision & IoT)",
+    "title": "9.3 ตรวจจับโครงกระดูกมือ 3 มิติ MediaPipe (3D Cyber Skeleton Tracker AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter10_bloch_sphere_qubit.html",
+    "path": "simulations/chapter10_bloch_sphere_qubit.html",
+    "prefix": "chapter10",
+    "category": "บทที่ 10: โครงงานนวัตกรรมและควอนตัม (Capstone & Quantum)",
+    "title": "10.0 แกลเลอรีจัดแสดงโครงงานนวัตกรรม (Innovation Showcase Gallery AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter10_capstone_synthesizer.html",
+    "path": "simulations/chapter10_capstone_synthesizer.html",
+    "prefix": "chapter10",
+    "category": "บทที่ 10: โครงงานนวัตกรรมและควอนตัม (Capstone & Quantum)",
+    "title": "ระบบ: ประเมินจุลการสอนและการทบทวนหลังปฏิบัติ (Micro-teaching & AAR Synthesizer)"
+  },
+  {
+    "file": "chapter10_code_security_scanner.html",
+    "path": "simulations/chapter10_code_security_scanner.html",
+    "prefix": "chapter10",
+    "category": "บทที่ 10: โครงงานนวัตกรรมและควอนตัม (Capstone & Quantum)",
+    "title": "ระบบ: ตรวจวิเคราะห์ความปลอดภัยและจริยธรรมโค้ด (Code Security & Ethics Scanner)"
+  },
+  {
+    "file": "chapter10_grand_physics_ai.html",
+    "path": "simulations/chapter10_grand_physics_ai.html",
+    "prefix": "chapter10",
+    "category": "บทที่ 10: โครงงานนวัตกรรมและควอนตัม (Capstone & Quantum)",
+    "title": "10.4 พรีวิวโปสเตอร์ 16:9 และแบบทดสอบประมวลความรู้ MOOC (Synthesis Lab AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter10_innovation_gallery.html",
+    "path": "simulations/chapter10_innovation_gallery.html",
+    "prefix": "chapter10",
+    "category": "บทที่ 10: โครงงานนวัตกรรมและควอนตัม (Capstone & Quantum)",
+    "title": "ห้องนิทรรศการ 3D: แกลเลอรีนวัตกรรมวิทยาการคำนวณ (Innovation Showcase Gallery)"
+  },
+  {
+    "file": "chapter10_innovation_showcase_gallery.html",
+    "path": "simulations/chapter10_innovation_showcase_gallery.html",
+    "prefix": "chapter10",
+    "category": "บทที่ 10: โครงงานนวัตกรรมและควอนตัม (Capstone & Quantum)",
+    "title": "ห้องนิทรรศการ 3D: แกลเลอรีแสดงผลงานนวัตกรรม (Innovation Showcase Gallery)"
+  },
+  {
+    "file": "chapter10_nuclear_pet_scan.html",
+    "path": "simulations/chapter10_nuclear_pet_scan.html",
+    "prefix": "chapter10",
+    "category": "บทที่ 10: โครงงานนวัตกรรมและควอนตัม (Capstone & Quantum)",
+    "title": "10.1 เครื่องมือวางแผนโครงงานและ WBS (Project Roadmap Generator AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter10_poster_pitch_and_exam.html",
+    "path": "simulations/chapter10_poster_pitch_and_exam.html",
+    "prefix": "chapter10",
+    "category": "บทที่ 10: โครงงานนวัตกรรมและควอนตัม (Capstone & Quantum)",
+    "title": "10.4 พรีวิวโปสเตอร์ 16:9 และแบบทดสอบประมวลความรู้ MOOC (Synthesis Lab AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter10_poster_pitch_exam.html",
+    "path": "simulations/chapter10_poster_pitch_exam.html",
+    "prefix": "chapter10",
+    "category": "บทที่ 10: โครงงานนวัตกรรมและควอนตัม (Capstone & Quantum)",
+    "title": "10.4 พรีวิวโปสเตอร์ 16:9 และแบบทดสอบประมวลความรู้ MOOC (Synthesis Lab AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter10_project_roadmap.html",
+    "path": "simulations/chapter10_project_roadmap.html",
+    "prefix": "chapter10",
+    "category": "บทที่ 10: โครงงานนวัตกรรมและควอนตัม (Capstone & Quantum)",
+    "title": "สตูดิโอ: แผนแม่บทเส้นทางโครงงานวิทยาการคำนวณ (Project Roadmap)"
+  },
+  {
+    "file": "chapter10_project_roadmap_generator.html",
+    "path": "simulations/chapter10_project_roadmap_generator.html",
+    "prefix": "chapter10",
+    "category": "บทที่ 10: โครงงานนวัตกรรมและควอนตัม (Capstone & Quantum)",
+    "title": "สตูดิโอ: ออกแบบแผนการจัดการเรียนรู้และเส้นทางโครงงาน (Lesson Plan & Roadmap Studio)"
+  },
+  {
+    "file": "chapter10_quantum_entanglement.html",
+    "path": "simulations/chapter10_quantum_entanglement.html",
+    "prefix": "chapter10",
+    "category": "บทที่ 10: โครงงานนวัตกรรมและควอนตัม (Capstone & Quantum)",
+    "title": "10.2 ตัวสแกนความปลอดภัยและคุณภาพโค้ด (Code Security Scanner AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter10_spacetime_relativity.html",
+    "path": "simulations/chapter10_spacetime_relativity.html",
+    "prefix": "chapter10",
+    "category": "บทที่ 10: โครงงานนวัตกรรมและควอนตัม (Capstone & Quantum)",
+    "title": "10.3 เทมเพลตรายงานโครงงาน 5 บทมาตรฐานวิชาการ (Thesis Formatter AR) — AR MediaPipe Lab • RBRU MOOC"
+  },
+  {
+    "file": "chapter10_thesis_formatter.html",
+    "path": "simulations/chapter10_thesis_formatter.html",
+    "prefix": "chapter10",
+    "category": "บทที่ 10: โครงงานนวัตกรรมและควอนตัม (Capstone & Quantum)",
+    "title": "เครื่องมือ: จัดรูปแบบรายงานวิจัยและเอกสารวิชาการ (LaTeX & Thesis Formatter)"
+  },
+  {
+    "file": "chapter10_thesis_formatter_template.html",
+    "path": "simulations/chapter10_thesis_formatter_template.html",
+    "prefix": "chapter10",
+    "category": "บทที่ 10: โครงงานนวัตกรรมและควอนตัม (Capstone & Quantum)",
+    "title": "เครื่องมือ: เทมเพลตจัดรูปแบบรายงานวิจัย (Thesis Formatter Template)"
+  },
+  {
+    "file": "voxel_lab.html",
+    "path": "simulations/voxel_lab.html",
+    "prefix": "voxel",
+    "category": "พิเศษ: ปฏิบัติการจำลอง 3D Voxel & RLE Science Lab",
+    "title": "ห้องทดลองจำลอง 3D Voxel & RLE Image Representation"
+  },
+  {
+    "file": "chapter03_python_live_sandbox.html",
+    "path": "simulations/chapter03_python_live_sandbox.html",
+    "prefix": "chapter03",
+    "category": "บทที่ 3: การเขียนโปรแกรมและประมวลผลข้อมูลวิทยาศาสตร์",
+    "title": "ห้องปฏิบัติการโค้ดดิ้ง Python 3 เชิงวิทยาศาสตร์เสมือนจริง (In-Browser Live Sandbox & Memory Model)"
+  }
+]

@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ห้องทดลองการไล่สายรหัส (Trace Table & Algorithm Runner)</title>
+
+  <!-- Google Fonts & FontAwesome 6 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    :root {
+      --bg-dark: #030712;
+      --card-bg: rgba(11, 19, 43, 0.94);
+      --card-border: rgba(0, 240, 255, 0.25);
+      --cyan: #00f0ff;
+      --emerald: #10b981;
+      --amber: #f59e0b;
+      --rose: #f43f5e;
+      --indigo: #6366f1;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+    body {
+      background: var(--bg-dark);
+      color: #f8fafc;
+      font-family: 'Prompt', 'Sarabun', sans-serif;
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* Top Bar */
+    .top-header {
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--card-border);
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+      z-index: 10;
+    }
+    .header-title h1 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Chakra Petch', sans-serif;
+    }
+    .header-title h1 i { color: var(--cyan); }
+    .header-sub { font-size: 0.8rem; color: #94a3b8; margin-top: 2px; }
+    .header-btns { display: flex; gap: 8px; }
+    .btn-h {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: #e2e8f0;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-family: inherit;
+      cursor: pointer;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .btn-h:hover {
+      background: rgba(0, 240, 255, 0.15);
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+
+    /* Main Grid */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      flex: 1;
+      height: calc(100vh - 120px);
+      gap: 16px;
+      padding: 16px;
+      overflow: hidden;
+    }
+
+    .panel-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 16px;
+      backdrop-filter: blur(12px);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      overflow-y: auto;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+    }
+
+    .section-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--cyan);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .code-editor {
+      background: #020617;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      padding: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+      line-height: 1.8;
+      color: #94a3b8;
+    }
+    .code-line {
+      padding: 2px 6px;
+      border-radius: 4px;
+      transition: all 0.2s;
+    }
+    .code-line.active {
+      background: rgba(0, 240, 255, 0.2);
+      color: #fff;
+      font-weight: 700;
+      border-left: 3px solid var(--cyan);
+    }
+
+    .btn-step {
+      background: var(--cyan);
+      color: #030712;
+      font-weight: 700;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.82rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .btn-step:hover { filter: brightness(1.15); box-shadow: 0 0 12px var(--cyan); }
+
+    /* Trace Table */
+    .table-container {
+      background: #020617;
+      border: 1px solid rgba(0,240,255,0.2);
+      border-radius: 12px;
+      flex: 1;
+      overflow: auto;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+    }
+    th {
+      background: rgba(15, 23, 42, 0.95);
+      color: var(--cyan);
+      padding: 10px 14px;
+      text-align: left;
+      border-bottom: 2px solid rgba(0,240,255,0.3);
+      position: sticky;
+      top: 0;
+      z-index: 5;
+    }
+    td {
+      padding: 8px 14px;
+      color: #e2e8f0;
+      border-bottom: 1px solid rgba(255,255,255,0.06);
+    }
+    tr.latest-row {
+      background: rgba(0, 240, 255, 0.12);
+      font-weight: 700;
+    }
+
+    /* Bottom Bar */
+    .bottom-bar {
+      height: 48px;
+      background: var(--card-bg);
+      border-top: 1px solid var(--card-border);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 0 20px;
+      font-size: 0.82rem;
+    }
+    .badge {
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--cyan);
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+  <header class="top-header">
+    <div class="header-title">
+      <h1><i class="fas fa-table"></i> ห้องทดลองการไล่สายรหัส (Trace Table & Algorithm Runner)</h1>
+      <div class="header-sub">วิชา 4124941 วิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์ | ผศ.ดร.ชีวะ ทัศนา (มรภ.รำไพพรรณี)</div>
+    </div>
+    <div class="header-btns">
+      <a href="../lessons/week_08.html" class="btn-h"><i class="fas fa-arrow-left"></i> กลับสู่บทเรียน สัปดาห์ที่ 8</a>
+    </div>
+  </header>
+
+  <main class="main-grid">
+    <section class="panel-card">
+      <div class="section-title"><i class="fas fa-code"></i> โค้ดโจทย์สอบวิทยาการคำนวณ</div>
+      <div class="code-editor">
+        <div class="code-line" id="cl-0">1. count = 0</div>
+        <div class="code-line" id="cl-1">2. total_mass = 0</div>
+        <div class="code-line" id="cl-2">3. samples = [12, 18, 25, 30]</div>
+        <div class="code-line" id="cl-3">4. for m in samples:</div>
+        <div class="code-line" id="cl-4">5.    count = count + 1</div>
+        <div class="code-line" id="cl-5">6.    total_mass = total_mass + m</div>
+        <div class="code-line" id="cl-6">7. avg = total_mass / count</div>
+        <div class="code-line" id="cl-7">8. print("Average:", avg)</div>
+      </div>
+
+      <div style="display: flex; gap: 8px; margin-top: 6px;">
+        <button class="btn-step" style="flex: 1;" onclick="stepNext()"><i class="fas fa-step-forward"></i> ขั้นต่อไป (Step)</button>
+        <button class="btn-step" style="background: rgba(244, 63, 94, 0.2); color: var(--rose); border: 1px solid var(--rose);" onclick="resetTrace()"><i class="fas fa-rotate-left"></i> รีเซ็ต</button>
+      </div>
+
+      <div style="background: rgba(16, 185, 129, 0.15); border: 1px solid var(--emerald); border-radius: 8px; padding: 12px; font-size: 0.76rem; color: #a7f3d0; margin-top: auto;">
+        <i class="fas fa-lightbulb"></i> <strong>ประโยชน์ของตารางไล่สายรหัส (Trace Table):</strong> ใช้ตรวจสอบตรรกะของโปรแกรมโดยไม่ต้องรันเครื่องจริง และเป็นข้อสอบมาตรฐานเพื่อวัดความเข้าใจเชิงโครงสร้างของนักศึกษา
+      </div>
+    </section>
+
+    <section class="panel-card" style="padding: 0; overflow: hidden;">
+      <div class="table-container">
+        <table>
+          <thead>
+            <tr>
+              <th>ขั้นตอน (Step)</th>
+              <th>บรรทัด (Line)</th>
+              <th>m (Current Sample)</th>
+              <th>count</th>
+              <th>total_mass</th>
+              <th>avg</th>
+              <th>คำอธิบาย (Description)</th>
+            </tr>
+          </thead>
+          <tbody id="trace-tbody">
+            <!-- Injected via JS -->
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer class="bottom-bar">
+    <div>ขั้นตอนปัจจุบัน: <span class="badge" id="botStep">0 / 11</span></div>
+    <div>บรรทัดที่ทำงาน: <span class="badge" id="botLine">-</span></div>
+    <div>สถานะ: <span class="badge" id="botStatus" style="color: var(--emerald);">พร้อมไล่สายรหัส (Ready)</span></div>
+  </footer>
+
+  <script>
+    const traceSteps = [
+      { line: 0, m: '-', count: 0, total: 0, avg: '-', desc: 'กำหนดค่าเริ่มต้น count = 0' },
+      { line: 1, m: '-', count: 0, total: 0, avg: '-', desc: 'กำหนดค่าเริ่มต้น total_mass = 0' },
+      { line: 2, m: '-', count: 0, total: 0, avg: '-', desc: 'สร้าง Array ข้อมูลมวลสาร samples' },
+      { line: 3, m: 12, count: 0, total: 0, avg: '-', desc: 'รอบที่ 1: ดึง m = 12' },
+      { line: 4, m: 12, count: 1, total: 0, avg: '-', desc: 'เพิ่มรอบ count = 1' },
+      { line: 5, m: 12, count: 1, total: 12, avg: '-', desc: 'สะสมมวล total_mass = 0 + 12 = 12' },
+      { line: 3, m: 18, count: 1, total: 12, avg: '-', desc: 'รอบที่ 2: ดึง m = 18' },
+      { line: 4, m: 18, count: 2, total: 12, avg: '-', desc: 'เพิ่มรอบ count = 2' },
+      { line: 5, m: 18, count: 2, total: 30, avg: '-', desc: 'สะสมมวล total_mass = 12 + 18 = 30' },
+      { line: 3, m: 25, count: 2, total: 30, avg: '-', desc: 'รอบที่ 3: ดึง m = 25' },
+      { line: 4, m: 25, count: 3, total: 30, avg: '-', desc: 'เพิ่มรอบ count = 3' },
+      { line: 5, m: 25, count: 3, total: 55, avg: '-', desc: 'สะสมมวล total_mass = 30 + 25 = 55' },
+      { line: 3, m: 30, count: 3, total: 55, avg: '-', desc: 'รอบที่ 4: ดึง m = 30' },
+      { line: 4, m: 30, count: 4, total: 55, avg: '-', desc: 'เพิ่มรอบ count = 4' },
+      { line: 5, m: 30, count: 4, total: 85, avg: '-', desc: 'สะสมมวล total_mass = 55 + 30 = 85' },
+      { line: 6, m: 30, count: 4, total: 85, avg: '21.25', desc: 'คำนวณค่าเฉลี่ย avg = 85 / 4 = 21.25' },
+      { line: 7, m: 30, count: 4, total: 85, avg: '21.25', desc: 'แสดงผลลัพธ์ออกจอภาพ (จบโปรแกรม)' }
+    ];
+
+    let curStep = -1;
+
+    function resetTrace() {
+      curStep = -1;
+      document.querySelectorAll('.code-line').forEach(l => l.classList.remove('active'));
+      document.getElementById('trace-tbody').innerHTML = '<tr><td colspan="7" style="text-align: center; color: #64748b; padding: 20px;">กดปุ่ม "ขั้นต่อไป (Step)" เพื่อเริ่มไล่สายรหัส</td></tr>';
+      document.getElementById('botStep').innerText = '0 / ' + traceSteps.length;
+      document.getElementById('botLine').innerText = '-';
+      document.getElementById('botStatus').innerText = 'พร้อมไล่สายรหัส (Ready)';
+    }
+
+    function stepNext() {
+      if (curStep + 1 >= traceSteps.length) {
+        document.getElementById('botStatus').innerText = 'เสร็จสิ้นการรัน (Completed)';
+        return;
+      }
+      curStep++;
+      const s = traceSteps[curStep];
+
+      // Highlight line
+      document.querySelectorAll('.code-line').forEach(l => l.classList.remove('active'));
+      const activeLine = document.getElementById('cl-' + s.line);
+      if (activeLine) activeLine.classList.add('active');
+
+      // Table row
+      const tbody = document.getElementById('trace-tbody');
+      if (curStep === 0) tbody.innerHTML = '';
+
+      document.querySelectorAll('tr').forEach(r => r.classList.remove('latest-row'));
+      const tr = document.createElement('tr');
+      tr.className = 'latest-row';
+      tr.innerHTML = `
+        <td>${curStep + 1}</td>
+        <td style="color: var(--cyan); font-weight: 700;">Line ${s.line + 1}</td>
+        <td>${s.m}</td>
+        <td>${s.count}</td>
+        <td>${s.total}</td>
+        <td style="color: var(--emerald); font-weight: 700;">${s.avg}</td>
+        <td style="color: #94a3b8;">${s.desc}</td>
+      `;
+      tbody.appendChild(tr);
+      tr.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+      document.getElementById('botStep').innerText = (curStep + 1) + ' / ' + traceSteps.length;
+      document.getElementById('botLine').innerText = 'Line ' + (s.line + 1);
+      document.getElementById('botStatus').innerText = 'กำลังประมวลผล (Tracing)';
+    }
+
+    window.onload = resetTrace;
+  </script>
+</body>
+</html>

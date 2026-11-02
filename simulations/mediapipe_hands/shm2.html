@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AR Physics Lab – ลูกตุ้ม 3D</title>
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- MediaPipe -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils@0.3/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils@0.3/drawing_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4/hands.js" crossorigin="anonymous"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background: #0a1a2a;
+            color: #fff;
+            overflow: hidden;
+            height: 100vh;
+            user-select: none;
+        }
+        #container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background: #0a1a2a;
+        }
+        video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scaleX(1);
+            transition: transform 0.3s ease;
+            z-index: 0;
+        }
+        #mediapipe-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+        }
+        #three-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+        #hud {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.7);
+            padding: 16px 20px;
+            border-radius: 16px;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.15);
+            z-index: 10;
+            min-width: 180px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+        #hud .title { font-weight: 700; color: #8fcbff; margin-bottom: 4px; }
+        #hud .value { color: #ffd966; }
+        #graph-container {
+            position: absolute;
+            bottom: 80px;
+            left: 20px;
+            width: 300px;
+            height: 150px;
+            background: rgba(0,0,0,0.6);
+            border-radius: 12px;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255,255,255,0.1);
+            z-index: 10;
+            padding: 6px;
+        }
+        #graph-container canvas {
+            width: 100%;
+            height: 100%;
+            border-radius: 8px;
+        }
+        #controls {
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+            z-index: 10;
+            background: rgba(0,0,0,0.6);
+            padding: 12px 20px;
+            border-radius: 40px;
+            backdrop-filter: blur(6px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .btn {
+            background: #2b7be4;
+            color: #fff;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+        }
+        .btn:hover { transform: scale(1.05); opacity: 0.9; }
+        .btn-secondary { background: #5e7a9a; }
+        .btn-success { background: #27ae60; }
+        .btn-warning { background: #f39c12; }
+        .btn-danger { background: #e74c3c; }
+        .btn-mirror.active { background: #f1c40f; color: #000; }
+        #status {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 10;
+            background: rgba(0,0,0,0.6);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            backdrop-filter: blur(4px);
+        }
+        @media (max-width: 700px) {
+            #hud { top: 10px; right: 10px; padding: 10px 14px; font-size: 0.8rem; min-width: 120px; }
+            #graph-container { width: 180px; height: 100px; bottom: 80px; left: 10px; }
+            #controls { padding: 8px 12px; gap: 6px; bottom: 10px; }
+            .btn { padding: 6px 12px; font-size: 0.75rem; }
+        }
+    </style>
+</head>
+<body>
+<div id="container">
+    <video id="video" autoplay playsinline></video>
+    <canvas id="mediapipe-canvas"></canvas>
+    <canvas id="three-canvas"></canvas>
+
+    <!-- HUD -->
+    <div id="hud">
+        <div class="title">📐 พารามิเตอร์</div>
+        <div>มุม θ: <span class="value" id="thetaDisplay">0.00</span> rad</div>
+        <div>ความยาว L: <span class="value" id="lengthDisplay">1.00</span> m</div>
+        <div>คาบ T: <span class="value" id="periodDisplay">—</span> s</div>
+        <div>พลังงานรวม: <span class="value" id="energyDisplay">0.00</span> J</div>
+    </div>
+
+    <!-- สถานะ -->
+    <div id="status">🟢 กำลังเริ่มต้น...</div>
+
+    <!-- กราฟ -->
+    <div id="graph-container">
+        <canvas id="graph-canvas"></canvas>
+    </div>
+
+    <!-- ปุ่มควบคุม -->
+    <div id="controls">
+        <button class="btn btn-mirror" id="mirrorBtn">🔄 Mirror</button>
+        <button class="btn btn-success" id="autoBtn">▶ Auto</button>
+        <button class="btn btn-warning" id="resetBtn">↺ Reset</button>
+        <button class="btn btn-secondary" id="toggleLabelsBtn">🏷️ ป้าย</button>
+    </div>
+</div>
+
+<script>
+    (function() {
+        // ------------------ DOM refs ------------------
+        const video = document.getElementById('video');
+        const mpCanvas = document.getElementById('mediapipe-canvas');
+        const mpCtx = mpCanvas.getContext('2d');
+        const threeCanvas = document.getElementById('three-canvas');
+        const statusDiv = document.getElementById('status');
+        const thetaDisplay = document.getElementById('thetaDisplay');
+        const lengthDisplay = document.getElementById('lengthDisplay');
+        const periodDisplay = document.getElementById('periodDisplay');
+        const energyDisplay = document.getElementById('energyDisplay');
+        const graphCanvas = document.getElementById('graph-canvas');
+        const graphCtx = graphCanvas.getContext('2d');
+
+        // ------------------ State ------------------
+        let mirrorMode = false;
+        let autoMode = false;
+        let showLabels = true;
+        let handData = { left: null, right: null }; // store landmarks
+
+        // Physics parameters
+        const G = 9.8;
+        let L = 1.0;          // length (m)
+        let theta = 0.4;      // rad
+        let omega = 0.0;      // angular velocity
+        let time = 0.0;
+        let dt = 0.016;       // approx 60 fps
+
+        // History for graph (store theta over time)
+        const history = [];
+        const MAX_HISTORY = 300;
+
+        // ------------------ Three.js setup ------------------
+        const scene = new THREE.Scene();
+        scene.background = null; // transparent
+
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+        camera.position.set(3, 2, 5);
+        camera.lookAt(0, -1, 0);
+
+        const renderer = new THREE.WebGLRenderer({
+            canvas: threeCanvas,
+            alpha: true,
+            antialias: true
+        });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+        // Lights
+        const ambient = new THREE.AmbientLight(0x404060);
+        scene.add(ambient);
+        const dirLight = new THREE.DirectionalLight(0xffffff, 1);
+        dirLight.position.set(5, 10, 7);
+        scene.add(dirLight);
+        const backLight = new THREE.DirectionalLight(0x88aaff, 0.5);
+        backLight.position.set(-3, -1, -5);
+        scene.add(backLight);
+
+        // Pendulum group
+        const pendulumGroup = new THREE.Group();
+        scene.add(pendulumGroup);
+
+        // Rope (line)
+        const ropeMat = new THREE.LineBasicMaterial({ color: 0xcccccc, linewidth: 1 });
+        const ropeGeo = new THREE.BufferGeometry();
+        const ropePositions = new Float32Array([0, 0, 0, 0, -1, 0]);
+        ropeGeo.setAttribute('position', new THREE.BufferAttribute(ropePositions, 3));
+        const rope = new THREE.Line(ropeGeo, ropeMat);
+        pendulumGroup.add(rope);
+
+        // Bob (sphere)
+        const sphereMat = new THREE.MeshPhongMaterial({
+            color: 0xffaa00,
+            emissive: 0x442200,
+            shininess: 30
+        });
+        const sphere = new THREE.Mesh(new THREE.SphereGeometry(0.25, 32, 32), sphereMat);
+        sphere.position.set(0, -1, 0);
+        pendulumGroup.add(sphere);
+
+        // Pivot point (small sphere)
+        const pivotMat = new THREE.MeshBasicMaterial({ color: 0xffdd44 });
+        const pivot = new THREE.Mesh(new THREE.SphereGeometry(0.08, 16, 16), pivotMat);
+        pivot.position.set(0, 0, 0);
+        pendulumGroup.add(pivot);
+
+        // Grid helper (optional)
+        const gridHelper = new THREE.GridHelper(3, 10, 0x88aaff, 0x445566);
+        gridHelper.position.y = -1.5;
+        scene.add(gridHelper);
+
+        // ------------------ Update pendulum physics ------------------
+        function updatePendulum(deltaTime) {
+            if (autoMode) {
+                // Auto mode: simple harmonic with damping? we'll just simulate
+                const alpha = -(G / L) * Math.sin(theta);
+                omega += alpha * deltaTime;
+                theta += omega * deltaTime;
+                // small damping to avoid infinite
+                omega *= 0.9999;
+            } else {
+                // Manual control: if left hand detected, set theta based on hand x position
+                // but we also need to allow release: if left hand disappears, keep current velocity
+                // We'll handle in the hand update, not here.
+                // Here we just apply physics with current theta and omega
+                const alpha = -(G / L) * Math.sin(theta);
+                omega += alpha * deltaTime;
+                theta += omega * deltaTime;
+                // damping
+                omega *= 0.9995;
+            }
+
+            // Clamp theta
+            if (theta > Math.PI/2) theta = Math.PI/2;
+            if (theta < -Math.PI/2) theta = -Math.PI/2;
+
+            // Update 3D position
+            const x = L * Math.sin(theta);
+            const y = -L * Math.cos(theta);
+            sphere.position.set(x, y, 0);
+            // Update rope
+            const positions = rope.geometry.attributes.position.array;
+            positions[0] = 0; positions[1] = 0; positions[2] = 0;
+            positions[3] = x; positions[4] = y; positions[5] = 0;
+            rope.geometry.attributes.position.needsUpdate = true;
+
+            // Update HUD
+            thetaDisplay.textContent = theta.toFixed(3);
+            lengthDisplay.textContent = L.toFixed(2);
+            // Period
+            if (theta !== 0 && Math.abs(omega) > 0.01) {
+                // approximate period from small angle: T = 2pi sqrt(L/g)
+                const T = 2 * Math.PI * Math.sqrt(L / G);
+                periodDisplay.textContent = T.toFixed(3);
+            } else {
+                periodDisplay.textContent = '—';
+            }
+            // Energy (assume mass = 1)
+            const Ek = 0.5 * L * L * omega * omega;
+            const Ep = G * L * (1 - Math.cos(theta));
+            const Etot = Ek + Ep;
+            energyDisplay.textContent = Etot.toFixed(3);
+        }
+
+        // ------------------ Graph (2D) ------------------
+        function updateGraph() {
+            const w = graphCanvas.width;
+            const h = graphCanvas.height;
+            graphCtx.clearRect(0, 0, w, h);
+            graphCtx.fillStyle = 'rgba(0,0,0,0.3)';
+            graphCtx.fillRect(0, 0, w, h);
+
+            if (history.length < 2) return;
+
+            const maxVal = Math.max(1.2, ...history.map(Math.abs));
+            const minVal = -maxVal;
+
+            graphCtx.strokeStyle = '#00ffaa';
+            graphCtx.lineWidth = 2;
+            graphCtx.beginPath();
+            for (let i = 0; i < history.length; i++) {
+                const x = (i / MAX_HISTORY) * w;
+                const y = h/2 - (history[i] / maxVal) * (h/2 - 10);
+                if (i === 0) graphCtx.moveTo(x, y);
+                else graphCtx.lineTo(x, y);
+            }
+            graphCtx.stroke();
+
+            // Zero line
+            graphCtx.strokeStyle = 'rgba(255,255,255,0.2)';
+            graphCtx.lineWidth = 1;
+            graphCtx.setLineDash([4,4]);
+            graphCtx.beginPath();
+            graphCtx.moveTo(0, h/2);
+            graphCtx.lineTo(w, h/2);
+            graphCtx.stroke();
+            graphCtx.setLineDash([]);
+
+            // labels
+            graphCtx.fillStyle = 'rgba(255,255,255,0.5)';
+            graphCtx.font = '10px Sarabun';
+            graphCtx.fillText('θ (rad)', 4, 14);
+        }
+
+        // ------------------ MediaPipe Hands ------------------
+        const hands = new Hands({
+            locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4/${file}`
+        });
+        hands.setOptions({
+            maxNumHands: 2,
+            modelComplexity: 1,
+            minDetectionConfidence: 0.5,
+            minTrackingConfidence: 0.5
+        });
+
+        hands.onResults((results) => {
+            // Clear MediaPipe canvas
+            mpCtx.clearRect(0, 0, mpCanvas.width, mpCanvas.height);
+
+            // Draw hands (with labels)
+            if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
+                const w = mpCanvas.width;
+                const h = mpCanvas.height;
+                const handCount = results.multiHandLandmarks.length;
+
+                // Update hand data for control
+                handData.left = null;
+                handData.right = null;
+                for (let idx = 0; idx < handCount; idx++) {
+                    const landmarks = results.multiHandLandmarks[idx];
+                    const handedness = results.multiHandedness?.[idx]?.label || 'Unknown';
+                    if (handedness === 'Left') handData.left = landmarks;
+                    else if (handedness === 'Right') handData.right = landmarks;
+
+                    // Draw points and connections (similar to earlier code)
+                    const pts = landmarks.map(lm => {
+                        let x = lm.x * w;
+                        let y = lm.y * h;
+                        if (mirrorMode) x = w - x;
+                        return { x, y };
+                    });
+
+                    // Connections
+                    const connections = [
+                        [0,1],[1,2],[2,3],[3,4],[0,5],[5,6],[6,7],[7,8],
+                        [0,9],[9,10],[10,11],[11,12],[0,13],[13,14],[14,15],[15,16],
+                        [0,17],[17,18],[18,19],[19,20],[5,9],[9,13],[13,17]
+                    ];
+                    mpCtx.strokeStyle = '#00FFAA';
+                    mpCtx.lineWidth = 2;
+                    for (let conn of connections) {
+                        const [i, j] = conn;
+                        if (i < pts.length && j < pts.length) {
+                            mpCtx.beginPath();
+                            mpCtx.moveTo(pts[i].x, pts[i].y);
+                            mpCtx.lineTo(pts[j].x, pts[j].y);
+                            mpCtx.stroke();
+                        }
+                    }
+
+                    // Points
+                    pts.forEach((p, i) => {
+                        mpCtx.beginPath();
+                        mpCtx.arc(p.x, p.y, 5, 0, 2 * Math.PI);
+                        mpCtx.fillStyle = '#FFD700';
+                        mpCtx.fill();
+                        mpCtx.strokeStyle = '#000';
+                        mpCtx.lineWidth = 1;
+                        mpCtx.stroke();
+
+                        if (showLabels) {
+                            mpCtx.fillStyle = '#fff';
+                            mpCtx.font = '9px Sarabun';
+                            mpCtx.shadowColor = 'rgba(0,0,0,0.8)';
+                            mpCtx.shadowBlur = 4;
+                            mpCtx.fillText(i, p.x + 6, p.y - 6);
+                            mpCtx.shadowBlur = 0;
+                        }
+                    });
+
+                    // Show left/right label
+                    if (pts.length > 0) {
+                        const wrist = pts[0];
+                        mpCtx.fillStyle = '#FFD700';
+                        mpCtx.font = 'bold 14px Sarabun';
+                        mpCtx.shadowColor = 'rgba(0,0,0,0.9)';
+                        mpCtx.shadowBlur = 6;
+                        mpCtx.fillText(handedness === 'Left' ? '🖐️ ซ้าย' : '🖐️ ขวา', wrist.x - 20, wrist.y - 30);
+                        mpCtx.shadowBlur = 0;
+                    }
+                }
+
+                // Control logic using hand data
+                // Left hand: control theta (if present)
+                if (handData.left) {
+                    const lm8 = handData.left[8]; // index finger tip
+                    // map x (0-1) to theta (-PI/2 to PI/2)
+                    let x = lm8.x;
+                    if (mirrorMode) x = 1 - x;
+                    const targetTheta = (x - 0.5) * Math.PI; // -PI/2 to PI/2
+                    // Smoothly move theta toward target (with velocity)
+                    // but we want to "grab" the pendulum: set theta directly and reset omega
+                    theta = targetTheta;
+                    omega = 0.0;
+                } else {
+                    // If left hand not detected, let physics continue (don't force theta)
+                    // but we might want to keep the current theta
+                    // Actually we want to release: keep velocity as is
+                    // no action
+                }
+
+                // Right hand: control length L using distance between thumb (4) and index (8)
+                if (handData.right) {
+                    const lm4 = handData.right[4];
+                    const lm8 = handData.right[8];
+                    const dx = lm4.x - lm8.x;
+                    const dy = lm4.y - lm8.y;
+                    const dist = Math.sqrt(dx*dx + dy*dy);
+                    // map dist (0-0.3) to L (0.3 - 2.0)
+                    const newL = 0.3 + dist * 5.5; // max ~2.0
+                    L = Math.min(2.0, Math.max(0.3, newL));
+                }
+            }
+
+            statusDiv.textContent = '🟢 กำลังตรวจจับ';
+        });
+
+        // ------------------ Camera ------------------
+        const cameraHelper = new Camera(video, {
+            onFrame: async () => {
+                await hands.send({ image: video });
+            },
+            width: 640,
+            height: 480
+        });
+        cameraHelper.start().then(() => {
+            statusDiv.textContent = '🟢 กล้องพร้อม';
+            resizeAll();
+        }).catch(err => {
+            statusDiv.textContent = '❌ กล้องไม่ทำงาน: ' + err.message;
+        });
+
+        // ------------------ Resize all canvases ------------------
+        function resizeAll() {
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+            mpCanvas.width = w;
+            mpCanvas.height = h;
+            threeCanvas.width = w;
+            threeCanvas.height = h;
+            renderer.setSize(w, h);
+            camera.aspect = w / h;
+            camera.updateProjectionMatrix();
+
+            // Graph canvas
+            const rect = graphCanvas.parentElement.getBoundingClientRect();
+            graphCanvas.width = rect.width;
+            graphCanvas.height = rect.height;
+        }
+        window.addEventListener('resize', resizeAll);
+
+        // ------------------ Main Loop (Three.js + Physics) ------------------
+        let lastTime = 0;
+        function animate(time) {
+            const delta = Math.min((time - lastTime) / 1000, 0.05);
+            lastTime = time;
+
+            // Physics update
+            if (!autoMode && handData.left) {
+                // If left hand is present, we already set theta directly in onResults.
+                // But we still need to update omega? We set omega=0, so no physics integration.
+                // However we want to allow some inertia when released? Actually we set theta directly, so no need.
+                // But to allow smooth transition, we could keep omega but we set to 0.
+                // For better feel, we could compute velocity from hand movement, but for simplicity we just set.
+                // We'll update theta here as well to avoid conflict? Already done in onResults.
+                // So do nothing physics-wise.
+            } else {
+                // Physics simulation (auto or free)
+                updatePendulum(delta);
+            }
+
+            // Store history for graph (only if not in manual control? we store always)
+            history.push(theta);
+            if (history.length > MAX_HISTORY) history.shift();
+            updateGraph();
+
+            // Render Three.js
+            renderer.render(scene, camera);
+
+            requestAnimationFrame(animate);
+        }
+
+        // Start animation
+        requestAnimationFrame(animate);
+
+        // ------------------ UI Controls ------------------
+        document.getElementById('mirrorBtn').addEventListener('click', function() {
+            mirrorMode = !mirrorMode;
+            video.style.transform = mirrorMode ? 'scaleX(-1)' : 'scaleX(1)';
+            this.classList.toggle('active');
+            this.textContent = mirrorMode ? '🔄 Mirror ON' : '🔄 Mirror';
+        });
+
+        document.getElementById('autoBtn').addEventListener('click', function() {
+            autoMode = !autoMode;
+            this.textContent = autoMode ? '⏸ Auto' : '▶ Auto';
+            if (autoMode) {
+                // set initial conditions for auto
+                theta = 0.5;
+                omega = 0.0;
+                // set length to 1.0
+                L = 1.0;
+            }
+        });
+
+        document.getElementById('resetBtn').addEventListener('click', function() {
+            theta = 0.0;
+            omega = 0.0;
+            L = 1.0;
+            history.length = 0;
+            periodDisplay.textContent = '—';
+            energyDisplay.textContent = '0.00';
+        });
+
+        document.getElementById('toggleLabelsBtn').addEventListener('click', function() {
+            showLabels = !showLabels;
+            this.textContent = showLabels ? '🏷️ ป้าย' : '🏷️ ซ่อน';
+        });
+
+        // Initial resize after a short delay
+        setTimeout(resizeAll, 500);
+    })();
+</script>
+</body>
+</html>

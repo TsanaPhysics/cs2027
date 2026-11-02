@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ระบบประเมินจุลการสอนและการทบทวนหลังปฏิบัติ (Micro-teaching & AAR Synthesizer)</title>
+
+  <!-- Google Fonts & FontAwesome 6 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    :root {
+      --bg-dark: #030712;
+      --card-bg: rgba(11, 19, 43, 0.94);
+      --card-border: rgba(0, 240, 255, 0.25);
+      --cyan: #00f0ff;
+      --emerald: #10b981;
+      --amber: #f59e0b;
+      --rose: #f43f5e;
+      --indigo: #6366f1;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+    body {
+      background: var(--bg-dark);
+      color: #f8fafc;
+      font-family: 'Prompt', 'Sarabun', sans-serif;
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .top-header {
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--card-border);
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+      z-index: 10;
+    }
+    .header-title h1 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Chakra Petch', sans-serif;
+    }
+    .header-title h1 i { color: var(--cyan); }
+    .header-sub { font-size: 0.8rem; color: #94a3b8; margin-top: 2px; }
+    .header-btns { display: flex; gap: 8px; }
+    .btn-h {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: #e2e8f0;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-family: inherit;
+      cursor: pointer;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .btn-h:hover {
+      background: rgba(0, 240, 255, 0.15);
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: 340px 1fr;
+      flex: 1;
+      height: calc(100vh - 120px);
+      gap: 16px;
+      padding: 16px;
+      overflow: hidden;
+    }
+    .panel-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 16px;
+      backdrop-filter: blur(12px);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      overflow-y: auto;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+    }
+    .section-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--cyan);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .rubric-item {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .rubric-label {
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: #e2e8f0;
+      display: flex;
+      justify-content: space-between;
+    }
+    .rubric-val {
+      color: var(--cyan);
+      font-family: 'JetBrains Mono', monospace;
+    }
+    input[type=range] {
+      width: 100%;
+      height: 5px;
+      background: #1e293b;
+      border-radius: 4px;
+      outline: none;
+      -webkit-appearance: none;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--cyan);
+      cursor: pointer;
+    }
+
+    .aar-box {
+      background: #020617;
+      border: 1px solid rgba(0,240,255,0.2);
+      border-radius: 12px;
+      padding: 20px;
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+    .aar-card {
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 0.82rem;
+      line-height: 1.6;
+    }
+
+    .bottom-bar {
+      height: 48px;
+      background: var(--card-bg);
+      border-top: 1px solid var(--card-border);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 0 20px;
+      font-size: 0.82rem;
+    }
+    .badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      color: var(--cyan);
+    }
+  </style>
+</head>
+<body>
+  <header class="top-header">
+    <div class="header-title">
+      <h1><i class="fas fa-chalkboard-teacher"></i> ระบบประเมินจุลการสอนและการทบทวนหลังปฏิบัติ (Micro-teaching & AAR)</h1>
+      <div class="header-sub">วิชา 4124941 วิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์ | ผศ.ดร.ชีวะ ทัศนา (มรภ.รำไพพรรณี)</div>
+    </div>
+    <div class="header-btns">
+      <a href="../lessons/week_14.html" class="btn-h"><i class="fas fa-arrow-left"></i> กลับสู่บทเรียน สัปดาห์ที่ 14</a>
+    </div>
+  </header>
+
+  <main class="main-grid">
+    <section class="panel-card">
+      <div class="section-title"><i class="fas fa-check-double"></i> เกณฑ์การประเมินรูบริกส์ (Scoring Rubrics)</div>
+      
+      <div class="rubric-item">
+        <div class="rubric-label"><span>1. ความถูกต้องเชิงเนื้อหาและแนวคิดเชิงคำนวณ:</span> <span class="rubric-val" id="valR1">5 / 5</span></div>
+        <input type="range" id="r1" min="1" max="5" value="5" oninput="updateScore()">
+      </div>
+
+      <div class="rubric-item">
+        <div class="rubric-label"><span>2. การบูรณาการสื่อจำลอง 3D / วิทยาการคอมพิวเตอร์:</span> <span class="rubric-val" id="valR2">5 / 5</span></div>
+        <input type="range" id="r2" min="1" max="5" value="5" oninput="updateScore()">
+      </div>
+
+      <div class="rubric-item">
+        <div class="rubric-label"><span>3. เทคนิคการตั้งคำถามและกระตุ้นการคิด (Pedagogy):</span> <span class="rubric-val" id="valR3">4 / 5</span></div>
+        <input type="range" id="r3" min="1" max="5" value="4" oninput="updateScore()">
+      </div>
+
+      <div class="rubric-item">
+        <div class="rubric-label"><span>4. การบริหารเวลาและบรรยากาศชั้นเรียน:</span> <span class="rubric-val" id="valR4">5 / 5</span></div>
+        <input type="range" id="r4" min="1" max="5" value="5" oninput="updateScore()">
+      </div>
+
+      <div style="background: rgba(16, 185, 129, 0.15); border: 1px solid var(--emerald); border-radius: 8px; padding: 12px; font-size: 0.76rem; color: #a7f3d0; margin-top: auto;">
+        <i class="fas fa-star"></i> <strong>คะแนนรวมเฉลี่ย:</strong> <span id="txtScore" style="font-size: 1.1rem; font-weight: 700; color: #fff;">19 / 20 (95.0%) - ดีเยี่ยม (A)</span>
+      </div>
+    </section>
+
+    <section class="panel-card" style="padding: 0; overflow: hidden;">
+      <div class="aar-box">
+        <h3 style="font-size: 1.05rem; color: #fff; font-family: 'Chakra Petch';">
+          <i class="fas fa-comments" style="color: var(--cyan);"></i> ผลการสะท้อนคิดหลังการปฏิบัติการสอน (After Action Review: AAR)
+        </h3>
+
+        <div class="aar-card" style="border-left: 3px solid var(--emerald);">
+          <strong style="color: var(--emerald);"><i class="fas fa-smile"></i> สิ่งที่เป็นไปตามเป้าหมาย (What went well):</strong><br>
+          • นักเรียนตื่นตัวและสนใจเป็นอย่างมากเมื่อได้ทดลองหมุนมุมกล้อง 3D ในแบบจำลองมวลจุด (Point-Mass Abstraction)<br>
+          • นักเรียนสามารถตอบคำถามเรื่องความแตกต่างระหว่างตัวแปรจริงกับตัวแปรดิจิทัลได้อย่างถูกต้อง
+        </div>
+
+        <div class="aar-card" style="border-left: 3px solid var(--amber);">
+          <strong style="color: var(--amber);"><i class="fas fa-exclamation-triangle"></i> สิ่งที่พบอุปสรรคและต้องปรับปรุง (Challenges):</strong><br>
+          • มีนักเรียนบางคนยังสับสนคำศัพท์ทางวิทยาการคำนวณ เช่น Decomposition กับ Abstraction<br>
+          • ควรเตรียมใบงานสรุปย่อแบบ Unplugged ควบคู่ไปด้วยสำหรับกลุ่มที่ไม่มีอุปกรณ์แท็บเล็ต
+        </div>
+
+        <div class="aar-card" style="border-left: 3px solid var(--cyan);">
+          <strong style="color: var(--cyan);"><i class="fas fa-lightbulb"></i> แผนการพัฒนาในการสอนครั้งถัดไป (Next Steps):</strong><br>
+          • นำโปรแกรมจำลอง Flowchart Stepper มาใช้ประกอบการสอนเรื่องเงื่อนไข จะช่วยให้นักเรียนระดับมัธยมต้นเข้าใจได้รวดเร็วยิ่งขึ้น
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="bottom-bar">
+    <div>เกณฑ์มาตรฐาน: <span class="badge">คุรุสภา / TQF-ED สาขาวิทยาศาสตร์</span></div>
+    <div>ระดับคุณภาพ: <span class="badge" style="color: var(--emerald);" id="botGrade">ดีเยี่ยม (Distinction)</span></div>
+  </footer>
+
+  <script>
+    function updateScore() {
+      const r1 = parseInt(document.getElementById('r1').value);
+      const r2 = parseInt(document.getElementById('r2').value);
+      const r3 = parseInt(document.getElementById('r3').value);
+      const r4 = parseInt(document.getElementById('r4').value);
+
+      document.getElementById('valR1').innerText = r1 + ' / 5';
+      document.getElementById('valR2').innerText = r2 + ' / 5';
+      document.getElementById('valR3').innerText = r3 + ' / 5';
+      document.getElementById('valR4').innerText = r4 + ' / 5';
+
+      const total = r1 + r2 + r3 + r4;
+      const pct = (total / 20 * 100).toFixed(1);
+      let grade = 'ดีเยี่ยม (A)';
+      if (pct < 70) grade = 'ต้องปรับปรุง (C)';
+      else if (pct < 80) grade = 'ดี (B)';
+
+      document.getElementById('txtScore').innerText = `${total} / 20 (${pct}%) - ${grade}`;
+      document.getElementById('botGrade').innerText = grade;
+    }
+  </script>
+</body>
+</html>

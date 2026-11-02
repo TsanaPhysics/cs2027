@@ -1,0 +1,13 @@
+# Operating System & Temporary Files
+.DS_Store
+Thumbs.db
+*.tmp
+*.log
+
+# Editor & IDE
+.vscode/
+.idea/
+
+# Database Journals
+*.sqlite3-journal
+database/*.sqlite3-journal

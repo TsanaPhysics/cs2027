@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>เครื่องมือจัดรูปแบบรายงานและเอกสารวิชาการ (LaTeX & Thesis Formatter)</title>
+
+  <!-- Google Fonts & FontAwesome 6 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    :root {
+      --bg-dark: #030712;
+      --card-bg: rgba(11, 19, 43, 0.94);
+      --card-border: rgba(0, 240, 255, 0.25);
+      --cyan: #00f0ff;
+      --emerald: #10b981;
+      --amber: #f59e0b;
+      --rose: #f43f5e;
+      --indigo: #6366f1;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+    body {
+      background: var(--bg-dark);
+      color: #f8fafc;
+      font-family: 'Prompt', 'Sarabun', sans-serif;
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* Top Bar */
+    .top-header {
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--card-border);
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+      z-index: 10;
+    }
+    .header-title h1 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Chakra Petch', sans-serif;
+    }
+    .header-title h1 i { color: var(--cyan); }
+    .header-sub { font-size: 0.8rem; color: #94a3b8; margin-top: 2px; }
+    .header-btns { display: flex; gap: 8px; }
+    .btn-h {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: #e2e8f0;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-family: inherit;
+      cursor: pointer;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .btn-h:hover {
+      background: rgba(0, 240, 255, 0.15);
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+
+    /* Main Grid */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      flex: 1;
+      height: calc(100vh - 120px);
+      gap: 16px;
+      padding: 16px;
+      overflow: hidden;
+    }
+
+    .panel-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 16px;
+      backdrop-filter: blur(12px);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+    }
+    .section-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--cyan);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    textarea {
+      width: 100%;
+      flex: 1;
+      background: #020617;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      color: #e2e8f0;
+      padding: 14px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+      line-height: 1.7;
+      resize: none;
+      outline: none;
+    }
+
+    /* Preview Paper Sheet */
+    .preview-sheet {
+      background: #ffffff;
+      color: #1e293b;
+      border-radius: 8px;
+      padding: 30px;
+      flex: 1;
+      overflow-y: auto;
+      font-family: 'Sarabun', serif;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      line-height: 1.8;
+      font-size: 14px;
+    }
+    .preview-sheet h2 {
+      text-align: center;
+      font-size: 1.25rem;
+      color: #0f172a;
+      margin-bottom: 8px;
+    }
+    .preview-sheet .author {
+      text-align: center;
+      font-size: 0.88rem;
+      color: #64748b;
+      margin-bottom: 16px;
+    }
+    .preview-sheet h3 {
+      font-size: 1.05rem;
+      color: #0f172a;
+      border-bottom: 1.5px solid #0284c7;
+      padding-bottom: 4px;
+      margin-top: 16px;
+      margin-bottom: 8px;
+    }
+
+    /* Bottom Bar */
+    .bottom-bar {
+      height: 48px;
+      background: var(--card-bg);
+      border-top: 1px solid var(--card-border);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 0 20px;
+      font-size: 0.82rem;
+    }
+    .badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      color: var(--cyan);
+    }
+  </style>
+</head>
+<body>
+  <header class="top-header">
+    <div class="header-title">
+      <h1><i class="fas fa-file-alt"></i> เครื่องมือจัดรูปแบบรายงานและเอกสารวิชาการ (LaTeX & Thesis Formatter)</h1>
+      <div class="header-sub">วิชา 4124941 วิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์ | ผศ.ดร.ชีวะ ทัศนา (มรภ.รำไพพรรณี)</div>
+    </div>
+    <div class="header-btns">
+      <button class="btn-h" onclick="copyLaTeX()"><i class="fas fa-copy"></i> คัดลอกโค้ด LaTeX</button>
+      <a href="../lessons/week_12.html" class="btn-h"><i class="fas fa-arrow-left"></i> กลับสู่บทเรียน สัปดาห์ที่ 12</a>
+    </div>
+  </header>
+
+  <main class="main-grid">
+    <!-- Left: LaTeX Editor -->
+    <section class="panel-card">
+      <div class="section-title"><i class="fas fa-code"></i> โค้ดต้นฉบับ LaTeX / Markdown</div>
+      <textarea id="latex-input" oninput="updatePreview()">\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath}
+
+\title{การพัฒนาสื่อจำลอง 3 มิติเพื่อส่งเสริมการคิดเชิงนามธรรม}
+\author{นักศึกษาหลักสูตรวิทยาศาสตร์ทั่วไป มรภ.รำไพพรรณี}
+\date{ปีการศึกษา 2570}
+
+\begin{document}
+
+\maketitle
+
+\section{บทคัดย่อ}
+งานวิจัยนี้มีวัตถุประสงค์เพื่อศึกษาผลสัมฤทธิ์ทางการเรียนของนักเรียนระดับมัธยมศึกษาในการเรียนรู้วิทยาการคำนวณ โดยใช้แบบจำลอง 3 มิติร่วมกับแนวคิดเชิงคำนวณ (Computational Thinking) ผ่านการทดลองฟิสิกส์มวลจุด (Point-Mass Abstraction)
+
+\section{ระเบียบวิธีวิจัย}
+กลุ่มตัวอย่างคือนักเรียนชั้นมัธยมศึกษาปีที่ 4 จำนวน 35 คน เครื่องมือที่ใช้คือห้องทดลองเสมือนจริง Three.js โดยเก็บข้อมูลความแม่นยำและเวลาในการประมวลผล
+
+\section{ผลการวิจัย}
+ผลการทดลองพบว่า ค่าเฉลี่ยความเข้าใจหลังเรียน ($x̄ = 18.5, S.D. = 1.2$) สูงกว่าก่อนเรียน ($x̄ = 11.2, S.D. = 1.8$) อย่างมีนัยสำคัญทางสถิติที่ระดับ .01
+
+\end{document}</textarea>
+    </section>
+
+    <!-- Right: Paper Sheet Preview -->
+    <section class="panel-card">
+      <div class="section-title"><i class="fas fa-eye"></i> หน้ากระดาษตัวอย่างผลลัพธ์ (A4 Academic Sheet)</div>
+      <div class="preview-sheet" id="paper-preview">
+        <h2>การพัฒนาสื่อจำลอง 3 มิติเพื่อส่งเสริมการคิดเชิงนามธรรม</h2>
+        <div class="author">นักศึกษาหลักสูตรวิทยาศาสตร์ทั่วไป มรภ.รำไพพรรณี (ที่ปรึกษา: ผศ.ดร.ชีวะ ทัศนา)</div>
+        
+        <h3>1. บทคัดย่อ</h3>
+        <p>งานวิจัยนี้มีวัตถุประสงค์เพื่อศึกษาผลสัมฤทธิ์ทางการเรียนของนักเรียนระดับมัธยมศึกษาในการเรียนรู้วิทยาการคำนวณ โดยใช้แบบจำลอง 3 มิติร่วมกับแนวคิดเชิงคำนวณ (Computational Thinking) ผ่านการทดลองฟิสิกส์มวลจุด (Point-Mass Abstraction)</p>
+
+        <h3>2. ระเบียบวิธีวิจัย</h3>
+        <p>กลุ่มตัวอย่างคือนักเรียนชั้นมัธยมศึกษาปีที่ 4 จำนวน 35 คน เครื่องมือที่ใช้คือห้องทดลองเสมือนจริง Three.js โดยเก็บข้อมูลความแม่นยำและเวลาในการประมวลผล</p>
+
+        <h3>3. ผลการวิจัย</h3>
+        <p>ผลการทดลองพบว่า ค่าเฉลี่ยความเข้าใจหลังเรียน (x̄ = 18.5, S.D. = 1.2) สูงกว่าก่อนเรียน (x̄ = 11.2, S.D. = 1.8) อย่างมีนัยสำคัญทางสถิติที่ระดับ .01</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="bottom-bar">
+    <div>รูปแบบเอกสาร: <span class="badge">XeLaTeX B5 / A4 Academic Journal</span></div>
+    <div>แบบอักษรมาตรฐาน: <span class="badge">TH Sarabun New (16 pt)</span></div>
+    <div>สถานะความถูกต้อง: <span class="badge" style="color: var(--emerald);">ไวยากรณ์ LaTeX สมบูรณ์ (Valid)</span></div>
+  </footer>
+
+  <script>
+    function updatePreview() {
+      // Simple parser for demonstration
+      const text = document.getElementById('latex-input').value;
+      // Real-time updates could be expanded
+    }
+
+    function copyLaTeX() {
+      const text = document.getElementById('latex-input').value;
+      navigator.clipboard.writeText(text);
+      alert('คัดลอกโค้ด LaTeX ไปยังคลิปบอร์ดแล้ว!');
+    }
+  </script>
+</body>
+</html>

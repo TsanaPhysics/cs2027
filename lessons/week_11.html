@@ -1,0 +1,1374 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แผนการสอนสัปดาห์ที่ 11 - การออกแบบกิจกรรมการเรียนรู้วิทยาศาสตร์ด้วยแนวคิดเชิงคำนวณและการรู้เท่าทันข้อมูล (Lesson Plan Design & Data Literacy with CRAAP)</title>
+    <!-- ฟอนต์ Sarabun และ Inter จาก Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- MathJax 3 for Scientific Notation & Equations -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [["$", "$"], ["\\(", "\\)"]],
+                displayMath: [["$$", "$$"], ["\\[", "\\]"]],
+                processEscapes: true,
+                processEnvironments: true
+            },
+            options: {
+                skipHtmlTags: ["script", "noscript", "style", "textarea", "pre", "code"]
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --primary: #0f172a;
+            --primary-light: #1e293b;
+            --accent: #2563eb;
+            --accent-hover: #1d4ed8;
+            --secondary: #0891b2;
+            --success: #059669;
+            --warning: #d97706;
+            --danger: #dc2626;
+            --purple: #7c3aed;
+            --amber: #f59e0b;
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --border-focus: #94a3b8;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.08), 0 2px 4px -2px rgba(0,0,0,0.05);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.05);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Sarabun', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.8;
+            font-size: 16px;
+        }
+
+        .container {
+            max-width: 1140px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        .nav-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 1.25rem;
+            padding: 0.5rem 1rem;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.25s ease;
+        }
+
+        .nav-back:hover {
+            color: var(--accent-hover);
+            transform: translateX(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0d9488 100%);
+            color: #ffffff;
+            padding: 3rem 2.5rem;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            top: -40%;
+            right: -10%;
+            width: 480px;
+            height: 480px;
+            background: radial-gradient(circle, rgba(20, 184, 166, 0.25) 0%, rgba(255, 255, 255, 0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .header-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(8px);
+            padding: 0.35rem 0.85rem;
+            border-radius: 9999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header h1 {
+            font-size: 2.1rem;
+            font-weight: 700;
+            line-height: 1.35;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.02em;
+        }
+
+        .header .subtitle {
+            font-size: 1.15rem;
+            opacity: 0.92;
+            font-weight: 400;
+            max-width: 880px;
+        }
+
+        .header .course-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 1.25rem 1.5rem;
+            border-radius: 12px;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .header .course-info span {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.92rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .tab-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 0.85rem 1.4rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            transition: all 0.25s ease;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .tab-btn:hover {
+            background: #f1f5f9;
+            color: var(--accent);
+            border-color: #cbd5e1;
+        }
+
+        .tab-btn.active {
+            background: var(--accent);
+            color: #ffffff;
+            border-color: var(--accent);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+
+        .content-section {
+            display: none;
+            animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--bg-card);
+            border-radius: 14px;
+            padding: 2.25rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+        }
+
+        .card-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding-bottom: 0.85rem;
+            border-bottom: 2px solid #f1f5f9;
+        }
+
+        .card-title i {
+            color: var(--secondary);
+        }
+
+        .highlight-box {
+            background-color: #eff6ff;
+            border-left: 4px solid var(--accent);
+            padding: 1.25rem 1.5rem;
+            border-radius: 0 10px 10px 0;
+            margin: 1.5rem 0;
+            font-size: 0.98rem;
+        }
+
+        .highlight-box.warning {
+            background-color: #fffbeb;
+            border-left-color: var(--warning);
+        }
+
+        .highlight-box.success {
+            background-color: #ecfdf5;
+            border-left-color: var(--success);
+        }
+
+        .highlight-box.purple {
+            background-color: #f5f3ff;
+            border-left-color: var(--purple);
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.25rem;
+            margin: 1.5rem 0;
+        }
+
+        .feature-box {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.25s ease;
+        }
+
+        .feature-box:hover {
+            border-color: var(--accent);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .feature-box h4 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+            background: #ffffff;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        th, td {
+            padding: 1rem 1.25rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+
+        th {
+            background-color: #f8fafc;
+            font-weight: 700;
+            color: var(--primary);
+            border-bottom: 2px solid var(--border);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background-color: #f8fafc;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .badge-blue { background: #dbeafe; color: #1e40af; }
+        .badge-green { background: #d1fae5; color: #065f46; }
+        .badge-amber { background: #fef3c7; color: #92400e; }
+        .badge-purple { background: #ede9fe; color: #5b21b6; }
+        .badge-red { background: #fee2e2; color: #991b1b; }
+
+        .time-badge {
+            background: var(--primary-light);
+            color: #ffffff;
+            padding: 0.3rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .code-container {
+            background: #0f172a;
+            color: #e2e8f0;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            border: 1px solid #334155;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .code-container .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 0.75rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #334155;
+            color: #94a3b8;
+            font-size: 0.82rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .code-comment { color: #64748b; font-style: italic; }
+        .code-keyword { color: #38bdf8; font-weight: bold; }
+        .code-func { color: #a78bfa; }
+        .code-string { color: #34d399; }
+        .code-num { color: #fbbf24; }
+
+        .quiz-option {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem 1.25rem;
+            margin-bottom: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .quiz-option:hover {
+            border-color: var(--accent);
+            background: #f8fafc;
+        }
+
+        .quiz-explanation {
+            display: none;
+            margin-top: 1.25rem;
+            padding: 1.25rem;
+            border-radius: 8px;
+            background: #f8fafc;
+            border: 1px solid var(--border);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2.5rem 0;
+            color: var(--text-muted);
+            font-size: 0.92rem;
+            border-top: 1px solid var(--border);
+            margin-top: 3rem;
+        }
+
+        @media (max-width: 768px) {
+            .header { padding: 2rem 1.5rem; }
+            .header h1 { font-size: 1.6rem; }
+            .card { padding: 1.5rem; }
+            .tab-btn { padding: 0.7rem 1.1rem; font-size: 0.88rem; }
+            .grid-2, .grid-3 { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <a href="../index.html" class="nav-back">
+        <i class="fas fa-arrow-left"></i> กลับสู่หน้าหลักรายวิชา
+    </a>
+
+    <!-- Header Section -->
+    <header class="header">
+        <div class="header-badge">
+            <i class="fas fa-chalkboard-user"></i> สัปดาห์ที่ 11 • Lesson Plan & Data Literacy
+        </div>
+        <h1>การออกแบบกิจกรรมการเรียนรู้วิทยาศาสตร์ด้วยแนวคิดเชิงคำนวณและการรู้เท่าทันข้อมูล<br><span style="font-size: 1.35rem; font-weight: 500; opacity: 0.92;">Science Lesson Plan Design, Computational Thinking & Data Literacy with CRAAP Model</span></h1>
+        <p class="subtitle">
+            การบูรณาการกระบวนการสืบเสาะ 5E เข้ากับแนวคิดเชิงคำนวณ (CT-S Framework) การประเมินความน่าเชื่อถือของข้อมูลวิทยาศาสตร์ด้วย CRAAP Scorecard และการรู้เท่าทันตรรกะวิบัติ (Logical Fallacies) ในห้องเรียนยุคปัญญาประดิษฐ์
+        </p>
+        <div class="course-info">
+            <span><i class="fas fa-book-open text-accent"></i> <strong>รหัสวิชา:</strong> 4124941</span>
+            <span><i class="fas fa-graduation-cap text-accent"></i> <strong>รายวิชา:</strong> วิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์</span>
+            <span><i class="fas fa-chalkboard-user text-accent"></i> <strong>ผู้สอน:</strong> ผศ.ดร.ชีวะ ทัศนา</span>
+            <span><i class="fas fa-clock text-accent"></i> <strong>เวลาเรียน:</strong> 4 ชั่วโมง (บรรยาย 1 ชม. / ปฏิบัติ 3 ชม.)</span>
+        </div>
+    </header>
+
+    <!-- Navigation Tabs (The 6-Tab Standard) -->
+    <div class="tabs">
+        <button class="tab-btn active" onclick="showTab('tab1', this)">
+            <i class="fas fa-bullseye"></i> 1. ผลลัพธ์การเรียนรู้ (WLOs)
+        </button>
+        <button class="tab-btn" onclick="showTab('tab2', this)">
+            <i class="fas fa-book-bookmark"></i> 2. สาระสำคัญ & สื่อทัศนศิลป์
+        </button>
+        <button class="tab-btn" onclick="showTab('tab3', this)">
+            <i class="fas fa-hands-holding-circle"></i> 3. กิจกรรมการเรียนรู้ 5E
+        </button>
+        <button class="tab-btn" onclick="showTab('tab4', this)">
+            <i class="fas fa-chart-simple"></i> 4. การวัดและประเมินผล
+        </button>
+        <button class="tab-btn" onclick="showTab('tab5', this)">
+            <i class="fas fa-clipboard-question"></i> 5. ข้อสอบวัดสมรรถนะ HOTS
+        </button>
+        <button class="tab-btn" onclick="showTab('tab6', this)">
+            <i class="fas fa-quote-left"></i> 6. เอกสารอ้างอิง APA 7th
+        </button>
+    </div>
+
+    <!-- ==================== TAB 1: ผลลัพธ์การเรียนรู้ ==================== -->
+    <div id="tab1" class="content-section active">
+        <div class="card">
+            <h2 class="card-title">
+                <i class="fas fa-bullseye"></i> ผลลัพธ์การเรียนรู้รายสัปดาห์ (Weekly Learning Outcomes: WLOs)
+            </h2>
+            <p style="margin-bottom: 1.5rem; color: var(--text-muted);">
+                เมื่อสิ้นสุดการเรียนรู้ในสัปดาห์ที่ 11 นักศึกษาครูวิทยาศาสตร์สามารถแสดงสมรรถนะตามกรอบผลลัพธ์การเรียนรู้ 4 มิติ (K-P-A-PCK) ดังนี้:
+            </p>
+
+            <div class="grid-2">
+                <div class="feature-box">
+                    <h4><i class="fas fa-brain text-accent"></i> 1. ด้านความรู้เชิงทฤษฎี (Knowledge - K)</h4>
+                    <p>อธิบายหลักการความสอดคล้องเชิงสร้างสรรค์ (Constructive Alignment) ระหว่างตัวชี้วัด สสวท. - จุดประสงค์การเรียนรู้ - กิจกรรม 5E - การประเมินผล, ทฤษฎีการประเมินความน่าเชื่อถือของข้อมูลด้วยโมเดล CRAAP (Currency, Relevance, Authority, Accuracy, Purpose) และการจำแนกเหตุผลวิบัติ (Logical Fallacies) ในการอ้างอิงข้อมูลวิทยาศาสตร์</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4><i class="fas fa-laptop-code text-secondary"></i> 2. ด้านทักษะและการปฏิบัติการ (Skills - P)</h4>
+                    <p>ยกร่างแผนการจัดการเรียนรู้วิทยาศาสตร์ 1 คาบ (50-60 นาที) ที่บูรณาการโปรแกรมจำลองที่พัฒนาขึ้นและแนวคิดเชิงคำนวณ (CT 4 เสาหลัก) ได้อย่างเป็นระบบ พร้อมทั้งออกแบบใบกิจกรรมตรวจสอบข่าวลวงวิทยาศาสตร์ด้วยเกณฑ์ CRAAP Scorecard</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4><i class="fas fa-shield-halved text-warning"></i> 3. ด้านเจตคติและความเป็นพลเมืองดิจิทัล (Attitude - A)</h4>
+                    <p>แสดงจิตสำนึกแห่งความซื่อสัตย์ทางวิชาการ (Academic Integrity) ตระหนักถึงจริยธรรมข้อมูล (Data Ethics) และมุ่งมั่นในการปลูกฝังทักษะการรู้เท่าทันสื่อดิจิทัลเพื่อปกป้องผู้เรียนจากการตกเป็นเหยื่อของข่าวปลอมและตรรกะวิบัติ</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4><i class="fas fa-chalkboard-user text-purple"></i> 4. ด้านการประยุกต์เชิงวิชาชีพครู (Pedagogical Application - PCK/TPACK)</h4>
+                    <p>บูรณาการกรอบ TPACK เพื่อประสานเทคโนโลยีโปรแกรมจำลองเข้ากับยุทธวิธีสืบเสาะ 5E ได้อย่างกลมกลืน ช่วยลดภาระการรู้คิดที่ไม่จำเป็น (Extraneous Cognitive Load) และนำผลการวิพากษ์แผนการสอน (Peer Review) ไปเตรียมความพร้อมสำหรับการจุลการสอน (Micro-teaching) ในสัปดาห์ที่ 13-14</p>
+                </div>
+            </div>
+
+            <div class="highlight-box success">
+                <i class="fas fa-circle-check text-success" style="margin-right: 0.5rem;"></i>
+                <strong>ความเชื่อมโยงกับหลักสูตร:</strong> สัปดาห์นี้ทำหน้าที่เชื่อมโยง <em>"ผลิตภัณฑ์โปรแกรมจำลอง (Software Artifact)"</em> จากสัปดาห์ที่ 9-10 เข้ากับ <em>"ศิลปะและวิทยาการการจัดการเรียนรู้ (Pedagogical Practice)"</em> เพื่อแปรเปลี่ยนเทคโนโลยีให้กลายเป็นนวัตกรรมการสอนที่สร้างผลลัพธ์ต่อผู้เรียนจริงในห้องเรียน
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== TAB 2: สาระสำคัญ & สื่อทัศนศิลป์ ==================== -->
+    <div id="tab2" class="content-section">
+        <div class="card">
+            <h2 class="card-title">
+                <i class="fas fa-diagram-project"></i> 1. การบูรณาการกระบวนการสืบเสาะ 5E ร่วมกับแนวคิดเชิงคำนวณ (5E + CT Framework)
+            </h2>
+            <p>
+                การสอนวิทยาศาสตร์ยุคใหม่มิใช่เพียงให้นักเรียนท่องจำสูตรหรือกฎทางธรรมชาติ แต่ต้องฝึกให้ผู้เรียนมองปรากฏการณ์ผ่าน <strong>แนวคิดเชิงคำนวณ (Computational Thinking in Science: CT-S)</strong> โดยใช้โปรแกรมจำลองคอมพิวเตอร์เป็นห้องปฏิบัติการเสมือน (Virtual Sandbox) ในแต่ละขั้นของวงจรสืบเสาะ 5E ดังนี้:
+            </p>
+
+            <!-- Infographic SVG 11.1: 5E + CT Framework -->
+            <div style="margin: 2rem 0; text-align: center;">
+                <svg viewBox="0 0 960 480" width="100%" height="auto" style="max-width: 960px; border-radius: 12px; background: #ffffff; box-shadow: 0 4px 20px rgba(0,0,0,0.06); border: 1px solid #e2e8f0;" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="grad_5e" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#1e293b"/>
+                            <stop offset="100%" stop-color="#0f172a"/>
+                        </linearGradient>
+                        <filter id="shadow_box" x="-10%" y="-10%" width="120%" height="120%">
+                            <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#0f172a" flood-opacity="0.08"/>
+                        </filter>
+                    </defs>
+
+                    <!-- Title -->
+                    <text x="480" y="40" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="20" font-weight="700" fill="#0f172a">
+                        แผนผังที่ 11.1: กรอบการบูรณาการกระบวนการสืบเสาะ 5E ร่วมกับแนวคิดเชิงคำนวณ (5E + CT-S Model)
+                    </text>
+                    <text x="480" y="66" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="13" fill="#64748b">
+                        การประสานขั้นตอนการสืบเสาะวิทยาศาสตร์เข้ากับ 4 เสาหลักแนวคิดเชิงคำนวณและโปรแกรมจำลองเสมือนจริง
+                    </text>
+
+                    <!-- Step 1: Engagement + Decomposition -->
+                    <g transform="translate(35, 105)" filter="url(#shadow_box)">
+                        <rect width="165" height="320" rx="10" fill="#eff6ff" stroke="#3b82f6" stroke-width="2"/>
+                        <rect width="165" height="42" rx="10" fill="#2563eb"/>
+                        <rect y="32" width="165" height="10" fill="#1d4ed8"/>
+                        <text x="82" y="26" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="14" font-weight="700" fill="#ffffff">1. Engagement</text>
+                        <rect x="15" y="55" width="135" height="26" rx="4" fill="#dbeafe"/>
+                        <text x="82" y="72" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="11" font-weight="700" fill="#1e40af">⚡ กระตุ้นความสนใจ</text>
+                        
+                        <text x="15" y="110" font-family="'Sarabun', sans-serif" font-size="12" font-weight="700" fill="#0f172a">บทบาทโปรแกรมจำลอง:</text>
+                        <text x="15" y="130" font-family="'Sarabun', sans-serif" font-size="11" fill="#334155">• สาธิตปรากฏการณ์สุดขั้ว</text>
+                        <text x="15" y="148" font-family="'Sarabun', sans-serif" font-size="11" fill="#334155">• ตั้งคำถามท้าทายมโนทัศน์</text>
+
+                        <line x1="15" y1="165" x2="150" y2="165" stroke="#bfdbfe"/>
+                        <rect x="15" y="180" width="135" height="30" rx="4" fill="#fee2e2"/>
+                        <text x="82" y="200" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="11" font-weight="700" fill="#991b1b">🧩 Decomposition</text>
+                        <text x="15" y="235" font-family="'Sarabun', sans-serif" font-size="11" fill="#475569">• แตกตัวแปรต้น-ตาม-ควบคุม</text>
+                        <text x="15" y="255" font-family="'Sarabun', sans-serif" font-size="11" fill="#475569">• แยกแยะองค์ประกอบระบบ</text>
+                    </g>
+
+                    <!-- Step 2: Exploration + Pattern Recognition -->
+                    <g transform="translate(215, 105)" filter="url(#shadow_box)">
+                        <rect width="165" height="320" rx="10" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/>
+                        <rect width="165" height="42" rx="10" fill="#16a34a"/>
+                        <rect y="32" width="165" height="10" fill="#15803d"/>
+                        <text x="82" y="26" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="14" font-weight="700" fill="#ffffff">2. Exploration</text>
+                        <rect x="15" y="55" width="135" height="26" rx="4" fill="#dcfce7"/>
+                        <text x="82" y="72" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="11" font-weight="700" fill="#166534">🔬 สำรวจและค้นหา</text>
+
+                        <text x="15" y="110" font-family="'Sarabun', sans-serif" font-size="12" font-weight="700" fill="#0f172a">บทบาทโปรแกรมจำลอง:</text>
+                        <text x="15" y="130" font-family="'Sarabun', sans-serif" font-size="11" fill="#334155">• ปรับ Slider ทดลองซ้ำ</text>
+                        <text x="15" y="148" font-family="'Sarabun', sans-serif" font-size="11" fill="#334155">• บันทึกข้อมูลลงตาราง</text>
+
+                        <line x1="15" y1="165" x2="150" y2="165" stroke="#bbf7d0"/>
+                        <rect x="15" y="180" width="135" height="30" rx="4" fill="#fef3c7"/>
+                        <text x="82" y="200" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="11" font-weight="700" fill="#92400e">🔍 Pattern Recognition</text>
+                        <text x="15" y="235" font-family="'Sarabun', sans-serif" font-size="11" fill="#475569">• วิเคราะห์แนวโน้มกราฟ</text>
+                        <text x="15" y="255" font-family="'Sarabun', sans-serif" font-size="11" fill="#475569">• หารูปแบบความสัมพันธ์</text>
+                    </g>
+
+                    <!-- Step 3: Explanation + Abstraction -->
+                    <g transform="translate(395, 105)" filter="url(#shadow_box)">
+                        <rect width="165" height="320" rx="10" fill="#faf5ff" stroke="#9333ea" stroke-width="2"/>
+                        <rect width="165" height="42" rx="10" fill="#9333ea"/>
+                        <rect y="32" width="165" height="10" fill="#7e22ce"/>
+                        <text x="82" y="26" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="14" font-weight="700" fill="#ffffff">3. Explanation</text>
+                        <rect x="15" y="55" width="135" height="26" rx="4" fill="#f3e8ff"/>
+                        <text x="82" y="72" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="11" font-weight="700" fill="#6b21a8">💡 อธิบายและลงข้อสรุป</text>
+
+                        <text x="15" y="110" font-family="'Sarabun', sans-serif" font-size="12" font-weight="700" fill="#0f172a">บทบาทโปรแกรมจำลอง:</text>
+                        <text x="15" y="130" font-family="'Sarabun', sans-serif" font-size="11" fill="#334155">• เทียบกราฟกับสมการจริง</text>
+                        <text x="15" y="148" font-family="'Sarabun', sans-serif" font-size="11" fill="#334155">• สรุปมโนทัศน์ร่วมกับครู</text>
+
+                        <line x1="15" y1="165" x2="150" y2="165" stroke="#e9d5ff"/>
+                        <rect x="15" y="180" width="135" height="30" rx="4" fill="#ede9fe"/>
+                        <text x="82" y="200" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="11" font-weight="700" fill="#5b21b6">🎯 Abstraction</text>
+                        <text x="15" y="235" font-family="'Sarabun', sans-serif" font-size="11" fill="#475569">• สกัดสาระสำคัญ/แก่นแท้</text>
+                        <text x="15" y="255" font-family="'Sarabun', sans-serif" font-size="11" fill="#475569">• ละทิ้งรายละเอียดรบกวน</text>
+                    </g>
+
+                    <!-- Step 4: Elaboration + Algorithm -->
+                    <g transform="translate(575, 105)" filter="url(#shadow_box)">
+                        <rect width="165" height="320" rx="10" fill="#fffbeb" stroke="#f59e0b" stroke-width="2"/>
+                        <rect width="165" height="42" rx="10" fill="#d97706"/>
+                        <rect y="32" width="165" height="10" fill="#b45309"/>
+                        <text x="82" y="26" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="14" font-weight="700" fill="#ffffff">4. Elaboration</text>
+                        <rect x="15" y="55" width="135" height="26" rx="4" fill="#fef3c7"/>
+                        <text x="82" y="72" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="11" font-weight="700" fill="#92400e">🚀 ขยายความรู้</text>
+
+                        <text x="15" y="110" font-family="'Sarabun', sans-serif" font-size="12" font-weight="700" fill="#0f172a">บทบาทโปรแกรมจำลอง:</text>
+                        <text x="15" y="130" font-family="'Sarabun', sans-serif" font-size="11" fill="#334155">• ท้าทายสถานการณ์ใหม่</text>
+                        <text x="15" y="148" font-family="'Sarabun', sans-serif" font-size="11" fill="#334155">• คาดการณ์ผลกระทบภายนอก</text>
+
+                        <line x1="15" y1="165" x2="150" y2="165" stroke="#fde68a"/>
+                        <rect x="15" y="180" width="135" height="30" rx="4" fill="#e0f2fe"/>
+                        <text x="82" y="200" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="11" font-weight="700" fill="#0369a1">⚙️ Algorithm Design</text>
+                        <text x="15" y="235" font-family="'Sarabun', sans-serif" font-size="11" fill="#475569">• วางขั้นตอนแก้ปัญหาใหม่</text>
+                        <text x="15" y="255" font-family="'Sarabun', sans-serif" font-size="11" fill="#475569">• ออกแบบกฎเชิงคำนวณ</text>
+                    </g>
+
+                    <!-- Step 5: Evaluation -->
+                    <g transform="translate(755, 105)" filter="url(#shadow_box)">
+                        <rect width="165" height="320" rx="10" fill="#fef2f2" stroke="#ef4444" stroke-width="2"/>
+                        <rect width="165" height="42" rx="10" fill="#dc2626"/>
+                        <rect y="32" width="165" height="10" fill="#b91c1c"/>
+                        <text x="82" y="26" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="14" font-weight="700" fill="#ffffff">5. Evaluation</text>
+                        <rect x="15" y="55" width="135" height="26" rx="4" fill="#fee2e2"/>
+                        <text x="82" y="72" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="11" font-weight="700" fill="#991b1b">📊 ประเมินผล</text>
+
+                        <text x="15" y="110" font-family="'Sarabun', sans-serif" font-size="12" font-weight="700" fill="#0f172a">เครื่องมือวัดผล:</text>
+                        <text x="15" y="130" font-family="'Sarabun', sans-serif" font-size="11" fill="#334155">• แบบทดสอบ HOTS สสวท.</text>
+                        <text x="15" y="148" font-family="'Sarabun', sans-serif" font-size="11" fill="#334155">• ใบงานวิเคราะห์ข้อมูล</text>
+
+                        <line x1="15" y1="165" x2="150" y2="165" stroke="#fecaca"/>
+                        <rect x="15" y="180" width="135" height="30" rx="4" fill="#d1fae5"/>
+                        <text x="82" y="200" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="11" font-weight="700" fill="#065f46">🛡️ Scientific Rigor</text>
+                        <text x="15" y="235" font-family="'Sarabun', sans-serif" font-size="11" fill="#475569">• ประเมินความถูกต้องมโนทัศน์</text>
+                        <text x="15" y="255" font-family="'Sarabun', sans-serif" font-size="11" fill="#475569">• สะท้อนคิดและแก้ไขตนเอง</text>
+                    </g>
+
+                    <!-- Connecting Pipeline Arrows -->
+                    <path d="M 200, 240 L 215, 240" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+                    <path d="M 380, 240 L 395, 240" stroke="#64748b" stroke-width="2"/>
+                    <path d="M 560, 240 L 575, 240" stroke="#64748b" stroke-width="2"/>
+                    <path d="M 740, 240 L 755, 240" stroke="#64748b" stroke-width="2"/>
+
+                    <!-- Bottom Bar -->
+                    <rect x="35" y="440" width="885" height="26" rx="6" fill="#f8fafc" stroke="#cbd5e1"/>
+                    <text x="480" y="458" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="12" font-weight="600" fill="#334155">
+                        🔄 วงรอบการสืบเสาะแบบต่อเนื่อง (Iterative Inquiry Loop): เสริมพลังด้วยโปรแกรมจำลองที่ผู้เรียนมีปฏิสัมพันธ์ได้ 100%
+                    </text>
+                </svg>
+            </div>
+
+            <h2 class="card-title" style="margin-top: 2.5rem;">
+                <i class="fas fa-shield-virus"></i> 2. การประเมินความน่าเชื่อถือของข้อมูลวิทยาศาสตร์ด้วย CRAAP Model
+            </h2>
+            <p>
+                ในยุคสารสนเทศที่ข้อมูลข่าวสารและผลการวิจัยปลอมแพร่กระจายอย่างรวดเร็ว (Infodemic) ครูวิทยาศาสตร์ต้องสามารถออกแบบกิจกรรมให้นักเรียนมีภูมิคุ้มกันทางดิจิทัล โดยใช้กรอบการประเมิน <strong>CRAAP Model</strong> (Currency, Relevance, Authority, Accuracy, Purpose) ซึ่งคิดค้นโดยมหาวิทยาลัย California State University, Chico:
+            </p>
+
+            <!-- Infographic SVG 11.2: CRAAP Model Pipeline -->
+            <div style="margin: 2rem 0; text-align: center;">
+                <svg viewBox="0 0 960 380" width="100%" height="auto" style="max-width: 960px; border-radius: 12px; background: #ffffff; box-shadow: 0 4px 20px rgba(0,0,0,0.06); border: 1px solid #e2e8f0;" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Title -->
+                    <text x="480" y="38" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="19" font-weight="700" fill="#0f172a">
+                        แผนผังที่ 11.2: กระบวนการประเมินความน่าเชื่อถือของข้อมูลวิทยาศาสตร์ (CRAAP Model Pipeline)
+                    </text>
+                    <text x="480" y="60" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="13" fill="#64748b">
+                        5 มิติสำคัญในการตรวจสอบแหล่งข้อมูล งานวิจัย และข่าวสารวิทยาศาสตร์บนโลกออนไลน์
+                    </text>
+
+                    <!-- Pillar 1: C -->
+                    <g transform="translate(40, 90)">
+                        <rect width="160" height="230" rx="10" fill="#eff6ff" stroke="#3b82f6" stroke-width="2"/>
+                        <circle cx="80" cy="40" r="24" fill="#2563eb"/>
+                        <text x="80" y="48" text-anchor="middle" font-family="'Inter', sans-serif" font-size="20" font-weight="700" fill="#ffffff">C</text>
+                        <text x="80" y="85" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="14" font-weight="700" fill="#1e40af">Currency</text>
+                        <text x="80" y="102" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="11" fill="#3b82f6">ความทันสมัยของข้อมูล</text>
+                        <line x1="15" y1="115" x2="145" y2="115" stroke="#bfdbfe"/>
+                        <text x="15" y="135" font-family="'Sarabun', sans-serif" font-size="11" fill="#334155">• ตีพิมพ์เมื่อใด?</text>
+                        <text x="15" y="155" font-family="'Sarabun', sans-serif" font-size="11" fill="#334155">• มีข้อมูลใหม่มาหักล้างไหม?</text>
+                        <text x="15" y="175" font-family="'Sarabun', sans-serif" font-size="11" fill="#334155">• ลิงก์อ้างอิงยังใช้ได้หรือไม่?</text>
+                    </g>
+
+                    <!-- Pillar 2: R -->
+                    <g transform="translate(220, 90)">
+                        <rect width="160" height="230" rx="10" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/>
+                        <circle cx="80" cy="40" r="24" fill="#16a34a"/>
+                        <text x="80" y="48" text-anchor="middle" font-family="'Inter', sans-serif" font-size="20" font-weight="700" fill="#ffffff">R</text>
+                        <text x="80" y="85" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="14" font-weight="700" fill="#15803d">Relevance</text>
+                        <text x="80" y="102" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="11" fill="#16a34a">ความเกี่ยวข้องตรงประเด็น</text>
+                        <line x1="15" y1="115" x2="145" y2="115" stroke="#bbf7d0"/>
+                        <text x="15" y="135" font-family="'Sarabun', sans-serif" font-size="11" fill="#334155">• ตรงกับโจทย์คำถามวิทย์?</text>
+                        <text x="15" y="155" font-family="'Sarabun', sans-serif" font-size="11" fill="#334155">• ระดับภาษาเหมาะกับเด็ก?</text>
+                        <text x="15" y="175" font-family="'Sarabun', sans-serif" font-size="11" fill="#334155">• เทียบกับแหล่งอื่นหรือยัง?</text>
+                    </g>
+
+                    <!-- Pillar 3: A1 -->
+                    <g transform="translate(400, 90)">
+                        <rect width="160" height="230" rx="10" fill="#faf5ff" stroke="#9333ea" stroke-width="2"/>
+                        <circle cx="80" cy="40" r="24" fill="#9333ea"/>
+                        <text x="80" y="48" text-anchor="middle" font-family="'Inter', sans-serif" font-size="20" font-weight="700" fill="#ffffff">A</text>
+                        <text x="80" y="85" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="14" font-weight="700" fill="#6b21a8">Authority</text>
+                        <text x="80" y="102" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="11" fill="#9333ea">ความเชี่ยวชาญของแหล่ง</text>
+                        <line x1="15" y1="115" x2="145" y2="115" stroke="#e9d5ff"/>
+                        <text x="15" y="135" font-family="'Sarabun', sans-serif" font-size="11" fill="#334155">• ผู้เขียนมีคุณวุฒิตรงสาย?</text>
+                        <text x="15" y="155" font-family="'Sarabun', sans-serif" font-size="11" fill="#334155">• สถาบัน/วารสารน่าเชื่อถือ?</text>
+                        <text x="15" y="175" font-family="'Sarabun', sans-serif" font-size="11" fill="#334155">• มีช่องทางติดต่อชัดเจน?</text>
+                    </g>
+
+                    <!-- Pillar 4: A2 -->
+                    <g transform="translate(580, 90)">
+                        <rect width="160" height="230" rx="10" fill="#fffbeb" stroke="#f59e0b" stroke-width="2"/>
+                        <circle cx="80" cy="40" r="24" fill="#d97706"/>
+                        <text x="80" y="48" text-anchor="middle" font-family="'Inter', sans-serif" font-size="20" font-weight="700" fill="#ffffff">A</text>
+                        <text x="80" y="85" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="14" font-weight="700" fill="#92400e">Accuracy</text>
+                        <text x="80" y="102" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="11" fill="#d97706">ความถูกต้องและหลักฐาน</text>
+                        <line x1="15" y1="115" x2="145" y2="115" stroke="#fde68a"/>
+                        <text x="15" y="135" font-family="'Sarabun', sans-serif" font-size="11" fill="#334155">• มีหลักฐานแล็บ/สถิติรองรับ?</text>
+                        <text x="15" y="155" font-family="'Sarabun', sans-serif" font-size="11" fill="#334155">• ผ่าน Peer Review ไหม?</text>
+                        <text x="15" y="175" font-family="'Sarabun', sans-serif" font-size="11" fill="#334155">• การทดลองทำซ้ำได้หรือไม่?</text>
+                    </g>
+
+                    <!-- Pillar 5: P -->
+                    <g transform="translate(760, 90)">
+                        <rect width="160" height="230" rx="10" fill="#fef2f2" stroke="#ef4444" stroke-width="2"/>
+                        <circle cx="80" cy="40" r="24" fill="#dc2626"/>
+                        <text x="80" y="48" text-anchor="middle" font-family="'Inter', sans-serif" font-size="20" font-weight="700" fill="#ffffff">P</text>
+                        <text x="80" y="85" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="14" font-weight="700" fill="#991b1b">Purpose</text>
+                        <text x="80" y="102" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="11" fill="#ef4444">เจตนาและวัตถุประสงค์</text>
+                        <line x1="15" y1="115" x2="145" y2="115" stroke="#fecaca"/>
+                        <text x="15" y="135" font-family="'Sarabun', sans-serif" font-size="11" fill="#334155">• เผยแพร่เพื่อสอน/ให้ความรู้?</text>
+                        <text x="15" y="155" font-family="'Sarabun', sans-serif" font-size="11" fill="#334155">• แอบแฝงขายของ/ผลประโยชน์?</text>
+                        <text x="15" y="175" font-family="'Sarabun', sans-serif" font-size="11" fill="#334155">• มีอคติหรือชี้นำอารมณ์ไหม?</text>
+                    </g>
+
+                    <!-- Bottom Bar: Score Evaluation -->
+                    <rect x="40" y="335" width="880" height="30" rx="6" fill="#f8fafc" stroke="#cbd5e1"/>
+                    <text x="480" y="355" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="12" font-weight="600" fill="#334155">
+                        ⭐ เกณฑ์ประเมินคะแนนรวม (เต็ม 50 คะแนน): ≥ 40 คะแนน = น่าเชื่อถือสูงมาก | 30–39 คะแนน = พอใช้ได้แต่ต้องตรวจเพิ่ม | &lt; 30 คะแนน = ปฏิเสธการนำไปใช้
+                    </text>
+                </svg>
+            </div>
+
+            <!-- Table 11.1: CRAAP Scorecard -->
+            <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--primary); margin: 2rem 0 1rem 0;">
+                ตารางที่ 11.1: เมทริกซ์เกณฑ์คะแนน CRAAP Scorecard สำหรับการจัดกิจกรรมในห้องเรียนวิทยาศาสตร์
+            </h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 15%;">เกณฑ์ CRAAP</th>
+                        <th style="width: 25%;">คำถามนำการคิดสำหรับนักเรียน</th>
+                        <th style="width: 30%;">สัญญาณบ่งชี้ความน่าเชื่อถือสูง (Green Flags)</th>
+                        <th style="width: 30%;">สัญญาณเตือนอันตราย (Red Flags)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>1. Currency (ความทันสมัย)</strong></td>
+                        <td>ข้อมูลนี้เผยแพร่เมื่อใด? ทฤษฎีนี้ยังได้รับการยอมรับในปัจจุบันหรือไม่?</td>
+                        <td>มีการระบุวันที่ชัดเจน, ปรับปรุงเนื้อหาตามหลักฐานวิทยาศาสตร์ล่าสุดในรอบ 3–5 ปี</td>
+                        <td>ไม่มีระบุวันที่, อ้างอิงทฤษฎีเก่าที่ถูกพิสูจน์แล้วว่าผิดพลาด (เช่น ทฤษฎีอีเทอร์)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>2. Relevance (ความเกี่ยวข้อง)</strong></td>
+                        <td>ข้อมูลนี้ตอบโจทย์ข้อสงสัยในการทดลองหรือไม่?</td>
+                        <td>เนื้อหาตรงกับตัวชี้วัดวิทยาศาสตร์, ระบุกลุ่มตัวอย่างและตัวแปรชัดเจน</td>
+                        <td>ข้อมูลกว้างเกินไป, นำผลการทดลองในหลอดทดลองไปสรุปผลในร่างกายมนุษย์โดยตรง</td>
+                    </tr>
+                    <tr>
+                        <td><strong>3. Authority (ความเชี่ยวชาญ)</strong></td>
+                        <td>ใครเป็นผู้เขียนหรือสถาบันที่รับรองผลงาน?</td>
+                        <td>นักวิจัยสังกัดมหาวิทยาลัย/สถาบันวิจัยที่ได้รับการยอมรับ, วารสารระดับ Peer-reviewed</td>
+                        <td>เพจนิรนาม, บล็อกเกอร์ขายสินค้า, บุคคลที่อ้างตนเองเป็นผู้เชี่ยวชาญแต่ไม่มีคุณวุฒิรองรับ</td>
+                    </tr>
+                    <tr>
+                        <td><strong>4. Accuracy (ความแม่นยำ)</strong></td>
+                        <td>มีหลักฐานเชิงประจักษ์และการควบคุมตัวแปรที่รัดกุมไหม?</td>
+                        <td>มีกลุ่มทดลอง (Treatment) และกลุ่มควบคุม (Control), สถิติชัดเจน, มีการทำซ้ำ</td>
+                        <td>ไม่มีการควบคุมตัวแปร, อ้างหลักฐานจากความรู้สึกหรือคำบอกเล่ารายบุคคล (Anecdote)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>5. Purpose (เจตนา)</strong></td>
+                        <td>ข้อมูลนี้เผยแพร่เพื่อเป้าหมายใด? เพื่อการศึกษาหรือเชิงพาณิชย์?</td>
+                        <td>มีเจตนาทางวิชาการเพื่อสร้างองค์ความรู้, เปิดเผยแหล่งทุนและไม่มีผลประโยชน์ทับซ้อน</td>
+                        <td>แอบแฝงขายผลิตภัณฑ์อาหารเสริม, โจมตีคู่แข่งทางการค้า, ใช้พาดหัวข่าวกระตุ้นความกลัว</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2 class="card-title" style="margin-top: 2.5rem;">
+                <i class="fas fa-triangle-exclamation"></i> 3. การรู้เท่าทันเหตุผลวิบัติทางวิทยาศาสตร์ (Scientific Logical Fallacies)
+            </h2>
+            <p>
+                เหตุผลวิบัติ (Logical Fallacy) คือความบกพร่องในกระบวนการให้เหตุผลที่ทำให้ข้อสรุปทางวิทยาศาสตร์ขาดความสมเหตุสมผล ซึ่งมักปรากฏทั้งในรายงานผลการทดลองของนักเรียนและในข่าวปลอมบนโซเชียลมีเดีย:
+            </p>
+
+            <!-- Infographic SVG 11.3: Fallacy Taxonomy -->
+            <div style="margin: 2rem 0; text-align: center;">
+                <svg viewBox="0 0 960 420" width="100%" height="auto" style="max-width: 960px; border-radius: 12px; background: #ffffff; box-shadow: 0 4px 20px rgba(0,0,0,0.06); border: 1px solid #e2e8f0;" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Title -->
+                    <text x="480" y="38" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="19" font-weight="700" fill="#0f172a">
+                        แผนผังที่ 11.3: อนุกรมวิธาน 5 เหตุผลวิบัติยอดฮิตในการสอนวิทยาศาสตร์ (Common Scientific Fallacies)
+                    </text>
+                    <text x="480" y="60" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="13" fill="#64748b">
+                        การวิเคราะห์ช่องโหว่ทางตรรกะและข้อบกพร่องในระเบียบวิธีทางวิทยาศาสตร์
+                    </text>
+
+                    <!-- Top 3 Boxes -->
+                    <g transform="translate(45, 85)">
+                        <rect width="270" height="145" rx="8" fill="#fef2f2" stroke="#f87171" stroke-width="1.5"/>
+                        <text x="15" y="30" font-family="'Sarabun', sans-serif" font-size="14" font-weight="700" fill="#b91c1c">1. Post Hoc Ergo Propter Hoc</text>
+                        <text x="15" y="50" font-family="'Sarabun', sans-serif" font-size="11" font-weight="600" fill="#991b1b">(เหตุผลวิบัติตู่เหตุการณ์: เกิดก่อนต้องเป็นสาเหตุ)</text>
+                        <line x1="15" y1="60" x2="255" y2="60" stroke="#fecaca"/>
+                        <text x="15" y="80" font-family="'Sarabun', sans-serif" font-size="11" fill="#334155">• "พอดื่มน้ำด่างวันรุ่งขึ้นไข้ลด แสดงว่าน้ำด่างฆ่าเชื้อ"</text>
+                        <text x="15" y="100" font-family="'Sarabun', sans-serif" font-size="11" fill="#475569">💡 ความจริง: อาจหายจากระบบภูมิคุ้มกันของร่างกายเอง</text>
+                        <rect x="15" y="115" width="240" height="20" rx="3" fill="#fee2e2"/>
+                        <text x="135" y="129" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="10" font-weight="600" fill="#b91c1c">Correlation does NOT imply Causation!</text>
+                    </g>
+
+                    <g transform="translate(345, 85)">
+                        <rect width="270" height="145" rx="8" fill="#fffbeb" stroke="#fbbf24" stroke-width="1.5"/>
+                        <text x="15" y="30" font-family="'Sarabun', sans-serif" font-size="14" font-weight="700" fill="#b45309">2. Hasty Generalization</text>
+                        <text x="15" y="50" font-family="'Sarabun', sans-serif" font-size="11" font-weight="600" fill="#92400e">(การด่วนสรุปจากตัวอย่างน้อยเกินไป)</text>
+                        <line x1="15" y1="60" x2="255" y2="60" stroke="#fde68a"/>
+                        <text x="15" y="80" font-family="'Sarabun', sans-serif" font-size="11" fill="#334155">• "ปลูกถั่วต้นเดียวรดน้ำผสมเกลือแล้วโต แสดงว่าเกลือดี"</text>
+                        <text x="15" y="100" font-family="'Sarabun', sans-serif" font-size="11" fill="#475569">💡 ความจริง: ขนาดตัวอย่าง \(N=1\) ไม่มีนัยสำคัญทางสถิติ</text>
+                        <rect x="15" y="115" width="240" height="20" rx="3" fill="#fef3c7"/>
+                        <text x="135" y="129" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="10" font-weight="600" fill="#b45309">ต้องมี Sample Size และ Replicates เพียงพอ</text>
+                    </g>
+
+                    <g transform="translate(645, 85)">
+                        <rect width="270" height="145" rx="8" fill="#eff6ff" stroke="#60a5fa" stroke-width="1.5"/>
+                        <text x="15" y="30" font-family="'Sarabun', sans-serif" font-size="14" font-weight="700" fill="#1d4ed8">3. Ad Hominem</text>
+                        <text x="15" y="50" font-family="'Sarabun', sans-serif" font-size="11" font-weight="600" fill="#1e40af">(การโจมตีตัวบุคคลแทนการหักล้างข้อมูล)</text>
+                        <line x1="15" y1="60" x2="255" y2="60" stroke="#bfdbfe"/>
+                        <text x="15" y="80" font-family="'Sarabun', sans-serif" font-size="11" fill="#334155">• "ทฤษฎีของเขาเชื่อไม่ได้หรอก เพราะเขาอายุน้อย"</text>
+                        <text x="15" y="100" font-family="'Sarabun', sans-serif" font-size="11" fill="#475569">💡 ความจริง: ความถูกต้องของวิทย์วัดที่หลักฐานเชิงประจักษ์</text>
+                        <rect x="15" y="115" width="240" height="20" rx="3" fill="#dbeafe"/>
+                        <text x="135" y="129" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="10" font-weight="600" fill="#1e40af">โฟกัสที่ระเบียบวิธีและข้อมูลเชิงตัวเลข</text>
+                    </g>
+
+                    <!-- Bottom 2 Boxes -->
+                    <g transform="translate(195, 245)">
+                        <rect width="270" height="145" rx="8" fill="#faf5ff" stroke="#c084fc" stroke-width="1.5"/>
+                        <text x="15" y="30" font-family="'Sarabun', sans-serif" font-size="14" font-weight="700" fill="#7e22ce">4. Straw Man (หุ่นฟาง)</text>
+                        <text x="15" y="50" font-family="'Sarabun', sans-serif" font-size="11" font-weight="600" fill="#6b21a8">(การบิดเบือนข้ออ้างให้อ่อนแอแล้วโจมตี)</text>
+                        <line x1="15" y1="60" x2="255" y2="60" stroke="#e9d5ff"/>
+                        <text x="15" y="80" font-family="'Sarabun', sans-serif" font-size="11" fill="#334155">• "ครูบอกให้ระวังสารกันบูด แปลว่าอยากให้อาหารเน่าหมด?"</text>
+                        <text x="15" y="100" font-family="'Sarabun', sans-serif" font-size="11" fill="#475569">💡 ความจริง: ครูแนะนำให้บริโภคตามปริมาณมาตรฐาน อย.</text>
+                        <rect x="15" y="115" width="240" height="20" rx="3" fill="#f3e8ff"/>
+                        <text x="135" y="129" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="10" font-weight="600" fill="#7e22ce">โต้แย้งบนพื้นฐานข้อเท็จจริงดั้งเดิม ไม่ขยายความเกินจริง</text>
+                    </g>
+
+                    <g transform="translate(495, 245)">
+                        <rect width="270" height="145" rx="8" fill="#f0fdf4" stroke="#4ade80" stroke-width="1.5"/>
+                        <text x="15" y="30" font-family="'Sarabun', sans-serif" font-size="14" font-weight="700" fill="#15803d">5. Appeal to Ignorance</text>
+                        <text x="15" y="50" font-family="'Sarabun', sans-serif" font-size="11" font-weight="600" fill="#166534">(อ้างความไม่รู้: พิสูจน์ไม่ได้แปลว่ามีจริง)</text>
+                        <line x1="15" y1="60" x2="255" y2="60" stroke="#bbf7d0"/>
+                        <text x="15" y="80" font-family="'Sarabun', sans-serif" font-size="11" fill="#334155">• "ในเมื่อวิทยาศาสตร์ยังพิสูจน์พลังงานควอนตัมบำบัดไม่ได้ แสดงว่ามันมีอยู่จริง"</text>
+                        <text x="15" y="100" font-family="'Sarabun', sans-serif" font-size="11" fill="#475569">💡 ความจริง: ภาระการพิสูจน์ (Burden of Proof) ตกอยู่กับผู้อ้าง</text>
+                        <rect x="15" y="115" width="240" height="20" rx="3" fill="#dcfce7"/>
+                        <text x="135" y="129" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="10" font-weight="600" fill="#15803d">Extraordinary claims require extraordinary evidence</text>
+                    </g>
+                </svg>
+            </div>
+
+            <!-- Table 11.2: Fallacies in Science -->
+            <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--primary); margin: 2rem 0 1rem 0;">
+                ตารางที่ 11.2: การวิเคราะห์ข้อสรุปการทดลองของนักเรียนและข้อโต้แย้งที่รัดกุมตามหลักวิทยาศาสตร์
+            </h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 20%;">ประเภทเหตุผลวิบัติ</th>
+                        <th style="width: 35%;">ตัวอย่างข้อสรุปที่บกพร่องในรายงานของนักเรียน</th>
+                        <th style="width: 45%;">แนวทางการโค้ชของครูและข้อโต้แย้งที่รัดกุมทางวิทยาศาสตร์</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="badge badge-red">Post Hoc</span><br>ตู่เหตุการณ์</td>
+                        <td>"กลุ่มเราเปิดไฟสีแดงใส่ต้นถั่ว 3 วัน แล้วพบว่ายอดถั่วเอียงเข้าหาหน้าต่าง แสดงว่าแสงสีแดงเร่งให้พืชเอียง"</td>
+                        <td>กระตุ้นให้นักเรียนแยกแยะตัวแปรแทรกซ้อน: <em>"ต้นถั่วเอียงหาแสงไฟสีแดง หรือเอียงหาแสงแดดจากหน้าต่าง (Phototropism)? ลองย้ายกล่องทดลองไปในห้องมืดที่ไม่มีแสงธรรมชาติเพื่อทดสอบซ้ำ"</em></td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-amber">Hasty Generalization</span><br>ด่วนสรุป</td>
+                        <td>"เราทดลองโยนเหรียญบาทลงในน้ำเชื่อม 1 ครั้งแล้วจมช้ากว่าน้ำเปล่า จึงสรุปว่าของเหลวทุกชนิดที่มีน้ำตาลย่อมมีความหนืดมากกว่าน้ำเปล่าเสมอ"</td>
+                        <td>ชี้แนะเรื่องขนาดกลุ่มตัวอย่างและความเข้มข้น: <em>"การทดลอง 1 ครั้งอาจเกิด Human Error และความหนืดขึ้นกับความเข้มข้นและอุณหภูมิ ควรทำการทดลองซ้ำ 3 ครั้ง (Triplicate) และแปรผันความเข้มข้น"</em></td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-purple">False Dilemma</span><br>ขาวกับดำ</td>
+                        <td>"ถ้าแบบจำลองฟิสิกส์ของเราไม่สามารถพยากรณ์การตกของกระดาษได้แม่นยำ 100% แสดงว่ากฎแรงโน้มถ่วงของนิวตันใช้ไม่ได้ในโลกจริง"</td>
+                        <td>สอนเรื่องกรอบจำกัดของแบบจำลอง (Model Limitations): <em>"กฎนิวตันยังคงถูกต้อง แต่แบบจำลองเริ่มต้นของเราละเลยตัวแปรแรงต้านอากาศ (Air Resistance) และรูปร่างกระดาษไปต่างหาก"</em></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Python Data Literacy Engine -->
+            <h2 class="card-title" style="margin-top: 2.5rem;">
+                <i class="fas fa-terminal"></i> 4. ตัวแบบจำลองภาษา Python 3.11: เครื่องคำนวณ CRAAP Scorecard และตรวจจับ Fallacy
+            </h2>
+            <p>
+                ตัวอย่างโค้ดเครื่องมือช่วยสอนภาษา Python 3.11 สำหรับครูวิทยาศาสตร์ เพื่อใช้ประเมินคะแนนความน่าเชื่อถือของแหล่งข้อมูล และตรวจจับคีย์เวิร์ดบ่งชี้ความเสี่ยงของเหตุผลวิบัติในบทความวิทยาศาสตร์:
+            </p>
+
+            <div class="code-container">
+                <div class="code-header">
+                    <span><i class="fab fa-python" style="color: #38bdf8;"></i> Python 3.11 • ScientificDataLiteracyEngine.py</span>
+                    <span>100% Tested & Executable</span>
+                </div>
+<pre><code><span class="code-keyword">class</span> <span class="code-func">ScientificDataLiteracyEngine</span>:
+    <span class="code-string">"""
+    เครื่องมือช่วยสอนเพื่อคำนวณ CRAAP Scorecard และตรวจจับสัญญาณความเสี่ยงเหตุผลวิบัติ
+    ตามกรอบการรู้เท่าทันข้อมูลวิทยาศาสตร์ (Scientific Data Literacy)
+    """</span>
+    <span class="code-keyword">def</span> <span class="code-func">__init__</span>(self):
+        <span class="code-comment"># พจนานุกรมแพทเทิร์นข้อความที่เสี่ยงต่อการเป็นเหตุผลวิบัติ</span>
+        self.fallacy_rules = {
+            <span class="code-string">'post_hoc'</span>: [<span class="code-string">'หลังจากดื่มสิ่งนี้แล้วหาย'</span>, <span class="code-string">'พอทำสิ่งนี้วันรุ่งขึ้นก็หาย'</span>, <span class="code-string">'เกิดขึ้นตามหลัง'</span>],
+            <span class="code-string">'hasty_generalization'</span>: [<span class="code-string">'ทดลองแค่คนเดียว'</span>, <span class="code-string">'เคสเดียวก็สรุปได้'</span>, <span class="code-string">'คนข้างบ้านหายทุกคน'</span>],
+            <span class="code-string">'ad_hominem'</span>: [<span class="code-string">'ไม่ใช่ผู้เชี่ยวชาญ'</span>, <span class="code-string">'ไม่ได้จบตรงสาย'</span>, <span class="code-string">'มีนิสัยไม่ดี'</span>],
+            <span class="code-string">'appeal_to_ignorance'</span>: [<span class="code-string">'วิทยาศาสตร์ยังพิสูจน์ไม่ได้'</span>, <span class="code-string">'ไม่มีใครหักล้างได้'</span>]
+        }
+
+    <span class="code-keyword">def</span> <span class="code-func">evaluate_craap_score</span>(self, currency, relevance, authority, accuracy, purpose):
+        <span class="code-string">"""คำนวณคะแนนรวม CRAAP (คะแนนแต่ละด้าน 0 - 10, รวมเต็ม 50)"""</span>
+        scores = [currency, relevance, authority, accuracy, purpose]
+        <span class="code-keyword">if</span> any(s &lt; <span class="code-num">0</span> <span class="code-keyword">or</span> s &gt; <span class="code-num">10</span> <span class="code-keyword">for</span> s <span class="code-keyword">in</span> scores):
+            <span class="code-keyword">raise</span> <span class="code-func">ValueError</span>(<span class="code-string">"Individual CRAAP criteria score must be between 0 and 10."</span>)
+        
+        total = sum(scores)
+        <span class="code-keyword">if</span> total &gt;= <span class="code-num">40</span>:
+            rating = <span class="code-string">"Highly Reliable (ความน่าเชื่อถือสูงมาก - ใช้ในห้องเรียนได้)"</span>
+        <span class="code-keyword">elif</span> total &gt;= <span class="code-num">30</span>:
+            rating = <span class="code-string">"Reliable with Caution (น่าเชื่อถือปานกลาง - ควรหาเอกสารยืนยันเพิ่ม)"</span>
+        <span class="code-keyword">else</span>:
+            rating = <span class="code-string">"Unreliable / Misleading (ไม่น่าเชื่อถือ - ปฏิเสธการนำมาอ้างอิง)"</span>
+        
+        <span class="code-keyword">return</span> total, rating
+
+    <span class="code-keyword">def</span> <span class="code-func">detect_fallacies</span>(self, text):
+        <span class="code-string">"""สแกนตรวจจับคีย์เวิร์ดที่เข้าข่ายเหตุผลวิบัติ"""</span>
+        detected = []
+        <span class="code-keyword">for</span> fallacy_type, keywords <span class="code-keyword">in</span> self.fallacy_rules.items():
+            <span class="code-keyword">for</span> kw <span class="code-keyword">in</span> keywords:
+                <span class="code-keyword">if</span> kw <span class="code-keyword">in</span> text:
+                    detected.append(fallacy_type)
+                    <span class="code-keyword">break</span>
+        <span class="code-keyword">return</span> detected
+
+<span class="code-comment"># ==========================================================</span>
+<span class="code-comment"># ตัวอย่างการทดสอบระบบ (Automated Test Pipeline)</span>
+<span class="code-comment"># ==========================================================</span>
+<span class="code-keyword">if</span> __name__ == <span class="code-string">"__main__"</span>:
+    engine = ScientificDataLiteracyEngine()
+    print(<span class="code-string">"--- ทดสอบการประเมิน CRAAP Score ---"</span>)
+    score, verdict = engine.evaluate_craap_score(currency=<span class="code-num">8</span>, relevance=<span class="code-num">9</span>, authority=<span class="code-num">8</span>, accuracy=<span class="code-num">9</span>, purpose=<span class="code-num">8</span>)
+    print(f<span class="code-string">"คะแนนรวม: {score}/50 => {verdict}"</span>)
+
+    print(<span class="code-string">"\n--- ทดสอบการสแกนจับเท็จข่าววิทยาศาสตร์ปลอม ---"</span>)
+    fake_news = <span class="code-string">"หลังจากดื่มสิ่งนี้แล้วหายในวันรุ่งขึ้นทันที ใครที่ไม่เชื่อก็เพราะไม่ใช่ผู้เชี่ยวชาญ"</span>
+    flags = engine.detect_fallacies(fake_news)
+    print(f<span class="code-string">"ข้อความ: \"{fake_news}\""</span>)
+    print(f<span class="code-string">"เหตุผลวิบัติที่ตรวจพบ: {flags}"</span>)
+</code></pre>
+            </div>
+        </div>
+    
+        <!-- ปฏิบัติการจำลองเสมือนจริงประจำสัปดาห์ (Interactive Science Simulator & 180 Labs) -->
+        <div class="card" id="sim-section" style="border: 2px solid #0284c7; box-shadow: 0 8px 24px rgba(2, 132, 199, 0.12); margin-top: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.75rem;">
+                <h2 class="card-title" style="margin-bottom: 0; color: #0284c7;">
+                    <i class="fas fa-cube"></i> ปฏิบัติการจำลองเสมือนจริง: 10.1 เครื่องมือวางแผนโครงงานและ WBS (Project Roadmap Generator AR) — AR MediaPipe Lab • RBRU MOOC
+                </h2>
+                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                    <a href="../simulations/chapter10_project_roadmap_generator.html" target="_blank" class="nav-back" style="margin-bottom: 0; padding: 0.45rem 0.9rem; font-size: 0.85rem; background: #0284c7; color: #fff;">
+                        <i class="fas fa-external-link-alt"></i> เปิดแบบจำลองเต็มหน้าจอ
+                    </a>
+                    <a href="../assets/slides/Computing Science for Science Teaching - Chapter 7: Information Management and Digital Literacy for Science Teachers.pptx" download class="nav-back" style="margin-bottom: 0; padding: 0.45rem 0.9rem; font-size: 0.85rem; background: #f59e0b; color: #fff;"><i class="fas fa-file-powerpoint"></i> ดาวน์โหลดสไลด์ (.pptx)</a>
+                </div>
+            </div>
+
+            <p style="font-size: 0.95rem; color: #334155; margin-bottom: 1rem;">
+                <strong>แบบจำลองเชิงโต้ตอบสำหรับห้องเรียนวิทยาศาสตร์:</strong> ให้นักศึกษาทดลองปรับค่าพารามิเตอร์ สังเกตการณ์เปลี่ยนแปลง และวิเคราะห์ข้อมูลตามกระบวนการคิดเชิงคำนวณ (Computational Thinking):
+            </p>
+
+            <div style="margin: 1rem 0; border-radius: 12px; overflow: hidden; border: 1px solid #cbd5e1; height: 600px; box-shadow: var(--shadow-md);">
+                <iframe src="../simulations/chapter10_project_roadmap_generator.html" style="width: 100%; height: 100%; border: none;"></iframe>
+            </div>
+
+            <div style="margin: 0.85rem 0; display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;"><span style="font-size: 0.85rem; font-weight: 600; color: #64748b;"><i class="fas fa-cubes"></i> แบบจำลองเสริมในบท:</span> <a href="../simulations/chapter07_csv_json_parser.html" target="_blank" style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.35rem 0.75rem; background: #e0f2fe; color: #0284c7; border-radius: 6px; font-size: 0.82rem; font-weight: 600; text-decoration: none; border: 1px solid #bae6fd;"><i class="fas fa-play-circle"></i> 7.3 เครื่องมือแยกวิเคราะห์ข้อมูล CSV และ JSON (Live File Parser AR) — AR MediaPipe Lab • RBRU MOOC</a></div>
+
+            <!-- คลังใบงานปฏิบัติการที่สอดคล้องจาก 180 Labs Manual -->
+            <div style="margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid #e2e8f0;">
+                <h3 style="font-size: 1.05rem; font-weight: 700; color: #0f172a; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-flask" style="color: #10b981;"></i> ใบงานปฏิบัติการที่สอดคล้อง (จากคู่มือปฏิบัติการ ๑๘๐ การทดลอง):
+                </h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem;">
+                    
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.1rem; border-left: 4px solid #10b981; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem; flex-wrap: wrap; gap: 0.25rem;">
+                    <span style="background: #10b981; color: #fff; font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.55rem; border-radius: 4px;">LAB 4.1.1</span>
+                    <span style="font-size: 0.78rem; color: #64748b;"><i class="far fa-clock"></i> 45 นาที | C3 (ประยุกต์ใช้)</span>
+                </div>
+                <h4 style="font-size: 0.98rem; font-weight: 700; color: #0f172a; margin-bottom: 0.2rem;">การพิสูจน์มโนทัศน์พื้นฐาน การวิเคราะห์ความซับซ้อนและสัญกรณ์บิ๊กโอ</h4>
+                <p style="font-size: 0.82rem; color: #64748b; font-style: italic; margin-bottom: 0.5rem;">Foundational Verification: Big-O Asymptotic Complexity</p>
+                <div style="background: #ffffff; border: 1px dashed #cbd5e1; border-radius: 6px; padding: 0.45rem 0.75rem; font-size: 0.85rem; margin-bottom: 0.5rem; overflow-x: auto;"><strong>สมการทฤษฎี:</strong> $$\text{ตัวแปรสถานะแกนกลาง}: \mathcal{S}_{4.1.1} = f(\mathbf{x}, \mathbf{p}) \quad \text{โดยที่ } \mathbf{x} \in \mathbb{R}^n$$</div>
+                <div style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.25rem;"><i class="fas fa-question-circle" style="color: #3b82f6;"></i> คำถามท้ายการทดลอง:</div>
+                <ul style="font-size: 0.82rem; color: #475569; margin-bottom: 0; padding-left: 1.25rem; line-height: 1.5;">
+                    <li style="margin-bottom: 0.25rem;">จงอธิบายความสอดคล้องระหว่างค่าที่วัดได้กับทฤษฎีใน การวิเคราะห์ความซับซ้อนและสัญกรณ์บิ๊กโอ</li><li style="margin-bottom: 0.25rem;">หากปรับเปลี่ยนสภาวะแวดล้อม ตัวแปรควบคุมใดส่งผลต่อความไว (Sensitivity) ของระบบมากที่สุด?</li>
+                </ul>
+            </div>
+        
+
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.1rem; border-left: 4px solid #10b981; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem; flex-wrap: wrap; gap: 0.25rem;">
+                    <span style="background: #10b981; color: #fff; font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.55rem; border-radius: 4px;">LAB 4.1.2</span>
+                    <span style="font-size: 0.78rem; color: #64748b;"><i class="far fa-clock"></i> 60 นาที | C4 (วิเคราะห์)</span>
+                </div>
+                <h4 style="font-size: 0.98rem; font-weight: 700; color: #0f172a; margin-bottom: 0.2rem;">การวิเคราะห์สมรรถนะและขั้นตอนวิธี การวิเคราะห์ความซับซ้อนและสัญกรณ์บิ๊กโอ</h4>
+                <p style="font-size: 0.82rem; color: #64748b; font-style: italic; margin-bottom: 0.5rem;">Performance & Algorithmic Analysis: Big-O Asymptotic Complexity</p>
+                <div style="background: #ffffff; border: 1px dashed #cbd5e1; border-radius: 6px; padding: 0.45rem 0.75rem; font-size: 0.85rem; margin-bottom: 0.5rem; overflow-x: auto;"><strong>สมการทฤษฎี:</strong> $$\text{ประสิทธิภาพเชิงเวลาและความคลาดเคลื่อน}: \varepsilon = \frac{|y_{\text{measured}} - y_{\text{model}}|}{y_{\text{model}}} \times 100\%$$</div>
+                <div style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.25rem;"><i class="fas fa-question-circle" style="color: #3b82f6;"></i> คำถามท้ายการทดลอง:</div>
+                <ul style="font-size: 0.82rem; color: #475569; margin-bottom: 0; padding-left: 1.25rem; line-height: 1.5;">
+                    <li style="margin-bottom: 0.25rem;">อัตราการเพิ่มขึ้นของเวลาประมวลผลสอดคล้องกับความซับซ้อน Big-O ระดับใด?</li><li style="margin-bottom: 0.25rem;">เสนอแนะแนวทางการปรับปรุงขั้นตอนวิธีเพื่อลดการใช้หน่วยความจำลงอย่างน้อย 30%</li>
+                </ul>
+            </div>
+        
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ==================== TAB 3: กิจกรรมการเรียนรู้ 5E ==================== -->
+    <div id="tab3" class="content-section">
+        <div class="card">
+            <h2 class="card-title">
+                <i class="fas fa-chalkboard-user"></i> แผนการจัดกิจกรรมการเรียนรู้เชิงรุก (Active Learning 5E Model - 4 ชั่วโมง)
+            </h2>
+            <p style="margin-bottom: 1.5rem; color: var(--text-muted);">
+                การฝึกอบรมเชิงปฏิบัติการเพื่อเปลี่ยนผ่านจากการพัฒนาโปรแกรมจำลอง สู่การยกร่างแผนการจัดการเรียนรู้และการตรวจสอบความน่าเชื่อถือของข้อมูล:
+            </p>
+
+            <!-- ภาคบรรยาย 1 ชม. -->
+            <div style="background: #ffffff; border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <h3 style="font-size: 1.2rem; color: var(--primary);"><i class="fas fa-book-open text-accent"></i> ภาคบรรยายและสร้างกรอบความคิด (Lecture & Conceptual Scaffolding)</h3>
+                    <span class="time-badge"><i class="fas fa-clock"></i> 60 นาที</span>
+                </div>
+
+                <div style="margin-bottom: 1.25rem;">
+                    <h4 style="color: var(--secondary); margin-bottom: 0.5rem;">1. ขั้นสร้างความสนใจ (Engagement) - 15 นาที</h4>
+                    <ul>
+                        <li><strong>สถานการณ์ท้าทาย:</strong> อาจารย์เปิดคลิปข่าวไวรัลบน TikTok ที่อ้างว่า <em>"กล้วยน้ำว้าต้มผสมเกลือรักษาโรคมะเร็งระยะสุดท้ายได้ผล 100% ภายใน 7 วัน"</em> พร้อมแสดงภาพคอมเมนต์ที่มีผู้หลงเชื่อและแชร์ไปกว่าแสนครั้ง</li>
+                        <li><strong>ประเด็นกระตุกคิด:</strong> "ในฐานะครูวิทยาศาสตร์ เราจะสร้างภูมิคุ้มกันทางปัญญาให้นักเรียนของเราไม่ตกเป็นเหยื่อของการให้เหตุผลที่บิดเบี้ยวนี้ได้อย่างไร?"</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 style="color: var(--secondary); margin-bottom: 0.5rem;">2. ขั้นสำรวจและค้นหา (Exploration) - 45 นาที</h4>
+                    <ul>
+                        <li><strong>การบรรยายเชิงทฤษฎี:</strong> อาจารย์อธิบายหลักการ <strong>Constructive Alignment</strong> (ความสอดคล้องระหว่าง ตัวชี้วัด สสวท. $\leftrightarrow$ วัตถุประสงค์ $\leftrightarrow$ กิจกรรม 5E $\leftrightarrow$ การวัดผล)</li>
+                        <li><strong>สอนโมเดล CRAAP & Fallacy:</strong> ชี้แจงหลักการประเมิน 5 มิติของ CRAAP และยกตัวอย่าง 5 เหตุผลวิบัติที่พบบ่อยในการสอนวิทยาศาสตร์</li>
+                        <li><strong>ตัวอย่างแผนการสอนต้นแบบ:</strong> แจกเอกสารตัวอย่างแผนการสอนวิทยาศาสตร์บูรณาการโปรแกรมจำลองการเคลื่อนที่แนวตรง</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- ภาคปฏิบัติ 3 ชม. -->
+            <div style="background: #ffffff; border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <h3 style="font-size: 1.2rem; color: var(--primary);"><i class="fas fa-laptop-code text-secondary"></i> ภาคปฏิบัติการและเวิร์กช็อป (Lesson Design & Peer Review Workshop)</h3>
+                    <span class="time-badge"><i class="fas fa-clock"></i> 180 นาที</span>
+                </div>
+
+                <div style="margin-bottom: 1.25rem;">
+                    <h4 style="color: var(--secondary); margin-bottom: 0.5rem;">3. ขั้นอธิบายและลงข้อสรุป (Explanation: Lesson Drafting Workshop) - 60 นาที</h4>
+                    <ul>
+                        <li><strong>กิจกรรมยกร่างแผนการสอน (Drafting Lesson Plan):</strong> แต่ละกลุ่มนำโปรแกรมจำลองที่พัฒนาขึ้นและปรับปรุงในสัปดาห์ที่ 10 มาเป็นแกนหลักในการเขียนแผนการจัดการเรียนรู้ 1 คาบ (50-60 นาที)</li>
+                        <li>ระบุตัวชี้วัด สสวท., กำหนดวัตถุประสงค์เชิงพฤติกรรม (K-P-A), และวางขั้นตอนการสอน 5E ที่นักเรียนต้องได้ควบคุมสไลเดอร์และสังเกตผลในโปรแกรมจำลองจริง</li>
+                        <li>อาจารย์เดินให้คำแนะนำเชิงความสอดคล้อง (Alignment Check) เป็นรายกลุ่ม</li>
+                    </ul>
+                </div>
+
+                <div style="margin-bottom: 1.25rem;">
+                    <h4 style="color: var(--secondary); margin-bottom: 0.5rem;">4. ขั้นขยายความรู้ (Elaboration: Fallacy Detective & Peer Review) - 80 นาที</h4>
+                    <ul>
+                        <li><strong>กิจกรรม "นักสืบจับตรรกะวิบัติ" (Fallacy Detective):</strong> แต่ละกลุ่มได้รับเคสข่าววิทยาศาสตร์ปลอม 2 ข่าว นำมาช่วยกันประเมินด้วยแบบฟอร์ม <strong>CRAAP Scorecard</strong> และระบุประเภทของ Logical Fallacy</li>
+                        <li><strong>กิจกรรม Peer Review ตรวจร่างแผนการสอน:</strong> สลับแผนการจัดการเรียนรู้กับกลุ่มเพื่อนบ้าน เพื่อตรวจทานตามเกณฑ์รูบริกส์ 4 มิติ และให้ข้อเสนอแนะเชิงวิชาการเพื่อเตรียมพร้อมสู่การจุลการสอน</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 style="color: var(--secondary); margin-bottom: 0.5rem;">5. ขั้นประเมินผล (Evaluation & Micro-teaching Briefing) - 40 นาที</h4>
+                    <ul>
+                        <li><strong>สรุปและสะท้อนผล:</strong> ตัวแทนกลุ่ม 2 กลุ่มนำเสนอตัวอย่างแผนการสอนที่ได้รับการปรับปรุงตาม Peer Review</li>
+                        <li><strong>การชี้แจงการจุลการสอน (Micro-teaching Briefing):</strong> อาจารย์อธิบายเกณฑ์และกติกาการสอนจำลอง 15 นาทีในสัปดาห์ที่ 13-14 (การแต่งกาย, การแบ่งบทบาทครูหลัก-ครูผู้ช่วย-ผู้คุมสื่อ, และการเตรียมใบงาน)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== TAB 4: การวัดและประเมินผล ==================== -->
+    <div id="tab4" class="content-section">
+        <div class="card">
+            <h2 class="card-title">
+                <i class="fas fa-chart-pie"></i> การวัดและประเมินผลการเรียนรู้ (Assessment & Rubrics)
+            </h2>
+            <p style="margin-bottom: 1.5rem; color: var(--text-muted);">
+                เกณฑ์การประเมินร่างแผนการจัดการเรียนรู้วิทยาศาสตร์บูรณาการแนวคิดเชิงคำนวณ (Lesson Plan Analytic Rubrics) รวม 16 คะแนน (ประเมินเพื่อพัฒนา Formative Assessment):
+            </p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 20%;">มิติการประเมิน</th>
+                        <th style="width: 20%;">ยอดเยี่ยม (4 คะแนน)</th>
+                        <th style="width: 20%;">ดี (3 คะแนน)</th>
+                        <th style="width: 20%;">พอใช้ (2 คะแนน)</th>
+                        <th style="width: 20%;">ปรับปรุง (1 คะแนน)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>1. ความสอดคล้องเชิงสร้างสรรค์ (Constructive Alignment)</strong></td>
+                        <td>ตัวชี้วัด สสวท. วัตถุประสงค์ (K-P-A) กิจกรรม 5E และเครื่องมือวัดผลสอดรับกันอย่างสมบูรณ์ ไร้รอยต่อ วัดผลได้เชิงประจักษ์</td>
+                        <td>ตัวชี้วัดและกิจกรรมส่วนใหญ่สอดคล้องกัน วัตถุประสงค์ครอบคลุม K-P-A แต่อาจมีเครื่องมือวัดผลบางประเด็นที่ยังไม่ชัดเจนเล็กน้อย</td>
+                        <td>กิจกรรมการสอนไม่สอดคล้องกับตัวชี้วัดบางส่วน หรือวัตถุประสงค์เชิงพฤติกรรมเขียนในลักษณะที่ไม่สามารถวัดผลได้</td>
+                        <td>องค์ประกอบในแผนการสอนขัดแย้งกัน ตัวชี้วัด กิจกรรม และการวัดผลไม่สัมพันธ์กัน ขาดทิศทางการเรียนรู้ที่ชัดเจน</td>
+                    </tr>
+                    <tr>
+                        <td><strong>2. การบูรณาการ CT และโปรแกรมจำลอง</strong></td>
+                        <td>บูรณาการ CT ทั้ง 4 เสาหลักเข้ากับโปรแกรมจำลองได้อย่างแนบเนียน ผู้เรียนได้มีปฏิสัมพันธ์ควบคุมตัวแปรและค้นพบมโนทัศน์ด้วยตนเอง</td>
+                        <td>บูรณาการ CT ได้ 2-3 เสาหลัก โปรแกรมจำลองมีบทบาทสำคัญในการเรียนรู้ แต่อาจเน้นการสาธิตหน้าชั้นมากกว่าให้นักเรียนทดลองเอง</td>
+                        <td>ใช้โปรแกรมจำลองเป็นเพียงภาพประกอบ หรือให้นักเรียนดูเฉยๆ โดยไม่ได้เชื่อมโยงกับแนวคิดเชิงคำนวณอย่างเป็นรูปธรรม</td>
+                        <td>ไม่มีการใช้โปรแกรมจำลอง หรือโปรแกรมที่ใช้ไม่ได้มีส่วนช่วยในการส่งเสริมความเข้าใจในบทเรียนวิทยาศาสตร์</td>
+                    </tr>
+                    <tr>
+                        <td><strong>3. การส่งเสริมการรู้เท่าทันข้อมูล (Data Literacy & CRAAP)</strong></td>
+                        <td>สอดแทรกกิจกรรมตรวจสอบความน่าเชื่อถือของข้อมูล (CRAAP) และการระบุเหตุผลวิบัติได้อย่างแยบคาย เหมาะสมกับระดับชั้นของผู้เรียน</td>
+                        <td>มีกิจกรรมตรวจสอบข้อมูลหรือวิเคราะห์ข้อผิดพลาด แต่คำถามนำยังไม่เจาะลึกถึงระดับการวิเคราะห์ตรรกะวิบัติ</td>
+                        <td>กล่าวถึงการรู้เท่าทันข้อมูลเพียงผิวเผินในขั้นสรุป โดยไม่มีใบกิจกรรมหรือกรณีศึกษาให้นักเรียนได้ลงมือฝึกปฏิบัติ</td>
+                        <td>ไม่มีองค์ประกอบด้านการรู้เท่าทันข้อมูล หรือปล่อยให้เกิดข้อสรุปที่เข้าข่ายเหตุผลวิบัติโดยไม่มีการทักท้วง</td>
+                    </tr>
+                    <tr>
+                        <td><strong>4. ความเป็นไปได้และการจัดการเวลา (Feasibility & Flow)</strong></td>
+                        <td>การจัดสรรเวลา 50-60 นาทีมีความสมดุล ลำดับขั้น 5E ลื่นไหล มีแผนรองรับกรณีเกิดปัญหาทางเทคนิคหรืออุปกรณ์ขัดข้อง</td>
+                        <td>กิจกรรมมีลำดับขั้นตอนดี เวลาค่อนข้างเหมาะสม แต่อาจเร่งรีบในขั้นขยายความรู้ (Elaborate) หรือขั้นประเมินผล</td>
+                        <td>กิจกรรมแน่นเกินไปจนไม่สามารถจัดได้จริงใน 1 คาบ หรือไม่มีการระบุการจัดการบทบาทหน้าที่ของสมาชิกกลุ่ม</td>
+                        <td>กิจกรรมไม่เป็นระบบ ขาดความต่อเนื่อง และไม่สามารถนำไปปฏิบัติการสอนจริงในชั้นเรียนได้</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="highlight-box">
+                <i class="fas fa-file-signature text-accent" style="margin-right: 0.5rem;"></i>
+                <strong>การนำผลการประเมินไปใช้:</strong> แผนการจัดการเรียนรู้ที่ผ่านการตรวจทานในสัปดาห์นี้ จะถูกนำไปปรับปรุงเป็น "แผนการจัดการเรียนรู้ฉบับสมบูรณ์" เพื่อใช้สำหรับการ <strong>จุลการสอน (Micro-teaching 20%)</strong> ในสัปดาห์ที่ 13-14
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== TAB 5: ข้อสอบวัดสมรรถนะ HOTS ==================== -->
+    <div id="tab5" class="content-section">
+        <div class="card">
+            <h2 class="card-title">
+                <i class="fas fa-clipboard-question"></i> แบบทดสอบวัดสมรรถนะการคิดขั้นสูง (HOTS) ตามแนวทาง สสวท.
+            </h2>
+            <p style="margin-bottom: 1.5rem; color: var(--text-muted);">
+                ข้อสอบวัดสมรรถนะการคิดขั้นสูง (High-Order Thinking Skills) สำหรับครูวิทยาศาสตร์ เพื่อประเมินความสามารถในการวิเคราะห์ข้อมูลลวงและการออกแบบการจัดการเรียนรู้:
+            </p>
+
+            <!-- HOTS Question 1 -->
+            <div style="background: #ffffff; border: 1px solid var(--border); border-radius: 12px; padding: 1.75rem; margin-bottom: 2rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <span class="badge badge-blue">ข้อที่ 1 • การประเมินค่าความน่าเชื่อถือของข้อมูล (Evaluating & CRAAP Test)</span>
+                    <span style="font-size: 0.85rem; color: var(--text-muted);"><i class="fas fa-brain"></i> Bloom: Evaluating</span>
+                </div>
+                <h4 style="font-size: 1.05rem; line-height: 1.7; margin-bottom: 1rem; color: var(--primary);">
+                    <strong>สถานการณ์:</strong> ในคาบเรียนวิทยาศาสตร์ ม.2 เรื่องสารอาหารและสุขภาพ นักเรียนนำบทความจากเพจ Facebook ชื่อ <em>"สมุนไพรมหัศจรรย์พลิกชีวิต"</em> มาอภิปราย โดยบทความระบุว่า:<br>
+                    <em>"ผลวิจัยระดับโลกล่าสุดจากแล็บยืนยัน! สารสกัดจากใบมะละกอเข้มข้นสามารถทำลายเซลล์มะเร็งปอดได้ 99.8% ภายใน 24 ชั่วโมง โดยไม่ทำลายเซลล์ปกติ ผู้ป่วยมะเร็งไม่ต้องพึ่งเคมีบำบัดอีกต่อไป สั่งซื้อสารสกัดแท้สูตรอาจารย์สมหมายได้ที่ลิงก์ด้านล่างนี้"</em><br><br>
+                    หากท่านเป็นครูผู้สอน ข้อใดระบุ <strong>"จุดบกพร่องตามเกณฑ์ CRAAP และข้อจำกัดทางระเบียบวิธีวิทยาศาสตร์"</strong> ที่ครูควรชี้แนะให้นักเรียนตระหนักได้อย่างถูกต้องและรอบด้านที่สุด?
+                </h4>
+
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="toggleExplanation('exp1', false, this)">
+                        <span style="font-weight: 700; color: var(--accent);">ก.</span>
+                        <div>บกพร่องเฉพาะด้าน Currency เพราะใบมะละกอเป็นสมุนไพรพื้นบ้านโบราณที่ไม่มีความทันสมัย; ควรแนะนำให้นักเรียนศึกษาเฉพาะงานวิจัยที่ใช้ยาแผนปัจจุบันสังเคราะห์</div>
+                    </div>
+                    <div class="quiz-option" onclick="toggleExplanation('exp1', true, this)">
+                        <span style="font-weight: 700; color: var(--accent);">ข.</span>
+                        <div>บกพร่องร้ายแรงด้าน Purpose (แอบแฝงขายสินค้า), Authority (ขาดการรับรองจากสถาบันการแพทย์ที่เชื่อถือได้) และ Accuracy (เป็นการทดลองในจานเพาะเชื้อ In Vitro ที่ยังไม่ผ่านการทดลองทางคลินิกในมนุษย์ ซึ่งสารเคมีหลายชนิดสามารถฆ่าเซลล์ในจานทดลองได้แต่เป็นพิษหรือไม่ได้ผลในร่างกายจริง)</div>
+                    </div>
+                    <div class="quiz-option" onclick="toggleExplanation('exp1', false, this)">
+                        <span style="font-weight: 700; color: var(--accent);">ค.</span>
+                        <div>บกพร่องด้าน Relevance เพราะเรื่องเซลล์มะเร็งไม่เกี่ยวข้องกับสาระการเรียนรู้วิทยาศาสตร์ระดับมัธยมศึกษา; ครูควรสั่งห้ามไม่ให้นักเรียนยกตัวอย่างนี้ในชั้นเรียน</div>
+                    </div>
+                    <div class="quiz-option" onclick="toggleExplanation('exp1', false, this)">
+                        <span style="font-weight: 700; color: var(--accent);">ง.</span>
+                        <div>ข้อมูลดังกล่าวมีความน่าเชื่อถือสูงตามเกณฑ์ Accuracy เนื่องจากระบุตัวเลขสถิติชัดเจน (99.8% ใน 24 ชม.); ครูควรสนับสนุนให้นักเรียนแชร์ต่อเพื่อเป็นวิทยาทาน</div>
+                    </div>
+                </div>
+
+                <div id="exp1" class="quiz-explanation">
+                    <h5 style="color: var(--success); font-weight: 700; margin-bottom: 0.5rem;"><i class="fas fa-circle-check"></i> เฉลยข้อ ข. (ถูกต้อง)</h5>
+                    <p style="font-size: 0.95rem; line-height: 1.7; color: var(--text-main);">
+                        <strong>คำอธิบายเชิงการสอนและวิทยาศาสตร์:</strong><br>
+                        1. <strong>Purpose (เจตนา):</strong> มีผลประโยชน์ทับซ้อนเชิงพาณิชย์ชัดเจน (Commercial Bias) เพราะทิ้งท้ายด้วยการขายสินค้า<br>
+                        2. <strong>Authority (ความเชี่ยวชาญ):</strong> ขาดการอ้างอิงวารสารวิชาการที่มีระบบ Peer Review และสถาบันต้นสังกัดของผู้เขียน<br>
+                        3. <strong>Accuracy (ความถูกต้องของระเบียบวิธีวิทย์):</strong> เป็นตัวอย่างคลาสสิกของการ <em>"ด่วนสรุปเกินขอบเขต (Overgeneralization)"</em> สารพิษหลายชนิดรวมถึงสารฟอกขาวสามารถทำลายเซลล์มะเร็งในจานแก้ว (In vitro) ได้ 100% แต่ไม่สามารถนำมาใช้รักษาในสิ่งมีชีวิตจริง (In vivo) ได้ เพราะอาจทำลายตับ ไต และระบบไหลเวียนโลหิต การสอนให้นักเรียนเข้าใจความแตกต่างระหว่างผลในจานเพาะเชื้อกับการทดลองทางคลินิก (Clinical Trial) คือหัวใจสำคัญของการรู้เท่าทันวิทยาศาสตร์ตามมาตรฐาน สสวท.
+                    </p>
+                </div>
+            </div>
+
+            <!-- HOTS Question 2 -->
+            <div style="background: #ffffff; border: 1px solid var(--border); border-radius: 12px; padding: 1.75rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <span class="badge badge-purple">ข้อที่ 2 • การวิเคราะห์ตรรกะวิบัติและการออกแบบการสอน (Fallacy Analysis & Pedagogical Design)</span>
+                    <span style="font-size: 0.85rem; color: var(--text-muted);"><i class="fas fa-brain"></i> Bloom: Creating</span>
+                </div>
+                <h4 style="font-size: 1.05rem; line-height: 1.7; margin-bottom: 1rem; color: var(--primary);">
+                    <strong>สถานการณ์:</strong> ในการทดลองวิทยาศาสตร์ เรื่อง <em>"ปัจจัยที่มีผลต่ออัตราการสังเคราะห์ด้วยแสงของพืชน้ำ (สาหร่ายหางกระรอก)"</em> นักเรียนกลุ่มหนึ่งเขียนรายงานสรุปผลการทดลองว่า:<br>
+                    <em>"เมื่อพวกเราเปิดเพลงคลาสสิกของโมสาร์ทให้สาหร่ายหางกระรอกฟังเป็นเวลา 15 นาที พบว่าจำนวนฟองก๊าซออกซิเจนที่ลอยขึ้นมามีมากกว่าตอนที่ไม่เปิดเพลงถึง 10 ฟองต่อนาที กลุ่มเราจึงสรุปว่าคลื่นเสียงดนตรีคลาสสิกช่วยกระตุ้นการทำงานของคลอโรฟิลล์ให้สังเคราะห์ด้วยแสงได้ดีขึ้นอย่างมีนัยสำคัญ"</em><br>
+                    (หมายเหตุ: การทดลองช่วงเปิดเพลง ทำในช่วงเวลา 12.00 น. ซึ่งมีแสงแดดส่องกระทบโต๊ะทดลองริมหน้าต่างมากกว่าช่วงเช้า 09.00 น. ที่ไม่มีการเปิดเพลง)<br><br>
+                    ข้อสรุปของนักเรียนเกิดเหตุผลวิบัติประเภทใด และครูควรออกแบบ <strong>"คำถามสืบเสาะ (Inquiry Question)"</strong> ในขั้น Explanation อย่างไร เพื่อให้นักเรียนตระหนักถึงข้อผิดพลาดและออกแบบการทดลองควบคุมตัวแปรใหม่ได้ด้วยตนเอง?
+                </h4>
+
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="toggleExplanation('exp2', false, this)">
+                        <span style="font-weight: 700; color: var(--accent);">ก.</span>
+                        <div>เกิด Ad Hominem; ครูควรบอกนักเรียนตรงๆ ว่านักเรียนยังเด็กเกินไปที่จะเข้าใจกลไกควอนตัมของการสังเคราะห์ด้วยแสง และให้ลบรายงานทิ้ง</div>
+                    </div>
+                    <div class="quiz-option" onclick="toggleExplanation('exp2', false, this)">
+                        <span style="font-weight: 700; color: var(--accent);">ข.</span>
+                        <div>เกิด Straw Man; ครูควรถามว่า "ทำไมกลุ่มเธอถึงคิดว่าเพลงร็อกหรือเพลงป็อปจะไม่ช่วยให้พืชสังเคราะห์ด้วยแสงล่ะ?"</div>
+                    </div>
+                    <div class="quiz-option" onclick="toggleExplanation('exp2', true, this)">
+                        <span style="font-weight: 700; color: var(--accent);">ค.</span>
+                        <div>เกิด <strong>Post Hoc Ergo Propter Hoc (False Cause)</strong> และการไม่ควบคุมตัวแปรแทรกซ้อน (Confounding Variable: แสงแดด); ครูควรถามกระตุ้นคิดว่า: <em>"นอกจากเสียงเพลงที่เปิดแล้ว มีปัจจัยแวดล้อมใดอีกบ้างที่แตกต่างกันระหว่างตอน 9 โมงเช้ากับตอนเที่ยงตรง? และเราจะมั่นใจได้อย่างไรว่าฟองก๊าซที่เพิ่มขึ้นเกิดจากคลื่นเสียง มิใช่เกิดจากความเข้มแสงแดดริมหน้าต่างที่เปลี่ยนไป?"</em></div>
+                    </div>
+                    <div class="quiz-option" onclick="toggleExplanation('exp2', false, this)">
+                        <span style="font-weight: 700; color: var(--accent);">ง.</span>
+                        <div>เกิด Appeal to Authority; ครูควรเฉลยทันทีว่าในหนังสือเรียน สสวท. ไม่มีเรื่องเสียงเพลง พร้อมทั้งสั่งให้นักเรียนท่องจำเฉพาะปัจจัยความเข้มแสง อุณหภูมิ และก๊าซคาร์บอนไดออกไซด์</div>
+                    </div>
+                </div>
+
+                <div id="exp2" class="quiz-explanation">
+                    <h5 style="color: var(--success); font-weight: 700; margin-bottom: 0.5rem;"><i class="fas fa-circle-check"></i> เฉลยข้อ ค. (ถูกต้อง)</h5>
+                    <p style="font-size: 0.95rem; line-height: 1.7; color: var(--text-main);">
+                        <strong>คำอธิบายเชิงจิตวิทยาการเรียนรู้และการสอนวิทยาศาสตร์:</strong><br>
+                        - นักเรียนด่วนสรุปว่าเสียงดนตรีเป็น "สาเหตุ" เพียงเพราะมันเกิดขึ้นร่วมกับฟองก๊าซที่เพิ่มขึ้น (False Cause / Post Hoc) โดยละเลย <strong>ตัวแปรแทรกซ้อน (Confounding Variable)</strong> สำคัญยิ่งทางชีววิทยา นั่นคือ "ความเข้มแสงธรรมชาติริมหน้าต่าง" ที่เวลาเที่ยงย่อมมีความเข้มแสงสูงกว่าตอน 9 โมงเช้าอย่างมาก<br>
+                        - บทบาทของครูตามแนวทาง Active Learning คือ <strong>"การใช้คำถามนำเพื่อการสะท้อนคิด (Scaffolding Questioning)"</strong> มิใช่การตัดสินผิด-ถูกในทันที คำถามในข้อ ค. จะช่วยให้นักเรียนใช้ทักษะ <em>Decomposition</em> แยกแยะตัวแปร และตระหนักได้เองว่าการทดลองของตนขาด <strong>"กลุ่มควบคุมพร้อมกัน (Concurrent Control Setup)"</strong> ในสภาวะแสงเท่ากัน ซึ่งจะนำไปสู่การปรับปรุงระเบียบวิธีวิจัยให้รัดกุมตามกระบวนการทางวิทยาศาสตร์
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== TAB 6: เอกสารอ้างอิง ==================== -->
+    <div id="tab6" class="content-section">
+        <div class="card">
+            <h2 class="card-title">
+                <i class="fas fa-book"></i> เอกสารและงานวิจัยอ้างอิง (References - APA 7th Edition)
+            </h2>
+            <p style="margin-bottom: 1.5rem; color: var(--text-muted);">
+                คลังวรรณกรรมวิจัยระดับนานาชาติและระดับชาติด้านการรู้เท่าทันข้อมูลวิทยาศาสตร์, การออกแบบแผนการสอนแบบบูรณาการ, และการจัดการศึกษาในยุคดิจิทัล:
+            </p>
+
+            <ul style="list-style: none; padding-left: 0; line-height: 2;">
+                <li style="margin-bottom: 1.25rem; padding-left: 1.75rem; text-indent: -1.75rem;">
+                    <i class="fas fa-file-lines text-accent" style="margin-right: 0.5rem;"></i>
+                    Blakeslee, S. (2004). The CRAAP test. <em>LOEX Quarterly</em>, 31(3), 6–7. 
+                    <a href="https://commons.emich.edu/loexquarterly/vol31/iss3/4" target="_blank" style="color: var(--accent); text-decoration: underline;">https://commons.emich.edu/loexquarterly/vol31/iss3/4</a>
+                </li>
+
+                <li style="margin-bottom: 1.25rem; padding-left: 1.75rem; text-indent: -1.75rem;">
+                    <i class="fas fa-file-lines text-accent" style="margin-right: 0.5rem;"></i>
+                    Karlsen, N., & Aalbergsjø, S. G. (2026). Developing pre-service teachers’ TPACK for programming simulations in science education. <em>Educational Technology Research and Development</em>, 74(1), 1–25. 
+                    <a href="https://doi.org/10.1007/s11423-026-10674-3" target="_blank" style="color: var(--accent); text-decoration: underline;">https://doi.org/10.1007/s11423-026-10674-3</a>
+                </li>
+
+                <li style="margin-bottom: 1.25rem; padding-left: 1.75rem; text-indent: -1.75rem;">
+                    <i class="fas fa-file-lines text-accent" style="margin-right: 0.5rem;"></i>
+                    Osborne, J., Pimentel, D., Alberts, B., Allchin, D., Barzilai, S., Bergstrom, C., Coffey, J., & Donovan, B. (2022). <em>Science education in an age of misinformation</em>. Stanford University. 
+                    <a href="https://doi.org/10.25740/cx564kt2998" target="_blank" style="color: var(--accent); text-decoration: underline;">https://doi.org/10.25740/cx564kt2998</a>
+                </li>
+
+                <li style="margin-bottom: 1.25rem; padding-left: 1.75rem; text-indent: -1.75rem;">
+                    <i class="fas fa-file-lines text-accent" style="margin-right: 0.5rem;"></i>
+                    Ragonis, N., Rosenberg-Kima, R. B., & Hazzan, O. (2024). A computational thinking course for all preservice K-12 teachers: implementing the four pedagogies for developing computational thinking (4P4CT) framework. <em>Educational Technology Research and Development</em>, 72(4), 2135–2161. 
+                    <a href="https://doi.org/10.1007/s11423-024-10406-5" target="_blank" style="color: var(--accent); text-decoration: underline;">https://doi.org/10.1007/s11423-024-10406-5</a>
+                </li>
+
+                <li style="margin-bottom: 1.25rem; padding-left: 1.75rem; text-indent: -1.75rem;">
+                    <i class="fas fa-file-lines text-accent" style="margin-right: 0.5rem;"></i>
+                    Saraç, A., & Özdener, N. (2026). Interdisciplinary IoT-enhanced project-based learning in pre-service teacher education: Exploring computational thinking and collaboration. <em>Education Sciences</em>, 16(8), 1330. 
+                    <a href="https://doi.org/10.3390/educsci16081330" target="_blank" style="color: var(--accent); text-decoration: underline;">https://doi.org/10.3390/educsci16081330</a>
+                </li>
+
+                <li style="margin-bottom: 1.25rem; padding-left: 1.75rem; text-indent: -1.75rem;">
+                    <i class="fas fa-book text-accent" style="margin-right: 0.5rem;"></i>
+                    สถาบันส่งเสริมการสอนวิทยาศาสตร์และเทคโนโลยี. (2561). <em>คู่มือการใช้หลักสูตรรายวิชาพื้นฐานวิทยาศาสตร์ สาระเทคโนโลยี (วิทยาการคำนวณ) ตามมาตรฐานการเรียนรู้และตัวชี้วัด กลุ่มสาระการเรียนรู้วิทยาศาสตร์ (ฉบับปรับปรุง พ.ศ. 2560)</em>. โรงพิมพ์แห่งจุฬาลงกรณ์มหาวิทยาลัย.
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>© 2026 รายวิชา 4124941 วิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์ | <strong>ผู้ช่วยศาสตราจารย์ ดร.ชีวะ ทัศนา</strong></p>
+        <p>คณะวิทยาศาสตร์และเทคโนโลยี มหาวิทยาลัยราชภัฏรำไพพรรณี</p>
+    </footer>
+</div>
+
+<!-- Interactive Scripts -->
+<script>
+    function showTab(tabId, btnElement) {
+        document.querySelectorAll('.content-section').forEach(function(section) {
+            section.classList.remove('active');
+        });
+        document.querySelectorAll('.tab-btn').forEach(function(btn) {
+            btn.classList.remove('active');
+        });
+        document.getElementById(tabId).classList.add('active');
+        btnElement.classList.add('active');
+        window.scrollTo({ top: 120, behavior: 'smooth' });
+    }
+
+    function toggleExplanation(expId, isCorrect, element) {
+        var expBox = document.getElementById(expId);
+        if (expBox) {
+            expBox.style.display = 'block';
+        }
+        var parentUl = element.parentElement;
+        var options = parentUl.querySelectorAll('.quiz-option');
+        options.forEach(function(opt) {
+            opt.style.borderColor = '#e2e8f0';
+            opt.style.backgroundColor = '#ffffff';
+        });
+        if (isCorrect) {
+            element.style.borderColor = '#10b981';
+            element.style.backgroundColor = '#ecfdf5';
+        } else {
+            element.style.borderColor = '#ef4444';
+            element.style.backgroundColor = '#fef2f2';
+        }
+    }
+</script>
+
+</body>
+</html>

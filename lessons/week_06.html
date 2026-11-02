@@ -1,0 +1,1483 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แผนการสอนสัปดาห์ที่ 6 - การเขียนโปรแกรมอย่างง่าย 2 (การวนซ้ำ ฟังก์ชัน และการประมวลผลข้อมูลอาร์เรย์) ด้วย Scratch/Python</title>
+    <!-- ฟอนต์ Sarabun และ Inter จาก Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- MathJax 3 for Scientific Notation & Equations -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [["$", "$"], ["\\(", "\\)"]],
+                displayMath: [["$$", "$$"], ["\\[", "\\]"]],
+                processEscapes: true,
+                processEnvironments: true
+            },
+            options: {
+                skipHtmlTags: ["script", "noscript", "style", "textarea", "pre", "code"]
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --primary: #0f172a;
+            --primary-light: #1e293b;
+            --accent: #2563eb;
+            --accent-hover: #1d4ed8;
+            --secondary: #0891b2;
+            --success: #059669;
+            --warning: #d97706;
+            --danger: #dc2626;
+            --purple: #7c3aed;
+            --scratch-orange: #ffab19;
+            --scratch-blue: #4c97ff;
+            --scratch-green: #59c059;
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --border-focus: #94a3b8;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.08), 0 2px 4px -2px rgba(0,0,0,0.05);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.05);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Sarabun', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.8;
+            font-size: 16px;
+        }
+
+        .container {
+            max-width: 1140px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        .nav-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 1.25rem;
+            padding: 0.5rem 1rem;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.25s ease;
+        }
+
+        .nav-back:hover {
+            color: var(--accent-hover);
+            transform: translateX(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0369a1 100%);
+            color: #ffffff;
+            padding: 3rem 2.5rem;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            top: -40%;
+            right: -10%;
+            width: 480px;
+            height: 480px;
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.25) 0%, rgba(255, 255, 255, 0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .header-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(8px);
+            padding: 0.35rem 0.85rem;
+            border-radius: 9999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            line-height: 1.3;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.02em;
+        }
+
+        .header .subtitle {
+            font-size: 1.15rem;
+            opacity: 0.92;
+            font-weight: 400;
+            max-width: 880px;
+        }
+
+        .header .course-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 1.25rem 1.5rem;
+            border-radius: 12px;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .header .course-info span {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.92rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .tab-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 0.85rem 1.4rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            transition: all 0.25s ease;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .tab-btn:hover {
+            background: #f1f5f9;
+            color: var(--accent);
+            border-color: #cbd5e1;
+        }
+
+        .tab-btn.active {
+            background: var(--accent);
+            color: #ffffff;
+            border-color: var(--accent);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+
+        .content-section {
+            display: none;
+            animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--bg-card);
+            border-radius: 14px;
+            padding: 2.25rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+        }
+
+        .card-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding-bottom: 0.85rem;
+            border-bottom: 2px solid #f1f5f9;
+        }
+
+        .card-title i {
+            color: var(--accent);
+        }
+
+        .highlight-box {
+            background-color: #eff6ff;
+            border-left: 4px solid var(--accent);
+            padding: 1.25rem 1.5rem;
+            border-radius: 0 10px 10px 0;
+            margin: 1.5rem 0;
+            font-size: 0.98rem;
+        }
+
+        .highlight-box.warning {
+            background-color: #fffbeb;
+            border-left-color: var(--warning);
+        }
+
+        .highlight-box.success {
+            background-color: #ecfdf5;
+            border-left-color: var(--success);
+        }
+
+        .highlight-box.danger {
+            background-color: #fef2f2;
+            border-left-color: var(--danger);
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .feature-box {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.25s ease;
+        }
+
+        .feature-box:hover {
+            border-color: var(--accent);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .feature-box h4 {
+            font-size: 1.1rem;
+            color: var(--primary);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .session-block {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 1.75rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border);
+            border-left: 5px solid var(--secondary);
+        }
+
+        .session-block h4 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .time-badge {
+            background: #e0f2fe;
+            color: #0369a1;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+        }
+
+        th, td {
+            padding: 0.9rem 1.1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+
+        th {
+            background-color: #f1f5f9;
+            font-weight: 700;
+            color: var(--primary);
+            border-top: 1px solid var(--border);
+        }
+
+        tr:hover td {
+            background-color: #f8fafc;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.65rem;
+            border-radius: 6px;
+            font-size: 0.82rem;
+            font-weight: 600;
+        }
+
+        .badge-blue { background: #dbeafe; color: #1e40af; }
+        .badge-green { background: #dcfce7; color: #166534; }
+        .badge-purple { background: #f3e8ff; color: #6b21a8; }
+        .badge-amber { background: #fef3c7; color: #92400e; }
+
+        pre {
+            background: #0f172a;
+            color: #f8fafc;
+            padding: 1.25rem 1.5rem;
+            border-radius: 10px;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.92rem;
+            line-height: 1.6;
+            margin: 1rem 0;
+            border: 1px solid #1e293b;
+        }
+
+        code {
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            background-color: #f1f5f9;
+            color: #b91c1c;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        pre code {
+            background-color: transparent;
+            color: inherit;
+            padding: 0;
+        }
+
+        .svg-container {
+            width: 100%;
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.75rem 0;
+            box-shadow: var(--shadow-sm);
+            text-align: center;
+        }
+
+        .svg-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.75rem;
+            text-align: center;
+        }
+
+        .svg-caption {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            margin-top: 0.75rem;
+            text-align: center;
+            font-style: italic;
+        }
+
+        .quiz-card {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.75rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .quiz-question {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .quiz-options {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 1rem;
+        }
+
+        .quiz-option {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .quiz-option:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+        }
+
+        .quiz-explanation {
+            background: #ecfdf5;
+            border-left: 4px solid var(--success);
+            padding: 1rem 1.25rem;
+            border-radius: 0 8px 8px 0;
+            margin-top: 1rem;
+            font-size: 0.95rem;
+            display: none;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2.5rem 0;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border);
+            margin-top: 3rem;
+        }
+
+        @media (max-width: 768px) {
+            .header { padding: 2rem 1.5rem; }
+            .header h1 { font-size: 1.6rem; }
+            .card { padding: 1.5rem; }
+            .tabs { gap: 0.35rem; }
+            .tab-btn { padding: 0.65rem 1rem; font-size: 0.88rem; }
+            .grid-2 { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <a href="../index.html" class="nav-back">
+        <i class="fas fa-arrow-left"></i> กลับสู่หน้าหลักรายวิชา
+    </a>
+
+    <header class="header">
+        <div class="header-badge"><i class="fas fa-microchip"></i> Computational Thinking & Programming</div>
+        <h1>📚 แผนการสอนสัปดาห์ที่ 6</h1>
+        <p class="subtitle">การเขียนโปรแกรมอย่างง่าย 2 (การวนซ้ำ ฟังก์ชัน และการประมวลผลข้อมูลอาร์เรย์) ด้วย Scratch/Python</p>
+        <div class="course-info">
+            <span><i class="fas fa-book"></i> <strong>รหัสวิชา:</strong> 4124941</span>
+            <span><i class="fas fa-graduation-cap"></i> <strong>วิชา:</strong> วิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์</span>
+            <span><i class="fas fa-chalkboard-teacher"></i> <strong>ผู้สอน:</strong> ผศ.ดร.ชีวะ ทัศนา</span>
+            <span><i class="fas fa-university"></i> <strong>สังกัด:</strong> คณะวิทยาศาสตร์และเทคโนโลยี</span>
+            <span><i class="fas fa-clock"></i> <strong>เวลา:</strong> 4 ชม. (บรรยาย 2 + ปฏิบัติ 2)</span>
+        </div>
+    </header>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="showTab('tab1', this)"><i class="fas fa-bullseye"></i> ผลลัพธ์การเรียนรู้ (WLOs)</button>
+        <button class="tab-btn" onclick="showTab('tab2', this)"><i class="fas fa-project-diagram"></i> สาระสำคัญ & สื่อทัศนศิลป์</button>
+        <button class="tab-btn" onclick="showTab('tab3', this)"><i class="fas fa-chalkboard-user"></i> กิจกรรมการเรียนรู้ (5E)</button>
+        <button class="tab-btn" onclick="showTab('tab4', this)"><i class="fas fa-clipboard-check"></i> การวัดและประเมินผล</button>
+        <button class="tab-btn" onclick="showTab('tab5', this)"><i class="fas fa-brain"></i> ข้อสอบวัดสมรรถนะ (HOTS)</button>
+        <button class="tab-btn" onclick="showTab('tab6', this)"><i class="fas fa-book-bookmark"></i> เอกสารอ้างอิง (APA 7th)</button>
+    </div>
+
+    <!-- ==========================================
+         TAB 1: ผลลัพธ์การเรียนรู้ (WLOs)
+         ========================================== -->
+    <div id="tab1" class="content-section active">
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-bullseye"></i> ผลลัพธ์การเรียนรู้ระดับสัปดาห์ (Weekly Learning Outcomes: WLOs)</h2>
+            <p style="margin-bottom: 1.5rem; color: var(--text-muted);">
+                เมื่อสิ้นสุดการจัดกิจกรรมการเรียนรู้สัปดาห์ที่ 6 นักศึกษาครูวิทยาศาสตร์สามารถแสดงสมรรถนะ 4 มิติเชิงบูรณาการวิทยาการคำนวณและวิทยาศาสตร์ได้ดังนี้:
+            </p>
+
+            <div class="grid-2">
+                <div class="feature-box" style="border-top: 4px solid var(--accent);">
+                    <h4><i class="fas fa-brain text-accent"></i> WLO 1: ความรู้ด้านการวนซ้ำและโมดูลาร์ (Functional Knowledge)</h4>
+                    <p>อธิบายหลักการทำงานและเปรียบเทียบสถาปัตยกรรมของ <strong>ลูปแบบรู้จำนวนรอบแน่นอน (Definite Iteration: <code>for</code> loop)</strong> และ <strong>ลูปแบบมีเงื่อนไข (Indefinite Iteration: <code>while</code> loop)</strong> ตลอดจนสถาปัตยกรรมการแบ่งส่วนโมดูลฟังก์ชัน (Modular Function Abstraction, Parameter Passing, Return Values, Local vs. Global Scope) ในการแก้ปัญหาวิทยาศาสตร์ได้อย่างถูกต้อง</p>
+                </div>
+
+                <div class="feature-box" style="border-top: 4px solid var(--secondary);">
+                    <h4><i class="fas fa-table-list text-secondary"></i> WLO 2: การจัดการข้อมูลอาร์เรย์/ลิสต์ (Data Manipulation Skill)</h4>
+                    <p>สามารถประยุกต์ใช้โครงสร้างข้อมูลอาร์เรย์/ลิสต์ 1 มิติ (Array / List Data Structure) เพื่อจัดเก็บข้อมูลอนุกรมเวลา (Time-series data) จากการวัดผลการทดลองทางวิทยาศาสตร์ การเข้าถึงข้อมูลด้วยดัชนี (Zero-based Indexing & Slicing) และการป้องกันข้อผิดพลาด <code>IndexError</code> ได้อย่างคล่องแคล่ว</p>
+                </div>
+
+                <div class="feature-box" style="border-top: 4px solid var(--success);">
+                    <h4><i class="fas fa-laptop-code text-success"></i> WLO 3: ทักษะการประมวลผลและการจำลอง (Computational Modeling)</h4>
+                    <p>พัฒนาโปรแกรมด้วย Scratch (Custom My Blocks & Lists) และ Python 3.11 เพื่อคำนวณสถิติพื้นฐาน ($\sum$, ค่าเฉลี่ยเลขคณิต $\bar{x}$, ค่าสูงสุด-ต่ำสุด, การกรอง Outlier) และจำลองปรากฏการณ์พลวัตทางวิทยาศาสตร์ เช่น การสลายตัวของสารกัมมันตรังสี (Half-Life Decay) หรือการแพร่ของสารเคมีได้อย่างมีประสิทธิภาพ</p>
+                </div>
+
+                <div class="feature-box" style="border-top: 4px solid var(--warning);">
+                    <h4><i class="fas fa-shield-halved text-warning"></i> WLO 4: การสอนเชิงรุกและจริยธรรมข้อมูล (Pedagogy & Defensive Coding)</h4>
+                    <p>ออกแบบกิจกรรมการจัดการเรียนรู้วิทยาศาสตร์บูรณาการวิทยาการคำนวณที่จัดการกับข้อผิดพลาดทั่วไป (Infinite Loops, Off-by-one, Division by Zero) และปลูกฝังจริยธรรมความซื่อสัตย์ในความถูกต้องของข้อมูลการทดลองทางวิทยาศาสตร์ (Scientific Data Integrity) โดยไม่บิดเบือนข้อมูลดิบ</p>
+                </div>
+            </div>
+
+            <div class="highlight-box success">
+                <strong><i class="fas fa-link"></i> การเชื่อมโยงผลลัพธ์การเรียนรู้ระดับหลักสูตร (CLO Alignment):</strong>
+                สอดรับกับ <strong>CLO2:</strong> สามารถออกแบบและเขียนโปรแกรมคอมพิวเตอร์อย่างง่ายด้วยโปรแกรมเชิงภาพและข้อความเพื่อจำลองแบบทางวิทยาศาสตร์ และ <strong>CLO3:</strong> ตระหนักถึงความสำคัญ จริยธรรม และความรับผิดชอบในการใช้เทคโนโลยีคำนวณเพื่อการสอน
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         TAB 2: สาระสำคัญ & สื่อทัศนศิลป์
+         ========================================== -->
+    <div id="tab2" class="content-section">
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-project-diagram"></i> สาระสำคัญเชิงวิชาการ & สื่อทัศนศิลป์ (No Text-Wall Visual Architecture)</h2>
+            <p style="margin-bottom: 1.5rem; color: var(--text-muted);">
+                ในการจัดการทดลองและการวิเคราะห์ผลทางวิทยาศาสตร์ นักวิทยาศาสตร์ต้องเผชิญกับข้อมูลปริมาณมากและกระบวนการที่เกิดซ้ำ (Repetitive Processes) วิทยาการคำนวณจึงนำเสนอเครื่องมือสำคัญ 3 ประการ คือ <strong>การวนซ้ำ (Loops)</strong>, <strong>ฟังก์ชัน (Functions)</strong>, และ <strong>โครงสร้างข้อมูลอาร์เรย์ (Arrays/Lists)</strong> เพื่อเพิ่มความถูกต้อง แม่นยำ และประสิทธิภาพในการวิเคราะห์ผล
+            </p>
+
+            <!-- หัวข้อที่ 1: การวนซ้ำเชิงวิทยาศาสตร์ -->
+            <h3 style="color: var(--primary); margin: 1.75rem 0 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fas fa-repeat text-accent"></i> 1. สถาปัตยกรรมการวนซ้ำในงานวิทยาศาสตร์ (Iteration Architecture: For vs. While Loops)
+            </h3>
+            <p>
+                การวนซ้ำคือการสั่งให้ชุดคำสั่งประมวลผลซ้ำตามเงื่อนไขที่กำหนด ในการสอนและการทดลองวิทยาศาสตร์ เราแบ่งโครงสร้างลูปออกเป็น 2 ชนิดหลัก:
+            </p>
+            <ul style="margin: 0.75rem 0 1rem 1.5rem; line-height: 1.8;">
+                <li><strong>ลูปที่มีจำนวนรอบแน่นอน (Definite Iteration - <code>for</code> loop):</strong> ใช้เมื่อทราบจำนวนรอบการวนซ้ำที่แน่นอนล่วงหน้า เช่น การทำซ้ำการทดลอง 5 ครั้ง (5 Trials) หรือการกวาดอ่านข้อมูลอุณหภูมิตลอด 24 ชั่วโมงในอาร์เรย์</li>
+                <li><strong>ลูปที่ขึ้นกับเงื่อนไขทางวิทยาศาสตร์ (Indefinite Iteration - <code>while</code> loop):</strong> ใช้เมื่อไม่ทราบจำนวนรอบที่แน่นอน แต่โปรแกรมจะทำงานไปเรื่อยๆ จนกว่าเงื่อนไขทางวิทยาศาสตร์จะบรรลุ เช่น การให้ความร้อนแก่สารละลายจนกระทั่งอุณหภูมิถึงจุดเดือด ($T \ge 100^\circ\text{C}$) หรือการสลายตัวของสารกัมมันตรังสีจนมวลเหลือน้อยกว่า $0.01\text{ g}$</li>
+            </ul>
+
+            <!-- INFOGRAPHIC 6.1 SVG -->
+            <div class="svg-container">
+                <div class="svg-title"><i class="fas fa-diagram-project"></i> ภาพผังที่ 6.1: สถาปัตยกรรมเปรียบเทียบการวนซ้ำทางวิทยาศาสตร์ (For Loop vs. While Loop Execution Architecture)</div>
+                <svg viewBox="0 0 960 480" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="gradFor" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#2563eb" />
+                            <stop offset="100%" stop-color="#1d4ed8" />
+                        </linearGradient>
+                        <linearGradient id="gradWhile" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#0891b2" />
+                            <stop offset="100%" stop-color="#0e7490" />
+                        </linearGradient>
+                        <linearGradient id="gradWarn" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#dc2626" />
+                            <stop offset="100%" stop-color="#991b1b" />
+                        </linearGradient>
+                        <filter id="shadowBox" x="-5%" y="-5%" width="110%" height="115%" filterUnits="userSpaceOnUse">
+                            <feDropShadow dx="2" dy="4" stdDeviation="4" flood-opacity="0.12"/>
+                        </filter>
+                    </defs>
+
+                    <!-- Background Panels -->
+                    <rect x="20" y="20" width="440" height="430" rx="14" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadowBox)" />
+                    <rect x="500" y="20" width="440" height="430" rx="14" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5" filter="url(#shadowBox)" />
+
+                    <!-- Header Panel 1: For Loop -->
+                    <rect x="20" y="20" width="440" height="55" rx="14" fill="url(#gradFor)" />
+                    <text x="240" y="54" fill="#ffffff" font-family="'Sarabun', sans-serif" font-size="18" font-weight="700" text-anchor="middle">Definite Iteration: For Loop (ทดลองซ้ำ N ครั้ง)</text>
+
+                    <!-- Header Panel 2: While Loop -->
+                    <rect x="500" y="20" width="440" height="55" rx="14" fill="url(#gradWhile)" />
+                    <text x="720" y="54" fill="#ffffff" font-family="'Sarabun', sans-serif" font-size="18" font-weight="700" text-anchor="middle">Indefinite Iteration: While Loop (จนกว่าจะถึงเกณฑ์)</text>
+
+                    <!-- FOR LOOP FLOW -->
+                    <!-- Start Box -->
+                    <rect x="150" y="95" width="180" height="36" rx="8" fill="#ffffff" stroke="#2563eb" stroke-width="2" />
+                    <text x="240" y="118" fill="#1e293b" font-family="'Sarabun', sans-serif" font-size="13" font-weight="600" text-anchor="middle">กำหนดช่วง: for trial in range(1, 6)</text>
+
+                    <!-- Arrow 1 -->
+                    <line x1="240" y1="131" x2="240" y2="155" stroke="#2563eb" stroke-width="2" marker-end="url(#arrow)" />
+                    <polygon points="236,155 244,155 240,162" fill="#2563eb" />
+
+                    <!-- Condition Diamond -->
+                    <polygon points="240,165 330,195 240,225 150,195" fill="#dbeafe" stroke="#2563eb" stroke-width="2" />
+                    <text x="240" y="192" fill="#1e40af" font-family="'Sarabun', sans-serif" font-size="12" font-weight="700" text-anchor="middle">trial &lt;= 5 หรือไม่?</text>
+                    <text x="240" y="207" fill="#1e40af" font-family="'Sarabun', sans-serif" font-size="11" text-anchor="middle">(ตรวจสอบจำนวนรอบ)</text>
+
+                    <!-- True branch (Down) -->
+                    <text x="255" y="245" fill="#059669" font-family="'Sarabun', sans-serif" font-size="12" font-weight="700">ใช่ (True)</text>
+                    <line x1="240" y1="225" x2="240" y2="255" stroke="#059669" stroke-width="2" />
+                    <polygon points="236,255 244,255 240,262" fill="#059669" />
+
+                    <!-- Process Box -->
+                    <rect x="140" y="265" width="200" height="50" rx="8" fill="#ecfdf5" stroke="#059669" stroke-width="2" />
+                    <text x="240" y="286" fill="#065f46" font-family="'Sarabun', sans-serif" font-size="12" font-weight="700" text-anchor="middle">บันทึกผลการทดลองรอบที่ trial</text>
+                    <text x="240" y="303" fill="#065f46" font-family="'Sarabun', sans-serif" font-size="11" text-anchor="middle">data.append(measured_value)</text>
+
+                    <!-- Increment and Loop Back -->
+                    <line x1="140" y1="290" x2="70" y2="290" stroke="#2563eb" stroke-width="2" />
+                    <line x1="70" y1="290" x2="70" y2="195" stroke="#2563eb" stroke-width="2" />
+                    <line x1="70" y1="195" x2="148" y2="195" stroke="#2563eb" stroke-width="2" />
+                    <polygon points="145,191 145,199 152,195" fill="#2563eb" />
+                    <text x="105" y="240" fill="#2563eb" font-family="'Sarabun', sans-serif" font-size="11" font-weight="600" text-anchor="middle">ก้าวหน้า (Step +1)</text>
+
+                    <!-- False branch (Exit right) -->
+                    <line x1="330" y1="195" x2="410" y2="195" stroke="#dc2626" stroke-width="2" />
+                    <line x1="410" y1="195" x2="410" y2="340" stroke="#dc2626" stroke-width="2" />
+                    <line x1="410" y1="340" x2="240" y2="340" stroke="#dc2626" stroke-width="2" />
+                    <line x1="240" y1="340" x2="240" y2="365" stroke="#dc2626" stroke-width="2" />
+                    <polygon points="236,365 244,365 240,372" fill="#dc2626" />
+                    <text x="365" y="185" fill="#dc2626" font-family="'Sarabun', sans-serif" font-size="11" font-weight="700">ไม่ใช่ (จบรอบ)</text>
+
+                    <!-- Finish Box For -->
+                    <rect x="150" y="375" width="180" height="40" rx="20" fill="#2563eb" />
+                    <text x="240" y="400" fill="#ffffff" font-family="'Sarabun', sans-serif" font-size="13" font-weight="700" text-anchor="middle">ออกจากลูป $\rightarrow$ คำนวณค่าเฉลี่ย</text>
+
+
+                    <!-- WHILE LOOP FLOW -->
+                    <!-- Start Box While -->
+                    <rect x="630" y="95" width="180" height="36" rx="8" fill="#ffffff" stroke="#0891b2" stroke-width="2" />
+                    <text x="720" y="118" fill="#1e293b" font-family="'Sarabun', sans-serif" font-size="13" font-weight="600" text-anchor="middle">กำหนดเงื่อนไข: while temp &lt; 100:</text>
+
+                    <!-- Arrow While 1 -->
+                    <line x1="720" y1="131" x2="720" y2="155" stroke="#0891b2" stroke-width="2" />
+                    <polygon points="716,155 724,155 720,162" fill="#0891b2" />
+
+                    <!-- Condition Diamond While -->
+                    <polygon points="720,165 810,195 720,225 630,195" fill="#cffafe" stroke="#0891b2" stroke-width="2" />
+                    <text x="720" y="192" fill="#155e75" font-family="'Sarabun', sans-serif" font-size="12" font-weight="700" text-anchor="middle">temp &lt; 100°C ?</text>
+                    <text x="720" y="207" fill="#155e75" font-family="'Sarabun', sans-serif" font-size="11" text-anchor="middle">(ยังไม่ถึงจุดเดือด)</text>
+
+                    <!-- True branch While -->
+                    <text x="735" y="245" fill="#059669" font-family="'Sarabun', sans-serif" font-size="12" font-weight="700">ใช่ (ให้ความร้อนต่อ)</text>
+                    <line x1="720" y1="225" x2="720" y2="255" stroke="#059669" stroke-width="2" />
+                    <polygon points="716,255 724,255 720,262" fill="#059669" />
+
+                    <!-- Process Box While -->
+                    <rect x="610" y="265" width="220" height="50" rx="8" fill="#ecfdf5" stroke="#059669" stroke-width="2" />
+                    <text x="720" y="286" fill="#065f46" font-family="'Sarabun', sans-serif" font-size="12" font-weight="700" text-anchor="middle">temp += heat_rate * dt</text>
+                    <text x="720" y="303" fill="#065f46" font-family="'Sarabun', sans-serif" font-size="11" text-anchor="middle">time += dt (อัปเดตสภาวะทางฟิสิกส์)</text>
+
+                    <!-- Loop Back While -->
+                    <line x1="610" y1="290" x2="540" y2="290" stroke="#0891b2" stroke-width="2" />
+                    <line x1="540" y1="290" x2="540" y2="195" stroke="#0891b2" stroke-width="2" />
+                    <line x1="540" y1="195" x2="628" y2="195" stroke="#0891b2" stroke-width="2" />
+                    <polygon points="625,191 625,199 632,195" fill="#0891b2" />
+
+                    <!-- Warning: Infinite Loop Trap -->
+                    <rect x="525" y="325" width="130" height="35" rx="6" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5" />
+                    <text x="590" y="342" fill="#991b1b" font-family="'Sarabun', sans-serif" font-size="10" font-weight="700" text-anchor="middle">⚠️ ระวัง Infinite Loop!</text>
+                    <text x="590" y="354" fill="#991b1b" font-family="'Sarabun', sans-serif" font-size="9" text-anchor="middle">หากลืมเพิ่มค่า temp</text>
+
+                    <!-- False branch While -->
+                    <line x1="810" y1="195" x2="890" y2="195" stroke="#dc2626" stroke-width="2" />
+                    <line x1="890" y1="195" x2="890" y2="340" stroke="#dc2626" stroke-width="2" />
+                    <line x1="890" y1="340" x2="720" y2="340" stroke="#dc2626" stroke-width="2" />
+                    <line x1="720" y1="340" x2="720" y2="365" stroke="#dc2626" stroke-width="2" />
+                    <polygon points="716,365 724,365 720,372" fill="#dc2626" />
+                    <text x="845" y="185" fill="#dc2626" font-family="'Sarabun', sans-serif" font-size="11" font-weight="700">ถึง 100°C (เดือด)</text>
+
+                    <!-- Finish Box While -->
+                    <rect x="630" y="375" width="180" height="40" rx="20" fill="#0891b2" />
+                    <text x="720" y="400" fill="#ffffff" font-family="'Sarabun', sans-serif" font-size="13" font-weight="700" text-anchor="middle">สารเดือด $\rightarrow$ เปลี่ยนสถานะเป็นไอ</text>
+                </svg>
+                <div class="svg-caption">แสดงการเปรียบเทียบตรรกะการวนซ้ำระหว่าง For Loop (นับจำนวนรอบแน่นอน) และ While Loop (หยุดเมื่อสภาวะทางฟิสิกส์บรรลุเกณฑ์)</div>
+            </div>
+
+            <!-- หัวข้อที่ 2: ฟังก์ชันเชิงนามธรรมและการแบ่งโมดูล -->
+            <h3 style="color: var(--primary); margin: 2rem 0 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fas fa-cubes text-accent"></i> 2. สถาปัตยกรรมฟังก์ชันและการเป็นโมดูล (Scientific Function Abstraction & Modularity)
+            </h3>
+            <p>
+                ฟังก์ชัน (Function) ในทางวิทยาการคำนวณเปรียบเสมือน <strong>"กล่องดำทางวิทยาศาสตร์ (Scientific Blackbox)"</strong> ที่รับตัวแปรอิสระ (Input Parameters) เข้าไปประมวลผลตามกฎหรือสมการธรรมชาติ แล้วส่งคืนตัวแปรตามหรือผลลัพธ์ (Output Return Value) ออกมา ช่วยให้โค้ดเป็นไปตามหลักการ <strong>DRY (Don't Repeat Yourself)</strong> ไม่ต้องเขียนสูตรเดิมซ้ำๆ และลดข้อผิดพลาดในการคำนวณ
+            </p>
+
+            <!-- INFOGRAPHIC 6.2 SVG -->
+            <div class="svg-container">
+                <div class="svg-title"><i class="fas fa-cube"></i> ภาพผังที่ 6.2: สถาปัตยกรรมฟังก์ชันวิทยาศาสตร์และการห่อหุ้มโมดูล (Scientific Function Blackbox Architecture)</div>
+                <svg viewBox="0 0 960 420" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="gradBlackbox" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#1e293b" />
+                            <stop offset="100%" stop-color="#0f172a" />
+                        </linearGradient>
+                        <linearGradient id="gradInput" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#3b82f6" />
+                            <stop offset="100%" stop-color="#1d4ed8" />
+                        </linearGradient>
+                        <linearGradient id="gradOutput" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#10b981" />
+                            <stop offset="100%" stop-color="#047857" />
+                        </linearGradient>
+                    </defs>
+
+                    <!-- Background Base -->
+                    <rect x="20" y="20" width="920" height="380" rx="16" fill="#f8fafc" stroke="#e2e8f0" stroke-width="2" />
+
+                    <!-- Input Section -->
+                    <rect x="50" y="110" width="190" height="200" rx="12" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.5" />
+                    <rect x="50" y="110" width="190" height="40" rx="12" fill="url(#gradInput)" />
+                    <text x="145" y="136" fill="#ffffff" font-family="'Sarabun', sans-serif" font-size="14" font-weight="700" text-anchor="middle">Input Parameters (อาร์กิวเมนต์)</text>
+                    <text x="70" y="180" fill="#1e3a8a" font-family="'Consolas', monospace" font-size="13" font-weight="600">• mass: float (kg)</text>
+                    <text x="70" y="215" fill="#1e3a8a" font-family="'Consolas', monospace" font-size="13" font-weight="600">• volume: float (m³)</text>
+                    <text x="70" y="250" fill="#1e3a8a" font-family="'Consolas', monospace" font-size="13" font-weight="600">• temp: float (°C)</text>
+                    <text x="145" y="295" fill="#64748b" font-family="'Sarabun', sans-serif" font-size="11" text-anchor="middle">(ตัวแปรนำเข้าสู่โมดูล)</text>
+
+                    <!-- Arrow to Function -->
+                    <line x1="240" y1="210" x2="310" y2="210" stroke="#3b82f6" stroke-width="4" />
+                    <polygon points="310,202 325,210 310,218" fill="#3b82f6" />
+
+                    <!-- Function Blackbox Container -->
+                    <rect x="330" y="60" width="340" height="300" rx="16" fill="url(#gradBlackbox)" stroke="#334155" stroke-width="2" filter="url(#shadowBox)" />
+                    
+                    <!-- Header inside Blackbox -->
+                    <rect x="345" y="75" width="310" height="36" rx="8" fill="#334155" />
+                    <text x="500" y="98" fill="#38bdf8" font-family="'Consolas', monospace" font-size="13" font-weight="700" text-anchor="middle">def calculate_density(mass, volume):</text>
+
+                    <!-- Guard Box inside Blackbox -->
+                    <rect x="350" y="125" width="300" height="60" rx="8" fill="#1e1b4b" stroke="#6366f1" stroke-width="1.5" />
+                    <text x="365" y="148" fill="#a5b4fc" font-family="'Consolas', monospace" font-size="12" font-weight="600"># Defensive Guard (ป้องกัน crash)</text>
+                    <text x="365" y="168" fill="#f87171" font-family="'Consolas', monospace" font-size="12">if volume &lt;= 0: raise ValueError</text>
+
+                    <!-- Core Calculation inside Blackbox -->
+                    <rect x="350" y="195" width="300" height="60" rx="8" fill="#0f2942" stroke="#38bdf8" stroke-width="1.5" />
+                    <text x="365" y="218" fill="#7dd3fc" font-family="'Consolas', monospace" font-size="12" font-weight="600"># Core Science Formula</text>
+                    <text x="365" y="238" fill="#34d399" font-family="'Consolas', monospace" font-size="12">density = mass / volume  # ρ = m/V</text>
+
+                    <!-- Return Statement -->
+                    <rect x="350" y="265" width="300" height="45" rx="8" fill="#064e3b" stroke="#10b981" stroke-width="1.5" />
+                    <text x="500" y="293" fill="#6ee7b7" font-family="'Consolas', monospace" font-size="13" font-weight="700" text-anchor="middle">return round(density, 4)</text>
+
+                    <text x="500" y="340" fill="#94a3b8" font-family="'Sarabun', sans-serif" font-size="11" text-anchor="middle">🔒 Encapsulation: ตัวแปรภายในเป็น Local Scope ไม่กระทบภายนอก</text>
+
+                    <!-- Arrow to Output -->
+                    <line x1="670" y1="210" x2="740" y2="210" stroke="#10b981" stroke-width="4" />
+                    <polygon points="740,202 755,210 740,218" fill="#10b981" />
+
+                    <!-- Output Section -->
+                    <rect x="760" y="110" width="160" height="200" rx="12" fill="#ecfdf5" stroke="#a7f3d0" stroke-width="1.5" />
+                    <rect x="760" y="110" width="160" height="40" rx="12" fill="url(#gradOutput)" />
+                    <text x="840" y="136" fill="#ffffff" font-family="'Sarabun', sans-serif" font-size="14" font-weight="700" text-anchor="middle">Return Value</text>
+                    <text x="775" y="185" fill="#065f46" font-family="'Consolas', monospace" font-size="13" font-weight="700">• density: float</text>
+                    <text x="775" y="215" fill="#065f46" font-family="'Sarabun', sans-serif" font-size="12">• หน่วย: kg/m³</text>
+                    <text x="775" y="250" fill="#059669" font-family="'Sarabun', sans-serif" font-size="12">✓ นำไปพล็อตกราฟ</text>
+                    <text x="775" y="275" fill="#059669" font-family="'Sarabun', sans-serif" font-size="12">✓ นำไปจำแนกสาร</text>
+                </svg>
+                <div class="svg-caption">แสดงโครงสร้างกล่องดำของฟังก์ชันวิทยาศาสตร์ (Input Parameters $\rightarrow$ Local Guard & Formula Execution $\rightarrow$ Return Result)</div>
+            </div>
+
+            <!-- หัวข้อที่ 3: โครงสร้างข้อมูลอาร์เรย์และลิสต์ -->
+            <h3 style="color: var(--primary); margin: 2rem 0 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fas fa-list-ol text-accent"></i> 3. โครงสร้างข้อมูลลิสต์/อาร์เรย์และการประมวลผลข้อมูลอนุกรมเวลา (List/Array & Scientific Data Pipeline)
+            </h3>
+            <p>
+                ในงานวิจัยและการทดลองวิทยาศาสตร์ ข้อมูลที่เก็บรวบรวมมักอยู่ในรูป <strong>อนุกรมเวลา (Time-series Data)</strong> หรือ <strong>ข้อมูลหลายซ้ำ (Multi-trial Data)</strong> การใช้ตัวแปรเดี่ยว ($x_1, x_2, x_3, \dots$) ทำให้การจัดการโค้ดยุ่งยากและผิดพลาดง่าย ภาษาโปรแกรมจึงใช้ <strong>List (Python)</strong> หรือ <strong>List Variable (Scratch)</strong> เพื่อเก็บชุดข้อมูลในหน่วยความจำเรียงต่อกัน
+            </p>
+
+            <!-- INFOGRAPHIC 6.3 SVG -->
+            <div class="svg-container">
+                <div class="svg-title"><i class="fas fa-microchip"></i> ภาพผังที่ 6.3: ท่อประมวลผลข้อมูลอนุกรมเวลาทางวิทยาศาสตร์ (Scientific Data Pipeline & Zero-based Indexing)</div>
+                <svg viewBox="0 0 960 400" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="gradList" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#4f46e5" />
+                            <stop offset="100%" stop-color="#3730a3" />
+                        </linearGradient>
+                    </defs>
+
+                    <!-- Array Cells Background -->
+                    <rect x="20" y="20" width="920" height="360" rx="14" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5" />
+
+                    <!-- List Variable Header -->
+                    <text x="50" y="55" fill="#1e293b" font-family="'Consolas', monospace" font-size="16" font-weight="700">temperatures = [24.5, 25.0, 24.8, 38.2, 25.1]  # ชุดข้อมูลอุณหภูมิ (°C)</text>
+
+                    <!-- Memory Cells Visualization -->
+                    <!-- Cell 0 -->
+                    <g transform="translate(60, 80)">
+                        <rect x="0" y="0" width="150" height="70" rx="8" fill="#ffffff" stroke="#2563eb" stroke-width="2" />
+                        <text x="75" y="32" fill="#1e293b" font-family="'Consolas', monospace" font-size="20" font-weight="700" text-anchor="middle">24.5</text>
+                        <text x="75" y="55" fill="#64748b" font-family="'Sarabun', sans-serif" font-size="11" text-anchor="middle">ค่าปกติ (Normal)</text>
+                        <rect x="35" y="78" width="80" height="24" rx="4" fill="#dbeafe" />
+                        <text x="75" y="94" fill="#1e40af" font-family="'Consolas', monospace" font-size="12" font-weight="700" text-anchor="middle">index = 0</text>
+                    </g>
+
+                    <!-- Cell 1 -->
+                    <g transform="translate(230, 80)">
+                        <rect x="0" y="0" width="150" height="70" rx="8" fill="#ffffff" stroke="#2563eb" stroke-width="2" />
+                        <text x="75" y="32" fill="#1e293b" font-family="'Consolas', monospace" font-size="20" font-weight="700" text-anchor="middle">25.0</text>
+                        <text x="75" y="55" fill="#64748b" font-family="'Sarabun', sans-serif" font-size="11" text-anchor="middle">ค่าปกติ (Normal)</text>
+                        <rect x="35" y="78" width="80" height="24" rx="4" fill="#dbeafe" />
+                        <text x="75" y="94" fill="#1e40af" font-family="'Consolas', monospace" font-size="12" font-weight="700" text-anchor="middle">index = 1</text>
+                    </g>
+
+                    <!-- Cell 2 -->
+                    <g transform="translate(400, 80)">
+                        <rect x="0" y="0" width="150" height="70" rx="8" fill="#ffffff" stroke="#2563eb" stroke-width="2" />
+                        <text x="75" y="32" fill="#1e293b" font-family="'Consolas', monospace" font-size="20" font-weight="700" text-anchor="middle">24.8</text>
+                        <text x="75" y="55" fill="#64748b" font-family="'Sarabun', sans-serif" font-size="11" text-anchor="middle">ค่าปกติ (Normal)</text>
+                        <rect x="35" y="78" width="80" height="24" rx="4" fill="#dbeafe" />
+                        <text x="75" y="94" fill="#1e40af" font-family="'Consolas', monospace" font-size="12" font-weight="700" text-anchor="middle">index = 2</text>
+                    </g>
+
+                    <!-- Cell 3 (Outlier) -->
+                    <g transform="translate(570, 80)">
+                        <rect x="0" y="0" width="150" height="70" rx="8" fill="#fef2f2" stroke="#dc2626" stroke-width="2.5" />
+                        <text x="75" y="32" fill="#b91c1c" font-family="'Consolas', monospace" font-size="20" font-weight="700" text-anchor="middle">38.2</text>
+                        <text x="75" y="55" fill="#dc2626" font-family="'Sarabun', sans-serif" font-size="11" font-weight="700" text-anchor="middle">⚠️ Outlier (ผิดปกติ)</text>
+                        <rect x="35" y="78" width="80" height="24" rx="4" fill="#fee2e2" />
+                        <text x="75" y="94" fill="#991b1b" font-family="'Consolas', monospace" font-size="12" font-weight="700" text-anchor="middle">index = 3</text>
+                    </g>
+
+                    <!-- Cell 4 -->
+                    <g transform="translate(740, 80)">
+                        <rect x="0" y="0" width="150" height="70" rx="8" fill="#ffffff" stroke="#2563eb" stroke-width="2" />
+                        <text x="75" y="32" fill="#1e293b" font-family="'Consolas', monospace" font-size="20" font-weight="700" text-anchor="middle">25.1</text>
+                        <text x="75" y="55" fill="#64748b" font-family="'Sarabun', sans-serif" font-size="11" text-anchor="middle">ค่าปกติ (Normal)</text>
+                        <rect x="35" y="78" width="80" height="24" rx="4" fill="#dbeafe" />
+                        <text x="75" y="94" fill="#1e40af" font-family="'Consolas', monospace" font-size="12" font-weight="700" text-anchor="middle">index = 4</text>
+                    </g>
+
+                    <!-- Danger Box for IndexError -->
+                    <g transform="translate(60, 205)">
+                        <rect x="0" y="0" width="830" height="45" rx="8" fill="#fffbeb" stroke="#f59e0b" stroke-width="1.5" />
+                        <text x="415" y="27" fill="#b45309" font-family="'Sarabun', sans-serif" font-size="12" font-weight="600" text-anchor="middle">
+                            ⚠️ ข้อพึงระวัง: ลิสต์มีขนาด len(temperatures) = 5 ตำแหน่งดัชนีคือ 0 ถึง 4 หากเรียก temperatures[5] จะเกิดข้อผิดพลาด <code>IndexError: list index out of range</code>
+                        </text>
+                    </g>
+
+                    <!-- Pipeline Processing Stages (Bottom) -->
+                    <g transform="translate(60, 270)">
+                        <!-- Stage 1 -->
+                        <rect x="0" y="0" width="250" height="85" rx="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" />
+                        <text x="125" y="24" fill="#1e293b" font-family="'Sarabun', sans-serif" font-size="13" font-weight="700" text-anchor="middle">ขั้นที่ 1: การวนลูปสะสมผลรวม</text>
+                        <text x="125" y="46" fill="#4f46e5" font-family="'Consolas', monospace" font-size="11" text-anchor="middle">total = 0</text>
+                        <text x="125" y="65" fill="#4f46e5" font-family="'Consolas', monospace" font-size="11" text-anchor="middle">for t in temperatures: total += t</text>
+
+                        <!-- Arrow 1-2 -->
+                        <line x1="250" y1="42" x2="285" y2="42" stroke="#64748b" stroke-width="2" />
+                        <polygon points="285,38 293,42 285,46" fill="#64748b" />
+
+                        <!-- Stage 2 -->
+                        <rect x="295" y="0" width="240" height="85" rx="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" />
+                        <text x="415" y="24" fill="#1e293b" font-family="'Sarabun', sans-serif" font-size="13" font-weight="700" text-anchor="middle">ขั้นที่ 2: สถิติบรรยาย ($\bar{x}$, Min, Max)</text>
+                        <text x="415" y="46" fill="#0891b2" font-family="'Consolas', monospace" font-size="11" text-anchor="middle">mean = total / len(temperatures)</text>
+                        <text x="415" y="65" fill="#0891b2" font-family="'Consolas', monospace" font-size="11" text-anchor="middle">min_val = min(temperatures)</text>
+
+                        <!-- Arrow 2-3 -->
+                        <line x1="535" y1="42" x2="570" y2="42" stroke="#64748b" stroke-width="2" />
+                        <polygon points="570,38 578,42 570,46" fill="#64748b" />
+
+                        <!-- Stage 3 -->
+                        <rect x="580" y="0" width="250" height="85" rx="8" fill="#ecfdf5" stroke="#10b981" stroke-width="1.5" />
+                        <text x="705" y="24" fill="#065f46" font-family="'Sarabun', sans-serif" font-size="13" font-weight="700" text-anchor="middle">ขั้นที่ 3: คัดกรอง Outlier Filter</text>
+                        <text x="705" y="46" fill="#059669" font-family="'Consolas', monospace" font-size="11" text-anchor="middle">clean = [t for t in temp if t &lt; 35]</text>
+                        <text x="705" y="65" fill="#059669" font-family="'Sarabun', sans-serif" font-size="11" text-anchor="middle">✓ ได้ค่าเฉลี่ยใหม่ที่เที่ยงตรง = 24.85°C</text>
+                    </g>
+                </svg>
+                <div class="svg-caption">แสดงโครงสร้างลิสต์ในหน่วยความจำ การเข้าถึงด้วย Zero-based Indexing, การสะสมผลรวม และการกรองข้อมูลผิดปกติ (Outlier Filtering)</div>
+            </div>
+
+            <!-- ตารางเปรียบเทียบการประยุกต์ใช้ใน 3 สาขาวิทยาศาสตร์ -->
+            <h3 style="color: var(--primary); margin: 2rem 0 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fas fa-table text-accent"></i> ตารางที่ 6.1: เมทริกซ์การบูรณาการ Loops, Functions, และ Data Collections ใน 3 สาขาวิทยาศาสตร์
+            </h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 15%;">สาขาวิชา</th>
+                        <th style="width: 25%;">การประยุกต์ใช้ Loop (วนซ้ำ)</th>
+                        <th style="width: 30%;">การสร้าง Function (โมดูลคำนวณ)</th>
+                        <th style="width: 30%;">การประมวลผล List/Array</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong><i class="fas fa-atom text-accent"></i> ฟิสิกส์ (Physics)</strong></td>
+                        <td>
+                            <code>for t in range(0, 11)</code><br>
+                            คำนวณตำแหน่งและความเร็วของวัตถุตกอิสระในแต่ละวินาที ($t = 0 \dots 10$)
+                        </td>
+                        <td>
+                            <code>def kinematic_pos(u, a, t):</code><br>
+                            คำนวณระยะทางจากสมการ $s = ut + \frac{1}{2}at^2$ พร้อมตรวจสอบ $t \ge 0$
+                        </td>
+                        <td>
+                            เก็บพิกัดตำแหน่ง $[s_0, s_1, s_2, \dots]$ เพื่อนำไปพล็อตเส้นกราฟพาราโบลาของการเคลื่อนที่
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong><i class="fas fa-flask text-secondary"></i> เคมี (Chemistry)</strong></td>
+                        <td>
+                            <code>while ph &lt; 7.0:</code><br>
+                            หยดสารละลายเบสทีละหยด ($\Delta V$) เพื่อจำลองกระบวนการไทเทรตจนกระทั่งสะเทิน
+                        </td>
+                        <td>
+                            <code>def calc_ph(h_concentration):</code><br>
+                            คำนวณค่า $\text{pH} = -\log_{10}[H^+]$ พร้อมระบบ Guard ป้องกันค่าติดลบหรือ 0
+                        </td>
+                        <td>
+                            เก็บค่า pH ในแต่ละปริมาตรไทแทรนต์เพื่อพล็อตกราฟการไทเทรต (Titration Curve) และหาจุดสมมูล
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong><i class="fas fa-dna text-success"></i> ชีววิทยา (Biology)</strong></td>
+                        <td>
+                            <code>while population &lt; capacity:</code><br>
+                            จำลองการเพิ่มประชากรแบคทีเรียแบบจำกัดความจุสิ่งแวดล้อม (Logistic Growth)
+                        </td>
+                        <td>
+                            <code>def logistic_growth(N, r, K):</code><br>
+                            คำนวณอัตราการเพิ่ม $\frac{dN}{dt} = rN\left(1 - \frac{N}{K}\right)$
+                        </td>
+                        <td>
+                            เก็บขนาดประชากรในแต่ละชั่วรุ่นเพื่อวิเคราะห์ระยะ Lag phase, Log phase และ Stationary phase
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- โค้ดตัวแบบจำลอง Python 3.11 ที่รันได้จริง 100% -->
+            <h3 style="color: var(--primary); margin: 2rem 0 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fab fa-python text-accent"></i> โค้ดตัวแบบจำลอง Python 3.11: โปรแกรมประมวลผลข้อมูลการทดลองและจำลองการสลายตัวกัมมันตรังสี
+            </h3>
+            <p>
+                โปรแกรมด้านล่างนี้บูรณาการครบทั้ง <strong>ฟังก์ชัน (Functions พร้อม Type Hints และ Docstrings)</strong>, <strong>การวนซ้ำ (For & While Loops)</strong>, และ <strong>โครงสร้างข้อมูลลิสต์ (List Processing พร้อมการตัด Outlier)</strong> ซึ่งสามารถนำไปใช้จริงในห้องเรียนวิทยาศาสตร์:
+            </p>
+            <pre><code># ==============================================================================
+# โปรแกรม: Scientific Data Processor & Radioactive Decay Simulation
+# รายวิชา: 4124941 วิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์ | ผศ.ดร.ชีวะ ทัศนา
+# ==============================================================================
+import math
+from typing import List, Tuple, Dict
+
+def analyze_lab_trials(data: List[float], outlier_threshold: float = 3.0) -> Dict[str, float]:
+    """
+    ฟังก์ชันคำนวณสถิติผลการทดลองวิทยาศาสตร์ N ซ้ำ พร้อมคัดกรอง Outlier
+    
+    Parameters:
+        data: รายการข้อมูลผลการทดลองดิบ (List of measured floats)
+        outlier_threshold: ค่าขีดจำกัดความคลาดเคลื่อนที่ยอมรับได้
+        
+    Returns:
+        Dictionary สรุปค่าสถิติ (N_raw, N_clean, Mean, Min, Max)
+    """
+    if not data:
+        raise ValueError("ชุดข้อมูลการทดลองต้องไม่เป็นค่าว่าง (Empty Dataset)")
+        
+    # ขั้นที่ 1: วนลูปคำนวณผลรวมดิบ (For Loop Accumulator)
+    raw_sum = 0.0
+    for value in data:
+        raw_sum += value
+    raw_mean = raw_sum / len(data)
+    
+    # ขั้นที่ 2: คัดกรองข้อมูลผิดปกติ (Filtering Outliers)
+    clean_data: List[float] = []
+    for value in data:
+        if abs(value - raw_mean) <= outlier_threshold:
+            clean_data.append(value)
+            
+    # กรณีตัด Outlier แล้วยังคงมีข้อมูล
+    if not clean_data:
+        clean_data = data  # Fallback
+        
+    # ขั้นที่ 3: คำนวณสถิติของข้อมูลที่สะอาดแล้ว
+    clean_mean = sum(clean_data) / len(clean_data)
+    
+    return {
+        "raw_count": float(len(data)),
+        "clean_count": float(len(clean_data)),
+        "raw_mean": round(raw_mean, 3),
+        "clean_mean": round(clean_mean, 3),
+        "min_value": round(min(clean_data), 3),
+        "max_value": round(max(clean_data), 3)
+    }
+
+def simulate_radioactive_decay(initial_mass: float, half_life_years: float, 
+                              target_remaining_ratio: float = 0.01) -> List[Tuple[int, float]]:
+    """
+    ฟังก์ชันจำลองการสลายตัวของสารกัมมันตรังสีด้วย While Loop
+    
+    Parameters:
+        initial_mass: มวลเริ่มต้น (กรัม)
+        half_life_years: ครึ่งชีวิตของธาตุ (ปี)
+        target_remaining_ratio: สัดส่วนมวลที่เหลือเป้าหมาย (เช่น 0.01 หรือ 1%)
+        
+    Returns:
+        List ของคู่ลำดับ (ปีที่ผ่านไป, มวลที่เหลืออยู่)
+    """
+    if initial_mass <= 0 or half_life_years <= 0:
+        raise ValueError("มวลและครึ่งชีวิตต้องมีค่ามากกว่าศูนย์")
+        
+    decay_curve: List[Tuple[int, float]] = []
+    current_mass = initial_mass
+    current_year = 0
+    dt_years = int(half_life_years)  # ก้าวเวลาเท่ากับ 1 ครึ่งชีวิต
+    
+    # วนซ้ำ While Loop จนกระทั่งมวลสลายตัวเหลือน้อยกว่าเกณฑ์ที่กำหนด
+    while current_mass > (initial_mass * target_remaining_ratio):
+        decay_curve.append((current_year, round(current_mass, 4)))
+        current_mass /= 2.0  # มวลลดลงครึ่งหนึ่งในแต่ละครึ่งชีวิต
+        current_year += dt_years
+        
+    decay_curve.append((current_year, round(current_mass, 4)))
+    return decay_curve
+
+# ------------------------------------------------------------------------------
+# ส่วนทดสอบการทำงานของโปรแกรม (Demonstration)
+# ------------------------------------------------------------------------------
+if __name__ == "__main__":
+    print("=" * 60)
+    print("1. การประมวลผลข้อมูลการทดลองวัดค่า pH 6 ซ้ำ (พร้อม Outlier)")
+    print("=" * 60)
+    ph_raw_trials = [7.02, 6.98, 7.05, 12.50, 7.01, 6.95]  # มี 12.50 เป็น Outlier
+    summary = analyze_lab_trials(ph_raw_trials, outlier_threshold=2.0)
+    
+    print(f"จำนวนข้อมูลดิบ: {int(summary['raw_count'])} ซ้ำ | ค่าเฉลี่ยดิบ: {summary['raw_mean']}")
+    print(f"จำนวนข้อมูลที่ผ่านการกรอง: {int(summary['clean_count'])} ซ้ำ | ค่าเฉลี่ยที่แท้จริง: {summary['clean_mean']}")
+    print(f"ช่วงค่าข้อมูล: {summary['min_value']} ถึง {summary['max_value']}")
+
+    print("\n" + "=" * 60)
+    print("2. การจำลองการสลายตัวของคาร์บอน-14 (C-14: ครึ่งชีวิต 5,730 ปี)")
+    print("=" * 60)
+    history = simulate_radioactive_decay(initial_mass=100.0, half_life_years=5730, target_remaining_ratio=0.03)
+    print(f"{'รอบครึ่งชีวิต':<12}{'ปีที่ผ่านไป':<15}{'มวลที่คงเหลือ (g)':<15}")
+    print("-" * 45)
+    for cycle, (yr, mass) in enumerate(history):
+        print(f"Cycle {cycle:<6}{yr:<15}{mass:<15}")</code></pre>
+        </div>
+    
+        <!-- ปฏิบัติการจำลองเสมือนจริงประจำสัปดาห์ (Interactive Science Simulator & 180 Labs) -->
+        <div class="card" id="sim-section" style="border: 2px solid #0284c7; box-shadow: 0 8px 24px rgba(2, 132, 199, 0.12); margin-top: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.75rem;">
+                <h2 class="card-title" style="margin-bottom: 0; color: #0284c7;">
+                    <i class="fas fa-cube"></i> ปฏิบัติการจำลองเสมือนจริง: 4.3 แอนิเมชันการทำงานของลูป For และ Range (For-Loop Visualizer AR) — AR MediaPipe Lab • RBRU MOOC
+                </h2>
+                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                    <a href="../simulations/chapter04_for_loop_range_visualizer.html" target="_blank" class="nav-back" style="margin-bottom: 0; padding: 0.45rem 0.9rem; font-size: 0.85rem; background: #0284c7; color: #fff;">
+                        <i class="fas fa-external-link-alt"></i> เปิดแบบจำลองเต็มหน้าจอ
+                    </a>
+                    <a href="../assets/slides/Computing Science for Science Teaching - Chapter 5.pptx" download class="nav-back" style="margin-bottom: 0; padding: 0.45rem 0.9rem; font-size: 0.85rem; background: #f59e0b; color: #fff;"><i class="fas fa-file-powerpoint"></i> ดาวน์โหลดสไลด์ (.pptx)</a>
+                </div>
+            </div>
+
+            <p style="font-size: 0.95rem; color: #334155; margin-bottom: 1rem;">
+                <strong>แบบจำลองเชิงโต้ตอบสำหรับห้องเรียนวิทยาศาสตร์:</strong> ให้นักศึกษาทดลองปรับค่าพารามิเตอร์ สังเกตการณ์เปลี่ยนแปลง และวิเคราะห์ข้อมูลตามกระบวนการคิดเชิงคำนวณ (Computational Thinking):
+            </p>
+
+            <div style="margin: 1rem 0; border-radius: 12px; overflow: hidden; border: 1px solid #cbd5e1; height: 600px; box-shadow: var(--shadow-md);">
+                <iframe src="../simulations/chapter04_for_loop_range_visualizer.html" style="width: 100%; height: 100%; border: none;"></iframe>
+            </div>
+
+            <div style="margin: 0.85rem 0; display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;"><span style="font-size: 0.85rem; font-weight: 600; color: #64748b;"><i class="fas fa-cubes"></i> แบบจำลองเสริมในบท:</span> <a href="../simulations/chapter07_legb_scope_simulator.html" target="_blank" style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.35rem 0.75rem; background: #e0f2fe; color: #0284c7; border-radius: 6px; font-size: 0.82rem; font-weight: 600; text-decoration: none; border: 1px solid #bae6fd;"><i class="fas fa-play-circle"></i> 7.1 โปรแกรมจำลองขอบเขตตัวแปร LEGB (Scope Resolution AR) — AR MediaPipe Lab • RBRU MOOC</a> <a href="../simulations/chapter08_matplotlib_2d_plotter.html" target="_blank" style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.35rem 0.75rem; background: #e0f2fe; color: #0284c7; border-radius: 6px; font-size: 0.82rem; font-weight: 600; text-decoration: none; border: 1px solid #bae6fd;"><i class="fas fa-play-circle"></i> 8.2 เครื่องมือพล็อตกราฟวิทยาศาสตร์เชิงโต้ตอบ (2D Plotter AR) — AR MediaPipe Lab • RBRU MOOC</a></div>
+
+            <!-- คลังใบงานปฏิบัติการที่สอดคล้องจาก 180 Labs Manual -->
+            <div style="margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid #e2e8f0;">
+                <h3 style="font-size: 1.05rem; font-weight: 700; color: #0f172a; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-flask" style="color: #10b981;"></i> ใบงานปฏิบัติการที่สอดคล้อง (จากคู่มือปฏิบัติการ ๑๘๐ การทดลอง):
+                </h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem;">
+                    
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.1rem; border-left: 4px solid #10b981; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem; flex-wrap: wrap; gap: 0.25rem;">
+                    <span style="background: #10b981; color: #fff; font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.55rem; border-radius: 4px;">LAB 2.2.1</span>
+                    <span style="font-size: 0.78rem; color: #64748b;"><i class="far fa-clock"></i> 45 นาที | C3 (ประยุกต์ใช้)</span>
+                </div>
+                <h4 style="font-size: 0.98rem; font-weight: 700; color: #0f172a; margin-bottom: 0.2rem;">การพิสูจน์มโนทัศน์พื้นฐาน ตัวแปรและการคำนวณทางฟิสิกส์</h4>
+                <p style="font-size: 0.82rem; color: #64748b; font-style: italic; margin-bottom: 0.5rem;">Foundational Verification: Variables & Physics Math</p>
+                <div style="background: #ffffff; border: 1px dashed #cbd5e1; border-radius: 6px; padding: 0.45rem 0.75rem; font-size: 0.85rem; margin-bottom: 0.5rem; overflow-x: auto;"><strong>สมการทฤษฎี:</strong> $$\text{ตัวแปรสถานะแกนกลาง}: \mathcal{S}_{2.2.1} = f(\mathbf{x}, \mathbf{p}) \quad \text{โดยที่ } \mathbf{x} \in \mathbb{R}^n$$</div>
+                <div style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.25rem;"><i class="fas fa-question-circle" style="color: #3b82f6;"></i> คำถามท้ายการทดลอง:</div>
+                <ul style="font-size: 0.82rem; color: #475569; margin-bottom: 0; padding-left: 1.25rem; line-height: 1.5;">
+                    <li style="margin-bottom: 0.25rem;">จงอธิบายความสอดคล้องระหว่างค่าที่วัดได้กับทฤษฎีใน ตัวแปรและการคำนวณทางฟิสิกส์</li><li style="margin-bottom: 0.25rem;">หากปรับเปลี่ยนสภาวะแวดล้อม ตัวแปรควบคุมใดส่งผลต่อความไว (Sensitivity) ของระบบมากที่สุด?</li>
+                </ul>
+            </div>
+        
+
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.1rem; border-left: 4px solid #10b981; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem; flex-wrap: wrap; gap: 0.25rem;">
+                    <span style="background: #10b981; color: #fff; font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.55rem; border-radius: 4px;">LAB 2.2.2</span>
+                    <span style="font-size: 0.78rem; color: #64748b;"><i class="far fa-clock"></i> 60 นาที | C4 (วิเคราะห์)</span>
+                </div>
+                <h4 style="font-size: 0.98rem; font-weight: 700; color: #0f172a; margin-bottom: 0.2rem;">การวิเคราะห์สมรรถนะและขั้นตอนวิธี ตัวแปรและการคำนวณทางฟิสิกส์</h4>
+                <p style="font-size: 0.82rem; color: #64748b; font-style: italic; margin-bottom: 0.5rem;">Performance & Algorithmic Analysis: Variables & Physics Math</p>
+                <div style="background: #ffffff; border: 1px dashed #cbd5e1; border-radius: 6px; padding: 0.45rem 0.75rem; font-size: 0.85rem; margin-bottom: 0.5rem; overflow-x: auto;"><strong>สมการทฤษฎี:</strong> $$\text{ประสิทธิภาพเชิงเวลาและความคลาดเคลื่อน}: \varepsilon = \frac{|y_{\text{measured}} - y_{\text{model}}|}{y_{\text{model}}} \times 100\%$$</div>
+                <div style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.25rem;"><i class="fas fa-question-circle" style="color: #3b82f6;"></i> คำถามท้ายการทดลอง:</div>
+                <ul style="font-size: 0.82rem; color: #475569; margin-bottom: 0; padding-left: 1.25rem; line-height: 1.5;">
+                    <li style="margin-bottom: 0.25rem;">อัตราการเพิ่มขึ้นของเวลาประมวลผลสอดคล้องกับความซับซ้อน Big-O ระดับใด?</li><li style="margin-bottom: 0.25rem;">เสนอแนะแนวทางการปรับปรุงขั้นตอนวิธีเพื่อลดการใช้หน่วยความจำลงอย่างน้อย 30%</li>
+                </ul>
+            </div>
+        
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ==========================================
+         TAB 3: กิจกรรมการเรียนรู้เชิงรุก (5E)
+         ========================================== -->
+    <div id="tab3" class="content-section">
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-chalkboard-user"></i> แผนการจัดกิจกรรมการเรียนรู้เชิงรุก (Active Learning: 5E Instructional Model)</h2>
+            <p style="margin-bottom: 1.5rem; color: var(--text-muted);">
+                บูรณาการกระบวนการสืบเสาะหาความรู้ 5 ขั้น (5E) ควบคู่กับปฏิบัติการเขียนโค้ด (Coding Workshop) รวมเวลา 4 ชั่วโมง (240 นาที):
+            </p>
+
+            <!-- ภาคบรรยาย 2 ชม. -->
+            <div class="session-block">
+                <h4>
+                    <span><i class="fas fa-book-open text-primary"></i> ภาคบรรยาย: การออกแบบตรรกะการวนซ้ำและการสร้างฟังก์ชันเชิงวิทยาศาสตร์</span>
+                    <span class="time-badge">ชั่วโมงที่ 1 - 2 (120 นาที)</span>
+                </h4>
+                
+                <ul style="padding-left: 1.25rem; line-height: 1.9;">
+                    <li>
+                        <strong>ขั้นที่ 1: การสร้างความสนใจ (Engagement - 25 นาที): "วิกฤตโค้ดสปาเกตตีในการทดลอง 100 ซ้ำ"</strong>
+                        <ul style="margin-top: 0.25rem;">
+                            <li>ผู้สอนฉายโค้ด Python ที่คำนวณกฎของโอห์ม ($V = IR$) แบบไม่มีฟังก์ชันและไม่มีลูป โดยเขียนคำสั่งซ้ำๆ กัน 30 บรรทัดสำหรับข้อมูลกระแสไฟฟ้า 30 ค่า</li>
+                            <li>เปิดประเด็นคำถามกระตุ้นความคิด: <em>"หากนักเรียนของท่านทำการทดลองบันทึกข้อมูล 1,000 ครั้ง เราจะต้องเขียนโค้ดพันบรรทัดหรือไม่? และถ้าต้องการแก้ไขสูตรคำนวณ เราจะแก้ไขอย่างไรโดยไม่เหนื่อยล้าและไม่เกิดข้อผิดพลาด?"</em></li>
+                            <li>นักศึกษาร่วมกันระดมสมอง ชี้ประเด็นปัญหาความซ้ำซ้อน นำเข้าสู่แนวคิด <strong>DRY (Don't Repeat Yourself)</strong> ด้วย <code>Loops</code> และ <code>Functions</code></li>
+                        </ul>
+                    </li>
+                    <li style="margin-top: 0.75rem;">
+                        <strong>ขั้นที่ 2: การสำรวจและค้นหา (Exploration - 45 นาที): "การเปรียบเทียบตรรกะ For vs While และ Custom Blocks"</strong>
+                        <ul style="margin-top: 0.25rem;">
+                            <li>นักศึกษาจับคู่เข้าเครื่องคอมพิวเตอร์ ทดลองสร้าง Custom Block ในโปรแกรม Scratch เพื่อสร้างฟังก์ชันคำนวณพื้นที่วงกลม $\pi r^2$ และเรียกใช้งาน 5 ครั้ง</li>
+                            <li>ทดลองเปลี่ยนบล็อก <code>repeat 10</code> เป็น <code>repeat until &lt;condition&gt;</code> ใน Scratch เพื่อสร้างแบบจำลองการต้มน้ำ</li>
+                            <li>เปรียบเทียบกับการเขียนโปรแกรมในภาษา Python ระหว่าง <code>for i in range(10):</code> และ <code>while temperature &lt; 100:</code> และสังเกตสภาวะการเกิด Infinite Loop เมื่อจงใจลืมใส่ตัวแปรอัปเดต</li>
+                        </ul>
+                    </li>
+                    <li style="margin-top: 0.75rem;">
+                        <strong>ขั้นที่ 3: การอธิบายและลงข้อสรุป (Explanation - 50 นาที): "สถาปัตยกรรมโมดูลาร์และโครงสร้างข้อมูลอาร์เรย์"</strong>
+                        <ul style="margin-top: 0.25rem;">
+                            <li>ผู้สอนอธิบายเชิงลึกถึงโครงสร้างการทำงานในหน่วยความจำของอาร์เรย์/ลิสต์, หลักการ Zero-based Indexing, และผลกระทบของการเกิด <code>IndexError</code></li>
+                            <li>เจาะลึกรูปแบบ <strong>Accumulator Pattern</strong> (การวนลูปเพื่อหาผลรวมและค่าเฉลี่ยทางสถิติ) และแนวคิด Defensive Programming เพื่อป้องกันการหารด้วยศูนย์ (<code>ZeroDivisionError</code>)</li>
+                            <li>สรุปแผนผังสถาปัตยกรรมฟังก์ชันและการห่อหุ้มตัวแปร (Local Scope vs Global Scope) ร่วมกับผู้เรียน</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- ภาคปฏิบัติ 2 ชม. -->
+            <div class="session-block" style="border-left-color: var(--accent);">
+                <h4>
+                    <span><i class="fas fa-laptop-code text-accent"></i> ภาคปฏิบัติ: ปฏิบัติการจำลองข้อมูลทางวิทยาศาสตร์ (Science Data Simulator Workshop)</span>
+                    <span class="time-badge">ชั่วโมงที่ 3 - 4 (120 นาที)</span>
+                </h4>
+                
+                <ul style="padding-left: 1.25rem; line-height: 1.9;">
+                    <li>
+                        <strong>ขั้นที่ 4: การขยายความรู้ (Elaboration / Workshop - 80 นาที): "Science Lab Data Processor Challenge"</strong>
+                        <ul style="margin-top: 0.25rem;">
+                            <li>แบ่งนักศึกษาออกเป็นกลุ่มย่อย 4-5 คน เลือกปฏิบัติภารกิจจำลองระบบวิทยาศาสตร์ 1 สถานการณ์:
+                                <ul>
+                                    <li><strong>กลุ่มฟิสิกส์:</strong> พัฒนาโปรแกรมอ่านข้อมูลเวลา $[t_0, t_1, t_2, \dots]$ เพื่อคำนวณความเร็ว $v = \frac{\Delta s}{\Delta t}$ และอัตราเร่ง $a$ พร้อมหาค่าเฉลี่ย</li>
+                                    <li><strong>กลุ่มเคมี:</strong> พัฒนาโปรแกรมจำลองการสลายตัวของสารกัมมันตรังสี (Radioactive Half-Life Decay) ด้วย <code>while</code> loop และคำนวณระยะเวลาที่สารเหลือ $5\%$</li>
+                                    <li><strong>กลุ่มชีววิทยา:</strong> พัฒนาโปรแกรมคำนวณการเติบโตของแบคทีเรีย พร้อมสร้างฟังก์ชันตรวจสอบขีดจำกัดความจุของสิ่งแวดล้อม (Carrying Capacity $K$)</li>
+                                    <li><strong>กลุ่มวิทย์สิ่งแวดล้อม:</strong> พัฒนาโปรแกรมวิเคราะห์ข้อมูลค่าฝุ่น PM2.5 ตลอด 24 ชั่วโมงในอาร์เรย์ หาค่าเฉลี่ยรายวัน และนับจำนวนชั่วโมงที่ค่าฝุ่นเกินเกณฑ์มาตรฐาน</li>
+                                </ul>
+                            </li>
+                            <li>ทุกกลุ่มต้องปฏิบัติตามมาตรฐาน: มีฟังก์ชันอย่างน้อย 1 ฟังก์ชัน, มี Type Hints/Docstring, มีการวนซ้ำ, และมีการดักจับข้อผิดพลาด (Defensive Guard)</li>
+                        </ul>
+                    </li>
+                    <li style="margin-top: 0.75rem;">
+                        <strong>ขั้นที่ 5: การประเมินผลและการสะท้อนคิด (Evaluation & Reflection - 40 นาที): "Code Showcase & Bug Hunt"</strong>
+                        <ul style="margin-top: 0.25rem;">
+                            <li>สุ่มตัวแทน 2-3 กลุ่ม นำเสนอผลการทำงานและสาธิตการรันโปรแกรมสดบนหน้าจอใหญ่</li>
+                            <li>กิจกรรม <strong>"Bug Hunt Peer Review":</strong> ให้เพื่อนร่วมชั้นทดสอบป้อนค่าข้อมูลวิกฤต (Edge Cases) เช่น ป้อนชุดข้อมูลว่าง, ป้อนค่าตัวเลขติดลบ, หรือป้อนเวลา $t=0$ เพื่อทดสอบว่าฟังก์ชันของเพื่อนพังหรือไม่</li>
+                            <li>ผู้สอนสรุปภาพรวม บทเรียนสำคัญเรื่องความซื่อสัตย์ในการไม่ตกแต่งตัดทอนข้อมูลดิบ และมอบหมายงานการบ้านประจำสัปดาห์</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         TAB 4: การวัดและประเมินผล (Rubrics)
+         ========================================== -->
+    <div id="tab4" class="content-section">
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-clipboard-check"></i> เกณฑ์การวัดและประเมินผลตามสภาพจริง (Authentic Assessment Rubrics)</h2>
+            <p style="margin-bottom: 1.5rem; color: var(--text-muted);">
+                การประเมินผลรายสัปดาห์เน้นการประเมินเพื่อพัฒนา (Formative Assessment) ตามเกณฑ์รูบริกส์จำแนก 4 ระดับคุณภาพ สอดคล้องกับมาตรฐาน WLOs ทั้ง 4 มิติ:
+            </p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 20%;">เกณฑ์การประเมิน</th>
+                        <th style="width: 20%;">ดีมาก (4 คะแนน)</th>
+                        <th style="width: 20%;">ดี (3 คะแนน)</th>
+                        <th style="width: 20%;">พอใช้ (2 คะแนน)</th>
+                        <th style="width: 20%;">ปรับปรุง (1 คะแนน)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>1. การออกแบบตรรกะการวนซ้ำ (Loop Architecture)</strong></td>
+                        <td>เลือกใช้ For/While loop ได้ถูกต้องเหมาะสมกับสถานการณ์ กำหนดเงื่อนไขสิ้นสุดชัดเจน ไม่มีโอกาสเกิด Infinite Loop 100%</td>
+                        <td>เลือกใช้โครงสร้าง Loop ได้ถูกต้อง เงื่อนไขถูกต้อง แต่อาจขาดการจัดการ Edge Case ในบางกรณี</td>
+                        <td>ใช้ Loop ได้แต่เลือกประเภทไม่ตรงกับโจทย์ หรือมีโครงสร้างที่อาจเสี่ยงต่อการวนซ้ำไม่สิ้นสุด</td>
+                        <td>เขียนลูปผิดพลาด เกิด Infinite Loop หรือไม่เข้าใจความแตกต่างระหว่าง For และ While</td>
+                    </tr>
+                    <tr>
+                        <td><strong>2. สถาปัตยกรรมฟังก์ชัน (Functional Abstraction)</strong></td>
+                        <td>สร้างฟังก์ชันที่มีพารามิเตอร์และส่งค่ากลับถูกต้อง มี Defensive Guard ดักจับ Error มี Docstring และ Type Hints สมบูรณ์</td>
+                        <td>สร้างฟังก์ชันและส่งค่ากลับได้ถูกต้อง ตัวแปรแยกเป็นอิสระ (Local Scope) แต่ยังขาด Defensive Guard</td>
+                        <td>สร้างฟังก์ชันได้ แต่ใช้ตัวแปรส่วนกลาง (Global Scope) ปะปน หรือลืมส่งค่ากลับ (Missing Return)</td>
+                        <td>ไม่สามารถสร้างฟังก์ชันแยกเป็นโมดูลได้ ยังคงเขียนโค้ดแบบคำสั่งเดียวเรียงยาวทั้งหมด</td>
+                    </tr>
+                    <tr>
+                        <td><strong>3. การประมวลผลข้อมูลอาร์เรย์ (Array Data Processing)</strong></td>
+                        <td>จัดการข้อมูลใน List ได้อย่างสมบูรณ์ คำนวณสถิติถูกต้อง มีระบบป้องกัน IndexError และตัด Outlier ได้อย่างเป็นเหตุเป็นผล</td>
+                        <td>เก็บข้อมูลใน List และใช้ลูปหาผลรวม/ค่าเฉลี่ยได้ถูกต้อง ดัชนีไม่คลาดเคลื่อน</td>
+                        <td>ใช้ List เก็บข้อมูลได้ แต่การเข้าถึงดัชนีคลาดเคลื่อน (Off-by-one Error) หรือคำนวณผลรวมผิด</td>
+                        <td>ไม่สามารถใช้ List ในการเก็บและประมวลผลข้อมูลการทดลองได้</td>
+                    </tr>
+                    <tr>
+                        <td><strong>4. การบูรณาการวิทย์และจริยธรรมข้อมูล (Pedagogy & Data Ethics)</strong></td>
+                        <td>แบบจำลองสะท้อนกฎธรรมชาติอย่างสมบูรณ์ รักษาความถูกต้องของข้อมูลดิบ และสามารถออกแบบกิจกรรมสอนนักเรียนได้อย่างสร้างสรรค์</td>
+                        <td>แบบจำลองทางวิทยาศาสตร์ถูกต้อง ข้อมูลไม่บิดเบือน มีแนวทางการจัดการเรียนรู้ที่ชัดเจน</td>
+                        <td>แบบจำลองมีจุดคลาดเคลื่อนทางวิทยาศาสตร์บางส่วน ขาดการอธิบายความเชื่อมโยงกับแนวคิดรวบยอด</td>
+                        <td>แบบจำลองขัดกับกฎทางวิทยาศาสตร์ หรือมีการแก้ไขตกแต่งผลการทดลองโดยไม่สุจริต</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="highlight-box">
+                <strong><i class="fas fa-info-circle"></i> เกณฑ์การตัดสินระดับคุณภาพ:</strong>
+                คะแนนรวม 14 - 16 คะแนน = <em>ระดับดีเยี่ยม (Excellent)</em> | 
+                11 - 13 คะแนน = <em>ระดับดี (Good)</em> | 
+                8 - 10 คะแนน = <em>ระดับพอใช้ (Fair)</em> | 
+                ต่ำกว่า 8 คะแนน = <em>ต้องได้รับการสอนเสริม (Needs Remediation)</em>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         TAB 5: ข้อสอบวัดสมรรถนะ (HOTS)
+         ========================================== -->
+    <div id="tab5" class="content-section">
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-brain"></i> ข้อสอบวัดสมรรถนะขั้นสูงเชิงการคิดคำนวณ (HOTS Assessment Bank)</h2>
+            <p style="margin-bottom: 1.5rem; color: var(--text-muted);">
+                แบบทดสอบวัดทักษะการคิดขั้นสูง (Higher-Order Thinking Skills: HOTS) ด้านการวิเคราะห์ข้อผิดพลาด (Analyzing) และการประเมินเงื่อนไขการวนซ้ำ (Evaluating) ตามแนวทางของ สสวท.:
+            </p>
+
+            <!-- ข้อสอบข้อที่ 1 -->
+            <div class="quiz-card">
+                <div class="quiz-question">
+                    <strong>ข้อที่ 1 (ระดับการวิเคราะห์ - Analyzing):</strong><br>
+                    ครูวิทยาศาสตร์ท่านหนึ่งให้นักเรียนเขียนโปรแกรมภาษา Python เพื่อหาค่าเฉลี่ยของอุณหภูมิที่วัดได้จากการทดลอง 5 ซ้ำ โดยนักเรียนเขียนโค้ดดังนี้:
+                    <pre style="margin: 0.5rem 0;"><code>temps = [24.5, 25.2, 24.8, 25.0, 24.9]
+total = 0.0
+for i in range(1, len(temps) + 1):
+    total = total + temps[i]
+mean_temp = total / len(temps)
+print("อุณหภูมิเฉลี่ย =", mean_temp)</code></pre>
+                    เมื่อนักเรียนสั่งรันโปรแกรมนี้ โปรแกรมเกิดข้อผิดพลาดและยุติการทำงานกะทันหัน ข้อใดวิเคราะห์สาเหตุและแนวทางแก้ไขได้อย่างถูกต้องที่สุด?
+                </div>
+
+                <ul class="quiz-options">
+                    <li class="quiz-option" onclick="toggleExplanation('exp1', true, this)">
+                        <span><strong>ก.</strong> เกิดข้อผิดพลาด <code>ZeroDivisionError</code> เนื่องจาก <code>len(temps)</code> มีค่าเป็น 0 ต้องแก้ไขโดยการกำหนดค่าเริ่มต้น <code>total = 1.0</code></span>
+                    </li>
+                    <li class="quiz-option" onclick="toggleExplanation('exp1', false, this)">
+                        <span><strong>ข.</strong> เกิดข้อผิดพลาด <code>TypeError</code> เพราะตัวแปร <code>total</code> ไม่สามารถนำไปบวกกับข้อมูลทศนิยมในลิสต์ได้ ต้องแปลงเป็น <code>float(total)</code></span>
+                    </li>
+                    <li class="quiz-option" onclick="toggleExplanation('exp1', true, this)">
+                        <span><strong>ค.</strong> เกิดข้อผิดพลาด <code>IndexError: list index out of range</code> เนื่องจากดัชนีของลิสต์ใน Python เริ่มต้นจาก 0 ถึง 4 แต่ลูปเข้าถึงดัชนี 1 ถึง 5 ต้องแก้เป็น <code>for i in range(len(temps)):</code> หรือ <code>for t in temps:</code></span>
+                    </li>
+                    <li class="quiz-option" onclick="toggleExplanation('exp1', false, this)">
+                        <span><strong>ง.</strong> เกิดข้อผิดพลาด <code>SyntaxError</code> เพราะคำสั่ง <code>range</code> ไม่สามารถรับค่าที่บวกหนึ่งได้ ต้องแก้เป็น <code>range(len(temps))</code></span>
+                    </li>
+                </ul>
+
+                <div id="exp1" class="quiz-explanation">
+                    <strong><i class="fas fa-check-circle"></i> เฉลยข้อ ค. ถูกต้อง!</strong><br>
+                    <strong>การวิเคราะห์เชิงลึก:</strong> ในภาษา Python (และภาษาคอมพิวเตอร์ส่วนใหญ่) โครงสร้างข้อมูลลิสต์ใช้การอ้างอิงตำแหน่งแบบ <em>Zero-based Indexing</em> ซึ่งลิสต์ <code>temps</code> ที่มีสมาชิก 5 ตัว จะมีตำแหน่งดัชนีคือ <code>0, 1, 2, 3, 4</code> เท่านั้น<br>
+                    คำสั่ง <code>range(1, len(temps) + 1)</code> คือ <code>range(1, 6)</code> ซึ่งจะสร้างลำดับตัวเลข <code>1, 2, 3, 4, 5</code> ส่งผลให้:
+                    <ul style="margin: 0.25rem 0 0.5rem 1.25rem;">
+                        <li>ค่า <code>temps[0]</code> (24.5) ข้อมูลตัวแรก ถูกละเว้นไม่ได้นำมารวม (Off-by-one Error)</li>
+                        <li>เมื่อลูปทำงานถึงรอบสุดท้าย <code>i = 5</code> โปรแกรมพยายามเข้าถึง <code>temps[5]</code> ซึ่งไม่มีตำแหน่งนี้ในหน่วยความจำ จึงเกิดข้อผิดพลาด <code>IndexError: list index out of range</code> ทันที</li>
+                    </ul>
+                    <strong>แนวทางแก้ไขที่ดีที่สุดตามหลัก Pythonic:</strong> ควรเขียน <code>for t in temps: total += t</code> ซึ่งปลอดภัยและไม่ต้องอ้างอิงตัวเลขดัชนี
+                </div>
+            </div>
+
+            <!-- ข้อสอบข้อที่ 2 -->
+            <div class="quiz-card">
+                <div class="quiz-question">
+                    <strong>ข้อที่ 2 (ระดับการประเมินค่า - Evaluating):</strong><br>
+                    นักศึกษาต้องการจำลองการสลายตัวของสารกัมมันตรังสีไอโอดีน-131 (I-131 ซึ่งมีครึ่งชีวิต 8 วัน) จากมวลเริ่มต้น 80 กรัม โดยต้องการคำนวณว่าต้องใช้เวลากี่วัน สารจึงจะสลายตัวจนเหลือน้อยกว่าหรือเท่ากับ 5 กรัม จึงเขียนฟังก์ชัน Python ดังนี้:
+                    <pre style="margin: 0.5rem 0;"><code>def calculate_decay_days(initial_mass, target_mass, half_life):
+    days = 0
+    mass = initial_mass
+    while mass > target_mass:
+        mass = mass / 2
+        days = days + half_life
+    return days, mass
+
+total_days, final_mass = calculate_decay_days(80, 5, 8)</code></pre>
+                    พิจารณาผลลัพธ์ของ <code>total_days</code> และ <code>final_mass</code> หลังฟังก์ชันทำงานเสร็จสิ้น คือข้อใด?
+                </div>
+
+                <ul class="quiz-options">
+                    <li class="quiz-option" onclick="toggleExplanation('exp2', false, this)">
+                        <span><strong>ก.</strong> <code>total_days = 24</code> วัน, <code>final_mass = 10.0</code> กรัม</span>
+                    </li>
+                    <li class="quiz-option" onclick="toggleExplanation('exp2', true, this)">
+                        <span><strong>ข.</strong> <code>total_days = 32</code> วัน, <code>final_mass = 5.0</code> กรัม</span>
+                    </li>
+                    <li class="quiz-option" onclick="toggleExplanation('exp2', false, this)">
+                        <span><strong>ค.</strong> <code>total_days = 40</code> วัน, <code>final_mass = 2.5</code> กรัม</span>
+                    </li>
+                    <li class="quiz-option" onclick="toggleExplanation('exp2', false, this)">
+                        <span><strong>ง.</strong> เกิด <code>Infinite Loop</code> เพราะ <code>mass</code> ไม่มีวันลดลงต่ำกว่า 0 ได้</span>
+                    </li>
+                </ul>
+
+                <div id="exp2" class="quiz-explanation">
+                    <strong><i class="fas fa-check-circle"></i> เฉลยข้อ ข. ถูกต้อง!</strong><br>
+                    <strong>การวิเคราะห์และไล่สอบสถานะ (Trace Table Analysis):</strong>
+                    <table style="margin: 0.5rem 0; font-size: 0.9rem;">
+                        <thead>
+                            <tr>
+                                <th>รอบการวน (Cycle)</th>
+                                <th>ค่า mass ก่อนลูป</th>
+                                <th>เงื่อนไข mass &gt; 5 ?</th>
+                                <th>mass หลังสลายตัว (/2)</th>
+                                <th>days สะสม (+8 วัน)</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td>เริ่มต้น</td><td>80.0 g</td><td>-</td><td>-</td><td>0 วัน</td></tr>
+                            <tr><td>รอบที่ 1</td><td>80.0 g</td><td>True (80 &gt; 5)</td><td>40.0 g</td><td>8 วัน</td></tr>
+                            <tr><td>รอบที่ 2</td><td>40.0 g</td><td>True (40 &gt; 5)</td><td>20.0 g</td><td>16 วัน</td></tr>
+                            <tr><td>รอบที่ 3</td><td>20.0 g</td><td>True (20 &gt; 5)</td><td>10.0 g</td><td>24 วัน</td></tr>
+                            <tr><td>รอบที่ 4</td><td>10.0 g</td><td>True (10 &gt; 5)</td><td>5.0 g</td><td>32 วัน</td></tr>
+                            <tr><td>รอบที่ 5</td><td>5.0 g</td><td><strong>False (5 ไม่มากกว่า 5)</strong></td><td>จบลูปทันที</td><td><strong>สิ้นสุดที่ 32 วัน</strong></td></tr>
+                        </tbody>
+                    </table>
+                    เมื่อจบลูป ค่าที่ส่งกลับคือ <code>(32, 5.0)</code> ซึ่งตรงกับข้อ ข. พอดี
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         TAB 6: เอกสารอ้างอิง (APA 7th)
+         ========================================== -->
+    <div id="tab6" class="content-section">
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-book-bookmark"></i> เอกสารอ้างอิงทางวิชาการ (Academic References - APA 7th Edition)</h2>
+            <p style="margin-bottom: 1.5rem; color: var(--text-muted);">
+                เอกสารและงานวิจัยระดับนานาชาติและระดับชาติที่นำมาสังเคราะห์และใช้ออกแบบแผนการสอนสัปดาห์ที่ 6:
+            </p>
+
+            <ul style="list-style: none; padding-left: 0; line-height: 2;">
+                <li style="margin-bottom: 1.25rem; padding-left: 1.75rem; text-indent: -1.75rem;">
+                    <i class="fas fa-file-lines text-accent" style="margin-right: 0.5rem;"></i>
+                    Cabrera, L., Ketelhut, D. J., Mills, K., & McGinnis, J. R. (2023). Designing a framework for teachers' integration of computational thinking into elementary science. <em>Journal of Research in Science Teaching</em>, 60(9), 1980–2012. 
+                    <a href="https://doi.org/10.1002/tea.21888" target="_blank" style="color: var(--accent); text-decoration: underline;">https://doi.org/10.1002/tea.21888</a>
+                </li>
+
+                <li style="margin-bottom: 1.25rem; padding-left: 1.75rem; text-indent: -1.75rem;">
+                    <i class="fas fa-file-lines text-accent" style="margin-right: 0.5rem;"></i>
+                    Farris, A., & McLaughlin, G. (2024). Getting a grip on how we talk about computational practices in science in settings of teacher learning. <em>Journal of Computer Assisted Learning</em>, 40(6), 2680–2696. 
+                    <a href="https://doi.org/10.1111/jcal.12976" target="_blank" style="color: var(--accent); text-decoration: underline;">https://doi.org/10.1111/jcal.12976</a>
+                </li>
+
+                <li style="margin-bottom: 1.25rem; padding-left: 1.75rem; text-indent: -1.75rem;">
+                    <i class="fas fa-file-lines text-accent" style="margin-right: 0.5rem;"></i>
+                    Killen, H., Coenraad, M., Byrne, V. L., & Weintrop, D. (2023). Teacher education to integrate computational thinking into elementary science: A design-based research study. <em>ACM Transactions on Computing Education</em>, 23(4), 1–28. 
+                    <a href="https://doi.org/10.1145/3618115" target="_blank" style="color: var(--accent); text-decoration: underline;">https://doi.org/10.1145/3618115</a>
+                </li>
+
+                <li style="margin-bottom: 1.25rem; padding-left: 1.75rem; text-indent: -1.75rem;">
+                    <i class="fas fa-file-lines text-accent" style="margin-right: 0.5rem;"></i>
+                    Listiaji, P., & Molnár, G. (2025). Integrating computational thinking into teacher education: A systematic literature review. <em>International Journal of Educational Research</em>, 129, 102682. 
+                    <a href="https://doi.org/10.1016/j.ijer.2025.102682" target="_blank" style="color: var(--accent); text-decoration: underline;">https://doi.org/10.1016/j.ijer.2025.102682</a>
+                </li>
+
+                <li style="margin-bottom: 1.25rem; padding-left: 1.75rem; text-indent: -1.75rem;">
+                    <i class="fas fa-file-lines text-accent" style="margin-right: 0.5rem;"></i>
+                    Liu, Z., Gearty, Z., Richard, E., & Ketelhut, D. J. (2024). Bringing computational thinking into classrooms: A systematic review on supporting teachers in integrating computational thinking into K-12 classrooms. <em>International Journal of STEM Education</em>, 11(1), 48. 
+                    <a href="https://doi.org/10.1186/s40594-024-00510-6" target="_blank" style="color: var(--accent); text-decoration: underline;">https://doi.org/10.1186/s40594-024-00510-6</a>
+                </li>
+
+                <li style="margin-bottom: 1.25rem; padding-left: 1.75rem; text-indent: -1.75rem;">
+                    <i class="fas fa-file-lines text-accent" style="margin-right: 0.5rem;"></i>
+                    Weintrop, D., Beheshti, E., Horn, M., Orton, K., Jona, K., Trouille, L., & Wilensky, U. (2016). Defining computational thinking for mathematics and science classrooms. <em>Journal of Science Education and Technology</em>, 25(1), 127–147. 
+                    <a href="https://doi.org/10.1007/s10956-015-9581-5" target="_blank" style="color: var(--accent); text-decoration: underline;">https://doi.org/10.1007/s10956-015-9581-5</a>
+                </li>
+
+                <li style="margin-bottom: 1.25rem; padding-left: 1.75rem; text-indent: -1.75rem;">
+                    <i class="fas fa-book text-accent" style="margin-right: 0.5rem;"></i>
+                    สถาบันส่งเสริมการสอนวิทยาศาสตร์และเทคโนโลยี. (2561). <em>คู่มือการใช้หลักสูตรรายวิชาพื้นฐานวิทยาศาสตร์ สาระเทคโนโลยี (วิทยาการคำนวณ) ตามมาตรฐานการเรียนรู้และตัวชี้วัด กลุ่มสาระการเรียนรู้วิทยาศาสตร์ (ฉบับปรับปรุง พ.ศ. 2560)</em>. โรงพิมพ์แห่งจุฬาลงกรณ์มหาวิทยาลัย.
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>© 2026 รายวิชา 4124941 วิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์ | <strong>ผู้ช่วยศาสตราจารย์ ดร.ชีวะ ทัศนา</strong></p>
+        <p>คณะวิทยาศาสตร์และเทคโนโลยี มหาวิทยาลัยราชภัฏรำไพพรรณี</p>
+    </footer>
+</div>
+
+<script>
+    function showTab(tabId, btnElement) {
+        document.querySelectorAll('.content-section').forEach(function(section) {
+            section.classList.remove('active');
+        });
+        document.querySelectorAll('.tab-btn').forEach(function(btn) {
+            btn.classList.remove('active');
+        });
+        document.getElementById(tabId).classList.add('active');
+        btnElement.classList.add('active');
+        window.scrollTo({ top: 120, behavior: 'smooth' });
+    }
+
+    function toggleExplanation(expId, isCorrect, element) {
+        var expBox = document.getElementById(expId);
+        if (expBox) {
+            expBox.style.display = 'block';
+        }
+        var parentUl = element.parentElement;
+        var options = parentUl.querySelectorAll('.quiz-option');
+        options.forEach(function(opt) {
+            opt.style.borderColor = '#e2e8f0';
+            opt.style.backgroundColor = '#f8fafc';
+        });
+        if (isCorrect) {
+            element.style.borderColor = '#10b981';
+            element.style.backgroundColor = '#ecfdf5';
+        } else {
+            element.style.borderColor = '#ef4444';
+            element.style.backgroundColor = '#fef2f2';
+        }
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AR MediaPipe – ตรวจจับมือทั้งสองข้าง</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background: #0b1a2a;
+            color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 900px;
+            width: 100%;
+            background: #1a2e3f;
+            border-radius: 24px;
+            padding: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+        }
+        h1 {
+            text-align: center;
+            font-size: 1.8rem;
+            margin-bottom: 12px;
+            color: #8fcbff;
+            letter-spacing: 1px;
+        }
+        .video-wrapper {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 4 / 3;
+            background: #000;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 2px solid #2a4b66;
+        }
+        #videoElement {
+            width: 100%;
+            height: 100%;
+            display: block;
+            transform: scaleX(1);
+            transition: transform 0.3s ease;
+        }
+        #canvasElement {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+            pointer-events: none;
+        }
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            margin: 16px 0 10px;
+        }
+        .btn {
+            background: #2b7be4;
+            color: #fff;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 30px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+        }
+        .btn:hover {
+            background: #1a5bb5;
+            transform: scale(1.03);
+        }
+        .btn-secondary { background: #5e7a9a; }
+        .btn-secondary:hover { background: #3d5a7a; }
+        .btn-success { background: #27ae60; }
+        .btn-success:hover { background: #1e8449; }
+        .info-panel {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 12px;
+            background: #0f1f2e;
+            border-radius: 14px;
+            padding: 14px 18px;
+            margin-top: 14px;
+            text-align: center;
+            font-size: 0.95rem;
+        }
+        .info-panel .label { color: #8aaec9; }
+        .info-panel .value { font-weight: 700; color: #8fcbff; font-size: 1.2rem; }
+        .mirror-active {
+            border-color: #f1c40f !important;
+            box-shadow: 0 0 20px rgba(241, 196, 15, 0.3);
+        }
+        @media (max-width: 600px) {
+            .info-panel { grid-template-columns: 1fr; gap: 8px; }
+            .btn { padding: 8px 16px; font-size: 0.9rem; }
+            h1 { font-size: 1.4rem; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>🖐️ AR MediaPipe – ตรวจจับมือ</h1>
+    <div class="controls">
+        <button class="btn" id="mirrorBtn">🔄 สลับ Mirror</button>
+        <button class="btn btn-secondary" id="resetBtn">↺ รีเซ็ต</button>
+        <button class="btn btn-success" id="toggleInfoBtn">📋 แสดง/ซ่อน ป้าย</button>
+    </div>
+    <div class="video-wrapper" id="videoWrapper">
+        <video id="videoElement" autoplay playsinline></video>
+        <canvas id="canvasElement"></canvas>
+    </div>
+    <div class="info-panel">
+        <div><span class="label">📷 สถานะ</span><br><span class="value" id="statusText">กำลังเริ่มต้น...</span></div>
+        <div><span class="label">✋ มือที่ตรวจพบ</span><br><span class="value" id="handCount">0</span></div>
+        <div><span class="label">🔄 Mirror</span><br><span class="value" id="mirrorStatus">ปิด</span></div>
+    </div>
+</div>
+
+<!-- MediaPipe CDN -->
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils@0.3/camera_utils.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils@0.3/drawing_utils.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4/hands.js" crossorigin="anonymous"></script>
+
+<script>
+    (function() {
+        // DOM refs
+        const video = document.getElementById('videoElement');
+        const canvas = document.getElementById('canvasElement');
+        const ctx = canvas.getContext('2d');
+        const statusText = document.getElementById('statusText');
+        const handCountSpan = document.getElementById('handCount');
+        const mirrorStatusSpan = document.getElementById('mirrorStatus');
+        const videoWrapper = document.getElementById('videoWrapper');
+        const mirrorBtn = document.getElementById('mirrorBtn');
+        const resetBtn = document.getElementById('resetBtn');
+        const toggleInfoBtn = document.getElementById('toggleInfoBtn');
+
+        let mirrorMode = false;
+        let showLabels = true;
+
+        // ปรับขนาด canvas ให้เท่ากับ video wrapper
+        function resizeCanvas() {
+            const rect = videoWrapper.getBoundingClientRect();
+            canvas.width = rect.width;
+            canvas.height = rect.height;
+        }
+        window.addEventListener('resize', resizeCanvas);
+
+        // วาดจุดและเส้น
+        function drawHands(results) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            if (!results.multiHandLandmarks || results.multiHandLandmarks.length === 0) {
+                handCountSpan.textContent = '0';
+                return;
+            }
+
+            const w = canvas.width;
+            const h = canvas.height;
+            const handCount = results.multiHandLandmarks.length;
+            handCountSpan.textContent = handCount;
+
+            // กำหนดสีตามนิ้ว (ตาม index)
+            const fingerColors = {
+                wrist: '#FFFFFF',
+                thumb: '#FFA500',
+                index: '#FFFF00',
+                middle: '#00FF00',
+                ring: '#0000FF',
+                pinky: '#FF00FF'
+            };
+
+            // กำหนดช่วง landmark ของแต่ละนิ้ว
+            const fingerRanges = {
+                thumb: [1,2,3,4],
+                index: [5,6,7,8],
+                middle: [9,10,11,12],
+                ring: [13,14,15,16],
+                pinky: [17,18,19,20]
+            };
+            const fingerNames = ['Thumb', 'Index', 'Middle', 'Ring', 'Pinky'];
+
+            // Connections (ตาม MediaPipe)
+            const connections = [
+                [0,1],[1,2],[2,3],[3,4],
+                [0,5],[5,6],[6,7],[7,8],
+                [0,9],[9,10],[10,11],[11,12],
+                [0,13],[13,14],[14,15],[15,16],
+                [0,17],[17,18],[18,19],[19,20],
+                [5,9],[9,13],[13,17]
+            ];
+
+            // วนทุกมือ
+            for (let idx = 0; idx < handCount; idx++) {
+                const landmarks = results.multiHandLandmarks[idx];
+                const handedness = results.multiHandedness?.[idx]?.label || 'Unknown';
+
+                // แปลงพิกัด
+                const pts = landmarks.map(lm => {
+                    let x = lm.x * w;
+                    let y = lm.y * h;
+                    if (mirrorMode) x = w - x;
+                    return { x, y };
+                });
+
+                // วาดเส้น
+                ctx.strokeStyle = '#00FFAA';
+                ctx.lineWidth = 2.5;
+                for (let conn of connections) {
+                    const [i, j] = conn;
+                    if (i < pts.length && j < pts.length) {
+                        ctx.beginPath();
+                        ctx.moveTo(pts[i].x, pts[i].y);
+                        ctx.lineTo(pts[j].x, pts[j].y);
+                        ctx.stroke();
+                    }
+                }
+
+                // วาดจุดและป้าย
+                pts.forEach((p, i) => {
+                    // กำหนดสี
+                    let color = fingerColors.wrist;
+                    if (i >= 1 && i <= 4) color = fingerColors.thumb;
+                    else if (i >= 5 && i <= 8) color = fingerColors.index;
+                    else if (i >= 9 && i <= 12) color = fingerColors.middle;
+                    else if (i >= 13 && i <= 16) color = fingerColors.ring;
+                    else if (i >= 17 && i <= 20) color = fingerColors.pinky;
+
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, 6, 0, 2 * Math.PI);
+                    ctx.fillStyle = color;
+                    ctx.fill();
+                    ctx.strokeStyle = '#000';
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+
+                    // แสดงหมายเลข (ถ้าเปิดป้าย)
+                    if (showLabels) {
+                        ctx.fillStyle = '#FFFFFF';
+                        ctx.font = '10px Sarabun';
+                        ctx.shadowColor = 'rgba(0,0,0,0.8)';
+                        ctx.shadowBlur = 4;
+                        ctx.fillText(i, p.x + 8, p.y - 8);
+                        ctx.shadowBlur = 0;
+                    }
+                });
+
+                // แสดงชื่อนิ้วที่ปลายนิ้ว
+                if (showLabels) {
+                    const tipIndices = [4, 8, 12, 16, 20];
+                    tipIndices.forEach((tip, i) => {
+                        if (tip < pts.length) {
+                            const p = pts[tip];
+                            ctx.fillStyle = '#FFFFFF';
+                            ctx.font = 'bold 13px Sarabun';
+                            ctx.shadowColor = 'rgba(0,0,0,0.9)';
+                            ctx.shadowBlur = 6;
+                            ctx.fillText(fingerNames[i], p.x - 18, p.y - 22);
+                            ctx.shadowBlur = 0;
+                        }
+                    });
+                }
+
+                // แสดง "ซ้าย"/"ขวา" ที่ข้อมือ
+                if (pts.length > 0) {
+                    const wrist = pts[0];
+                    ctx.fillStyle = '#FFD700';
+                    ctx.font = 'bold 16px Sarabun';
+                    ctx.shadowColor = 'rgba(0,0,0,0.9)';
+                    ctx.shadowBlur = 8;
+                    const label = handedness === 'Left' ? '🖐️ ซ้าย' : '🖐️ ขวา';
+                    ctx.fillText(label, wrist.x - 24, wrist.y - 38);
+                    ctx.shadowBlur = 0;
+                }
+            }
+        }
+
+        // ตั้งค่า MediaPipe Hands
+        const hands = new Hands({
+            locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4/${file}`
+        });
+
+        hands.setOptions({
+            maxNumHands: 2,
+            modelComplexity: 1,
+            minDetectionConfidence: 0.5,
+            minTrackingConfidence: 0.5
+        });
+
+        hands.onResults((results) => {
+            drawHands(results);
+            statusText.textContent = 'กำลังตรวจจับ...';
+        });
+
+        // เปิดกล้อง
+        const camera = new Camera(video, {
+            onFrame: async () => {
+                await hands.send({ image: video });
+            },
+            width: 640,
+            height: 480
+        });
+
+        camera.start()
+            .then(() => {
+                statusText.textContent = 'กล้องพร้อมใช้งาน';
+                resizeCanvas();
+            })
+            .catch(err => {
+                statusText.textContent = '❌ ไม่สามารถเปิดกล้อง: ' + err.message;
+                console.error(err);
+            });
+
+        // ปุ่ม mirror
+        mirrorBtn.addEventListener('click', () => {
+            mirrorMode = !mirrorMode;
+            if (mirrorMode) {
+                video.style.transform = 'scaleX(-1)';
+                mirrorStatusSpan.textContent = 'เปิด (สลับซ้าย-ขวา)';
+                videoWrapper.classList.add('mirror-active');
+            } else {
+                video.style.transform = 'scaleX(1)';
+                mirrorStatusSpan.textContent = 'ปิด';
+                videoWrapper.classList.remove('mirror-active');
+            }
+        });
+
+        // ปุ่มรีเซ็ต
+        resetBtn.addEventListener('click', () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            statusText.textContent = 'รีเซ็ตแล้ว';
+            setTimeout(() => { statusText.textContent = 'กำลังตรวจจับ...'; }, 800);
+        });
+
+        // ปุ่มแสดง/ซ่อนป้าย
+        toggleInfoBtn.addEventListener('click', () => {
+            showLabels = !showLabels;
+            toggleInfoBtn.textContent = showLabels ? '📋 ซ่อนป้าย' : '📋 แสดงป้าย';
+        });
+
+        // resize เมื่อโหลดเสร็จ
+        window.addEventListener('load', () => setTimeout(resizeCanvas, 600));
+    })();
+</script>
+</body>
+</html>

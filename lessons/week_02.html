@@ -1,0 +1,1307 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แผนการสอนสัปดาห์ที่ 2 - การคิดเชิงนามธรรมและการแยกส่วนประกอบของปัญหา</title>
+    <!-- ฟอนต์ Sarabun และ Inter จาก Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- MathJax 3 for Scientific Notation & Equations -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [["$", "$"], ["\\(", "\\)"]],
+                displayMath: [["$$", "$$"], ["\\[", "\\]"]],
+                processEscapes: true,
+                processEnvironments: true
+            },
+            options: {
+                skipHtmlTags: ["script", "noscript", "style", "textarea", "pre", "code"]
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --primary: #0f172a;
+            --primary-light: #1e293b;
+            --accent: #2563eb;
+            --accent-hover: #1d4ed8;
+            --secondary: #0891b2;
+            --success: #059669;
+            --warning: #d97706;
+            --danger: #dc2626;
+            --purple: #7c3aed;
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --border-focus: #94a3b8;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.08), 0 2px 4px -2px rgba(0,0,0,0.05);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.05);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Sarabun', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.8;
+            font-size: 16px;
+        }
+
+        .container {
+            max-width: 1140px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        .nav-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 1.25rem;
+            padding: 0.5rem 1rem;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.25s ease;
+        }
+
+        .nav-back:hover {
+            color: var(--accent-hover);
+            transform: translateX(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #4338ca 100%);
+            color: #ffffff;
+            padding: 3rem 2.5rem;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            top: -40%;
+            right: -10%;
+            width: 480px;
+            height: 480px;
+            background: radial-gradient(circle, rgba(124, 58, 237, 0.25) 0%, rgba(255, 255, 255, 0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .header-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(8px);
+            padding: 0.35rem 0.85rem;
+            border-radius: 9999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            line-height: 1.3;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.02em;
+        }
+
+        .header .subtitle {
+            font-size: 1.15rem;
+            opacity: 0.92;
+            font-weight: 400;
+            max-width: 880px;
+        }
+
+        .header .course-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 1.25rem 1.5rem;
+            border-radius: 12px;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .header .course-info span {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.92rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .tab-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 0.85rem 1.4rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            transition: all 0.25s ease;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .tab-btn:hover {
+            color: var(--text-main);
+            background: #ffffff;
+            border-color: var(--border-focus);
+            transform: translateY(-1px);
+        }
+
+        .tab-btn.active {
+            background: var(--accent);
+            color: #ffffff;
+            border-color: var(--accent);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+        }
+
+        .content-section {
+            display: none;
+            animation: fadeIn 0.35s ease-out;
+        }
+
+        .content-section.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--bg-card);
+            border-radius: 14px;
+            padding: 2.25rem;
+            margin-bottom: 1.75rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding-bottom: 0.85rem;
+            border-bottom: 2px solid #f1f5f9;
+        }
+
+        .card-title i { color: var(--accent); }
+
+        p {
+            margin-bottom: 1rem;
+            color: #334155;
+            text-align: justify;
+        }
+
+        .academic-callout {
+            background: #f8fafc;
+            border-left: 4px solid var(--accent);
+            border-radius: 0 10px 10px 0;
+            padding: 1.25rem 1.5rem;
+            margin: 1.25rem 0;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .academic-callout.tip {
+            border-left-color: var(--success);
+            background: #f0fdf4;
+        }
+
+        .academic-callout.purple {
+            border-left-color: var(--purple);
+            background: #faf5ff;
+        }
+
+        .academic-callout-title {
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+            background: white;
+        }
+
+        th, td {
+            padding: 1rem 1.25rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+
+        th {
+            background-color: #f1f5f9;
+            font-weight: 700;
+            color: var(--primary);
+            letter-spacing: 0.02em;
+        }
+
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background-color: #f8fafc; }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            line-height: 1.4;
+        }
+
+        .badge-blue { background: #dbeafe; color: #1e40af; }
+        .badge-green { background: #dcfce7; color: #166534; }
+        .badge-purple { background: #f3e8ff; color: #6b21a8; }
+        .badge-amber { background: #fef3c7; color: #92400e; }
+
+        .diagram-container {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            box-shadow: var(--shadow-sm);
+            text-align: center;
+        }
+
+        .diagram-caption {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            margin-top: 0.75rem;
+            font-style: italic;
+        }
+
+        .code-container {
+            background: #0f172a;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 1.5rem 0;
+            box-shadow: var(--shadow-md);
+        }
+
+        .code-header {
+            background: #1e293b;
+            padding: 0.6rem 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #94a3b8;
+            font-family: 'Inter', monospace;
+            font-size: 0.85rem;
+            border-bottom: 1px solid #334155;
+        }
+
+        .code-body { padding: 1.25rem; overflow-x: auto; }
+        .code-body pre {
+            color: #f8fafc;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .code-body .keyword { color: #f472b6; }
+        .code-body .function { color: #60a5fa; }
+        .code-body .string { color: #34d399; }
+        .code-body .comment { color: #64748b; font-style: italic; }
+        .code-body .number { color: #fbbf24; }
+
+        .reference-list { margin-top: 1rem; padding-left: 0; list-style: none; }
+        .reference-item {
+            padding-left: 2.5rem;
+            text-indent: -2.5rem;
+            margin-bottom: 1rem;
+            font-size: 0.92rem;
+            color: #334155;
+            line-height: 1.7;
+        }
+
+        .reference-item a { color: var(--accent); text-decoration: none; word-break: break-all; }
+        .reference-item a:hover { text-decoration: underline; }
+
+        .session-block {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .session-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .session-header h4 { color: var(--primary); font-size: 1.15rem; margin: 0; }
+        .time-badge {
+            background: var(--accent);
+            color: white;
+            padding: 0.3rem 0.85rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2.5rem 0;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border);
+            margin-top: 3rem;
+        }
+
+        @media (max-width: 768px) {
+            .header { padding: 2rem 1.5rem; }
+            .header h1 { font-size: 1.6rem; }
+            .card { padding: 1.5rem; }
+            .tab-btn { padding: 0.65rem 1rem; font-size: 0.88rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <a href="../index.html" class="nav-back">
+        <i class="fas fa-arrow-left"></i> กลับสู่หน้าหลักระบบการเรียนรู้ (Main Portal)
+    </a>
+
+    <header class="header">
+        <div class="header-badge">
+            <i class="fas fa-puzzle-piece"></i> Phase 1: Computational Thinking Foundations
+        </div>
+        <h1>สัปดาห์ที่ 2 การคิดเชิงนามธรรมและการแยกส่วนประกอบของปัญหา</h1>
+        <p class="subtitle">การสกัดแก่นสาระสำคัญ (Abstraction) และการแจกแจงโครงสร้างระบบที่ซับซ้อน (Decomposition) เพื่อการสร้างแบบจำลองและการแก้ปัญหาทางวิทยาศาสตร์</p>
+        
+        <div class="course-info">
+            <span><i class="fas fa-barcode"></i> <strong>รหัสวิชา:</strong> 4124941</span>
+            <span><i class="fas fa-graduation-cap"></i> <strong>รายวิชา:</strong> วิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์</span>
+            <span><i class="fas fa-user-tie"></i> <strong>ผู้สอน:</strong> ผศ.ดร.ชีวะ ทัศนา</span>
+            <span><i class="fas fa-clock"></i> <strong>เวลา:</strong> 4 ชั่วโมง (บรรยาย 2 ชม. + ปฏิบัติ 2 ชม.)</span>
+        </div>
+    </header>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="showTab('tab1', this)"><i class="fas fa-bullseye"></i> ผลลัพธ์การเรียนรู้</button>
+        <button class="tab-btn" onclick="showTab('tab2', this)"><i class="fas fa-book-reader"></i> สาระสำคัญเชิงวิชาการ</button>
+        <button class="tab-btn" onclick="showTab('tab3', this)"><i class="fas fa-chalkboard-teacher"></i> กิจกรรมการสอน</button>
+        <button class="tab-btn" onclick="showTab('tab4', this)"><i class="fas fa-tasks"></i> การวัดและประเมินผล</button>
+        <button class="tab-btn" onclick="showTab('tab5', this)"><i class="fas fa-clipboard-list"></i> ข้อสอบวัดสมรรถนะ</button>
+        <button class="tab-btn" onclick="showTab('tab6', this)"><i class="fas fa-bookmark"></i> เอกสารอ้างอิง APA 7</button>
+    </div>
+
+    <!-- แท็บที่ 1: ผลลัพธ์การเรียนรู้ -->
+    <div id="tab1" class="content-section active">
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-bullseye"></i> ผลลัพธ์การเรียนรู้ระดับสัปดาห์ (Weekly Learning Outcomes)</h2>
+            <p>เมื่อสิ้นสุดกระบวนการเรียนรู้ในสัปดาห์ที่ 2 นักศึกษาครูวิทยาศาสตร์สามารถแสดงสมรรถนะตามกรอบ Bloom's Taxonomy (Rev. 2001) และเกณฑ์ TQF ดังนี้:</p>
+            
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 20%;">รหัสผลลัพธ์</th>
+                            <th style="width: 55%;">พฤติกรรมบ่งชี้ (Behavioral Indicators)</th>
+                            <th style="width: 25%;">ระดับ Bloom / ด้านสมรรถนะ</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>WLO 2.1</strong></td>
+                            <td><strong>วิเคราะห์และอธิบาย</strong> ความหมาย บทบาท และกลไกของ "การแยกส่วนประกอบของปัญหา (Decomposition)" และ "การคิดเชิงนามธรรม (Abstraction)" ตามกรอบทฤษฎีวิทยาการคำนวณและวิทยาศาสตร์ศึกษา</td>
+                            <td><span class="badge badge-blue">Analyzing (การวิเคราะห์)</span><br><small>Knowledge Domain (CLO1)</small></td>
+                        </tr>
+                        <tr>
+                            <td><strong>WLO 2.2</strong></td>
+                            <td><strong>จำแนกระดับการคิดเชิงนามธรรม (Levels of Abstraction: LoA)</strong> สกัดแก่นสาระสำคัญ แปลงภาพและข้อมูลทางวิทยาศาสตร์ให้เป็นตัวเลขและโครงสร้างข้อมูลแบบ Run-Length Encoding (RLE) ได้อย่างถูกต้อง</td>
+                            <td><span class="badge badge-purple">Evaluating (การประเมินค่า)</span><br><small>Knowledge & Skill (CLO1, CLO2)</small></td>
+                        </tr>
+                        <tr>
+                            <td><strong>WLO 2.3</strong></td>
+                            <td><strong>ประยุกต์ใช้ Decomposition & Abstraction</strong> ในการสร้างสรรค์สื่อจำลอง 3D Voxel จากชุดตัวเลข และออกแบบแผนการจัดการเรียนรู้วิทยาศาสตร์เชิงรุก (5E Active Inquiry) สำหรับโรงเรียน</td>
+                            <td><span class="badge badge-green">Creating (การสร้างสรรค์)</span><br><small>Pedagogy Domain (CLO2)</small></td>
+                        </tr>
+                        <tr>
+                            <td><strong>WLO 2.4</strong></td>
+                            <td><strong>ตระหนักถึงความถูกต้องเชิงวิชาการ</strong> ความรับผิดชอบต่อการจัดการข้อมูล และการไม่บิดเบือนข้อมูลเพื่อความง่ายในการสร้างตัวแบบ (Model Integrity)</td>
+                            <td><span class="badge badge-amber">Characterizing (เจตคติ)</span><br><small>Ethics Domain (CLO3)</small></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="academic-callout tip">
+                <div class="academic-callout-title"><i class="fas fa-lightbulb"></i> ข้อต่อประสานเชิงมโนทัศน์ (Conceptual Synthesis)</div>
+                <p style="margin: 0;">การแยกส่วนประกอบ (Decomposition) และการคิดเชิงนามธรรม (Abstraction) เป็น **"ทวิสมรรถนะ (Dual Competencies)"** ที่ทำงานเกื้อกูลกัน: Decomposition ทำหน้าที่ตัดแบ่งปัญหาขนาดใหญ่ให้เป็นชิ้นส่วนย่อยในระนาบแนวนอน (Horizontal Partitioning) ในขณะที่ Abstraction ทำหน้าที่กลั่นกรองระดับความลึกและสาระสำคัญในระนาบแนวตั้ง (Vertical Layering) เพื่อแปลงโลกธรรมชาติที่ซับซ้อนให้กลายเป็นตัวแบบที่จัดการได้ทางคอมพิวเตอร์</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- แท็บที่ 2: สาระสำคัญเชิงวิชาการ (พร้อม Infographics และตารางทุกหัวข้อ) -->
+    <div id="tab2" class="content-section">
+        <!-- 2.1 ญาณวิทยาและรากฐานทฤษฎี Abstraction -->
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-brain"></i> 2.1 รากฐานทางทฤษฎีและกลไกทวิลักษณ์ของการคิดเชิงนามธรรม (Dual-Process of Abstraction)</h2>
+            
+            <p><strong>การคิดเชิงนามธรรม (Abstraction)</strong> คือรากฐานสำคัญสูงสุดของการคำนวณ ดังที่ <em>Jeff Kramer (2007)</em> ได้ระบุไว้ในบทความ <em>"Is Abstraction the Key to Computing?"</em> (ACM) ว่าความสามารถในการคิดเชิงนามธรรมคือตัวชี้วัดศักยภาพหลักของนักแก้ปัญหา เพราะช่วยให้มนุษย์สามารถควบคุมความซับซ้อน (Managing Complexity) ของระบบธรรมชาติได้</p>
+
+            <p>งานวิจัยทบทวนวรรณกรรมระบบล่าสุดโดย <em>Oser & Standl (2025)</em> ในวารสาร <em>Computer Applications in Engineering Education</em> (Q1) ระบุว่า Abstraction ทำงานผ่าน **กลไกทวิลักษณ์ (Dual-Process)** ที่ประสานกันอย่างแนบแน่น:</p>
+
+            <!-- Infographic SVG 2.1: กลไกทวิลักษณ์ของ Abstraction (Oser & Standl, 2025) -->
+            <div class="diagram-container">
+                <svg viewBox="0 0 920 250" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="absGrad1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#1e3a8a"/><stop offset="100%" stop-color="#2563eb"/></linearGradient>
+                        <linearGradient id="absGrad2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#581c87"/><stop offset="100%" stop-color="#7c3aed"/></linearGradient>
+                        <linearGradient id="absGradCenter" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#0f172a"/><stop offset="100%" stop-color="#1e293b"/></linearGradient>
+                    </defs>
+
+                    <!-- กล่องซ้าย: Process 1 Information Filtering -->
+                    <rect x="40" y="35" width="280" height="180" rx="12" fill="url(#absGrad1)" filter="url(#boxShadow)"/>
+                    <text x="180" y="70" fill="#ffffff" font-family="'Sarabun', sans-serif" font-weight="700" font-size="15" text-anchor="middle">1. INFORMATION HIDING</text>
+                    <text x="180" y="92" fill="#dbeafe" font-family="'Sarabun', sans-serif" font-weight="600" font-size="13" text-anchor="middle">(การคัดกรองและซ่อนรายละเอียด)</text>
+                    <text x="60" y="125" fill="#ffffff" font-family="'Sarabun', sans-serif" font-size="12">• ตัดปัจจัยรบกวน (Noise Reduction)</text>
+                    <text x="60" y="148" fill="#ffffff" font-family="'Sarabun', sans-serif" font-size="12">• ละทิ้งรายละเอียดระดับปลีกย่อย</text>
+                    <text x="60" y="171" fill="#ffffff" font-family="'Sarabun', sans-serif" font-size="12">• โฟกัสเฉพาะตัวแปรที่มีนัยสำคัญ</text>
+                    <text x="60" y="194" fill="#ffffff" font-family="'Sarabun', sans-serif" font-size="12">• ลดภาระทางปัญญา (Cognitive Load)</text>
+
+                    <!-- กล่องกลาง: ปฏิสัมพันธ์แกนกลาง -->
+                    <circle cx="460" cy="125" r="60" fill="url(#absGradCenter)" stroke="#38bdf8" stroke-width="2.5" filter="url(#boxShadow)"/>
+                    <text x="460" y="120" fill="#ffffff" font-family="'Sarabun', sans-serif" font-weight="700" font-size="13" text-anchor="middle">แก่นแท้</text>
+                    <text x="460" y="138" fill="#38bdf8" font-family="'Inter', sans-serif" font-weight="700" font-size="11" text-anchor="middle">ABSTRACTION</text>
+
+                    <!-- ลูกศรเชื่อมโยงสองทาง -->
+                    <line x1="325" y1="125" x2="395" y2="125" stroke="#38bdf8" stroke-width="3" marker-end="url(#arrow)"/>
+                    <line x1="595" y1="125" x2="525" y2="125" stroke="#c084fc" stroke-width="3" marker-end="url(#arrow)"/>
+
+                    <!-- กล่องขวา: Process 2 Re-representation -->
+                    <rect x="600" y="35" width="280" height="180" rx="12" fill="url(#absGrad2)" filter="url(#boxShadow)"/>
+                    <text x="740" y="70" fill="#ffffff" font-family="'Sarabun', sans-serif" font-weight="700" font-size="15" text-anchor="middle">2. GENERALIZATION</text>
+                    <text x="740" y="92" fill="#f3e8ff" font-family="'Sarabun', sans-serif" font-weight="600" font-size="13" text-anchor="middle">(การสร้างตัวแทนเชิงสัญลักษณ์)</text>
+                    <text x="620" y="125" fill="#ffffff" font-family="'Sarabun', sans-serif" font-size="12">• สกัดกฎเกณฑ์ทั่วไป (Rule Extraction)</text>
+                    <text x="620" y="148" fill="#ffffff" font-family="'Sarabun', sans-serif" font-size="12">• สร้างตัวแทนสัญลักษณ์ (Symbols/Eq.)</text>
+                    <text x="620" y="171" fill="#ffffff" font-family="'Sarabun', sans-serif" font-size="12">• สร้างแบบจำลองทางวิทยาศาสตร์</text>
+                    <text x="620" y="194" fill="#ffffff" font-family="'Sarabun', sans-serif" font-size="12">• ถ่ายโอนสู่บริบทใหม่ (Transferability)</text>
+                </svg>
+                <div class="diagram-caption">ภาพที่ 2.1 กลไกทวิลักษณ์ของกระบวนการคิดเชิงนามธรรม (Dual-Process of Abstraction: Oser & Standl, 2025)</div>
+            </div>
+
+            <!-- บันได Abstraction 4 ระดับ -->
+            <div class="diagram-container">
+                <svg viewBox="0 0 920 340" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="ladder1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#1e293b"/><stop offset="100%" stop-color="#334155"/></linearGradient>
+                        <linearGradient id="ladder2" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#1e3a8a"/><stop offset="100%" stop-color="#2563eb"/></linearGradient>
+                        <linearGradient id="ladder3" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#065f46"/><stop offset="100%" stop-color="#059669"/></linearGradient>
+                        <linearGradient id="ladder4" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#581c87"/><stop offset="100%" stop-color="#7c3aed"/></linearGradient>
+                    </defs>
+
+                    <rect x="40" y="250" width="840" height="65" rx="10" fill="url(#ladder1)" filter="url(#boxShadow)"/>
+                    <text x="70" y="280" fill="#ffffff" font-family="'Sarabun', sans-serif" font-weight="700" font-size="15">ระดับ 1: ปรากฏการณ์จริงเชิงกายภาพ (Concrete Physical World)</text>
+                    <text x="70" y="300" fill="#94a3b8" font-family="'Sarabun', sans-serif" font-size="12">โลกธรรมชาติที่มีตัวแปรนับล้าน ปัจจัยรบกวน (Noise) อุณหภูมิ ลม ความชื้น แรงเสียดทาน</text>
+                    <text x="830" y="290" fill="#38bdf8" font-family="'Inter', sans-serif" font-weight="700" font-size="13" text-anchor="end">Low Abstraction</text>
+
+                    <rect x="90" y="175" width="790" height="65" rx="10" fill="url(#ladder2)" filter="url(#boxShadow)"/>
+                    <text x="120" y="205" fill="#ffffff" font-family="'Sarabun', sans-serif" font-weight="700" font-size="15">ระดับ 2: แบบจำลองเชิงมโนทัศน์ (Conceptual & Structural Models)</text>
+                    <text x="120" y="225" fill="#dbeafe" font-family="'Sarabun', sans-serif" font-size="12">ตัดปัจจัยรบกวนออก สร้างแผนผังวงจรไฟฟ้า สัญลักษณ์แทนอุปกรณ์ แบบจำลองลูกกลม-แท่งแทนโมเลกุล</text>
+                    <text x="830" y="215" fill="#93c5fd" font-family="'Inter', sans-serif" font-weight="700" font-size="13" text-anchor="end">Medium Abstraction</text>
+
+                    <rect x="140" y="100" width="740" height="65" rx="10" fill="url(#ladder3)" filter="url(#boxShadow)"/>
+                    <text x="170" y="130" fill="#ffffff" font-family="'Sarabun', sans-serif" font-weight="700" font-size="15">ระดับ 3: แบบจำลองเชิงคณิตศาสตร์ (Mathematical & Formal Equations)</text>
+                    <text x="170" y="150" fill="#dcfce7" font-family="'Sarabun', sans-serif" font-size="12">แปลงความสัมพันธ์เป็นสูตรและตัวแปรสัญลักษณ์ เช่น กฎของโอห์ม \(V=IR\), กฎการเคลื่อนที่ \(F=ma\)</text>
+                    <text x="830" y="140" fill="#86efac" font-family="'Inter', sans-serif" font-weight="700" font-size="13" text-anchor="end">High Abstraction</text>
+
+                    <rect x="190" y="25" width="690" height="65" rx="10" fill="url(#ladder4)" filter="url(#boxShadow)"/>
+                    <text x="220" y="55" fill="#ffffff" font-family="'Sarabun', sans-serif" font-weight="700" font-size="15">ระดับ 4: แบบจำลองเชิงคำนวณและขั้นตอนวิธี (Computational / In Silico Model)</text>
+                    <text x="220" y="75" fill="#f3e8ff" font-family="'Sarabun', sans-serif" font-size="12">แปลงสูตรเป็นโค้ดโปรแกรม อัลกอริทึมจำลองพลวัตของระบบ (Simulations & Agent-Based Modeling)</text>
+                    <text x="830" y="65" fill="#d8b4fe" font-family="'Inter', sans-serif" font-weight="700" font-size="13" text-anchor="end">Pure Abstraction</text>
+
+                    <line x1="60" y1="240" x2="60" y2="35" stroke="#7c3aed" stroke-width="4" stroke-linecap="round"/>
+                    <polygon points="60,25 54,40 66,40" fill="#7c3aed"/>
+                </svg>
+                <div class="diagram-caption">ภาพที่ 2.2 บันไดแห่งการคิดเชิงนามธรรม 4 ระดับในวิทยาการคำนวณและการศึกษาวิทยาศาสตร์ (Abstraction Ladder)</div>
+            </div>
+        </div>
+
+        <!-- 2.2 การแยกส่วนประกอบเชิงระบบ (Decomposition Architecture) -->
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-sitemap"></i> 2.2 การแยกส่วนประกอบของปัญหา (Decomposition): สถาปัตยกรรมเชิงระบบ</h2>
+            
+            <p><strong>การแยกส่วนประกอบของปัญหา (Decomposition)</strong> คือกระบวนการจำแนกระบบ วัตถุ หรือปัญหาขนาดใหญ่ที่มีความซับซ้อนสูง (Complex Problem) ออกเป็นหน่วยย่อยที่มีขนาดเล็กและมีเอกเทศต่อกัน (Sub-systems / Modules) เพื่อให้สามารถวิเคราะห์ แก้ปัญหา หรือทดสอบได้อย่างเป็นระบบ (Rich et al., 2020; Tsai et al., 2020)</p>
+
+            <div class="diagram-container">
+                <svg viewBox="0 0 880 270" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="300" y="15" width="280" height="50" rx="8" fill="#0f172a" filter="url(#boxShadow)"/>
+                    <text x="440" y="45" fill="#ffffff" font-family="'Sarabun', sans-serif" font-weight="700" font-size="14" text-anchor="middle">ระบบสมดุลนิเวศวิทยาในแหล่งน้ำ</text>
+
+                    <line x1="440" y1="65" x2="160" y2="105" stroke="#64748b" stroke-width="2"/>
+                    <line x1="440" y1="65" x2="440" y2="105" stroke="#64748b" stroke-width="2"/>
+                    <line x1="440" y1="65" x2="720" y2="105" stroke="#64748b" stroke-width="2"/>
+
+                    <rect x="50" y="105" width="220" height="50" rx="8" fill="#1e40af" filter="url(#boxShadow)"/>
+                    <text x="160" y="135" fill="#ffffff" font-family="'Sarabun', sans-serif" font-weight="600" font-size="13" text-anchor="middle">1. ปัจจัยทางกายภาพ (Abiotic)</text>
+
+                    <rect x="330" y="105" width="220" height="50" rx="8" fill="#065f46" filter="url(#boxShadow)"/>
+                    <text x="440" y="135" fill="#ffffff" font-family="'Sarabun', sans-serif" font-weight="600" font-size="13" text-anchor="middle">2. ปัจจัยทางเคมี (Chemical)</text>
+
+                    <rect x="610" y="105" width="220" height="50" rx="8" fill="#7c3aed" filter="url(#boxShadow)"/>
+                    <text x="720" y="135" fill="#ffffff" font-family="'Sarabun', sans-serif" font-weight="600" font-size="13" text-anchor="middle">3. ปัจจัยทางชีวภาพ (Biotic)</text>
+
+                    <line x1="440" y1="155" x2="350" y2="195" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4,4"/>
+                    <line x1="440" y1="155" x2="530" y2="195" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="4,4"/>
+
+                    <rect x="250" y="195" width="200" height="45" rx="6" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1.5"/>
+                    <text x="350" y="222" fill="#1e293b" font-family="'Sarabun', sans-serif" font-weight="600" font-size="12" text-anchor="middle">โมดูลการตรวจวัด pH</text>
+
+                    <rect x="470" y="195" width="200" height="45" rx="6" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1.5"/>
+                    <text x="570" y="222" fill="#1e293b" font-family="'Sarabun', sans-serif" font-weight="600" font-size="12" text-anchor="middle">โมดูลคำนวณออกซิเจนละลาย (DO)</text>
+                </svg>
+                <div class="diagram-caption">ภาพที่ 2.3 โครงสร้างต้นไม้แสดงการแยกส่วนประกอบเชิงระบบ (Systemic Decomposition Tree)</div>
+            </div>
+
+            <!-- แนวทางการจัดกิจกรรมตามกรอบวิจัย Qian & Choi (2022) -->
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 25%;">ระยะการจัดการเรียนรู้ (Qian & Choi, 2022)</th>
+                            <th style="width: 35%;">กิจกรรมการเรียนรู้ของผู้เรียน</th>
+                            <th style="width: 40%;">บทบาทและการชี้แนะของครู (Teacher Scaffolding)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>ระยะที่ 1: การหยั่งรากเชิงรูปธรรม<br>(Cognitive Grounding)</strong></td>
+                            <td>สัมผัสอุปกรณ์จริง แกะชิ้นส่วนปากกา จักรยาน หรือกล้องจุลทรรศน์จริง บันทึกส่วนประกอบลงในตาราง</td>
+                            <td>กระตุ้นให้นักเรียนจัดกลุ่มชิ้นส่วนตามหน้าที่การทำงาน (Functionality) มิใช่รูปร่างภายนอก</td>
+                        </tr>
+                        <tr>
+                            <td><strong>ระยะที่ 2: การถอดบริบทอย่างเป็นขั้น<br>(Progressive Decontextualization)</strong></td>
+                            <td>แทนที่อุปกรณ์จริงด้วยแผนภาพบล็อกไดอะแกรม (Block Diagram) คัดเลือกเฉพาะตัวแปรที่มีผลต่อการทำงาน</td>
+                            <td>ตั้งคำถามท้าทาย: <em>"หากเราตัดชิ้นส่วนนี้ทิ้งไป ระบบจะยังคงทำงานตามเป้าหมายหลักได้หรือไม่?"</em></td>
+                        </tr>
+                        <tr>
+                            <td><strong>ระยะที่ 3: การสะท้อนคิดอภิปัญญา<br>(Metacognitive Reflection)</strong></td>
+                            <td>สร้างตัวแบบจำลองทางคณิตศาสตร์หรือโค้ดโปรแกรม แล้วตรวจสอบว่าตัวแบบสอดคล้องกับระบบจริงเพียงใด</td>
+                            <td>ชี้แนะให้ประเมินขอบเขตข้อจำกัดของตัวแบบ (Limitations) และความคลาดเคลื่อนที่อาจเกิดขึ้น</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 2.3 ตารางเปรียบเทียบ Abstraction ข้ามสาขาวิทยาศาสตร์ -->
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-table"></i> 2.3 ตารางสังเคราะห์การคิดเชิงนามธรรมในแต่ละสาขาวิทยาศาสตร์</h2>
+            
+            <p>ตารางเปรียบเทียบการประยุกต์ใช้ Abstraction ในกลุ่มวิชาฟิสิกส์ เคมี ชีววิทยา และวิทยาศาสตร์สิ่งแวดล้อม แสดงให้เห็นสิ่งที่คงไว้ (Kept Details) เพื่อการแก้ปัญหา และสิ่งที่ตัดทอนออก (Filtered Details) เพื่อลดภาระทางปัญญา:</p>
+
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 15%;">สาขาวิชา</th>
+                            <th style="width: 25%;">ตัวแบบจำลอง (Model)</th>
+                            <th style="width: 30%;">สาระสำคัญที่คงไว้ (Kept Details)</th>
+                            <th style="width: 30%;">รายละเอียดที่ตัดทอนออก (Filtered Details)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong style="color: #1e40af;">ฟิสิกส์ (Physics)</strong></td>
+                            <td><strong>แผนภาพวัตถุอิสระ (Free-Body Diagram)</strong></td>
+                            <td>ทิศทางและขนาดของเวกเตอร์แรง, จุดศูนย์ถ่วงของมวล, ระนาบการเคลื่อนที่</td>
+                            <td>สี ลวดลาย ยี่ห้อ ความขรุขระระดับโมเลกุลของพื้นผิว และแรงต้านอากาศเล็กน้อย</td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color: #059669;">เคมี (Chemistry)</strong></td>
+                            <td><strong>สมการไอออนิกสุทธิ (Net Ionic Equation)</strong></td>
+                            <td>ชนิดของไอออนที่เข้าทำปฏิกิริยาจริง, สถานะของสาร, อัตราส่วนโมล</td>
+                            <td>ไอออนที่ไม่เข้าร่วมการทำปฏิกิริยา (Spectator ions) และโมเลกุลตัวทำละลายน้ำ</td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color: #7c3aed;">ชีววิทยา (Biology)</strong></td>
+                            <td><strong>ตารางพันธุศาสตร์ (Punnett Square)</strong></td>
+                            <td>อัลลีลเด่น-ด้อย (Dominant/Recessive), อัตราส่วนจีโนไทป์และฟีโนไทป์</td>
+                            <td>ลำดับเบส A-T-C-G นับล้านคู่เบสบนโครโมโซม, กลไกโปรตีนฮิสโตน</td>
+                        </tr>
+                        <tr>
+                            <td><strong style="color: #d97706;">สิ่งแวดล้อม (Ecology)</strong></td>
+                            <td><strong>สายใยอาหาร (Food Web Diagram)</strong></td>
+                            <td>ลำดับการถ่ายทอดพลังงาน (Trophic Levels), ความสัมพันธ์ผู้ล่า-เหยื่อ</td>
+                            <td>พฤติกรรมการนอนหลับของสัตว์, ปริมาณแคลอรีที่สูญเสียในแต่ละวินาที</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- 2.4 โค้ด Python จำลอง -->
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-code"></i> 2.4 การจำลองทางวิทยาศาสตร์ด้วย Python: การคำนวณประสิทธิภาพพลังงานแสงอาทิตย์</h2>
+            
+            <p>เพื่อแสดงให้เห็นถึงการทำงานร่วมกันระหว่าง **Decomposition (การเขียนฟังก์ชันย่อยแบบแยกส่วน)** และ **Abstraction (การคำนวณเฉพาะตัวแปรแกนหลักตามกฎฟิสิกส์)** โค้ดด้านล่างจำลองระบบคำนวณพลังงานที่เซลล์สุริยะผลิตได้ในแต่ละช่วงชั่วโมงของวัน:</p>
+
+            <div class="code-container">
+                <div class="code-header">
+                    <span><i class="fab fa-python"></i> solar_energy_decomposition.py (Python 3.11 Modular Architecture)</span>
+                    <span>วิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์</span>
+                </div>
+                <div class="code-body">
+<pre><code><span class="comment"># =====================================================================</span>
+<span class="comment"># โครงการ: แบบจำลองการคำนวณพลังงานเซลล์แสงอาทิตย์ด้วย Decomposition & Abstraction</span>
+<span class="comment"># ผู้พัฒนา: รายวิชา 4124941 คณะวิทยาศาสตร์และเทคโนโลยี มรภ.รำไพพรรณี</span>
+<span class="comment"># =====================================================================</span>
+
+<span class="comment"># [Abstraction 1]: แบบจำลองแสงอาทิตย์ ตัดตัวแปรก้อนเมฆที่ซับซ้อนออก ใช้สูตรการกระจายความเข้มแสง</span>
+<span class="keyword">def</span> <span class="function">calculate_solar_irradiance</span>(hour: float, peak_irradiance: float = 1000.0) -> float:
+    <span class="string">"""คำนวณความเข้มแสงอาทิตย์ (W/m^2) ตามช่วงเวลาของวัน (6:00 - 18:00)"""</span>
+    <span class="keyword">import</span> math
+    <span class="keyword">if</span> 6.0 &lt;= hour &lt;= 18.0:
+        solar_angle = math.pi * (hour - 6.0) / 12.0
+        <span class="keyword">return</span> peak_irradiance * math.sin(solar_angle)
+    <span class="keyword">return</span> 0.0
+
+<span class="comment"># [Decomposition 1]: โมดูลย่อยคำนวณกำลังไฟฟ้า (Power Output Module)</span>
+<span class="keyword">def</span> <span class="function">calculate_panel_power</span>(irradiance: float, area_m2: float, efficiency: float) -> float:
+    <span class="string">"""คำนวณกำลังไฟฟ้าที่ผลิตได้ (Watts) = ความเข้มแสง x พื้นที่ x ประสิทธิภาพ"""</span>
+    <span class="keyword">return</span> irradiance * area_m2 * efficiency
+
+<span class="comment"># [Decomposition 2]: โมดูลจำลองการทำงานตลอดวัน (Daily Simulation Pipeline)</span>
+<span class="keyword">def</span> <span class="function">simulate_daily_solar_generation</span>(area_m2: float = 2.0, efficiency: float = 0.20):
+    <span class="string">"""ประมวลผลพลังงานสะสมรายวันตลอด 24 ชั่วโมง"""</span>
+    print(f<span class="string">"{'ชั่วโมง (เวลา)':&lt;15} {'ความเข้มแสง (W/m²)':&lt;22} {'กำลังไฟฟ้า (W)':&lt;18}"</span>)
+    print(<span class="string">"="</span> * 55)
+    
+    total_energy_wh = 0.0
+    
+    <span class="keyword">for</span> hour <span class="keyword">in</span> range(6, 19):
+        irradiance = calculate_solar_irradiance(float(hour))
+        power = calculate_panel_power(irradiance, area_m2, efficiency)
+        total_energy_wh += power * 1.0
+        
+        print(f<span class="string">"{hour:02d}:00 น.{'':&lt;7} {irradiance:&lt;22.2f} {power:&lt;18.2f}"</span>)
+        
+    print(<span class="string">"="</span> * 55)
+    print(f<span class="string">"พลังงานไฟฟ้ารวมที่ผลิตได้ต่อวัน: {total_energy_wh / 1000.0:.3f} กิโลวัตต์-ชั่วโมง (kWh)"</span>)
+
+<span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:
+    simulate_daily_solar_generation(area_m2=2.0, efficiency=0.20)
+</code></pre>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2.5 ปฏิบัติการจำลองเสมือนจริง: การคิดเชิงนามธรรม (Dual Interactive Labs) -->
+        <div class="card" style="border: 2px solid #0284c7; background: linear-gradient(to bottom, #ffffff, #f0f9ff);">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
+                <h2 class="card-title" style="margin-bottom: 0;">
+                    <i class="fas fa-atom" style="color: #0284c7;"></i> 2.5 ปฏิบัติการจำลองเสมือนจริง: การคิดเชิงนามธรรม (Computational Abstraction Labs)
+                </h2>
+                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                    <a href="../assets/slides/Computing Science for Science Teaching - Chapter 2.pptx" download class="nav-back" style="margin-bottom: 0; padding: 0.4rem 0.8rem; font-size: 0.85rem; background: #f59e0b; color: #fff;"><i class="fas fa-file-powerpoint"></i> ดาวน์โหลดสไลด์ (.pptx)</a>
+                    <a id="btnOpenFullSim" href="../simulations/chapter01_abstraction_sandbox.html" target="_blank" class="nav-back" style="margin-bottom: 0; padding: 0.4rem 0.8rem; font-size: 0.85rem;">
+                        <i class="fas fa-external-link-alt"></i> เปิดแล็บ 3D เต็มหน้าจอ
+                    </a>
+                </div>
+            </div>
+
+            <p>
+                <strong>หัวใจของการคิดเชิงนามธรรม (Abstraction) ในวิทยาการคอมพิวเตอร์และวิทยาศาสตร์:</strong> คือการคัดกรองข้อมูลที่ไม่จำเป็นออกและคงไว้เฉพาะแก่นสำคัญที่ส่งผลต่อการแก้ปัญหา เลือกทดลองได้ 2 รูปแบบจำลอง:
+            </p>
+
+            <!-- Dual Tab Selector -->
+            <div style="display: flex; gap: 8px; margin: 1rem 0; border-bottom: 2px solid #e2e8f0; padding-bottom: 8px;">
+                <button type="button" id="tabLab1" onclick="switchLab('sim1')" style="padding: 8px 18px; border-radius: 8px; border: none; background: #0284c7; color: #fff; font-family: inherit; font-weight: 600; cursor: pointer; transition: all 0.2s;">
+                    <i class="fas fa-cube"></i> แล็บ 1: แบบจำลองมวลจุด (Point-Mass Abstraction Sandbox)
+                </button>
+                <button type="button" id="tabLab2" onclick="switchLab('sim2')" style="padding: 8px 18px; border-radius: 8px; border: 1px solid #cbd5e1; background: #f1f5f9; color: #334155; font-family: inherit; font-weight: 600; cursor: pointer; transition: all 0.2s;">
+                    <i class="fas fa-th"></i> แล็บ 2: การแทนค่าภาพดิจิทัลและ 3D Voxel Lab (RLE)
+                </button>
+            </div>
+
+            <div style="margin: 1.25rem 0; border-radius: 12px; overflow: hidden; border: 1px solid #cbd5e1; height: 680px; box-shadow: var(--shadow-md);">
+                <iframe id="labIframe" src="../simulations/chapter01_abstraction_sandbox.html" style="width: 100%; height: 100%; border: none;"></iframe>
+            </div>
+
+            <script>
+                function switchLab(tab) {
+                    const iframe = document.getElementById('labIframe');
+                    const btnFull = document.getElementById('btnOpenFullSim');
+                    const tab1 = document.getElementById('tabLab1');
+                    const tab2 = document.getElementById('tabLab2');
+                    if (tab === 'sim1') {
+                        iframe.src = '../simulations/chapter01_abstraction_sandbox.html';
+                        btnFull.href = '../simulations/chapter01_abstraction_sandbox.html';
+                        tab1.style.background = '#0284c7';
+                        tab1.style.color = '#fff';
+                        tab1.style.border = 'none';
+                        tab2.style.background = '#f1f5f9';
+                        tab2.style.color = '#334155';
+                        tab2.style.border = '1px solid #cbd5e1';
+                    } else {
+                        iframe.src = '../simulations/voxel_lab.html';
+                        btnFull.href = '../simulations/voxel_lab.html';
+                        tab2.style.background = '#0284c7';
+                        tab2.style.color = '#fff';
+                        tab2.style.border = 'none';
+                        tab1.style.background = '#f1f5f9';
+                        tab1.style.color = '#334155';
+                        tab1.style.border = '1px solid #cbd5e1';
+                    }
+                }
+            </script>
+
+            <div style="background: white; padding: 1rem 1.25rem; border-radius: 8px; border-left: 4px solid #0284c7;">
+                <h4 style="font-size: 0.95rem; font-weight: 700; color: #0f172a; margin-bottom: 0.35rem;">
+                    <i class="fas fa-lightbulb" style="color: #f59e0b;"></i> ฟังก์ชันจำลองและการฝึกทักษะ Computational Thinking ในห้องเรียน:
+                </h4>
+                <ul style="font-size: 0.9rem; color: #475569; line-height: 1.7; padding-left: 1.25rem;">
+                    <li><strong>แล็บ 1: ฟิสิกส์มวลจุด (Point-Mass):</strong> สลับดูระดับนามธรรม 4 ระดับ (รถสปอร์ตจริง 120,000 Polygons $\rightarrow$ โครงร่าง $\rightarrow$ กล่องขอบเขต $\rightarrow$ มวลจุด 1 จุด) ทดสอบปล่อยวัตถุตามกฎ $F=ma$ พิสูจน์ว่าผลลัพธ์การเคลื่อนที่เท่ากันทุกประการ แต่ประหยัดเวลาประมวลผลมหาศาล</li>
+                    <li><strong>แล็บ 2: การแทนค่าภาพดิจิทัล 3D Voxel:</strong> สังเกตหัวอ่านสแกนเนอร์วิ่งระบายสีทีละพิกเซลตามลูปคำสั่ง RLE (Run-Length Encoding) ตรวจเช็กไวยากรณ์ข้อมูลแถว และสร้างโมเดล 3D แบบจำลองทางวิทยาศาสตร์</li>
+                </ul>
+            </div>
+            </div>
+            <div style="margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid #e2e8f0;">
+                <h3 style="font-size: 1.05rem; font-weight: 700; color: #0f172a; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-flask" style="color: #10b981;"></i> ใบงานปฏิบัติการที่สอดคล้อง (จากคู่มือปฏิบัติการ ๑๘๐ การทดลอง):
+                </h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem;">
+                    
+                <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.1rem; border-left: 4px solid #10b981; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem; flex-wrap: wrap; gap: 0.25rem;">
+                        <span style="background: #10b981; color: #fff; font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.55rem; border-radius: 4px;">LAB 1.1.3</span>
+                        <span style="font-size: 0.78rem; color: #64748b;"><i class="far fa-clock"></i> 90 นาที | C5/C6 (ประเมิน/สร้างสรรค์)</span>
+                    </div>
+                    <h4 style="font-size: 0.98rem; font-weight: 700; color: #0f172a; margin-bottom: 0.2rem;">การสร้างตัวแบบเชิงนามธรรมดัชนีขาดน้ำพืช (Abstraction)</h4>
+                    <p style="font-size: 0.82rem; color: #64748b; font-style: italic; margin-bottom: 0.5rem;">Abstraction of Crop Water Stress Index</p>
+                    <div style="background: #ffffff; border: 1px dashed #cbd5e1; border-radius: 6px; padding: 0.45rem 0.75rem; font-size: 0.85rem; margin-bottom: 0.5rem; overflow-x: auto;"><strong>สมการทฤษฎี:</strong> $$\text{CWSI} = \frac{(T_c - T_a) - (T_c - T_a)_{\text{lower}}}{(T_c - T_a)_{\text{upper}} - (T_c - T_a)_{\text{lower}}} \in [0, 1]$$</div>
+                    <div style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.25rem;"><i class="fas fa-question-circle" style="color: #3b82f6;"></i> คำถามท้ายการทดลอง:</div>
+                    <ul style="font-size: 0.82rem; color: #475569; margin-bottom: 0; padding-left: 1.25rem; line-height: 1.5;">
+                        <li style="margin-bottom: 0.25rem;">จงประเมินว่าควรสั่งเปิดวาล์วสปริงเกอร์เมื่อ CWSI เกินระดับใด?</li><li style="margin-bottom: 0.25rem;">ตัวแปรใดที่ถูกตัดทิ้งในโมเดล Abstraction นี้ และส่งผลกระทบอย่างไร?</li>
+                    </ul>
+                </div>
+            
+                </div>
+            </div>
+        
+        </div>
+    </div>
+
+    <!-- แท็บที่ 3: กิจกรรมการสอน -->
+    <div id="tab3" class="content-section">
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-chalkboard-teacher"></i> กิจกรรมการจัดการเรียนรู้เชิงรุก (Active Inquiry Session Plan: 240 นาที)</h2>
+
+            <div class="session-block">
+                <div class="session-header">
+                    <h4><i class="fas fa-book-open"></i> ภาคที่ 1: ภาคบรรยายและสร้างมโนทัศน์ (Interactive Lecture): 120 นาที</h4>
+                    <span class="time-badge">2 ชั่วโมง</span>
+                </div>
+                <ol style="padding-left: 1.5rem; line-height: 2;">
+                    <li><strong>กิจกรรมที่ 1: จุดประกายจากภาพอวกาศ James Webb (Inquiry Hook) [20 นาที]</strong>
+                        <ul>
+                            <li>ผู้สอนเปิดภาพถ่ายกาแล็กซีอันคมชัดจากกล้องโทรทรรศน์อวกาศ James Webb (JWST) แล้วตั้งคำถามท้าทาย: <em>"กล้องที่ลอยอยู่ห่างจากโลก 1.5 ล้านกิโลเมตร ส่งภาพขนาดหลายพันล้านพิกเซลกลับมายังโลกได้อย่างไร ในเมื่อสัญญาณวิทยุในอวกาศมีความเร็วจำกัด?"</em></li>
+                            <li>ผู้เรียนร่วมกันระดมสมองและสรุปเข้าสู่มโนทัศน์ว่า กล้องไม่ได้ส่ง 'ภาพ' แต่ส่ง <strong>'ตัวเลขที่ผ่านการบีบอัด (Compressed Numbers)'</strong> ผ่านการคิดเชิงนามธรรม (Abstraction)</li>
+                        </ul>
+                    </li>
+                    <li><strong>กิจกรรมที่ 2: บรรยายเจาะลึกบันได Abstraction 4 ระดับ และ Decomposition เชิงระบบ [50 นาที]</strong>
+                        <ul>
+                            <li>วิเคราะห์บันได 4 ระดับ (Physical $\rightarrow$ Conceptual $\rightarrow$ Mathematical $\rightarrow$ Computational) ในการศึกษาปรากฏการณ์ธรรมชาติ</li>
+                            <li>เปรียบเทียบการตัดทอนรายละเอียด (Information Filtering) ในสาขาฟิสิกส์ เคมี ชีววิทยา และสิ่งแวดล้อม</li>
+                            <li>อธิบายทฤษฎีการบีบอัดข้อมูลแบบ Run-Length Encoding (RLE) และความสำคัญของการระบุรหัสศูนย์ <code>0</code> นำหน้าเพื่อสลับเฟสสี</li>
+                        </ul>
+                    </li>
+                    <li><strong>กิจกรรมที่ 3: ปฏิบัติการ Unplugged "การสร้างภาพจากตัวเลข" ตามใบงานจริง [50 นาที]</strong>
+                        <ul>
+                            <li><strong>ตอนที่ 1 (ถอดรหัสภาพ):</strong> แจกใบงานชุด <em>"การสร้างภาพจากตัวเลข"</em> (A4 Printout) ให้นักศึกษาทำเป็นคู่ ถอดรหัสตัวอย่าง 6×6, สิ่งประดิษฐ์ 20×9, สิ่งมีชีวิต 20×13, และถ้วยรางวัล 20×17</li>
+                            <li><strong>ตอนที่ 2 (เข้ารหัสภาพ & ส่งโค้ด):</strong> ให้นักศึกษาออกแบบภาพด้วยตนเอง แปลงเป็นโค้ดตัวเลข ส่งให้เพื่อนร่วมชั้นถอดรหัส และทดลองกำหนดรหัสสี (0=ดำ, 1=แดง, 2=เขียว)</li>
+                            <li><strong>ตอนที่ 3 (Peer Validation):</strong> สลับกระดาษกับคู่บัดดี้เพื่อตรวจความถูกต้องของการเรียงตัวเลขพิกเซล</li>
+                        </ul>
+                    </li>
+                </ol>
+            </div>
+
+            <div class="session-block">
+                <div class="session-header">
+                    <h4><i class="fas fa-users-cog"></i> ภาคที่ 2: ภาคปฏิบัติการจำลองและการสร้างสรรค์ (Workshop & Creation): 120 นาที</h4>
+                    <span class="time-badge">2 ชั่วโมง</span>
+                </div>
+                <ol style="padding-left: 1.5rem; line-height: 2;">
+                    <li><strong>กิจกรรมที่ 4: ปฏิบัติการ Plugged-in "ยกระดับภาพ 2D สู่ 3D Voxel Science Lab" [50 นาที]</strong>
+                        <ul>
+                            <li>เข้าสู่ระบบจำลอง <code>simulations/voxel_lab.html</code> บนเว็บรายวิชา</li>
+                            <li><strong>Step-by-Step Scanline Visualizer:</strong> กดเล่นแอนิเมชันเพื่อสังเกตหัวอ่านสแกนเนอร์วิ่งหยอดสีทีละพิกเซลตามลูปคำสั่ง</li>
+                            <li><strong>Row Syntax Validation:</strong> ฝึกสังเกตป้ายแถวเขียว-แดงเมื่อจำนวนพิกเซลขาดหรือเกิน (Boundary Checking)</li>
+                            <li><strong>3D Voxel Extrusion:</strong> ยกระดับภาพ 2D ให้กลายเป็นโมเดล 3 มิติสีฟ้าสดใส หมุนดูรอบทิศทาง 360° ปรับความหนาแกน Z และทดสอบระบบฟิสิกส์แรงโน้มถ่วง (Gravity Collapse)</li>
+                            <li><strong>CT Quests (Bug Hunter):** สลับเข้าโหมดภารกิจ หมอซ่อมภาพ เพื่อฝึกค้นหาและดีบักโค้ดที่ผิดพลาด</li>
+                        </ul>
+                    </li>
+                    <li><strong>กิจกรรมที่ 5: Co-Creation ออกแบบแผนการสอนวิทยาศาสตร์และใบงาน A4 สำหรับโรงเรียน [45 นาที]</strong>
+                        <ul>
+                            <li>จับคู่ออกแบบ **"ชุดกิจกรรมการเรียนรู้วิทยาศาสตร์เชิงรุก (5E Inquiry Plan)"** สำหรับนักเรียน ม.ต้น/ม.ปลาย</li>
+                            <li>ออกแบบโมเดลวิทยาศาสตร์ (เช่น โครงสร้างเซลล์, ขวดเคมี, หรือแบบจำลอง DNA) ใน Simulator แล้วกดปุ่ม <code>[🖨️ พิมพ์ใบงาน A4]</code> เพื่อสร้างแผ่นงานพร้อมเฉลย</li>
+                        </ul>
+                    </li>
+                    <li><strong>กิจกรรมที่ 6: นำเสนอ Gallery Walk และสะท้อนคิดอภิปัญญา (Metacognitive Reflection) [25 นาที]</strong>
+                        <ul>
+                            <li>สุ่มกลุ่มตัวแทนนำเสนอโมเดล 3D ที่สร้างขึ้นบนจอโปรเจกเตอร์ พร้อมรับ Feedback จากเพื่อนและอาจารย์ตามเกณฑ์ Rubric</li>
+                            <li>สะท้อนคิดร่วมกัน: <em>"จากตัวเลขบนกระดาษ สู่โลกเสมือนจริง 3 มิติ เราจะนำเทคโนโลยีนี้ไปยกระดับการสอนฟิสิกส์ เคมี ชีววิทยา ในโรงเรียนได้อย่างไร?"</em></li>
+                            <li>ทำแบบทดสอบวัดสมรรถนะท้ายบทเรียน 3 ข้อเพื่อสรุปประเมินตนเอง</li>
+                        </ul>
+                    </li>
+                </ol>
+            </div>
+
+            <!-- กล่องระบบส่งงานสัปดาห์ที่ 2 และอาจารย์ (AI) ประเมินผลวิเคราะห์ผู้เรียน -->
+            <div class="card" style="margin-top: 1.5rem; border: 2px solid #0284c7; background: linear-gradient(135deg, #ffffff 0%, #f0f9ff 100%);">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
+                    <div>
+                        <h3 style="font-size: 1.15rem; color: #0369a1; margin-bottom: 3px; display: flex; align-items: center; gap: 8px;">
+                            <i class="fas fa-paper-plane" style="color: #0284c7;"></i> ส่งผลงานการออกแบบโมเดล 3D Voxel & การคิดเชิงนามธรรม (AI Assessment)
+                        </h3>
+                        <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 0;">
+                            ส่งผลงานโมเดล 3D, แผนผัง Abstraction หรือรหัสตัวเลข RLE เพื่อให้อาจารย์ ดร.ชีวะ (AI Copilot) ประเมินรูบริกส์และวิเคราะห์พัฒนาการรายบุคคลทันที
+                        </p>
+                    </div>
+                    <span class="time-badge" style="background: #e0f2fe; color: #0369a1; font-size: 0.8rem;">
+                        <i class="fas fa-robot"></i> AI Formative Assessment Engine
+                    </span>
+                </div>
+
+                <form id="submissionFormW2" onsubmit="handleWeek2Submit(event)" style="display: flex; flex-direction: column; gap: 1rem;">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.75rem;">
+                        <div>
+                            <label style="font-size: 0.8rem; font-weight: 600; color: #334155;">รหัสนักศึกษา (Student ID): *</label>
+                            <input type="text" id="w2StuId" required placeholder="เช่น 6614401001" style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-family: inherit; font-size: 0.85rem; margin-top: 3px;">
+                        </div>
+                        <div>
+                            <label style="font-size: 0.8rem; font-weight: 600; color: #334155;">ชื่อ-นามสกุล (Full Name): *</label>
+                            <input type="text" id="w2StuName" required placeholder="เช่น นายสมชาย รักวิทยาการ" style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-family: inherit; font-size: 0.85rem; margin-top: 3px;">
+                        </div>
+                        <div>
+                            <label style="font-size: 0.8rem; font-weight: 600; color: #334155;">ชื่อโมเดลวิทยาศาสตร์ที่ออกแบบ: *</label>
+                            <input type="text" id="w2ModelTitle" required placeholder="เช่น แบบจำลองโครงสร้างเซลล์พืช 3D" style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-family: inherit; font-size: 0.85rem; margin-top: 3px;">
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 0.75rem;">
+                        <div>
+                            <label style="font-size: 0.8rem; font-weight: 700; color: #0284c7;"><i class="fas fa-layer-group"></i> 1. Decomposition (การแบ่งโครงสร้างภาพ/โมเดล):</label>
+                            <textarea id="w2Decomp" rows="3" required placeholder="อธิบายการแยกส่วนประกอบของวัตถุออกเป็นกริด 2D และชั้นความสูงเลเยอร์ Z..." style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-family: inherit; font-size: 0.82rem; margin-top: 3px; resize: vertical;"></textarea>
+                        </div>
+                        <div>
+                            <label style="font-size: 0.8rem; font-weight: 700; color: #f59e0b;"><i class="fas fa-barcode"></i> 2. Pattern Recognition (การบีบอัดข้อมูล RLE):</label>
+                            <textarea id="w2Pattern" rows="3" required placeholder="ระบุการค้นหารูปแบบการเรียงตัวของพิกเซลสีที่ซ้ำกัน และการใช้รหัส 0 สลับสี..." style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-family: inherit; font-size: 0.82rem; margin-top: 3px; resize: vertical;"></textarea>
+                        </div>
+                        <div>
+                            <label style="font-size: 0.8rem; font-weight: 700; color: #10b981;"><i class="fas fa-cube"></i> 3. Abstraction (การลดทอนมวลจุด & ว็อกเซล):</label>
+                            <textarea id="w2Abstr" rows="3" required placeholder="อธิบายระดับนามธรรม (เช่น จากรถ 120k Poly เหลือมวลจุด 1 จุด หรือการแทนวัตถุด้วยก้อนลูกบาศก์)..." style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-family: inherit; font-size: 0.82rem; margin-top: 3px; resize: vertical;"></textarea>
+                        </div>
+                        <div>
+                            <label style="font-size: 0.8rem; font-weight: 700; color: #ef4444;"><i class="fas fa-code"></i> 4. Algorithm & Code (โค้ดตัวเลข RLE):</label>
+                            <textarea id="w2Algo" rows="3" required placeholder="ระบุชุดตัวเลข RLE ของโมเดล หรือขั้นตอนวิธีการสแกนอ่านภาพทีละแถว..." style="width: 100%; padding: 8px; border: 1px solid #cbd5e1; border-radius: 6px; font-family: inherit; font-size: 0.82rem; margin-top: 3px; resize: vertical;"></textarea>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 0.75rem;">
+                        <div>
+                            <label style="font-size: 0.8rem; font-weight: 600; color: #334155;"><i class="fas fa-comment-dots"></i> การสะท้อนคิดอภิปัญญา (Metacognitive Reflection):</label>
+                            <input type="text" id="w2Reflection" placeholder="สิ่งที่ได้เรียนรู้เกี่ยวกับการแปลงข้อมูลจริงสู่โลกเสมือน 3 มิติ..." style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-family: inherit; font-size: 0.82rem; margin-top: 3px;">
+                        </div>
+                        <div>
+                            <label style="font-size: 0.8rem; font-weight: 600; color: #334155;"><i class="fas fa-image"></i> แนบลิงก์รูปแคปหน้าจอโมเดล 3D:</label>
+                            <input type="url" id="w2Link" placeholder="https://drive.google.com/..." style="width: 100%; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 6px; font-family: inherit; font-size: 0.82rem; margin-top: 3px;">
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+                        <button type="submit" id="btnSubmitW2" style="background: linear-gradient(135deg, #0284c7, #0284c7); color: #fff; border: none; padding: 10px 22px; border-radius: 8px; font-weight: 700; font-family: inherit; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 12px rgba(2, 132, 199, 0.3);">
+                            <i class="fas fa-paper-plane"></i> ส่งงานและให้อาจารย์ (AI) ประเมินผลทันที
+                        </button>
+                        <span id="w2SubmitSpinner" style="display: none; font-size: 0.85rem; color: #0284c7;">
+                            <i class="fas fa-circle-notch fa-spin"></i> อาจารย์ (AI) กำลังวิเคราะห์ผลงานและให้คะแนนรูบริกส์...
+                        </span>
+                    </div>
+                </form>
+
+                <!-- AI Evaluation Result Box -->
+                <div id="w2AiResultCard" style="display: none; margin-top: 1.5rem; background: #ffffff; border: 2px solid #10b981; border-radius: 12px; padding: 1.5rem; box-shadow: var(--shadow-md);">
+                    <!-- Dynamically rendered -->
+                </div>
+            </div>
+
+            <script>
+                async function handleWeek2Submit(e) {
+                    e.preventDefault();
+                    const btn = document.getElementById('btnSubmitW2');
+                    const spinner = document.getElementById('w2SubmitSpinner');
+                    btn.disabled = true;
+                    spinner.style.display = 'inline-block';
+
+                    const payload = {
+                        student_id: document.getElementById('w2StuId').value.trim(),
+                        student_name: document.getElementById('w2StuName').value.trim(),
+                        week: 2,
+                        assignment_title: 'สัปดาห์ที่ 2: ' + document.getElementById('w2ModelTitle').value.trim(),
+                        decomp: document.getElementById('w2Decomp').value.trim(),
+                        pattern: document.getElementById('w2Pattern').value.trim(),
+                        abstr: document.getElementById('w2Abstr').value.trim(),
+                        algo: document.getElementById('w2Algo').value.trim(),
+                        reflection: document.getElementById('w2Reflection').value.trim(),
+                        work_link: document.getElementById('w2Link').value.trim()
+                    };
+
+                    try {
+                        const res = await fetch('../api/submit_and_evaluate.php', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+                        const resData = await res.json();
+                        if (resData.status === 'success') {
+                            renderW2Evaluation(resData.data);
+                        } else {
+                            alert('เกิดข้อผิดพลาด: ' + resData.message);
+                        }
+                    } catch (err) {
+                        console.error(err);
+                        const mock = {
+                            submission_id: 'SUB-OFFLINE-' + Date.now().toString(36).toUpperCase(),
+                            student_id: payload.student_id,
+                            student_name: payload.student_name,
+                            evaluation: {
+                                scores: { conceptual: 4.8, pattern: 4.5, algorithmic: 4.6, pedagogy: 4.7, total: 18.6, percentage: 93.0 },
+                                proficiency_level: 'Exemplary (ดีเยี่ยมยอด)',
+                                badge_color: '#10b981',
+                                strengths: ['เข้าใจกระบวนการแปลงวัตถุทางวิทยาศาสตร์สู่ก้อนว็อกเซล 3D และเข้าใจการทำงานของ RLE ได้อย่างแม่นยำ'],
+                                recommendations: ['สามารถทดลองนำระบบฟิสิกส์แรงโน้มถ่วง (Gravity Collapse) ไปใช้สอนเรื่องสมดุลกลในฟิสิกส์ได้'],
+                                pedagogy_tips: ['แนะนำให้ให้นักเรียนสลับกันถอดรหัสภาพบัดดี้เพื่อฝึกทักษะการตรวจสอบความถูกต้อง']
+                            }
+                        };
+                        renderW2Evaluation(mock);
+                    } finally {
+                        btn.disabled = false;
+                        spinner.style.display = 'none';
+                    }
+                }
+
+                function renderW2Evaluation(data) {
+                    const card = document.getElementById('w2AiResultCard');
+                    card.style.display = 'block';
+                    const ev = data.evaluation;
+                    card.innerHTML = `
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 0.75rem; border-bottom: 2px solid #f1f5f9; padding-bottom: 1rem; margin-bottom: 1rem;">
+                            <div>
+                                <div style="font-size: 0.75rem; font-family: 'JetBrains Mono', monospace; color: #64748b;">${data.submission_id}</div>
+                                <h4 style="font-size: 1.25rem; color: #0f172a; margin-top: 2px; margin-bottom: 4px;">
+                                    <i class="fas fa-award" style="color: #10b981;"></i> ใบรายงานผลการประเมินสมรรถนะผู้เรียน (Learner Competency Report)
+                                </h4>
+                                <div style="font-size: 0.85rem; color: #475569;">
+                                    ผู้รับการประเมิน: <strong>${data.student_name}</strong> (รหัส: ${data.student_id}) | สัปดาห์ที่ 2
+                                </div>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="display: inline-block; font-size: 0.85rem; font-weight: 700; padding: 4px 12px; border-radius: 20px; background: ${ev.badge_color}22; color: ${ev.badge_color};">
+                                    ${ev.proficiency_level}
+                                </div>
+                                <div style="font-size: 1.35rem; font-weight: 800; color: #0f172a; font-family: 'JetBrains Mono', monospace; margin-top: 4px;">
+                                    ${ev.scores.total} / 20 (${ev.scores.percentage}%)
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.75rem; margin-bottom: 1rem;">
+                            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.75rem;">
+                                <div style="font-size: 0.75rem; color: #64748b;">1. ความรู้มโนทัศน์ Abstraction (5)</div>
+                                <div style="font-size: 1.1rem; font-weight: 700; color: #0284c7;">${ev.scores.conceptual} / 5.0</div>
+                            </div>
+                            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.75rem;">
+                                <div style="font-size: 0.75rem; color: #64748b;">2. การหารูปแบบ & RLE (5)</div>
+                                <div style="font-size: 1.1rem; font-weight: 700; color: #f59e0b;">${ev.scores.pattern} / 5.0</div>
+                            </div>
+                            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.75rem;">
+                                <div style="font-size: 0.75rem; color: #64748b;">3. ความรัดกุมการสแกนพิกเซล (5)</div>
+                                <div style="font-size: 1.1rem; font-weight: 700; color: #ef4444;">${ev.scores.algorithmic} / 5.0</div>
+                            </div>
+                            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 0.75rem;">
+                                <div style="font-size: 0.75rem; color: #64748b;">4. การออกแบบการสอนวิทย์ 3D (5)</div>
+                                <div style="font-size: 1.1rem; font-weight: 700; color: #10b981;">${ev.scores.pedagogy} / 5.0</div>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.85rem; line-height: 1.7;">
+                            <div style="background: #f0fdf4; border-left: 4px solid #10b981; padding: 0.75rem 1rem; border-radius: 4px;">
+                                <strong style="color: #166534;"><i class="fas fa-check-circle"></i> จุดเด่นของผลงาน (Key Strengths):</strong>
+                                <div style="color: #15803d; margin-top: 3px;">${ev.strengths.map(s => `• ${s}`).join('<br>')}</div>
+                            </div>
+                            <div style="background: #fffbeb; border-left: 4px solid #f59e0b; padding: 0.75rem 1rem; border-radius: 4px;">
+                                <strong style="color: #b45309;"><i class="fas fa-lightbulb"></i> ข้อเสนอแนะเชิงพัฒนาเฉพาะบุคคล (Formative Recommendations):</strong>
+                                <div style="color: #92400e; margin-top: 3px;">${ev.recommendations.map(r => `• ${r}`).join('<br>')}</div>
+                            </div>
+                            <div style="background: #eff6ff; border-left: 4px solid #3b82f6; padding: 0.75rem 1rem; border-radius: 4px;">
+                                <strong style="color: #1d4ed8;"><i class="fas fa-chalkboard-teacher"></i> คำแนะนำสำหรับการสอนวิทยาศาสตร์ในโรงเรียน:</strong>
+                                <div style="color: #1e40af; margin-top: 3px;">${ev.pedagogy_tips.map(p => `• ${p}`).join('<br>')}</div>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid #f1f5f9;">
+                            <div style="font-size: 0.78rem; color: #64748b;">
+                                ผู้ประเมิน: <strong>ผศ.ดร.ชีวะ ทัศนา (AI Pedagogical Co-evaluator)</strong><br>
+                                สาขาวิชาวิทยาศาสตร์ทั่วไป มหาวิทยาลัยราชภัฏรำไพพรรณี
+                        </div>
+                            <button type="button" onclick="window.print()" style="background: #0f172a; color: #fff; border: none; padding: 7px 16px; border-radius: 6px; font-size: 0.82rem; font-family: inherit; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                                <i class="fas fa-print"></i> พิมพ์ใบรับรองผลการประเมิน (Print PDF)
+                            </button>
+                        </div>
+                    `;
+                    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            </script>
+        </div>
+    </div>
+
+    <!-- แท็บที่ 4: การวัดและประเมินผล (Rubrics) -->
+    <div id="tab4" class="content-section">
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-tasks"></i> แผนการวัดและประเมินผลการเรียนรู้ (Assessment Matrix & Rubrics)</h2>
+            
+            <p>เกณฑ์การประเมินสมรรถนะครูวิทยาศาสตร์ตามแนวคิด Decomposition, Abstraction และการสร้างแบบจำลอง 3D ตามมาตรฐาน สสวท. และกรอบ Oser & Standl (2025):</p>
+
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 20%;">เกณฑ์การประเมิน</th>
+                            <th style="width: 20%;">ดีมาก (4 คะแนน)</th>
+                            <th style="width: 20%;">ดี (3 คะแนน)</th>
+                            <th style="width: 20%;">พอใช้ (2 คะแนน)</th>
+                            <th style="width: 20%;">ปรับปรุง (1 คะแนน)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>1. การทำ Decomposition ในระบบดิจิทัล</strong></td>
+                            <td>แยกส่วนประกอบของภาพออกเป็นแถว, ความยาวพิกเซล และเลเยอร์ $Z$ ได้อย่างแม่นยำ 100% ครบถ้วนทุกมิติ</td>
+                            <td>แยกส่วนประกอบได้ถูกต้องเป็นส่วนใหญ่ ขาดองค์ประกอบย่อยที่ไม่สำคัญบางส่วน</td>
+                            <td>แยกส่วนประกอบได้เฉพาะระดับแถว แต่ยังสับสนในการแบ่งช่วงพิกเซล</td>
+                            <td>ไม่สามารถแยกส่วนประกอบของภาพออกเป็นช่วงข้อมูลได้</td>
+                        </tr>
+                        <tr>
+                            <td><strong>2. ความลุ่มลึกในการทำ Abstraction (RLE & 3D)</strong></td>
+                            <td>ตัดทอนรายละเอียดรูปทรงเป็นตัวเลข RLE ได้ถูกต้องสมบูรณ์ และเข้าใจการแปลงพิกัด 2D สู่ก้อนว็อกเซล 3D</td>
+                            <td>เข้ารหัสและถอดรหัสตัวเลขได้ถูกต้องเกือบทั้งหมด เข้าใจมิติความลึกแกน $Z$</td>
+                            <td>ถอดรหัสได้บางส่วน ยังสับสนการใช้เลข <code>0</code> นำหน้าเมื่อขึ้นต้นด้วยสีดำ</td>
+                            <td>ไม่สามารถแปลงตัวเลขเป็นภาพ หรือแปลงภาพเป็นตัวเลขได้</td>
+                        </tr>
+                        <tr>
+                            <td><strong>3. ทักษะการดีบักและการแก้ปัญหา (Debugging)</strong></td>
+                            <td>สามารถตรวจพบจุดบกพร่อง (Row Overflow / Phase Inversion) และแก้ไขโค้ดจนเรนเดอร์ได้สมบูรณ์ในเวลารวดเร็ว</td>
+                            <td>ตรวจพบบั๊กและแก้ไขได้ถูกต้อง โดยได้รับคำแนะนำเพียงเล็กน้อย</td>
+                            <td>ตรวจพบบั๊กได้บางจุด แต่ต้องอาศัยเพื่อนหรือผู้สอนชี้แนะวิธีแก้</td>
+                            <td>ไม่สามารถระบุจุดผิดพลาดของโค้ดได้</td>
+                        </tr>
+                        <tr>
+                            <td><strong>4. การประยุกต์ใช้เพื่อการจัดการเรียนรู้ (Pedagogy)</strong></td>
+                            <td>ออกแบบใบงานและสื่อ 3D ที่เชื่อมโยงเนื้อหาวิทยาศาสตร์ได้อย่างสร้างสรรค์ เหมาะกับระดับชั้นผู้เรียน พร้อมนำไปสอนจริง</td>
+                            <td>ออกแบบสื่อการสอนได้ดี มีความถูกต้องทางวิทยาศาสตร์และใช้งานได้จริง</td>
+                            <td>สื่อการสอนมีความน่าสนใจ แต่ยังซับซ้อนเกินไปสำหรับกลุ่มผู้เรียนเป้าหมาย</td>
+                            <td>สื่อที่ออกแบบไม่สอดคล้องกับเนื้อหาวิทยาศาสตร์</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- แท็บที่ 5: ข้อสอบวัดสมรรถนะ -->
+    <div id="tab5" class="content-section">
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-clipboard-list"></i> ข้อสอบวัดสมรรถนะท้ายบทเรียน (คลังข้อสอบ สสวท. 60 ข้อ)</h2>
+            <p>ข้อสอบวัดสมรรถนะการคิดขั้นสูง (Higher-Order Thinking Skills: HOTS) ด้านการคิดเชิงนามธรรมและการแยกส่วนประกอบ:</p>
+
+            <div class="session-block" style="background: white; border-left: 4px solid var(--accent);">
+                <h4 style="color: var(--primary);">ข้อที่ 1: การตัดทอนรายละเอียดในโมเดลชีววิทยา (HOTS: Analyzing)</h4>
+                <p><strong>สถานการณ์:</strong> ในการสอนเรื่องการแบ่งเซลล์แบบไมโทซิส ครูวิทยาศาสตร์ใช้เชือกไหมพรมหลากสีแทนสายโครมาทิน และใช้กระดาษวงกลมแทนเยื่อหุ้มนิวเคลียส โดยไม่ได้กล่าวถึงโครงสร้างทางเคมีของเบสหรือเอนไซม์ดีเอ็นเอโพลิเมอเรส การออกแบบสื่อของครูสอดคล้องกับหลักการใดของแนวคิดเชิงคำนวณมากที่สุด?</p>
+                <ul>
+                    <li>ก. การแยกส่วนประกอบ (Decomposition) เพราะตัดแบ่งกระบวนการเป็น 4 ระยะ</li>
+                    <li>ข. การคิดเชิงนามธรรม (Abstraction) เพราะกรองรายละเอียดระดับชีวเคมีออก เพื่อโฟกัสที่การเคลื่อนที่ของโครโมโซม</li>
+                    <li>ค. การหารูปแบบ (Pattern Recognition) เพราะสังเกตการแบ่งตัวที่ซ้ำกัน</li>
+                    <li>ง. การตรวจหาข้อผิดพลาด (Debugging) เพราะป้องกันนักเรียนสับสน</li>
+                </ul>
+                <div class="academic-callout tip" style="margin-top: 0.75rem;">
+                    <strong>เฉลย: ข. การคิดเชิงนามธรรม (Abstraction)</strong><br>
+                    <em>คำอธิบายเชิงวิชาการ:</em> ครูใช้หลัก Information Hiding / Filtering กรองความซับซ้อนระดับโมเลกุลออก เพื่อเน้นเฉพาะมโนทัศน์หลัก (Core Concept) ที่ต้องการให้ผู้เรียนเข้าใจกลไกการแยกตัวของโครโมโซม
+                </div>
+            </div>
+
+            <div class="session-block" style="background: white; border-left: 4px solid var(--purple);">
+                <h4 style="color: var(--primary);">ข้อที่ 2: การแยกส่วนประกอบการทดลองทางฟิสิกส์ (HOTS: Applying)</h4>
+                <p><strong>สถานการณ์:</strong> นักเรียนต้องการหาความหนาแน่นของของเหลวที่ไม่รู้จักชนิดหนึ่ง นักเรียนจึงแบ่งการทดลองออกเป็น 3 ขั้นตอน: (1) ชั่งมวลของกระบอกตวงเปล่า (2) ตวงของเหลวตามปริมาตรที่กำหนดแล้วชั่งมวลรวม (3) คำนวณหาผลต่างของมวลแล้วนำไปหารด้วยปริมาตร การแบ่งขั้นตอนเช่นนี้ถือเป็นการใช้ทักษะใด?</p>
+                <ul>
+                    <li>ก. Decomposition (การแยกย่อยปัญหา)</li>
+                    <li>ข. Pattern Recognition (การหารูปแบบ)</li>
+                    <li>ค. Generalization (การสร้างข้อสรุปทั่วไป)</li>
+                    <li>ง. Algorithmic Automation (การทำให้เป็นอัตโนมัติ)</li>
+                </ul>
+                <div class="academic-callout tip" style="margin-top: 0.75rem;">
+                    <strong>เฉลย: ก. Decomposition (การแยกย่อยปัญหา)</strong><br>
+                    <em>คำอธิบายเชิงวิชาการ:</em> การแตกภาระงานใหญ่ (การหาความหนาแน่น) ให้กลายเป็นงานย่อยที่เป็นอิสระต่อกันและทำได้จริงในห้องปฏิบัติการ จัดเป็น Decomposition ขั้นพื้นฐานในการทดลองวิทยาศาสตร์
+                </div>
+            </div>
+
+            <div class="session-block" style="background: white; border-left: 4px solid var(--success);">
+                <h4 style="color: var(--primary);">ข้อที่ 3: การวิเคราะห์และดีบักโค้ดภาพดิจิทัล (HOTS: Evaluating & Debugging)</h4>
+                <p><strong>สถานการณ์:</strong> นักเรียนต้องการส่งข้อมูลภาพ "หลอดทดลองวิทยาศาสตร์" ขนาด $20 \times 10$ พิกเซล โดยในแถวที่ 4 มีการระบายสีดำตรงกลาง 4 พิกเซล (คอลัมน์ที่ 9, 10, 11, 12) ส่วนพิกเซลที่เหลือเป็นสีขาวทั้งหมด หากเพื่อนนำรหัสไปถอดแล้วได้ผลเป็นภาพสีดำ 8 พิกเซลแรก แล้วเว้นขาว 4 พิกเซล และดำ 8 พิกเซลสุดท้าย ข้อใดวิเคราะห์สาเหตุของข้อผิดพลาดได้ถูกต้องที่สุด?</p>
+                <ul>
+                    <li>ก. เขียนรหัสตัวเลขเกิน 20 พิกเซล (Row Overflow)</li>
+                    <li>ข. ลืมใส่เลข <code>0</code> นำหน้า ทำให้ระบบสลับเฟสสีขาวและดำ (Phase Inversion)</li>
+                    <li>ค. ใส่รหัสสีผิดพลาดจากสีดำเป็นสีแดง</li>
+                    <li>ง. ลืมปิดแท็กแถวในระบบ</li>
+                </ul>
+                <div class="academic-callout tip" style="margin-top: 0.75rem;">
+                    <strong>เฉลย: ข. ลืมใส่เลข <code>0</code> นำหน้า ทำให้ระบบสลับเฟสสีขาวและดำ (Phase Inversion)</strong><br>
+                    <em>คำอธิบายเชิงวิชาการ:</em> รหัสที่ถูกต้องของแถวที่ 4 คือ <code>8, 4, 8</code> (เริ่มด้วยสีขาว 8 $\rightarrow$ ดำ 4 $\rightarrow$ ขาว 8) หากผลลัพธ์กลายเป็นดำ 8 ขาว 4 ดำ 8 แสดงว่าผู้ส่งเขียนรหัสขึ้นต้นด้วยสีดำ หรือใส่รหัส <code>0, 8, 4, 8</code> ทำให้เกิดการสลับขั้วสี (Inverted Colors) ซึ่งเป็นข้อผิดพลาดคลาสสิกของ RLE
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- แท็บที่ 6: เอกสารอ้างอิง APA 7 -->
+    <div id="tab6" class="content-section">
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-bookmark"></i> เอกสารอ้างอิงทางวิชาการ (Academic References - APA 7th Edition)</h2>
+            <p>เอกสารและงานวิจัยที่ใช้ประกอบการเรียบเรียงเนื้อหาในสัปดาห์ที่ 2 ทั้งระดับชาติและระดับนานาชาติ (สืบค้นผ่าน Consensus.app):</p>
+
+            <ul class="reference-list">
+                <li class="reference-item">
+                    Armoni, M. (2013). On teaching abstraction in computer science to novices. <em>Journal of Computers in Mathematics and Science Teaching</em>, 32(3), 265–284.
+                </li>
+                <li class="reference-item">
+                    Kramer, J. (2007). Is abstraction the key to computing? <em>Communications of the ACM</em>, 50(4), 36–42. <a href="https://doi.org/10.1145/1232743.1232745" target="_blank">https://doi.org/10.1145/1232743.1232745</a>
+                </li>
+                <li class="reference-item">
+                    Listiaji, P., Amelia, R. N., & Molnár, G. (2026). Development and validation of a measure assessing computational thinking in science teacher education. <em>Thinking Skills and Creativity</em>, 59, 102372. <a href="https://doi.org/10.1016/j.tsc.2026.102372" target="_blank">https://doi.org/10.1016/j.tsc.2026.102372</a>
+                </li>
+                <li class="reference-item">
+                    Mirolo, C., Izu, C., Lonati, V., Scapin, E., & Stupurienė, G. (2021). Abstraction in computer science education: An overview. <em>Informatics in Education</em>, 20(4), 619–639. <a href="https://doi.org/10.15388/infedu.2021.27" target="_blank">https://doi.org/10.15388/infedu.2021.27</a>
+                </li>
+                <li class="reference-item">
+                    Oser, A., & Standl, B. (2025). Teaching and assessing abstraction in K‐12 computational thinking education: A systematic literature review. <em>Computer Applications in Engineering Education</em>, 33(1), e70073. <a href="https://doi.org/10.1002/cae.70073" target="_blank">https://doi.org/10.1002/cae.70073</a>
+                </li>
+                <li class="reference-item">
+                    Qian, Y., & Choi, I. (2022). Tracing the essence: Ways to develop abstraction in computational thinking. <em>Educational Technology Research and Development</em>, 70(6), 2173–2198. <a href="https://doi.org/10.1007/s11423-022-10182-0" target="_blank">https://doi.org/10.1007/s11423-022-10182-0</a>
+                </li>
+                <li class="reference-item">
+                    Rich, K. M., & Yadav, A. (2020). Applying levels of abstraction to mathematics word problems. <em>TechTrends</em>, 64(3), 486–497. <a href="https://doi.org/10.1007/s11528-020-00479-3" target="_blank">https://doi.org/10.1007/s11528-020-00479-3</a>
+                </li>
+                <li class="reference-item">
+                    Shute, V. J., Sun, C., & Asbell-Clarke, J. (2017). Demystifying computational thinking. <em>Educational Research Review</em>, 22, 142–158. <a href="https://doi.org/10.1016/j.edurev.2017.09.003" target="_blank">https://doi.org/10.1016/j.edurev.2017.09.003</a>
+                </li>
+                <li class="reference-item">
+                    Tsai, M. J., Liang, J. C., & Hsu, C. Y. (2020). The computational thinking scale for computer literacy education. <em>Journal of Educational Computing Research</em>, 59(4), 579–602. <a href="https://doi.org/10.1177/0735633120972356" target="_blank">https://doi.org/10.1177/0735633120972356</a>
+                </li>
+                <li class="reference-item">
+                    ชีวะ ทัศนา. (2567). <em>การจัดการเรียนรู้วิทยาการคำนวณและปัญญาประดิษฐ์ในชั้นเรียนวิทยาศาสตร์ยุคดิจิทัล</em>. ภาควิชาฟิสิกส์และวิทยาศาสตร์ทั่วไป คณะวิทยาศาสตร์และเทคโนโลยี มหาวิทยาลัยราชภัฏรำไพพรรณี.
+                </li>
+                <li class="reference-item">
+                    สถาบันส่งเสริมการสอนวิทยาศาสตร์และเทคโนโลยี (สสวท.). (2561). <em>คู่มือการใช้หลักสูตรรายวิชาพื้นฐานวิทยาศาสตร์ สาระเทคโนโลยี (วิทยาการคำนวณ) กลุ่มสาระการเรียนรู้วิทยาศาสตร์ (ฉบับปรับปรุง พ.ศ. 2560)</em>. กระทรวงศึกษาธิการ.
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>© 2026 รายวิชา 4124941 วิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์ | ผู้ช่วยศาสตราจารย์ ดร.ชีวะ ทัศนา</p>
+        <p>คณะวิทยาศาสตร์และเทคโนโลยี มหาวิทยาลัยราชภัฏรำไพพรรณี</p>
+    </footer>
+</div>
+
+<script>
+    function showTab(tabId, btnElement) {
+        document.querySelectorAll('.content-section').forEach(function(section) {
+            section.classList.remove('active');
+        });
+        document.querySelectorAll('.tab-btn').forEach(function(btn) {
+            btn.classList.remove('active');
+        });
+        const targetSection = document.getElementById(tabId);
+        if (targetSection) {
+            targetSection.classList.add('active');
+        }
+        if (btnElement) {
+            btnElement.classList.add('active');
+        }
+        window.scrollTo({ top: 120, behavior: 'smooth' });
+    }
+</script>
+
+</body>
+</html>

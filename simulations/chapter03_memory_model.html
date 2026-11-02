@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ห้องทดลอง 3D: แบบจำลองหน่วยความจำและตัวแปร (RAM & Variable Memory Model)</title>
+
+  <!-- Google Fonts & FontAwesome 6 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Three.js & OrbitControls -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+  <style>
+    :root {
+      --bg-dark: #030712;
+      --card-bg: rgba(11, 19, 43, 0.94);
+      --card-border: rgba(0, 240, 255, 0.25);
+      --cyan: #00f0ff;
+      --emerald: #10b981;
+      --amber: #f59e0b;
+      --rose: #f43f5e;
+      --indigo: #6366f1;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+    body {
+      background: var(--bg-dark);
+      color: #f8fafc;
+      font-family: 'Prompt', 'Sarabun', sans-serif;
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+    }
+    #webgl-container { position: absolute; inset: 0; z-index: 1; }
+    .hud-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      pointer-events: none;
+      z-index: 10;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .hud-overlay * { pointer-events: auto; }
+
+    /* Top Bar */
+    .top-header {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.7);
+    }
+    .header-title-group h1 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Chakra Petch', sans-serif;
+    }
+    .header-title-group h1 i { color: var(--cyan); }
+    .header-subtitle { font-size: 0.8rem; color: #94a3b8; margin-top: 3px; }
+    .header-actions { display: flex; gap: 8px; }
+    .btn-header {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: #e2e8f0;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-family: inherit;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-header:hover {
+      background: rgba(0, 240, 255, 0.15);
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+
+    /* Left Control Dock */
+    .left-dock {
+      position: absolute;
+      top: 90px;
+      left: 16px;
+      width: 320px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 16px;
+      backdrop-filter: blur(14px);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-height: calc(100vh - 170px);
+      overflow-y: auto;
+    }
+    .section-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--cyan);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .var-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .var-item {
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      padding: 8px 10px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .var-item:hover, .var-item.active {
+      background: rgba(2, 132, 199, 0.3);
+      border-color: var(--cyan);
+    }
+    .var-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      padding: 2px 6px;
+      border-radius: 4px;
+      background: rgba(0, 240, 255, 0.15);
+      color: var(--cyan);
+    }
+
+    /* Code executor */
+    .exec-box {
+      background: #020617;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      padding: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      line-height: 1.6;
+    }
+    .btn-exec {
+      background: var(--cyan);
+      color: #030712;
+      border: none;
+      padding: 8px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .btn-exec:hover { filter: brightness(1.15); box-shadow: 0 0 12px var(--cyan); }
+
+    /* Right Step Guide */
+    .right-dock {
+      position: absolute;
+      top: 90px;
+      right: 16px;
+      width: 310px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 16px;
+      backdrop-filter: blur(14px);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .guide-box {
+      background: rgba(15, 23, 42, 0.5);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 0.76rem;
+      color: #cbd5e1;
+      line-height: 1.5;
+    }
+
+    /* Bottom Telemetry */
+    .bottom-bar {
+      margin-top: auto;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.7);
+    }
+    .tel-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+    .tel-lbl {
+      font-size: 0.7rem;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+    .tel-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <div id="webgl-container"></div>
+
+  <div class="hud-overlay">
+    <!-- Header -->
+    <header class="top-header">
+      <div class="header-title-group">
+        <h1><i class="fas fa-memory"></i> ห้องทดลอง 3D: แบบจำลองหน่วยความจำและตัวแปร (RAM & Variable Memory Model)</h1>
+        <div class="header-subtitle">วิชา 4124941 วิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์ | ผศ.ดร.ชีวะ ทัศนา (มรภ.รำไพพรรณี)</div>
+      </div>
+      <div class="header-actions">
+        <button class="btn-header" onclick="resetMemory()"><i class="fas fa-rotate-left"></i> รีเซ็ต RAM</button>
+        <a href="../lessons/week_05.html" class="btn-header"><i class="fas fa-arrow-left"></i> กลับสู่บทเรียน สัปดาห์ที่ 5</a>
+      </div>
+    </header>
+
+    <!-- Left Controls -->
+    <div class="left-dock">
+      <div class="section-title"><i class="fas fa-code-branch"></i> คำสั่งสร้าง/เปลี่ยนค่าตัวแปร</div>
+      <div class="exec-box">
+        <div style="color: #64748b;"># ตัวอย่างคำสั่งภาษา Python:</div>
+        <div><span style="color: #f43f5e;">mass</span> = <span style="color: var(--cyan);">50.0</span> <span style="color: #64748b;"># float (64-bit)</span></div>
+        <div><span style="color: #f43f5e;">speed</span> = <span style="color: var(--cyan);">12</span> <span style="color: #64748b;"># int (32-bit)</span></div>
+        <div><span style="color: #f43f5e;">status</span> = <span style="color: var(--emerald);">"RUN"</span> <span style="color: #64748b;"># str (Array)</span></div>
+        <div><span style="color: #f43f5e;">is_safe</span> = <span style="color: var(--amber);">True</span> <span style="color: #64748b;"># bool (1-bit)</span></div>
+      </div>
+      <button class="btn-exec" onclick="execSampleCode()"><i class="fas fa-play"></i> สั่งประมวลผลคำสั่งลงใน RAM</button>
+
+      <div class="section-title" style="margin-top: 10px;"><i class="fas fa-microchip"></i> ตารางตัวแปรในหน่วยความจำ</div>
+      <div class="var-list" id="var-list-ui">
+        <!-- Injected via JS -->
+      </div>
+    </div>
+
+    <!-- Right Guide -->
+    <div class="right-dock">
+      <div class="section-title"><i class="fas fa-lightbulb"></i> แนวคิดวิทยาการคอมพิวเตอร์</div>
+      <div class="guide-box">
+        <strong style="color: var(--cyan);">ตัวแปร (Variable) คืออะไร?</strong><br>
+        ในทางคอมพิวเตอร์ ตัวแปรไม่ได้เป็นเพียงตัวอักษรบนกระดาน แต่คือ <strong>"ป้ายชื่อที่ชี้ไปยังแอดเดรสของหน่วยความจำ RAM จริง"</strong>
+      </div>
+      <div class="guide-box">
+        <strong style="color: var(--amber);">ความสำคัญในการสอนวิทยาศาสตร์:</strong><br>
+        เมื่อคำนวณข้อมูลฟิสิกส์หรือเคมี การเลือกชนิดข้อมูล (เช่น <code>float</code> vs <code>int</code>) มีผลต่อความละเอียดของทศนิยมและความเร็วในการประมวลผลเซนเซอร์
+      </div>
+      <div style="background: rgba(16, 185, 129, 0.15); border: 1px solid var(--emerald); border-radius: 8px; padding: 10px; font-size: 0.75rem; color: #a7f3d0;">
+        <i class="fas fa-cube"></i> กล่อง 3D ในฉากคือ <strong>Memory Slot แต่ละช่องใน RAM</strong> คลิกที่กล่องเพื่อส่องดูค่า Bit และ Address!
+      </div>
+    </div>
+
+    <!-- Bottom Telemetry -->
+    <div class="bottom-bar">
+      <div class="tel-item">
+        <span class="tel-lbl">จำนวนช่อง RAM ที่จอง (Allocated Slots)</span>
+        <span class="tel-val" id="telAlloc">4 / 16 Slots</span>
+      </div>
+      <div class="tel-item">
+        <span class="tel-lbl">ขนาดข้อมูลรวม (Memory Footprint)</span>
+        <span class="tel-val" id="telBytes">17 Bytes</span>
+      </div>
+      <div class="tel-item">
+        <span class="tel-lbl">สแต็กพอยน์เตอร์ (Stack Pointer)</span>
+        <span class="tel-val" id="telSP" style="color: var(--cyan);">0x7FFE04</span>
+      </div>
+      <div class="tel-item">
+        <span class="tel-lbl">สถานะ Garbage Collector</span>
+        <span class="tel-val" style="color: var(--emerald);">OPTIMAL</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let scene, camera, renderer, controls;
+    let memorySlots = [];
+    const SLOTS_COUNT = 16;
+
+    const initialVars = [
+      { name: 'mass', type: 'float', val: '50.0', addr: '0x7FFE01', bytes: 8, color: 0x00f0ff },
+      { name: 'speed', type: 'int', val: '12', addr: '0x7FFE02', bytes: 4, color: 0x3b82f6 },
+      { name: 'status', type: 'str', val: '"RUN"', addr: '0x7FFE03', bytes: 4, color: 0x10b981 },
+      { name: 'is_safe', type: 'bool', val: 'True', addr: '0x7FFE04', bytes: 1, color: 0xf59e0b }
+    ];
+
+    function init() {
+      const container = document.getElementById('webgl-container');
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x030712);
+      scene.fog = new THREE.FogExp2(0x030712, 0.035);
+
+      camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+      camera.position.set(0, 5, 10);
+
+      renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      container.appendChild(renderer.domElement);
+
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
+
+      // Lights
+      scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+      const pLight = new THREE.PointLight(0x00f0ff, 1.5, 20);
+      pLight.position.set(0, 4, 2);
+      scene.add(pLight);
+
+      // Grid
+      const grid = new THREE.GridHelper(16, 16, 0x00f0ff, 0x1e293b);
+      grid.position.y = -1;
+      scene.add(grid);
+
+      buildMemorySlots();
+      renderVarListUI();
+
+      window.addEventListener('resize', onWindowResize);
+      animate();
+    }
+
+    function buildMemorySlots() {
+      // 4x4 Grid of RAM chips
+      for (let i = 0; i < SLOTS_COUNT; i++) {
+        const row = Math.floor(i / 4);
+        const col = i % 4;
+        const x = (col - 1.5) * 2.2;
+        const z = (row - 1.5) * 2.2;
+
+        const geom = new THREE.BoxGeometry(1.6, 0.6, 1.6);
+        const mat = new THREE.MeshStandardMaterial({
+          color: 0x0f172a,
+          metalness: 0.8,
+          roughness: 0.2,
+          transparent: true,
+          opacity: 0.85
+        });
+
+        const mesh = new THREE.Mesh(geom, mat);
+        mesh.position.set(x, 0, z);
+        scene.add(mesh);
+
+        // Wireframe border
+        const wireGeom = new THREE.EdgesGeometry(geom);
+        const wireMat = new THREE.LineBasicMaterial({ color: 0x334155 });
+        const wire = new THREE.LineSegments(wireGeom, wireMat);
+        mesh.add(wire);
+
+        memorySlots.push({
+          mesh: mesh,
+          wire: wire,
+          occupied: false,
+          data: null
+        });
+      }
+
+      assignVarsToSlots(initialVars);
+    }
+
+    function assignVarsToSlots(vars) {
+      // Clear previous
+      memorySlots.forEach(s => {
+        s.occupied = false;
+        s.data = null;
+        s.mesh.material.color.setHex(0x0f172a);
+        s.mesh.material.emissive = new THREE.Color(0x000000);
+        s.wire.material.color.setHex(0x334155);
+      });
+
+      vars.forEach((v, idx) => {
+        if (idx < memorySlots.length) {
+          const slot = memorySlots[idx];
+          slot.occupied = true;
+          slot.data = v;
+          slot.mesh.material.color.setHex(v.color);
+          slot.mesh.material.emissive = new THREE.Color(v.color).multiplyScalar(0.3);
+          slot.wire.material.color.setHex(0x00f0ff);
+        }
+      });
+    }
+
+    function renderVarListUI() {
+      const listDiv = document.getElementById('var-list-ui');
+      listDiv.innerHTML = '';
+      initialVars.forEach(v => {
+        const item = document.createElement('div');
+        item.className = 'var-item';
+        item.innerHTML = `
+          <div>
+            <strong style="color: #fff;">${v.name}</strong> 
+            <span style="font-size: 0.72rem; color: #94a3b8;">(${v.type})</span>
+            <div style="font-size: 0.7rem; color: #64748b; font-family: monospace;">${v.addr}</div>
+          </div>
+          <div style="text-align: right;">
+            <div class="var-badge">${v.val}</div>
+            <div style="font-size: 0.68rem; color: #64748b; margin-top: 2px;">${v.bytes} B</div>
+          </div>
+        `;
+        listDiv.appendChild(item);
+      });
+    }
+
+    function execSampleCode() {
+      // Update mass and speed
+      initialVars[0].val = (parseFloat(initialVars[0].val) + 10.5).toFixed(1);
+      initialVars[1].val = (parseInt(initialVars[1].val) + 5).toString();
+
+      assignVarsToSlots(initialVars);
+      renderVarListUI();
+
+      // Flash animation on slot 0 and 1
+      memorySlots[0].mesh.position.y = 0.4;
+      memorySlots[1].mesh.position.y = 0.4;
+      setTimeout(() => {
+        memorySlots[0].mesh.position.y = 0;
+        memorySlots[1].mesh.position.y = 0;
+      }, 300);
+    }
+
+    function resetMemory() {
+      initialVars[0].val = '50.0';
+      initialVars[1].val = '12';
+      assignVarsToSlots(initialVars);
+      renderVarListUI();
+      camera.position.set(0, 5, 10);
+      controls.target.set(0, 0, 0);
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+      controls.update();
+      renderer.render(scene, camera);
+    }
+
+    function onWindowResize() {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    window.onload = init;
+  </script>
+</body>
+</html>

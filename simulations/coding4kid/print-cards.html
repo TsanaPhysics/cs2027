@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="th" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <title>Print-Ready Coding Deck (4 Fields) | วิทย์ในวัง</title>
+    <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;700&family=Outfit:wght@800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        @media print { 
+            .no-print { display: none !important; } 
+            body { background: white !important; padding: 0 !important; }
+            .page { margin: 0 !important; box-shadow: none !important; border: none !important; }
+        }
+        body { font-family: 'Anuphan', sans-serif; background: #f0f2f5; margin: 0; padding: 20px; }
+        .no-print { 
+            background: white; padding: 2rem; border-radius: 20px; max-width: 800px; 
+            margin: 0 auto 30px auto; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.1); 
+        }
+        .page { 
+            background: white; width: 210mm; height: 297mm; padding: 10mm; 
+            margin: 0 auto 20px auto; box-shadow: 0 0 20px rgba(0,0,0,0.1); 
+            display: grid; grid-template-columns: 1fr 1fr; grid-template-rows: 1fr 1fr; gap: 8mm; 
+            page-break-after: always; box-sizing: border-box; border: 1px solid #eee;
+        }
+        .card { 
+            border: 2px dashed #cbd5e1; border-radius: 30px; display: flex; flex-direction: column; 
+            align-items: center; justify-content: center; padding: 20px; position: relative;
+            background: #fff;
+        }
+        .card__img { max-width: 85%; max-height: 85%; object-fit: contain; }
+        .card__label { 
+            position: absolute; bottom: 20px; font-weight: 800; font-size: 24px; 
+            color: #475569; font-family: 'Outfit', sans-serif;
+        }
+        .btn-print { 
+            background: #6366f1; color: white; padding: 18px 50px; border-radius: 99px; 
+            text-decoration: none; display: inline-block; font-size: 20px;
+            font-weight: 800; cursor: pointer; border: none; box-shadow: 0 10px 25px rgba(99,102,241,0.4);
+            margin-top: 1rem;
+        }
+        .summary-box { 
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-top: 1.5rem;
+            text-align: left; font-size: 14px;
+        }
+        .summary-item { background: #f8fafc; padding: 10px; border-radius: 10px; border: 1px solid #e2e8f0; }
+        
+        /* Number card styling */
+        .card--num { font-size: 150px; font-family: 'Outfit', sans-serif; color: #6366f1; border-color: #6366f1; }
+    </style>
+</head>
+<body>
+    <div class="no-print">
+        <h1 style="margin:0; font-family: 'Outfit', sans-serif;">🖨️ ระบบสั่งพิมพ์บัตรคำสั่ง (4 สนามแข่งขัน)</h1>
+        <p>จัดทำเป็นชุดสมบูรณ์ 43 หน้า เพื่อรองรับนักเรียน 16 คน (4 กลุ่ม)</p>
+        
+        <div class="summary-box">
+            <div class="summary-item"><b>เดินหน้า (Forward)</b><br>60 ใบ (15 หน้า)</div>
+            <div class="summary-item"><b>เลี้ยว (Turns)</b><br>48 ใบ (12 หน้า)</div>
+            <div class="summary-item"><b>พิเศษ (Special)</b><br>32 ใบ (8 หน้า)</div>
+            <div class="summary-item"><b>ตัวเลข (Numbers)</b><br>32 ใบ (8 หน้า)</div>
+        </div>
+        
+        <button onclick="window.print()" class="btn-print">🖨️ สั่งพิมพ์ (Print)</button>
+        <button onclick="downloadPDF()" class="btn-print" style="background: #10b981; box-shadow: 0 10px 25px rgba(16,185,129,0.3);">📄 ดาวน์โหลดเป็น PDF</button>
+    </div>
+
+    <div id="printArea">
+
+    <!-- GENERATING 15 PAGES OF FORWARD (60 CARDS) -->
+    <script>
+        const renderPages = (type, count, contentHTML) => {
+            for(let i=0; i<count; i++) {
+                document.write(`<div class="page">${contentHTML}${contentHTML}${contentHTML}${contentHTML}</div>`);
+            }
+        };
+
+        const forwardCard = `<div class="card"><img src="assets/img/card_forward_preview.png" class="card__img"><div class="card__label">FORWARD</div></div>`;
+        const leftCard = `<div class="card"><img src="assets/img/card_left_preview.png" class="card__img"><div class="card__label">LEFT</div></div>`;
+        const rightCard = `<div class="card"><img src="assets/img/card_right_preview.png" class="card__img"><div class="card__label">RIGHT</div></div>`;
+        const pickupCard = `<div class="card"><img src="assets/img/card_pickup_preview.png" class="card__img"><div class="card__label">PICK UP</div></div>`;
+        const loopCard = `<div class="card"><img src="assets/img/card_loop_preview.png" class="card__img"><div class="card__label">LOOP</div></div>`;
+        const ifCard = `<div class="card"><img src="assets/img/card_if_preview.png" class="card__img"><div class="card__label">IF-THEN</div></div>`;
+        const jumpCard = `<div class="card"><img src="assets/img/card_jump_preview.png" class="card__img"><div class="card__label">JUMP (OPTIONAL)</div></div>`;
+
+        // 1. FORWARD: 15 pages
+        renderPages('forward', 15, forwardCard);
+
+        // 2. TURNS: 12 pages (2 Left, 2 Right per page)
+        for(let i=0; i<12; i++) {
+            document.write(`<div class="page">${leftCard}${rightCard}${leftCard}${rightCard}</div>`);
+        }
+
+        // 3. SPECIALS: 8 pages (1 of each per page)
+        for(let i=0; i<8; i++) {
+            document.write(`<div class="page">${pickupCard}${loopCard}${ifCard}${jumpCard}</div>`);
+        }
+
+        // 4. NUMBERS: 4 sets of 1-8 (8 pages total)
+        for(let i=0; i<4; i++) {
+            // Numbers 1-4
+            document.write(`<div class="page">
+                <div class="card card--num">1</div>
+                <div class="card card--num">2</div>
+                <div class="card card--num">3</div>
+                <div class="card card--num">4</div>
+            </div>`);
+            // Numbers 5-8
+            document.write(`<div class="page">
+                <div class="card card--num">5</div>
+                <div class="card card--num">6</div>
+                <div class="card card--num">7</div>
+                <div class="card card--num">8</div>
+            </div>`);
+        }
+        document.write('</div>'); // End printArea
+
+        async function downloadPDF() {
+            const element = document.getElementById('printArea');
+            const opt = {
+                margin:       0,
+                filename:     'Coding_Cards_Full_Deck.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { 
+                    scale: 2, 
+                    useCORS: true, 
+                    allowTaint: true,
+                    logging: true 
+                },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+            
+            // Show loading state
+            const btn = document.querySelector('button[onclick="downloadPDF()"]');
+            const originalText = btn.innerText;
+            btn.innerText = '⏳ กำลังเตรียมรูปภาพ (โปรดรอสักครู่)...';
+            btn.disabled = true;
+
+            // Give extra time for heavy 3D images to render
+            await new Promise(r => setTimeout(r, 1000));
+
+            html2pdf().set(opt).from(element).save().then(() => {
+                btn.innerText = originalText;
+                btn.disabled = false;
+            }).catch(err => {
+                console.error("PDF Error:", err);
+                alert("เกิดข้อผิดพลาดในการสร้าง PDF กรุณาใช้คำสั่ง 'สั่งพิมพ์ (Print)' แล้วเลือก 'Save as PDF' แทนครับ");
+                btn.innerText = originalText;
+                btn.disabled = false;
+            });
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ใบงานกิจกรรม: การสร้างภาพจากตัวเลข (Image Representation from Numbers)</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        @page {
+            size: A4;
+            margin: 1.5cm;
+        }
+        body {
+            font-family: 'Sarabun', sans-serif;
+            font-size: 14px;
+            line-height: 1.5;
+            color: #000;
+            background: #fff;
+            padding: 1cm;
+        }
+        .header-box {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 2px solid #000;
+            padding-bottom: 8px;
+            margin-bottom: 16px;
+        }
+        .title {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+        .section-title {
+            font-weight: bold;
+            margin-top: 14px;
+            margin-bottom: 6px;
+        }
+        table.grid-table {
+            border-collapse: collapse;
+            margin-bottom: 14px;
+        }
+        table.grid-table td {
+            border: 1px solid #555;
+            width: 22px;
+            height: 22px;
+            text-align: center;
+            vertical-align: middle;
+            font-size: 11px;
+        }
+        td.code-cell {
+            border: none;
+            width: auto;
+            text-align: left;
+            padding-left: 10px;
+            font-weight: 600;
+            font-family: monospace;
+            font-size: 13px;
+        }
+        .page-break {
+            page-break-after: always;
+        }
+        @media print {
+            body { padding: 0; }
+            .no-print { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="no-print" style="margin-bottom: 20px; text-align: right;">
+        <button onclick="window.print()" style="padding: 8px 16px; background: #0284c7; color: white; border: none; border-radius: 4px; cursor: pointer; font-family: 'Sarabun';">
+            🖨️ พิมพ์ใบงานชุดนี้ (Print A4)
+        </button>
+        <a href="../../simulations/voxel_lab.html" style="margin-left: 10px; padding: 8px 16px; background: #6366f1; color: white; text-decoration: none; border-radius: 4px;">
+            🚀 เปิดระบบจำลอง 3D Voxel Simulator
+        </a>
+    </div>
+
+    <div class="header-box">
+        <div>ชื่อ.............................................................. รหัสนักศึกษา...............................</div>
+        <div>ชื่อ.............................................................. รหัสนักศึกษา...............................</div>
+    </div>
+
+    <div class="title">ใบงานปฏิบัติการ: การสร้างภาพจากตัวเลข (Run-Length Encoding)</div>
+    <div style="text-align: center; margin-bottom: 16px; color: #444; font-size: 13px;">
+        รายวิชา 4124941 วิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์ | คณะวิทยาศาสตร์และเทคโนโลยี มหาวิทยาลัยราชภัฏรำไพพรรณี
+    </div>
+
+    <div class="section-title">ตัวอย่าง: การสร้างภาพจากตัวเลข (6 × 6)</div>
+    <table class="grid-table">
+        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td class="code-cell">1,  3,  1</td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td class="code-cell">4,  1</td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td class="code-cell">1,  4</td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td class="code-cell">0,  1,  3,  1</td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td class="code-cell">0,  1,  3,  1</td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td class="code-cell">1,  4</td></tr>
+    </table>
+
+    <div class="section-title">แบบฝึกหัดที่ 1: จงสร้างภาพจากตัวเลขที่กำหนดให้ (20 × 9)</div>
+    <table class="grid-table">
+        <tr>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            <td class="code-cell">4,  11</td>
+        </tr>
+        <tr>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            <td class="code-cell">4,  9,  2,  1</td>
+        </tr>
+        <tr>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            <td class="code-cell">4,  9,  2,  1</td>
+        </tr>
+        <tr>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            <td class="code-cell">4,  11</td>
+        </tr>
+        <tr>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            <td class="code-cell">4,  9</td>
+        </tr>
+        <tr>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            <td class="code-cell">4,  9</td>
+        </tr>
+        <tr>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            <td class="code-cell">5,  7</td>
+        </tr>
+        <tr>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            <td class="code-cell">0,  17</td>
+        </tr>
+        <tr>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            <td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+            <td class="code-cell">1,  15</td>
+        </tr>
+    </table>
+
+    <div class="page-break"></div>
+
+    <div class="section-title">แบบฝึกหัดที่ 2: จงสร้างภาพจากตัวเลขที่กำหนดให้ (20 × 13)</div>
+    <table class="grid-table">
+        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="code-cell">6,  5,  2,  3</td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="code-cell">4,  2,  5,  2,  3,  1</td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="code-cell">3,  1,  9,  1,  2,  1</td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="code-cell">3,  1,  9,  1,  1,  1</td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="code-cell">2,  1,  11,  1</td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="code-cell">2,  1,  10,  2</td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="code-cell">2,  1,  9,  1,  1,  1</td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="code-cell">2,  1,  8,  1,  2,  1</td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="code-cell">2,  1,  7,  1,  3,  1</td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="code-cell">1,  1,  1,  1,  4,  2,  3,  1</td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="code-cell">0,  1,  2,  1,  2,  2,  5,  1</td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="code-cell">0,  1,  3,  2,  5,  2</td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="code-cell">1,  3,  2,  5</td></tr>
+    </table>
+
+    <div class="section-title">แบบฝึกหัดที่ 3: จงสร้างภาพจากตัวเลขที่กำหนดให้ (20 × 17)</div>
+    <table class="grid-table">
+        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="code-cell">6,  2,  2,  2</td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="code-cell">5,  1,  2,  2,  2,  1</td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="code-cell">6,  6</td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="code-cell">4,  2,  6,  2</td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="code-cell">3,  1,  10,  1</td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="code-cell">2,  1,  12,  1</td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="code-cell">2,  1,  3,  1,  4,  1,  3,  1</td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="code-cell">1,  2,  12,  2</td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="code-cell">0,  1,  16,  1</td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="code-cell">0,  1,  6,  1,  2,  1,  6,  1</td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="code-cell">0,  1,  7,  2,  7,  1</td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="code-cell">1,  1,  14,  1</td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="code-cell">2,  1,  12,  1</td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="code-cell">2,  1,  5,  2,  5,  1</td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="code-cell">3,  1,  10,  1</td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="code-cell">4,  2,  6,  2</td></tr>
+        <tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td></td><td class="code-cell">6,  6</td></tr>
+    </table>
+
+    <div class="page-break"></div>
+
+    <div class="section-title">แบบฝึกหัดที่ 4: วาดภาพโดยกำหนดเอง ใส่โค้ด แล้วส่งโค้ดให้เพื่อนวาดภาพ แล้วเปรียบเทียบกับภาพของคุณ</div>
+    <table class="grid-table">
+        <!-- 18x16 empty grid -->
+        <script>
+            for(let r=0; r<16; r++) {
+                document.write('<tr>');
+                for(let c=0; c<18; c++) document.write('<td></td>');
+                document.write('<td class="code-cell" style="color:#888;">แถวที่ ' + (r+1) + ': ........................................</td>');
+                document.write('</tr>');
+            }
+        </script>
+    </table>
+
+    <div class="section-title" style="margin-top: 20px;">
+        แบบฝึกหัดเสริม: การเข้ารหัสภาพสี (Color Palette Encoding)
+    </div>
+    <p style="font-size: 13px; color: #333; line-height: 1.6;">
+        ถ้าอยากให้รูปมีสีสัน เราสามารถใช้ตัวเลขแทนค่าสีต่างๆ ได้ ตัวอย่างเช่น <strong>0 แทนสีดำ</strong>, <strong>1 แทนสีแดง</strong>, และ <strong>2 แทนสีเขียว</strong> ตอนนี้จะมีเลขจำนวนสองประเภท คือ ประเภทแรกมีไว้เพื่อใช้แบ่งจำนวนความยาวของพิกเซล และอีกประเภทเพื่อบ่งบอกสี<br>
+        <em>ภาระงาน: วาดภาพโดยกำหนดเอง ใส่โค้ด แล้วส่งโค้ดให้เพื่อนวาดภาพ โดยอย่าลืมบอกว่าใช้เลขอะไรแทนสีไหน แล้วเปรียบเทียบกับภาพของคุณ จากนั้นนำโค้ดไปคีย์ลงในระบบจำลอง <strong>3D Voxel Simulator</strong> บนเว็บรายวิชา</em>
+    </p>
+    <table class="grid-table">
+        <script>
+            for(let r=0; r<12; r++) {
+                document.write('<tr>');
+                for(let c=0; c<18; c++) document.write('<td></td>');
+                document.write('<td class="code-cell" style="color:#888;">รหัสสีแถวที่ ' + (r+1) + ': ........................................</td>');
+                document.write('</tr>');
+            }
+        </script>
+    </table>
+
+</body>
+</html>
+

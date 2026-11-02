@@ -1,0 +1,8 @@
+{
+    "enabled": true,
+    "webhook_url": "https:\/\/script.google.com\/macros\/s\/AKfycbzJmJK0vv5cyLBmEAJiHkeb0vFSvhpAoFKq2IeHZ5cOnLGoipenSbxuCPi0Tue2NX_X\/exec",
+    "timeout_seconds": 8,
+    "sheet_name": "CT_Submissions_2027",
+    "last_sync_status": "success (HTTP 200)",
+    "last_sync_time": "2026-10-29T11:50:57+01:00"
+}

@@ -1,0 +1,1497 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แผนการสอนสัปดาห์ที่ 4 - การเขียนรหัสลำลอง (Pseudocode) และผังงาน (Flowchart) สำหรับกระบวนการทดลองทางวิทยาศาสตร์</title>
+    <!-- ฟอนต์ Sarabun และ Inter จาก Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- MathJax 3 for Scientific Notation & Equations -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [["$", "$"], ["\\(", "\\)"]],
+                displayMath: [["$$", "$$"], ["\\[", "\\]"]],
+                processEscapes: true,
+                processEnvironments: true
+            },
+            options: {
+                skipHtmlTags: ["script", "noscript", "style", "textarea", "pre", "code"]
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --primary: #0f172a;
+            --primary-light: #1e293b;
+            --accent: #2563eb;
+            --accent-hover: #1d4ed8;
+            --secondary: #0891b2;
+            --success: #059669;
+            --warning: #d97706;
+            --danger: #dc2626;
+            --purple: #7c3aed;
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --border-focus: #94a3b8;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.08), 0 2px 4px -2px rgba(0,0,0,0.05);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.05);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Sarabun', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.8;
+            font-size: 16px;
+        }
+
+        .container {
+            max-width: 1140px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        .nav-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 1.25rem;
+            padding: 0.5rem 1rem;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.25s ease;
+        }
+
+        .nav-back:hover {
+            color: var(--accent-hover);
+            transform: translateX(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #4338ca 100%);
+            color: #ffffff;
+            padding: 3rem 2.5rem;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            top: -40%;
+            right: -10%;
+            width: 480px;
+            height: 480px;
+            background: radial-gradient(circle, rgba(124, 58, 237, 0.25) 0%, rgba(255, 255, 255, 0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .header-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(8px);
+            padding: 0.35rem 0.85rem;
+            border-radius: 9999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            line-height: 1.3;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.02em;
+        }
+
+        .header .subtitle {
+            font-size: 1.15rem;
+            opacity: 0.92;
+            font-weight: 400;
+            max-width: 880px;
+        }
+
+        .header .course-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 1.25rem 1.5rem;
+            border-radius: 12px;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .header .course-info span {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.92rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .tab-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 0.85rem 1.4rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            transition: all 0.25s ease;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .tab-btn:hover {
+            color: var(--text-main);
+            background: #ffffff;
+            border-color: var(--border-focus);
+            transform: translateY(-1px);
+        }
+
+        .tab-btn.active {
+            background: var(--accent);
+            color: #ffffff;
+            border-color: var(--accent);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+        }
+
+        .content-section {
+            display: none;
+            animation: fadeIn 0.35s ease-out;
+        }
+
+        .content-section.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--bg-card);
+            border-radius: 14px;
+            padding: 2.25rem;
+            margin-bottom: 1.75rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding-bottom: 0.85rem;
+            border-bottom: 2px solid #f1f5f9;
+        }
+
+        .card-title i { color: var(--accent); }
+
+        p {
+            margin-bottom: 1rem;
+            color: #334155;
+            text-align: justify;
+        }
+
+        .academic-callout {
+            background: #f8fafc;
+            border-left: 4px solid var(--accent);
+            border-radius: 0 10px 10px 0;
+            padding: 1.25rem 1.5rem;
+            margin: 1.25rem 0;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .academic-callout.tip {
+            border-left-color: var(--success);
+            background: #f0fdf4;
+        }
+
+        .academic-callout.purple {
+            border-left-color: var(--purple);
+            background: #faf5ff;
+        }
+
+        .academic-callout.warning {
+            border-left-color: var(--warning);
+            background: #fffbeb;
+        }
+
+        .academic-callout-title {
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .wlo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.25rem;
+            margin-top: 1.5rem;
+        }
+
+        .wlo-card {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            border-top: 4px solid var(--accent);
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .wlo-card.c2 { border-top-color: var(--secondary); }
+        .wlo-card.c3 { border-top-color: var(--purple); }
+        .wlo-card.c4 { border-top-color: var(--success); }
+
+        .wlo-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .wlo-tag {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 0.2rem 0.6rem;
+            border-radius: 9999px;
+            background: #eff6ff;
+            color: var(--accent);
+        }
+
+        .wlo-card.c2 .wlo-tag { background: #ecfeff; color: var(--secondary); }
+        .wlo-card.c3 .wlo-tag { background: #f5f3ff; color: var(--purple); }
+        .wlo-card.c4 .wlo-tag { background: #f0fdf4; color: var(--success); }
+
+        .svg-container {
+            width: 100%;
+            background: #ffffff;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            padding: 1rem;
+            margin: 1.5rem 0;
+            box-shadow: var(--shadow-sm);
+            overflow-x: auto;
+        }
+
+        .svg-container svg {
+            display: block;
+            margin: 0 auto;
+            max-width: 100%;
+            height: auto;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+            text-align: left;
+            background: white;
+        }
+
+        th {
+            background-color: #f1f5f9;
+            color: var(--primary);
+            font-weight: 700;
+            padding: 1rem 1.25rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        td {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+            color: #334155;
+        }
+
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background-color: #f8fafc; }
+
+        .session-block {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.25rem;
+            border: 1px solid var(--border);
+        }
+
+        .session-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .session-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .time-badge {
+            background: var(--primary);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 9999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .code-container {
+            border-radius: 10px;
+            overflow: hidden;
+            background: #0f172a;
+            color: #f8fafc;
+            margin: 1.5rem 0;
+            border: 1px solid #334155;
+            box-shadow: var(--shadow-md);
+        }
+
+        .code-header {
+            background: #1e293b;
+            padding: 0.65rem 1.25rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            color: #94a3b8;
+            font-family: 'Inter', monospace;
+            border-bottom: 1px solid #334155;
+        }
+
+        .code-body {
+            padding: 1.25rem;
+            overflow-x: auto;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .code-body .keyword { color: #f472b6; font-weight: 600; }
+        .code-body .function { color: #60a5fa; }
+        .code-body .string { color: #34d399; }
+        .code-body .comment { color: #94a3b8; font-style: italic; }
+        .code-body .number { color: #fbbf24; }
+
+        .reference-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .reference-item {
+            padding: 1.2rem 0;
+            border-bottom: 1px solid var(--border);
+            text-align: justify;
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        .reference-item:last-child { border-bottom: none; }
+        .reference-item a { color: var(--accent); text-decoration: none; word-break: break-all; }
+        .reference-item a:hover { text-decoration: underline; }
+
+        .footer {
+            text-align: center;
+            padding: 2.5rem 0;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border);
+            margin-top: 3rem;
+        }
+
+        @media (max-width: 768px) {
+            .header { padding: 2rem 1.5rem; }
+            .header h1 { font-size: 1.6rem; }
+            .card { padding: 1.5rem; }
+            .tab-btn { padding: 0.7rem 1rem; font-size: 0.88rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- ปุ่มย้อนกลับสู่ระบบหลัก -->
+    <a href="../index.html" class="nav-back">
+        <i class="fas fa-arrow-left"></i> กลับสู่หน้าหลักระบบการเรียนรู้ (Main Portal)
+    </a>
+
+    <!-- ส่วนหัวของบทเรียน -->
+    <header class="header">
+        <div class="header-badge">
+            <i class="fas fa-sitemap"></i> Phase 1: Computational Thinking Foundations (สัปดาห์ที่ 4/16)
+        </div>
+        <h1>การเขียนรหัสลำลอง (Pseudocode) และผังงาน (Flowchart) สำหรับกระบวนการทดลองทางวิทยาศาสตร์</h1>
+        <p class="subtitle">
+            การสร้างแบบจำลองกระบวนการสืบเสาะวิทยาศาสตร์ (Inquiry Modeling) ด้วยสัญลักษณ์มาตรฐาน ANSI/ISO 5807, โครงสร้างการควบคุม IPO, และการแปลงขั้นตอนวิธีแล็บสู่รหัสลำลองปราศจากความกำกวมตามมาตรฐาน สสวท.
+        </p>
+        <div class="course-info">
+            <span><i class="fas fa-book-open"></i> <strong>รหัสวิชา:</strong> 4124941</span>
+            <span><i class="fas fa-graduation-cap"></i> <strong>รายวิชา:</strong> วิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์</span>
+            <span><i class="fas fa-user-tie"></i> <strong>ผู้สอน:</strong> ผู้ช่วยศาสตราจารย์ ดร.ชีวะ ทัศนา</span>
+            <span><i class="fas fa-clock"></i> <strong>เวลา:</strong> 4 ชั่วโมง (บรรยาย 2 ชม. + ปฏิบัติ 2 ชม.)</span>
+        </div>
+    </header>
+
+    <!-- แถบนำทางแท็บ (6 แท็บมาตรฐาน) -->
+    <div class="tabs">
+        <button class="tab-btn active" onclick="showTab('tab1', this)">
+            <i class="fas fa-bullseye"></i> 1. ผลลัพธ์การเรียนรู้ (WLOs)
+        </button>
+        <button class="tab-btn" onclick="showTab('tab2', this)">
+            <i class="fas fa-project-diagram"></i> 2. สาระสำคัญ & สื่อทัศนศิลป์
+        </button>
+        <button class="tab-btn" onclick="showTab('tab3', this)">
+            <i class="fas fa-chalkboard-teacher"></i> 3. กิจกรรมการเรียนรู้เชิงรุก
+        </button>
+        <button class="tab-btn" onclick="showTab('tab4', this)">
+            <i class="fas fa-tasks"></i> 4. การวัดและประเมินผล (Rubrics)
+        </button>
+        <button class="tab-btn" onclick="showTab('tab5', this)">
+            <i class="fas fa-brain"></i> 5. ข้อสอบวัดสมรรถนะ (HOTS)
+        </button>
+        <button class="tab-btn" onclick="showTab('tab6', this)">
+            <i class="fas fa-book"></i> 6. เอกสารอ้างอิง (APA 7th)
+        </button>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- แท็บที่ 1: ผลลัพธ์การเรียนรู้ (WLOs) -->
+    <!-- ========================================== -->
+    <div id="tab1" class="content-section active">
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-award"></i> ผลลัพธ์การเรียนรู้ระดับสัปดาห์ (Weekly Learning Outcomes: WLOs)</h2>
+            <p>
+                ออกแบบตามกรอบอนุกรมวิธานของบลูมฉบับปรับปรุง (Revised Bloom's Taxonomy) บูรณาการหลักฐานเชิงประจักษ์ด้านการรับรู้ภาพและการลดภาระทางปัญญา (Cognitive Load Reduction) ในการออกแบบอัลกอริทึม (Andrzejewska & Stolińska, 2022; Julaihi & Bohari, 2026):
+            </p>
+
+            <div class="wlo-grid">
+                <!-- WLO 1 -->
+                <div class="wlo-card">
+                    <div class="wlo-header">
+                        <span class="wlo-tag">WLO 1: ด้านความรู้เชิงสัญลักษณ์</span>
+                        <i class="fas fa-shapes text-accent"></i>
+                    </div>
+                    <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--primary);">มาตรฐานสัญลักษณ์ผังงานและไวยากรณ์</h3>
+                    <p style="font-size: 0.92rem; color: #475569; margin: 0;">
+                        ระบุและอธิบายสัญลักษณ์มาตรฐาน <strong>ANSI/ISO 5807</strong> (Terminator, Process, Input/Output, Decision, Loop/Connector) และคำสงวนรหัสลำลอง (READ, COMPUTE, IF-ELSE, WHILE, PRINT) ได้อย่างถูกต้องแม่นยำ
+                    </p>
+                </div>
+
+                <!-- WLO 2 -->
+                <div class="wlo-card c2">
+                    <div class="wlo-header">
+                        <span class="wlo-tag">WLO 2: ด้านการสร้างแบบจำลอง</span>
+                        <i class="fas fa-network-wired text-secondary"></i>
+                    </div>
+                    <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--primary);">การแปลงกระบวนการแล็บเป็นแบบจำลอง IPO</h3>
+                    <p style="font-size: 0.92rem; color: #475569; margin: 0;">
+                        วิเคราะห์แยกแยะคู่มือปฏิบัติการวิทยาศาสตร์ (Laboratory Protocols) ให้อยู่ในรูปของ <strong>Input-Process-Output (IPO)</strong> พร้อมกำหนดเงื่อนไขทางเลือกและจุดสิ้นสุดวงรอบการทดลองซ้ำได้อย่างสมบูรณ์
+                    </p>
+                </div>
+
+                <!-- WLO 3 -->
+                <div class="wlo-card c3">
+                    <div class="wlo-header">
+                        <span class="wlo-tag">WLO 3: ด้านทักษะการตรวจสอบความถูกต้อง</span>
+                        <i class="fas fa-bug text-purple"></i>
+                    </div>
+                    <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--primary);">การตรวจสอบตรรกะและป้องกัน Infinite Loop</h3>
+                    <p style="font-size: 0.92rem; color: #475569; margin: 0;">
+                        ตรวจสอบ ติดตามเส้นทางการไหล (Flow Tracing) และแก้ไขจุดผิดพลาดเชิงตรรกะ (Logical Bug Hunting) ป้องกันสภาวะลูปไม่รู้จบและทางแยกที่ไร้ป้ายกำกับเงื่อนไขในผังงานการทดลองวิทยาศาสตร์
+                    </p>
+                </div>
+
+                <!-- WLO 4 -->
+                <div class="wlo-card c4">
+                    <div class="wlo-header">
+                        <span class="wlo-tag">WLO 4: ด้านการจัดการเรียนรู้วิทยาศาสตร์</span>
+                        <i class="fas fa-layer-group text-success"></i>
+                    </div>
+                    <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--primary);">การสร้างนั่งร้านทางปัญญา (Scaffolding)</h3>
+                    <p style="font-size: 0.92rem; color: #475569; margin: 0;">
+                        ประยุกต์ใช้ <strong>Progressive Flowchart Scaffolding</strong> (Zhang et al., 2021) ในการออกแบบใบกิจกรรมเพื่อช่วยให้นักเรียนระดับมัธยมศึกษาสามารถวางแผนการทดลองโครงงานวิทยาศาสตร์ได้อย่างเป็นระบบ
+                    </p>
+                </div>
+            </div>
+
+            <div class="academic-callout tip" style="margin-top: 1.5rem;">
+                <div class="academic-callout-title">
+                    <i class="fas fa-eye"></i> หลักฐานเชิงประจักษ์ด้าน Eye-Tracking (Andrzejewska & Stolińska, 2022)
+                </div>
+                <p style="margin: 0; font-size: 0.92rem;">
+                    งานวิจัยด้วยเทคโนโลยีตรวจจับสายตา (Eye Movements) ยืนยันว่า ผังงานที่มีโครงสร้างชัดเจน (Structured Flowcharts) ช่วยลดเวลาในการทำความเข้าใจอัลกอริทึมลงอย่างมีนัยสำคัญ และเพิ่มความมั่นใจในความถูกต้องของผู้เรียนมากกว่าข้อความบรรยายหรือรหัสลำลองล้วน เนื่องจากสมองมนุษย์ประมวลผลทิศทางการไหลเชิงเรขาคณิต (Spatial Visual Processing) ได้เร็วกว่าการถอดรหัสข้อความแบบเชิงเส้น
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- แท็บที่ 2: สาระสำคัญ & สื่อทัศนศิลป์ -->
+    <!-- ========================================== -->
+    <div id="tab2" class="content-section">
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-project-diagram"></i> สาระสำคัญเชิงวิชาการ: ไวยากรณ์ผังงานและรหัสลำลองในกระบวนการวิทยาศาสตร์</h2>
+            
+            <p>
+                การเปลี่ยนจากแนวคิดเชิงนามธรรม (Abstraction) และขั้นตอนวิธี (Algorithm) ไปสู่การเขียนโปรแกรมคอมพิวเตอร์เพื่อควบคุมแล็บหรือจำลองแบบวิทยาศาสตร์ จำเป็นต้องอาศัย <strong>"เครื่องมือตัวแทนความคิด 2 รูปแบบ" (Dual Representation Models)</strong> ได้แก่ <strong>ผังงาน (Flowchart)</strong> ซึ่งเป็นตัวแทนเชิงทัศนภาพ (Visual Representation) และ <strong>รหัสลำลอง (Pseudocode)</strong> ซึ่งเป็นตัวแทนเชิงโครงสร้างข้อความ (Textual Structural Representation) (Nita & Kartikawati, 2020; Ghosh et al., 2023)
+            </p>
+
+            <!-- INFOGRAPHIC 4.1: ANSI/ISO 5807 STANDARD FLOWCHART SYNTAX -->
+            <div class="svg-container">
+                <svg viewBox="0 0 960 380" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <filter id="shadow41" x="-5%" y="-5%" width="110%" height="115%">
+                            <feDropShadow dx="0" dy="3" stdDeviation="4" flood-opacity="0.12"/>
+                        </filter>
+                        <linearGradient id="gTerm" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#1e293b"/><stop offset="100%" stop-color="#0f172a"/>
+                        </linearGradient>
+                        <linearGradient id="gProc" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#1d4ed8"/><stop offset="100%" stop-color="#2563eb"/>
+                        </linearGradient>
+                        <linearGradient id="gIO" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#0e7490"/><stop offset="100%" stop-color="#06b6d4"/>
+                        </linearGradient>
+                        <linearGradient id="gDec" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#6d28d9"/><stop offset="100%" stop-color="#7c3aed"/>
+                        </linearGradient>
+                        <linearGradient id="gLoop" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#047857"/><stop offset="100%" stop-color="#059669"/>
+                        </linearGradient>
+                    </defs>
+
+                    <!-- Title -->
+                    <text x="480" y="30" font-family="'Sarabun', sans-serif" font-size="18" font-weight="700" fill="#0f172a" text-anchor="middle">
+                        ภาพที่ 4.1: สัญลักษณ์มาตรฐาน ANSI/ISO 5807 สำหรับผังงานวิทยาศาสตร์ (Standard Scientific Flowchart Syntax)
+                    </text>
+                    <text x="480" y="52" font-family="'Sarabun', sans-serif" font-size="13" fill="#64748b" text-anchor="middle">
+                        สัญลักษณ์สากลสำหรับการจำลองกระบวนการทดลองและขั้นตอนวิธีทางวิทยาศาสตร์ (สสวท., 2561)
+                    </text>
+
+                    <!-- Row of 5 Symbols -->
+                    <!-- 1. Terminator -->
+                    <g transform="translate(30, 80)" filter="url(#shadow41)">
+                        <rect x="0" y="0" width="165" height="260" rx="12" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5"/>
+                        <rect x="25" y="25" width="115" height="42" rx="21" fill="url(#gTerm)"/>
+                        <text x="82" y="51" font-family="'Inter', sans-serif" font-size="13" font-weight="700" fill="#ffffff" text-anchor="middle">START / END</text>
+                        <text x="82" y="100" font-family="'Sarabun', sans-serif" font-size="14" font-weight="700" fill="#0f172a" text-anchor="middle">จุดเริ่มต้น / สิ้นสุด</text>
+                        <text x="82" y="120" font-family="'Inter', sans-serif" font-size="11" font-weight="700" fill="#2563eb" text-anchor="middle">TERMINATOR</text>
+                        <text x="15" y="150" font-family="'Sarabun', sans-serif" font-size="12" fill="#475569">• จุดเปิดแล็บทดลอง</text>
+                        <text x="15" y="175" font-family="'Sarabun', sans-serif" font-size="12" fill="#475569">• จุดเก็บอุปกรณ์/บันทึกเสร็จ</text>
+                        <text x="15" y="200" font-family="'Sarabun', sans-serif" font-size="12" fill="#475569">• มีเส้นเข้าหรือออก 1 เส้น</text>
+                        <rect x="15" y="222" width="135" height="24" rx="6" fill="#f1f5f9"/>
+                        <text x="82" y="238" font-family="'Sarabun', sans-serif" font-size="11" fill="#334155" text-anchor="middle">รูปทรง: แคปซูล / วงรี</text>
+                    </g>
+
+                    <!-- 2. Process -->
+                    <g transform="translate(215, 80)" filter="url(#shadow41)">
+                        <rect x="0" y="0" width="165" height="260" rx="12" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5"/>
+                        <rect x="25" y="25" width="115" height="42" rx="4" fill="url(#gProc)"/>
+                        <text x="82" y="51" font-family="'Inter', sans-serif" font-size="13" font-weight="700" fill="#ffffff" text-anchor="middle">PROCESS</text>
+                        <text x="82" y="100" font-family="'Sarabun', sans-serif" font-size="14" font-weight="700" fill="#0f172a" text-anchor="middle">กระบวนการ / คำนวณ</text>
+                        <text x="82" y="120" font-family="'Inter', sans-serif" font-size="11" font-weight="700" fill="#2563eb" text-anchor="middle">COMPUTATION</text>
+                        <text x="15" y="150" font-family="'Sarabun', sans-serif" font-size="12" fill="#475569">• ต้มสารที่ 80°C 10 นาที</text>
+                        <text x="15" y="175" font-family="'Sarabun', sans-serif" font-size="12" fill="#475569">• คำนวณ \(D = M / V\)</text>
+                        <text x="15" y="200" font-family="'Sarabun', sans-serif" font-size="12" fill="#475569">• ปั่นเหวี่ยงตะกอนเคมี</text>
+                        <rect x="15" y="222" width="135" height="24" rx="6" fill="#eff6ff"/>
+                        <text x="82" y="238" font-family="'Sarabun', sans-serif" font-size="11" fill="#1e40af" text-anchor="middle">รูปทรง: สี่เหลี่ยมผืนผ้า</text>
+                    </g>
+
+                    <!-- 3. Input / Output -->
+                    <g transform="translate(400, 80)" filter="url(#shadow41)">
+                        <rect x="0" y="0" width="165" height="260" rx="12" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5"/>
+                        <polygon points="40,25 140,25 125,67 25,67" fill="url(#gIO)"/>
+                        <text x="82" y="51" font-family="'Inter', sans-serif" font-size="13" font-weight="700" fill="#ffffff" text-anchor="middle">INPUT / OUTPUT</text>
+                        <text x="82" y="100" font-family="'Sarabun', sans-serif" font-size="14" font-weight="700" fill="#0f172a" text-anchor="middle">รับข้อมูล / แสดงผล</text>
+                        <text x="82" y="120" font-family="'Inter', sans-serif" font-size="11" font-weight="700" fill="#0891b2" text-anchor="middle">DATA I/O</text>
+                        <text x="15" y="150" font-family="'Sarabun', sans-serif" font-size="12" fill="#475569">• อ่านค่าอุณหภูมิเซนเซอร์</text>
+                        <text x="15" y="175" font-family="'Sarabun', sans-serif" font-size="12" fill="#475569">• รับค่าน้ำหนักจากตาชั่ง</text>
+                        <text x="15" y="200" font-family="'Sarabun', sans-serif" font-size="12" fill="#475569">• พิมพ์ตารางผลการทดลอง</text>
+                        <rect x="15" y="222" width="135" height="24" rx="6" fill="#ecfeff"/>
+                        <text x="82" y="238" font-family="'Sarabun', sans-serif" font-size="11" fill="#0e7490" text-anchor="middle">รูปทรง: ด้านขนาน</text>
+                    </g>
+
+                    <!-- 4. Decision -->
+                    <g transform="translate(585, 80)" filter="url(#shadow41)">
+                        <rect x="0" y="0" width="165" height="260" rx="12" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5"/>
+                        <polygon points="82,20 145,46 82,72 20,46" fill="url(#gDec)"/>
+                        <text x="82" y="51" font-family="'Inter', sans-serif" font-size="12" font-weight="700" fill="#ffffff" text-anchor="middle">DECISION</text>
+                        <text x="82" y="100" font-family="'Sarabun', sans-serif" font-size="14" font-weight="700" fill="#0f172a" text-anchor="middle">การตัดสินใจ / เงื่อนไข</text>
+                        <text x="82" y="120" font-family="'Inter', sans-serif" font-size="11" font-weight="700" fill="#7c3aed" text-anchor="middle">BRANCHING</text>
+                        <text x="15" y="150" font-family="'Sarabun', sans-serif" font-size="12" fill="#475569">• สารเปลี่ยนเป็นสีชมพู?</text>
+                        <text x="15" y="175" font-family="'Sarabun', sans-serif" font-size="12" fill="#475569">• อุณหภูมิ \(\ge 100^\circ\text{C}\)?</text>
+                        <text x="15" y="200" font-family="'Sarabun', sans-serif" font-size="12" fill="#475569">• ต้องมีเส้นทางออก ใช่/ไม่ใช่</text>
+                        <rect x="15" y="222" width="135" height="24" rx="6" fill="#faf5ff"/>
+                        <text x="82" y="238" font-family="'Sarabun', sans-serif" font-size="11" fill="#6b21a8" text-anchor="middle">รูปทรง: ขนมเปียกปูน</text>
+                    </g>
+
+                    <!-- 5. Loop / Preparation -->
+                    <g transform="translate(770, 80)" filter="url(#shadow41)">
+                        <rect x="0" y="0" width="160" height="260" rx="12" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5"/>
+                        <polygon points="35,25 125,25 145,46 125,67 35,67 15,46" fill="url(#gLoop)"/>
+                        <text x="80" y="51" font-family="'Inter', sans-serif" font-size="12" font-weight="700" fill="#ffffff" text-anchor="middle">LOOP / PREP</text>
+                        <text x="80" y="100" font-family="'Sarabun', sans-serif" font-size="14" font-weight="700" fill="#0f172a" text-anchor="middle">การเตรียม / วนรอบ</text>
+                        <text x="80" y="120" font-family="'Inter', sans-serif" font-size="11" font-weight="700" fill="#059669" text-anchor="middle">ITERATION</text>
+                        <text x="15" y="150" font-family="'Sarabun', sans-serif" font-size="12" fill="#475569">• ทดลองซ้ำ 3 ครั้ง (\(i=1..3\))</text>
+                        <text x="15" y="175" font-family="'Sarabun', sans-serif" font-size="12" fill="#475569">• หยดสารครั้งละ 0.5 mL</text>
+                        <text x="15" y="200" font-family="'Sarabun', sans-serif" font-size="12" fill="#475569">• ควบคุมไม่ให้เกิด Loop ตัน</text>
+                        <rect x="15" y="222" width="130" height="24" rx="6" fill="#ecfdf5"/>
+                        <text x="80" y="238" font-family="'Sarabun', sans-serif" font-size="11" fill="#065f46" text-anchor="middle">รูปทรง: หกเหลี่ยม</text>
+                    </g>
+                </svg>
+            </div>
+
+            <!-- SECTION 2: THE 3 CORE CONTROL STRUCTURES -->
+            <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--primary); margin: 2rem 0 0.75rem 0;">
+                <i class="fas fa-cubes text-accent"></i> 3 โครงสร้างการควบคุมหลักในกระบวนการทดลองวิทยาศาสตร์ (The 3 Control Structures)
+            </h3>
+            <p>
+                ไม่ว่ากระบวนการทดลองวิทยาศาสตร์จะซับซ้อนเพียงใด ทุกการทดลองสามารถแตกโครงสร้างออกเป็น 3 รูปแบบมาตรฐานตามทฤษฎีบทการสร้างโปรแกรมแบบมีโครงสร้าง (Structured Program Theorem โดย Böhm-Jacopini):
+            </p>
+
+            <!-- INFOGRAPHIC 4.2: 3 CONTROL STRUCTURES VISUALIZATION -->
+            <div class="svg-container">
+                <svg viewBox="0 0 960 440" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <filter id="shadow42" x="-5%" y="-5%" width="110%" height="115%">
+                            <feDropShadow dx="0" dy="3" stdDeviation="4" flood-opacity="0.12"/>
+                        </filter>
+                        <marker id="arrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                            <path d="M 0 1 L 8 5 L 0 9 z" fill="#64748b"/>
+                        </marker>
+                        <marker id="arrow-green" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                            <path d="M 0 1 L 8 5 L 0 9 z" fill="#059669"/>
+                        </marker>
+                        <marker id="arrow-red" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+                            <path d="M 0 1 L 8 5 L 0 9 z" fill="#dc2626"/>
+                        </marker>
+                    </defs>
+
+                    <!-- Title -->
+                    <text x="480" y="30" font-family="'Sarabun', sans-serif" font-size="18" font-weight="700" fill="#0f172a" text-anchor="middle">
+                        ภาพที่ 4.2: การประยุกต์ 3 โครงสร้างการควบคุมในห้องปฏิบัติการวิทยาศาสตร์ (Sequential, Selection, & Iteration)
+                    </text>
+                    <text x="480" y="52" font-family="'Sarabun', sans-serif" font-size="13" fill="#64748b" text-anchor="middle">
+                        เปรียบเทียบการไหลของคำสั่งตรรกะในคู่มือการทดลองฟิสิกส์ เคมี และชีววิทยา
+                    </text>
+
+                    <!-- Column 1: Sequential -->
+                    <g filter="url(#shadow42)">
+                        <rect x="30" y="75" width="285" height="345" rx="14" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+                        <rect x="30" y="75" width="285" height="42" rx="14" fill="#1e3a8a"/>
+                        <rect x="30" y="102" width="285" height="15" fill="#1e3a8a"/>
+                        <text x="172" y="102" font-family="'Sarabun', sans-serif" font-size="15" font-weight="700" fill="#ffffff" text-anchor="middle">
+                            1. แบบเรียงลำดับ (Sequential)
+                        </text>
+
+                        <!-- Diagram 1 -->
+                        <g transform="translate(60, 130)">
+                            <polygon points="15,0 95,0 85,28 5,28" fill="#ecfeff" stroke="#0891b2" stroke-width="1.5"/>
+                            <text x="50" y="18" font-family="'Sarabun', sans-serif" font-size="11" font-weight="700" fill="#0e7490" text-anchor="middle">ชั่งมวลสาร \(M\)</text>
+
+                            <line x1="50" y1="28" x2="50" y2="48" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+
+                            <polygon points="15,48 95,48 85,76 5,76" fill="#ecfeff" stroke="#0891b2" stroke-width="1.5"/>
+                            <text x="50" y="66" font-family="'Sarabun', sans-serif" font-size="11" font-weight="700" fill="#0e7490" text-anchor="middle">ตวงปริมาตร \(V\)</text>
+
+                            <line x1="50" y1="76" x2="50" y2="96" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+
+                            <rect x="0" y="96" width="100" height="28" rx="4" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+                            <text x="50" y="114" font-family="'Sarabun', sans-serif" font-size="11" font-weight="700" fill="#1e40af" text-anchor="middle">คำนวณ \(D = M/V\)</text>
+
+                            <line x1="50" y1="124" x2="50" y2="144" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+
+                            <polygon points="15,144 95,144 85,172 5,172" fill="#ecfeff" stroke="#0891b2" stroke-width="1.5"/>
+                            <text x="50" y="162" font-family="'Sarabun', sans-serif" font-size="11" font-weight="700" fill="#0e7490" text-anchor="middle">แสดงค่าความหนาแน่น</text>
+                        </g>
+
+                        <!-- Text explanation -->
+                        <text x="45" y="335" font-family="'Sarabun', sans-serif" font-size="12" font-weight="700" fill="#1e3a8a">
+                            ตัวอย่างแล็บ: การหาความหนาแน่น
+                        </text>
+                        <text x="45" y="355" font-family="'Sarabun', sans-serif" font-size="11.5" fill="#475569">
+                            กระบวนการไหลทางเดียวจากบนลงล่าง ไม่มีทางแยก ไม่มีขั้นตอนย้อนกลับ ปฏิบัติตามลำดับเคร่งครัด
+                        </text>
+                    </g>
+
+                    <!-- Column 2: Selection -->
+                    <g filter="url(#shadow42)">
+                        <rect x="337" y="75" width="285" height="345" rx="14" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+                        <rect x="337" y="75" width="285" height="42" rx="14" fill="#6d28d9"/>
+                        <rect x="337" y="102" width="285" height="15" fill="#6d28d9"/>
+                        <text x="479" y="102" font-family="'Sarabun', sans-serif" font-size="15" font-weight="700" fill="#ffffff" text-anchor="middle">
+                            2. แบบมีทางเลือก (Selection / If-Else)
+                        </text>
+
+                        <!-- Diagram 2 -->
+                        <g transform="translate(367, 130)">
+                            <polygon points="112,0 155,20 112,40 70,20" fill="#faf5ff" stroke="#7c3aed" stroke-width="1.5"/>
+                            <text x="112" y="24" font-family="'Sarabun', sans-serif" font-size="10.5" font-weight="700" fill="#6b21a8" text-anchor="middle">pH &lt; 7.0?</text>
+
+                            <!-- Branch True (Left) -->
+                            <path d="M 70 20 L 35 20 L 35 60" fill="none" stroke="#dc2626" stroke-width="1.5" marker-end="url(#arrow-red)"/>
+                            <text x="48" y="14" font-family="'Inter', sans-serif" font-size="10" font-weight="700" fill="#dc2626">TRUE</text>
+                            <rect x="0" y="60" width="70" height="30" rx="4" fill="#fef2f2" stroke="#ef4444" stroke-width="1.2"/>
+                            <text x="35" y="79" font-family="'Sarabun', sans-serif" font-size="10" font-weight="700" fill="#991b1b" text-anchor="middle">สารเป็นกรด</text>
+
+                            <!-- Branch False (Right) -->
+                            <path d="M 155 20 L 190 20 L 190 60" fill="none" stroke="#059669" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+                            <text x="165" y="14" font-family="'Inter', sans-serif" font-size="10" font-weight="700" fill="#059669">FALSE</text>
+                            <rect x="155" y="60" width="70" height="30" rx="4" fill="#f0fdf4" stroke="#22c55e" stroke-width="1.2"/>
+                            <text x="190" y="79" font-family="'Sarabun', sans-serif" font-size="10" font-weight="700" fill="#166534" text-anchor="middle">เป็นกลาง/เบส</text>
+
+                            <!-- Converge point -->
+                            <path d="M 35 90 L 35 120 L 105 120" fill="none" stroke="#64748b" stroke-width="1.5"/>
+                            <path d="M 190 90 L 190 120 L 118 120" fill="none" stroke="#64748b" stroke-width="1.5"/>
+                            <circle cx="112" cy="120" r="5" fill="#64748b"/>
+                            <line x1="112" y1="125" x2="112" y2="155" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+                            <polygon points="80,155 145,155 137,175 72,175" fill="#faf5ff" stroke="#7c3aed" stroke-width="1.2"/>
+                            <text x="112" y="169" font-family="'Sarabun', sans-serif" font-size="10" font-weight="700" fill="#6b21a8" text-anchor="middle">แสดงผลสรุป</text>
+                        </g>
+
+                        <!-- Text explanation -->
+                        <text x="352" y="335" font-family="'Sarabun', sans-serif" font-size="12" font-weight="700" fill="#6d28d9">
+                            ตัวอย่างแล็บ: การทดสอบกรด-เบส
+                        </text>
+                        <text x="352" y="355" font-family="'Sarabun', sans-serif" font-size="11.5" fill="#475569">
+                            ตรวจสอบเงื่อนไขทางเคมี เลือกปฏิบัติการย่อยเพียง 1 เส้นทางจากเงื่อนไขที่เป็นจริงหรือเท็จ
+                        </text>
+                    </g>
+
+                    <!-- Column 3: Iteration -->
+                    <g filter="url(#shadow42)">
+                        <rect x="645" y="75" width="285" height="345" rx="14" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+                        <rect x="645" y="75" width="285" height="42" rx="14" fill="#047857"/>
+                        <rect x="645" y="102" width="285" height="15" fill="#047857"/>
+                        <text x="787" y="102" font-family="'Sarabun', sans-serif" font-size="15" font-weight="700" fill="#ffffff" text-anchor="middle">
+                            3. แบบทำซ้ำ (Iteration / Loops)
+                        </text>
+
+                        <!-- Diagram 3 -->
+                        <g transform="translate(680, 130)">
+                            <rect x="40" y="0" width="135" height="24" rx="4" fill="#f0fdf4" stroke="#059669" stroke-width="1.2"/>
+                            <text x="107" y="16" font-family="'Sarabun', sans-serif" font-size="10.5" font-weight="700" fill="#065f46" text-anchor="middle">เริ่มรอบที่ \(i = 1\) (ทำ 3 ครั้ง)</text>
+
+                            <line x1="107" y1="24" x2="107" y2="44" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+                            <rect x="40" y="44" width="135" height="28" rx="4" fill="#eff6ff" stroke="#2563eb" stroke-width="1.2"/>
+                            <text x="107" y="62" font-family="'Sarabun', sans-serif" font-size="10.5" font-weight="700" fill="#1e40af" text-anchor="middle">บันทึกเวลาการตก \(t_i\)</text>
+
+                            <line x1="107" y1="72" x2="107" y2="92" stroke="#64748b" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+                            <polygon points="107,92 155,108 107,124 60,108" fill="#ecfdf5" stroke="#059669" stroke-width="1.2"/>
+                            <text x="107" y="112" font-family="'Sarabun', sans-serif" font-size="10" font-weight="700" fill="#047857" text-anchor="middle">ครบ 3 ซ้ำ?</text>
+
+                            <!-- Loop Back Line (No) -->
+                            <path d="M 60 108 L 20 108 L 20 58 L 37 58" fill="none" stroke="#dc2626" stroke-width="1.5" marker-end="url(#arrow-red)"/>
+                            <text x="28" y="102" font-family="'Inter', sans-serif" font-size="9" font-weight="700" fill="#dc2626">NO</text>
+
+                            <!-- Exit Loop (Yes) -->
+                            <line x1="107" y1="124" x2="107" y2="150" stroke="#059669" stroke-width="1.5" marker-end="url(#arrow-green)"/>
+                            <text x="114" y="140" font-family="'Inter', sans-serif" font-size="9" font-weight="700" fill="#059669">YES</text>
+
+                            <rect x="40" y="150" width="135" height="26" rx="4" fill="#f0fdf4" stroke="#059669" stroke-width="1.2"/>
+                            <text x="107" y="167" font-family="'Sarabun', sans-serif" font-size="10.5" font-weight="700" fill="#065f46" text-anchor="middle">หาค่าเฉลี่ย \(\bar{t}\)</text>
+                        </g>
+
+                        <!-- Text explanation -->
+                        <text x="660" y="335" font-family="'Sarabun', sans-serif" font-size="12" font-weight="700" fill="#047857">
+                            ตัวอย่างแล็บ: การทดลอง 3 ซ้ำฟิสิกส์
+                        </text>
+                        <text x="660" y="355" font-family="'Sarabun', sans-serif" font-size="11.5" fill="#475569">
+                            การวนซ้ำการทดลองเพื่อลดความคลาดเคลื่อนสุ่ม (Random Error) พร้อมเงื่อนไขการหยุดลูปที่ชัดเจน
+                        </text>
+                    </g>
+                </svg>
+            </div>
+
+            <!-- SECTION 3: COMPREHENSIVE LAB FLOWCHART (TITRATION) -->
+            <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--primary); margin: 2rem 0 0.75rem 0;">
+                <i class="fas fa-flask text-secondary"></i> ผังงานกระบวนการทดลองจริง: การไทเทรตกรด-เบสอัตโนมัติ (Automated Titration Protocol)
+            </h3>
+            <p>
+                ตัวอย่างผังงานระดับลึกที่ผสานโครงสร้างทั้ง 3 รูปแบบเข้าด้วยกัน จำลองกระบวนการไทเทรตกรดไฮโดรคลอริก (\(HCl\)) ด้วยโซเดียมไฮดรอกไซด์ (\(NaOH\)) โดยใช้ฟีนอล์ฟทาลีนเป็นอินดิเคเตอร์ พร้อมการตรวจจับจุดยุติและคำนวณความเข้มข้นสารละลายตัวอย่าง:
+            </p>
+
+            <!-- INFOGRAPHIC 4.3: DEEP TITRATION FLOWCHART -->
+            <div class="svg-container">
+                <svg viewBox="0 0 960 480" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <filter id="shadow43" x="-5%" y="-5%" width="110%" height="115%">
+                            <feDropShadow dx="0" dy="3" stdDeviation="4" flood-opacity="0.12"/>
+                        </filter>
+                    </defs>
+
+                    <!-- Title -->
+                    <text x="480" y="28" font-family="'Sarabun', sans-serif" font-size="18" font-weight="700" fill="#0f172a" text-anchor="middle">
+                        ภาพที่ 4.3: ผังงานกระบวนการไทเทรตกรด-เบสอัตโนมัติ (Automated Acid-Base Titration Flowchart)
+                    </text>
+                    <text x="480" y="48" font-family="'Sarabun', sans-serif" font-size="13" fill="#64748b" text-anchor="middle">
+                        การบูรณาการ Input (ปริมาตรกรด) $\rightarrow$ Process (หยดเบส) $\rightarrow$ Decision (จุดยุติสีชมพู) $\rightarrow$ Output (ความเข้มข้นโมลาร์)
+                    </text>
+
+                    <!-- Flowchart Blocks Grid -->
+                    <!-- Start -->
+                    <g transform="translate(415, 65)">
+                        <rect x="0" y="0" width="130" height="34" rx="17" fill="#0f172a"/>
+                        <text x="65" y="22" font-family="'Inter', sans-serif" font-size="13" font-weight="700" fill="#ffffff" text-anchor="middle">START</text>
+                    </g>
+                    <line x1="480" y1="99" x2="480" y2="120" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+
+                    <!-- Input Parameters -->
+                    <g transform="translate(370, 120)">
+                        <polygon points="20,0 200,0 180,36 0,36" fill="#ecfeff" stroke="#0891b2" stroke-width="1.5"/>
+                        <text x="100" y="22" font-family="'Sarabun', sans-serif" font-size="12" font-weight="700" fill="#0e7490" text-anchor="middle">รับค่า \(V_{\text{acid}} = 20.0\text{ mL}, C_{\text{base}} = 0.1\text{ M}\)</text>
+                    </g>
+                    <line x1="480" y1="156" x2="480" y2="178" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+
+                    <!-- Initialize Variables -->
+                    <g transform="translate(365, 178)">
+                        <rect x="0" y="0" width="230" height="32" rx="4" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+                        <text x="115" y="21" font-family="'Sarabun', sans-serif" font-size="12" font-weight="700" fill="#1e40af" text-anchor="middle">กำหนด \(V_{\text{base}} = 0.0\text{ mL}\), หยดอินดิเคเตอร์ 2 หยด</text>
+                    </g>
+                    <line x1="480" y1="210" x2="480" y2="232" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+
+                    <!-- Loop Titrant Process -->
+                    <g transform="translate(375, 232)">
+                        <rect x="0" y="0" width="210" height="34" rx="4" fill="#eff6ff" stroke="#2563eb" stroke-width="1.5"/>
+                        <text x="105" y="21" font-family="'Sarabun', sans-serif" font-size="12" font-weight="700" fill="#1e40af" text-anchor="middle">หยด \(NaOH\) เพิ่ม \(+0.2\text{ mL}\) พร้อมเขย่าขวด</text>
+                    </g>
+                    <line x1="480" y1="266" x2="480" y2="290" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+
+                    <!-- Decision Diamond -->
+                    <g transform="translate(400, 290)">
+                        <polygon points="80,0 160,28 80,56 0,28" fill="#faf5ff" stroke="#7c3aed" stroke-width="2"/>
+                        <text x="80" y="25" font-family="'Sarabun', sans-serif" font-size="11.5" font-weight="700" fill="#6b21a8" text-anchor="middle">สารเปลี่ยนเป็นสีชมพูจาง?</text>
+                        <text x="80" y="42" font-family="'Sarabun', sans-serif" font-size="10.5" fill="#7c3aed" text-anchor="middle">(ติดทนนาน 30 วินาที)</text>
+                    </g>
+
+                    <!-- Loop Back on NO (Left side) -->
+                    <path d="M 400 318 L 260 318 L 260 249 L 370 249" fill="none" stroke="#dc2626" stroke-width="2" marker-end="url(#arrow-red)"/>
+                    <text x="330" y="310" font-family="'Inter', sans-serif" font-size="11" font-weight="700" fill="#dc2626">NO (ยังไม่ถึงจุดยุติ)</text>
+
+                    <!-- Flow Forward on YES (Downwards) -->
+                    <line x1="480" y1="346" x2="480" y2="370" stroke="#059669" stroke-width="2" marker-end="url(#arrow-green)"/>
+                    <text x="490" y="362" font-family="'Inter', sans-serif" font-size="11" font-weight="700" fill="#059669">YES (ถึงจุดยุติ)</text>
+
+                    <!-- Calculation Process -->
+                    <g transform="translate(355, 370)">
+                        <rect x="0" y="0" width="250" height="34" rx="4" fill="#f0fdf4" stroke="#059669" stroke-width="1.5"/>
+                        <text x="125" y="21" font-family="'Sarabun', sans-serif" font-size="12" font-weight="700" fill="#065f46" text-anchor="middle">คำนวณ \(C_{\text{acid}} = (C_{\text{base}} \times V_{\text{base}}) / V_{\text{acid}}\)</text>
+                    </g>
+                    <line x1="480" y1="404" x2="480" y2="422" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+
+                    <!-- Output & End Side-by-Side -->
+                    <g transform="translate(350, 422)">
+                        <polygon points="15,0 170,0 155,30 0,30" fill="#ecfeff" stroke="#0891b2" stroke-width="1.5"/>
+                        <text x="85" y="19" font-family="'Sarabun', sans-serif" font-size="11.5" font-weight="700" fill="#0e7490" text-anchor="middle">แสดงผลค่า \(C_{\text{acid}}\) โมลาร์</text>
+                    </g>
+                    <line x1="525" y1="437" x2="575" y2="437" stroke="#64748b" stroke-width="2" marker-end="url(#arrow)"/>
+                    <g transform="translate(580, 420)">
+                        <rect x="0" y="0" width="100" height="34" rx="17" fill="#0f172a"/>
+                        <text x="50" y="22" font-family="'Inter', sans-serif" font-size="13" font-weight="700" fill="#ffffff" text-anchor="middle">END</text>
+                    </g>
+                </svg>
+            </div>
+
+            <!-- SECTION 4: SYNTAX MAPPING MATRIX TABLE -->
+            <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--primary); margin: 2rem 0 0.75rem 0;">
+                <i class="fas fa-exchange-alt text-purple"></i> ตารางที่ 4.1: เมทริกซ์การถ่ายโอนไวยากรณ์ (Syntax Mapping Matrix)
+            </h3>
+
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 22%;">ขั้นตอนการทดลอง (Lab Protocol)</th>
+                            <th style="width: 25%;">ผังงาน (ANSI Flowchart)</th>
+                            <th style="width: 26%;">รหัสลำลอง (Standard Pseudocode)</th>
+                            <th style="width: 27%;">โค้ดโปรแกรม (Python 3.11)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>1. การรับค่าจากการวัด</strong><br>ชั่งมวลสารตัวอย่างและตวงน้ำ</td>
+                            <td>สัญลักษณ์สี่เหลี่ยมด้านขนาน (Input):<br><code>READ Mass, Volume</code></td>
+                            <td><code>INPUT mass_sample</code><br><code>INPUT volume_water</code></td>
+                            <td><code>mass = float(input("Mass: "))</code><br><code>volume = float(input("Vol: "))</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>2. การคำนวณและประมวลผล</strong><br>หาความหนาแน่นสาร</td>
+                            <td>สัญลักษณ์สี่เหลี่ยมผืนผ้า (Process):<br><code>Density = Mass / Volume</code></td>
+                            <td><code>COMPUTE density = mass / volume</code></td>
+                            <td><code>density = mass / volume</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>3. การตรวจสอบเงื่อนไข</strong><br>ตรวจสอบการจม-ลอยในน้ำ</td>
+                            <td>สัญลักษณ์ขนมเปียกปูน (Decision):<br><code>Density &gt; 1.0 g/cm³?</code></td>
+                            <td><code>IF density &gt; 1.0 THEN</code><br>&nbsp;&nbsp;<code>PRINT "Sink"</code><br><code>ELSE</code><br>&nbsp;&nbsp;<code>PRINT "Float"</code><br><code>ENDIF</code></td>
+                            <td><code>if density &gt; 1.0:</code><br>&nbsp;&nbsp;&nbsp;&nbsp;<code>print("วัตถุจมน้ำ")</code><br><code>else:</code><br>&nbsp;&nbsp;&nbsp;&nbsp;<code>print("วัตถุลอยน้ำ")</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>4. การทดลองซ้ำ (Iteration)</strong><br>วัดเวลาการแกว่งลูกตุ้ม 5 รอบ</td>
+                            <td>สัญลักษณ์หกเหลี่ยม หรือ Loop Back เส้นย้อนกลับ</td>
+                            <td><code>FOR trial = 1 TO 5 DO</code><br>&nbsp;&nbsp;<code>READ time_period</code><br>&nbsp;&nbsp;<code>total_time = total_time + time_period</code><br><code>ENDFOR</code></td>
+                            <td><code>for trial in range(1, 6):</code><br>&nbsp;&nbsp;&nbsp;&nbsp;<code>t = measure_period()</code><br>&nbsp;&nbsp;&nbsp;&nbsp;<code>total_time += t</code></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- SECTION 5: EXECUTABLE PYTHON SIMULATOR -->
+            <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--primary); margin: 2rem 0 0.75rem 0;">
+                <i class="fab fa-python text-success"></i> ตัวแบบจำลองภาษา Python 3.11: โปรแกรมจำลองการทำงานของผังงานวิทยาศาสตร์
+            </h3>
+            <p>
+                ตัวแบบจำลองโค้ด Python 3.11 ต่อไปนี้แปลงผังงานการทดลองวิทยาศาสตร์ทั้ง 3 โครงสร้าง (Sequential, Selection และ Iteration) ให้ทำงานเป็นระบบ และจำลองระบบตรวจจับ Infinite Loop Exception:
+            </p>
+
+            <div class="code-container">
+                <div class="code-header">
+                    <span><i class="fab fa-python"></i> scientific_lab_flowchart_simulator.py (Executable Python 3.11)</span>
+                    <span>4124941 วิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์</span>
+                </div>
+                <div class="code-body">
+<pre><code><span class="comment"># =====================================================================</span>
+<span class="comment"># โครงการ: ตัวแบบจำลองการประมวลผลผังงานและรหัสลำลองการทดลองวิทยาศาสตร์</span>
+<span class="comment"># ผู้พัฒนา: ผู้ช่วยศาสตราจารย์ ดร.ชีวะ ทัศนา</span>
+<span class="comment"># สังกัด: คณะวิทยาศาสตร์และเทคโนโลยี มหาวิทยาลัยราชภัฏรำไพพรรณี</span>
+<span class="comment"># =====================================================================</span>
+
+<span class="keyword">from</span> typing <span class="keyword">import</span> Dict, Any, List
+
+<span class="comment"># ---------------------------------------------------------------------</span>
+<span class="comment"># 1. SEQUENTIAL FLOWCHART SIMULATION: คำนวณความหนาแน่นและปริมาตรทรงกลม</span>
+<span class="comment"># ---------------------------------------------------------------------</span>
+<span class="keyword">def</span> <span class="function">simulate_sequential_density</span>(mass_grams: float, radius_cm: float) -> Dict[str, float]:
+    <span class="string">"""
+    แปลงผังงานแบบลำดับ (Sequential Flowchart) สำหรับการหาความหนาแน่นทรงกลม
+    IPO: Input (mass, radius) -> Process (Volume = 4/3 pi r^3, D = M/V) -> Output (Density)
+    """</span>
+    <span class="keyword">import</span> math
+    <span class="keyword">if</span> radius_cm &lt;= 0 <span class="keyword">or</span> mass_grams &lt;= 0:
+        <span class="keyword">raise</span> ValueError(<span class="string">"ค่ามวลและรัศมีต้องมากกว่าศูนย์"</span>)
+        
+    volume = (4.0 / 3.0) * math.pi * (radius_cm ** 3)
+    density = mass_grams / volume
+    <span class="keyword">return</span> {<span class="string">"mass"</span>: mass_grams, <span class="string">"volume"</span>: volume, <span class="string">"density"</span>: density}
+
+
+<span class="comment"># ---------------------------------------------------------------------</span>
+<span class="comment"># 2. SELECTION FLOWCHART SIMULATION: การจำแนกสารเคมีด้วย Decision Tree</span>
+<span class="comment"># ---------------------------------------------------------------------</span>
+<span class="keyword">def</span> <span class="function">simulate_selection_biomolecule_test</span>(iodine_blue: bool, biuret_purple: bool, benedict_red: bool) -> str:
+    <span class="string">"""
+    แปลงผังงานแบบมีทางเลือก (Branching Flowchart) จำแนกสารชีวโมเลกุลในอาหาร
+    """</span>
+    <span class="keyword">if</span> iodine_blue:
+        <span class="keyword">return</span> <span class="string">"พบสารประเภท แป้ง (Starch)"</span>
+    <span class="keyword">elif</span> biuret_purple:
+        <span class="keyword">return</span> <span class="string">"พบสารประเภท โปรตีน (Protein)"</span>
+    <span class="keyword">elif</span> benedict_red:
+        <span class="keyword">return</span> <span class="string">"พบสารประเภท น้ำตาลรีดิวซ์ (Reducing Sugar)"</span>
+    <span class="keyword">else</span>:
+        <span class="keyword">return</span> <span class="string">"ไม่พบสารชีวโมเลกุลหลักทั้ง 3 ชนิด (หรือความเข้มข้นต่ำกว่าเกณฑ์ตรวจวัด)"</span>
+
+
+<span class="comment"># ---------------------------------------------------------------------</span>
+<span class="comment"># 3. ITERATIVE FLOWCHART WITH TERMINATION SAFETY (ป้องกัน Infinite Loop)</span>
+<span class="comment"># ---------------------------------------------------------------------</span>
+<span class="keyword">def</span> <span class="function">simulate_titration_loop</span>(v_acid: float = 20.0, c_base: float = 0.10, target_ph: float = 7.0, max_steps: int = 500) -> Dict[str, Any]:
+    <span class="string">"""
+    แปลงผังงานการไทเทรต (ภาพที่ 4.3) พร้อมระบบป้องกัน Infinite Loop
+    """</span>
+    v_base = 0.0
+    current_ph = 1.0  <span class="comment"># เริ่มต้นที่กรดแก่ pH 1</span>
+    step_count = 0
+    history: List[Dict] = []
+    
+    <span class="keyword">while</span> current_ph &lt; target_ph:
+        step_count += 1
+        <span class="comment"># Safety Check: ป้องกันข้อผิดพลาด Infinite Loop ในผังงาน</span>
+        <span class="keyword">if</span> step_count > max_steps:
+            <span class="keyword">raise</span> TimeoutError(<span class="string">"Infinite Loop Detected! ผังงานไม่มีเงื่อนไขหยุดที่รัดกุม"</span>)
+            
+        v_base += 0.2  <span class="comment"># หยดสารทีละ 0.2 mL</span>
+        <span class="comment"># จำลองการเปลี่ยนแปลงค่า pH เมื่อใกล้จุดสมมูล</span>
+        current_ph = 1.0 + (6.0 * (v_base / 20.0)) <span class="keyword">if</span> v_base &lt; 20.0 <span class="keyword">else</span> 7.0 + (5.0 * ((v_base - 20.0) / 5.0))
+        history.append({<span class="string">"step"</span>: step_count, <span class="string">"v_base"</span>: round(v_base, 2), <span class="string">"pH"</span>: round(current_ph, 2)})
+        
+    <span class="comment"># เมื่อหลุดลูป (จุดยุติ): คำนวณความเข้มข้นกรด</span>
+    c_acid = (c_base * v_base) / v_acid
+    <span class="keyword">return</span> {
+        <span class="string">"total_steps"</span>: step_count,
+        <span class="string">"v_base_used"</span>: round(v_base, 2),
+        <span class="string">"final_ph"</span>: round(current_ph, 2),
+        <span class="string">"calculated_c_acid"</span>: round(c_acid, 4),
+        <span class="string">"status"</span>: <span class="string">"Titration Completed Successfully"</span>
+    }
+
+
+<span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:
+    print(<span class="string">"=== [1] ทดสอบผังงานแบบลำดับ (Sequential Density Flowchart) ==="</span>)
+    res_seq = simulate_sequential_density(mass_grams=45.5, radius_cm=1.8)
+    print(f<span class="string">"มวล: {res_seq['mass']} g, ปริมาตร: {res_seq['volume']:.2f} cm³, ความหนาแน่น: {res_seq['density']:.3f} g/cm³\n"</span>)
+
+    print(<span class="string">"=== [2] ทดสอบผังงานแบบมีทางเลือก (Selection Decision Tree) ==="</span>)
+    sample_result = simulate_selection_biomolecule_test(iodine_blue=False, biuret_purple=True, benedict_red=False)
+    print(f<span class="string">"ผลการวินิจฉัยสารละลายตัวอย่าง: {sample_result}\n"</span>)
+
+    print(<span class="string">"=== [3] ทดสอบผังงานแบบทำซ้ำ (Iterative Titration Loop) ==="</span>)
+    res_titrate = simulate_titration_loop(v_acid=20.0, c_base=0.10)
+    print(f<span class="string">"สิ้นสุดการไทเทรตใน {res_titrate['total_steps']} รอบการหยด"</span>)
+    print(f<span class="string">"ปริมาตรเบสที่ใช้ ณ จุดยุติ: {res_titrate['v_base_used']} mL (pH = {res_titrate['final_ph']})"</span>)
+    print(f<span class="string">"ความเข้มข้นของกรดไฮโดรคลอริกตัวอย่าง: {res_titrate['calculated_c_acid']} M"</span>)
+</code></pre>
+                </div>
+            </div>
+        </div>
+    
+        <!-- ปฏิบัติการจำลองเสมือนจริงประจำสัปดาห์ (Interactive Science Simulator & 180 Labs) -->
+        <div class="card" id="sim-section" style="border: 2px solid #0284c7; box-shadow: 0 8px 24px rgba(2, 132, 199, 0.12); margin-top: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.75rem;">
+                <h2 class="card-title" style="margin-bottom: 0; color: #0284c7;">
+                    <i class="fas fa-cube"></i> ปฏิบัติการจำลองเสมือนจริง: LAB 2.2: สตูดิโอสร้างผังงานมาตรฐาน ISO 5807 (Flowchart Builder Studio) (Hybrid 2D/3D AR)
+                </h2>
+                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                    <a href="../simulations/chapter02_flowchart_builder.html" target="_blank" class="nav-back" style="margin-bottom: 0; padding: 0.45rem 0.9rem; font-size: 0.85rem; background: #0284c7; color: #fff;">
+                        <i class="fas fa-external-link-alt"></i> เปิดแบบจำลองเต็มหน้าจอ
+                    </a>
+                    <a href="../assets/slides/Computing Science for Science Teaching - Chapter 4.pptx" download class="nav-back" style="margin-bottom: 0; padding: 0.45rem 0.9rem; font-size: 0.85rem; background: #f59e0b; color: #fff;"><i class="fas fa-file-powerpoint"></i> ดาวน์โหลดสไลด์ (.pptx)</a>
+                </div>
+            </div>
+
+            <p style="font-size: 0.95rem; color: #334155; margin-bottom: 1rem;">
+                <strong>แบบจำลองเชิงโต้ตอบสำหรับห้องเรียนวิทยาศาสตร์:</strong> ให้นักศึกษาทดลองปรับค่าพารามิเตอร์ สังเกตการณ์เปลี่ยนแปลง และวิเคราะห์ข้อมูลตามกระบวนการคิดเชิงคำนวณ (Computational Thinking):
+            </p>
+
+            <div style="margin: 1rem 0; border-radius: 12px; overflow: hidden; border: 1px solid #cbd5e1; height: 600px; box-shadow: var(--shadow-md);">
+                <iframe src="../simulations/chapter02_flowchart_builder.html" style="width: 100%; height: 100%; border: none;"></iframe>
+            </div>
+
+            <div style="margin: 0.85rem 0; display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;"><span style="font-size: 0.85rem; font-weight: 600; color: #64748b;"><i class="fas fa-cubes"></i> แบบจำลองเสริมในบท:</span> <a href="../simulations/chapter02_pseudocode_ast.html" target="_blank" style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.35rem 0.75rem; background: #e0f2fe; color: #0284c7; border-radius: 6px; font-size: 0.82rem; font-weight: 600; text-decoration: none; border: 1px solid #bae6fd;"><i class="fas fa-play-circle"></i> LAB 2.1: ตัววิเคราะห์รหัสลำลองและต้นไม้ไวยากรณ์ (Pseudocode AST Linter) (Hybrid 2D/3D AR)</a> <a href="../simulations/chapter02_trace_table_runner.html" target="_blank" style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.35rem 0.75rem; background: #e0f2fe; color: #0284c7; border-radius: 6px; font-size: 0.82rem; font-weight: 600; text-decoration: none; border: 1px solid #bae6fd;"><i class="fas fa-play-circle"></i> LAB 2.4: การไล่ค่าตัวแปรด้วยตารางอนิเมชัน (Animated Trace Table Runner) (Hybrid 2D/3D AR)</a></div>
+
+            <!-- คลังใบงานปฏิบัติการที่สอดคล้องจาก 180 Labs Manual -->
+            <div style="margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid #e2e8f0;">
+                <h3 style="font-size: 1.05rem; font-weight: 700; color: #0f172a; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-flask" style="color: #10b981;"></i> ใบงานปฏิบัติการที่สอดคล้อง (จากคู่มือปฏิบัติการ ๑๘๐ การทดลอง):
+                </h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem;">
+                    
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.1rem; border-left: 4px solid #10b981; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem; flex-wrap: wrap; gap: 0.25rem;">
+                    <span style="background: #10b981; color: #fff; font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.55rem; border-radius: 4px;">LAB 1.3.1</span>
+                    <span style="font-size: 0.78rem; color: #64748b;"><i class="far fa-clock"></i> 45 นาที | C3</span>
+                </div>
+                <h4 style="font-size: 0.98rem; font-weight: 700; color: #0f172a; margin-bottom: 0.2rem;">การแปลงเลขฐานสองอันปลั๊ก (8-bit Binary)</h4>
+                <p style="font-size: 0.82rem; color: #64748b; font-style: italic; margin-bottom: 0.5rem;">8-Bit Binary Conversion Unplugged</p>
+                <div style="background: #ffffff; border: 1px dashed #cbd5e1; border-radius: 6px; padding: 0.45rem 0.75rem; font-size: 0.85rem; margin-bottom: 0.5rem; overflow-x: auto;"><strong>สมการทฤษฎี:</strong> $$V = \sum_{i=0}^7 b_i \cdot 2^i \quad \text{where } b_i \in \{0, 1\}$$</div>
+                <div style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.25rem;"><i class="fas fa-question-circle" style="color: #3b82f6;"></i> คำถามท้ายการทดลอง:</div>
+                <ul style="font-size: 0.82rem; color: #475569; margin-bottom: 0; padding-left: 1.25rem; line-height: 1.5;">
+                    <li style="margin-bottom: 0.25rem;">จงแปลงเลข 197 ฐานสิบ ให้เป็นเลขฐานสองและฐานสิบหก</li><li style="margin-bottom: 0.25rem;">เหตุใดสถาปัตยกรรมคอมพิวเตอร์จึงนิยมจัดกลุ่ม 8 บิตเป็น 1 ไบต์?</li>
+                </ul>
+            </div>
+        
+
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.1rem; border-left: 4px solid #10b981; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem; flex-wrap: wrap; gap: 0.25rem;">
+                    <span style="background: #10b981; color: #fff; font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.55rem; border-radius: 4px;">LAB 1.3.2</span>
+                    <span style="font-size: 0.78rem; color: #64748b;"><i class="far fa-clock"></i> 60 นาที | C4</span>
+                </div>
+                <h4 style="font-size: 0.98rem; font-weight: 700; color: #0f172a; margin-bottom: 0.2rem;">การเข้ารหัสตัวอักษรและโทรมาตรเซนเซอร์</h4>
+                <p style="font-size: 0.82rem; color: #64748b; font-style: italic; margin-bottom: 0.5rem;">Sensor Telemetry and Character Encoding</p>
+                <div style="background: #ffffff; border: 1px dashed #cbd5e1; border-radius: 6px; padding: 0.45rem 0.75rem; font-size: 0.85rem; margin-bottom: 0.5rem; overflow-x: auto;"><strong>สมการทฤษฎี:</strong> $$\text{Payload} = [\text{Header (1B)} \,|\, \text{ID (1B)} \,|\, \text{Value (2B)} \,|\, \text{CRC (1B)}]$$</div>
+                <div style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.25rem;"><i class="fas fa-question-circle" style="color: #3b82f6;"></i> คำถามท้ายการทดลอง:</div>
+                <ul style="font-size: 0.82rem; color: #475569; margin-bottom: 0; padding-left: 1.25rem; line-height: 1.5;">
+                    <li style="margin-bottom: 0.25rem;">การส่งข้อมูลแบบไบนารีประหยัดแบนด์วิดท์กว่าส่งเป็นข้อความ JSON กี่เท่า?</li><li style="margin-bottom: 0.25rem;">เหตุใดจึงต้องคูณทศนิยมด้วย 100 ก่อนแปลงเป็นจำนวนเต็ม 16 บิต?</li>
+                </ul>
+            </div>
+        
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ========================================== -->
+    <!-- แท็บที่ 3: กิจกรรมการเรียนรู้เชิงรุก (Active Learning) -->
+    <!-- ========================================== -->
+    <div id="tab3" class="content-section">
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-users-cog"></i> กิจกรรมการเรียนรู้เชิงรุก (Active Learning: Flowchart Scaffolding & Bug Hunt)</h2>
+            <p>
+                แผนการจัดการเรียนรู้ 4 ชั่วโมง ผสานกรอบนั่งร้านทางปัญญาแบบก้าวหน้า (Progressive Flowchart Scaffolding: Zhang et al., 2021) เข้ากับกิจกรรมสืบเสาะวิทยาศาสตร์และการตรวจจับข้อบกพร่องของอัลกอริทึม (Flowchart Bug Hunt):
+            </p>
+
+            <!-- PART 1: LECTURE & BUG HUNT 120 MIN -->
+            <div class="session-block">
+                <div class="session-header">
+                    <span class="session-title"><i class="fas fa-book-reader text-accent"></i> ชั่วโมงที่ 1-2: ภาคบรรยาย ไวยากรณ์ ANSI และกิจกรรมค้นหาบั๊กผังงาน (Theory & Flowchart Bug Hunt)</span>
+                    <span class="time-badge"><i class="far fa-clock"></i> 120 นาที</span>
+                </div>
+
+                <ol style="padding-left: 1.5rem; margin-bottom: 0;">
+                    <li style="margin-bottom: 1rem;">
+                        <strong>ขั้นกระตุ้นความสนใจ (Engagement - 20 นาที): "ปริศนาแล็บถล่มเพราะลูปไม่รู้จบ"</strong>
+                        <p style="margin: 0.25rem 0 0.5rem 0; font-size: 0.95rem;">
+                            อาจารย์ฉายภาพผังงานจำลองระบบเติมสารเคมีอัตโนมัติในโรงงานที่มีข้อผิดพลาด: เส้น Flowline ย้อนกลับก่อนตรวจสอบเงื่อนไข ทำให้สารเคมีเติมไม่หยุดจนล้นบีกเกอร์ ตั้งคำถาม: <em>"เกิดอะไรขึ้นกับผังงานนี้? เหตุใดหุ่นยนต์จึงทำงานไม่หยุดแม้บีกเกอร์จะเต็มแล้ว?"</em> ชี้ให้เห็นถึงความสำคัญของความรัดกุมในการกำหนดเงื่อนไข (Loop Condition)
+                        </p>
+                    </li>
+
+                    <li style="margin-bottom: 1rem;">
+                        <strong>ขั้นสำรวจและอธิบาย (Exploration & Explanation - 55 นาที): "มาตรฐาน ANSI/ISO 5807 & IPO Model"</strong>
+                        <p style="margin: 0.25rem 0 0.5rem 0; font-size: 0.95rem;">
+                            อาจารย์บรรยายเชิงลึกเกี่ยวกับสัญลักษณ์มาตรฐาน 5 ตัวหลัก, กฎการเขียนรหัสลำลองที่กระชับ ไม่ขึ้นกับภาษาโปรแกรมใดภาษาหนึ่ง (Language-Agnostic), และการใช้ Eye-Tracking Evidence (Andrzejewska & Stolińska, 2022) อธิบายเหตุผลที่ผังงานช่วยลดภาระทางปัญญาในการทำความเข้าใจการทดลอง
+                        </p>
+                    </li>
+
+                    <li style="margin-bottom: 1rem;">
+                        <strong>กิจกรรมย่อย "Flowchart Bug Hunt" (30 นาที):</strong>
+                        <p style="margin: 0.25rem 0 0.5rem 0; font-size: 0.95rem;">
+                            แจกใบงานผังงานวิทยาศาสตร์ที่มี "บั๊กที่พบบ่อย 4 แบบ" ให้นักศึกษาช่วยกันค้นหาและวงกลมแก้ไข:
+                        </p>
+                        <ul style="padding-left: 1.5rem; font-size: 0.92rem; color: #475569;">
+                            <li>1. การใช้สัญลักษณ์ผิดประเภท (เช่น นำสี่เหลี่ยมผืนผ้า Process มาใส่การรับค่า Input)</li>
+                            <li>2. สี่เหลี่ยมขนมเปียกปูน (Decision) ที่มีเส้นทางออกเพียงเส้นเดียว หรือลืมระบุ Label ใช่/ไม่ใช่ (Yes/No)</li>
+                            <li>3. สภาวะลูปไม่รู้จบ (Infinite Loop) ที่ไม่มีขั้นตอนปรับค่าตัวแปรเงื่อนไข</li>
+                            <li>4. สภาวะเส้นลูกศรไม่มีหัวลูกศร หรือทิศทางการไหลย้อนแย้ง (Dangling Flowlines)</li>
+                        </ul>
+                    </li>
+
+                    <li>
+                        <strong>ขั้นสรุปเชื่อมโยง (Elaboration - 15 นาที):</strong>
+                        <p style="margin: 0.25rem 0 0; font-size: 0.95rem;">
+                            สรุปข้อค้นพบ และเตรียมความพร้อมสู่การแปลงการทดลองแล็บจริงเป็นผังงานในชั่วโมงปฏิบัติการ
+                        </p>
+                    </li>
+                </ol>
+            </div>
+
+            <!-- PART 2: LAB WORKSHOP 120 MIN -->
+            <div class="session-block">
+                <div class="session-header">
+                    <span class="session-title"><i class="fas fa-laptop-code text-secondary"></i> ชั่วโมงที่ 3-4: ปฏิบัติการแปลงคู่มือแล็บสู่ผังงาน และกิจกรรม Gallery Walk</span>
+                    <span class="time-badge"><i class="far fa-clock"></i> 120 นาที</span>
+                </div>
+
+                <ol style="padding-left: 1.5rem; margin-bottom: 0;">
+                    <li style="margin-bottom: 1rem;">
+                        <strong>กิจกรรมกลุ่มย่อย (Group Workshop - 60 นาที): "Scientific Protocol to Flowchart & Pseudocode"</strong>
+                        <p style="margin: 0.25rem 0 0.5rem 0; font-size: 0.95rem;">
+                            แบ่งกลุ่มนักศึกษา 4-5 คน เลือกหัวข้อการทดลองวิทยาศาสตร์ระดับมัธยม 1 การทดลอง (เช่น 1. การสกัดคลอโรฟิลล์จากใบไม้, 2. การหาอัตราส่วนโมลของปฏิกิริยาเคมี, 3. การหาค่าความเร่งโน้มถ่วง \(g\) ด้วยการตกอิสระ) จากนั้น:
+                        </p>
+                        <ul style="padding-left: 1.5rem; font-size: 0.92rem; color: #475569;">
+                            <li><strong>ภาระงานที่ 1:</strong> วาดผังงาน (Flowchart) ตามมาตรฐาน ANSI/ISO 5807 ลงบนกระดาษ Flipchart ขนาดใหญ่ เน้นการใช้สีแยกประเภทสัญลักษณ์</li>
+                            <li><strong>ภาระงานที่ 2:</strong> เขียนรหัสลำลอง (Pseudocode) เทียบเคียงคู่ขนานทีละบล็อกคำสั่ง</li>
+                            <li><strong>ภาระงานที่ 3:</strong> ระบุตัวแปร Input, Output, เงื่อนไขทางเลือก และการวนรอบการทดลองซ้ำ 3 ซ้ำ</li>
+                        </ul>
+                    </li>
+
+                    <li style="margin-bottom: 1rem;">
+                        <strong>กิจกรรม "Gallery Walk & Peer Flow Execution" (40 นาที):</strong>
+                        <p style="margin: 0.25rem 0 0.5rem 0; font-size: 0.95rem;">
+                            แต่ละกลุ่มนำ Flipchart ติดแสดงรอบห้องเรียน สมาชิกแต่ละกลุ่มหมุนเวียนไปตรวจผลงานของเพื่อน โดยใช้ปากกาไฮไลต์ลากเส้นตาม Flowline หากพบจุดที่ขั้นตอนกำกวม สัญลักษณ์ผิด หรือเกิด Infinite Loop ให้แปะ Post-it สะท้อนคิดเชิงสร้างสรรค์
+                        </p>
+                    </li>
+
+                    <li>
+                        <strong>การสะท้อนคิดอภิปัญญาและสรุปผล (AAR & Wrap-up - 20 นาที):</strong>
+                        <p style="margin: 0.25rem 0 0; font-size: 0.95rem;">
+                            อาจารย์ให้ Feedback สรุปจุดแข็ง-จุดพัฒนาของแต่ละกลุ่ม พร้อมเชื่อมโยงว่าในสัปดาห์ที่ 5 เราจะนำผังงานและรหัสลำลองเหล่านี้ไปเขียนเป็นโค้ดจริงในภาษา Python/Scratch
+                        </p>
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- แท็บที่ 4: การวัดและประเมินผล (Rubrics) -->
+    <!-- ========================================== -->
+    <div id="tab4" class="content-section">
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-check-double"></i> เกณฑ์การวัดและประเมินผลการเรียนรู้ (Authentic Rubrics Matrix)</h2>
+            <p>
+                เกณฑ์การประเมินการออกแบบผังงานและรหัสลำลองวิทยาศาสตร์ 4 ระดับคุณภาพ พัฒนาตามเกณฑ์ประเมินสมรรถนะการสร้างแบบจำลองขั้นตอนวิธี (Zhang et al., 2021; Listiaji et al., 2026):
+            </p>
+
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 20%;">มิติการประเมิน</th>
+                            <th style="width: 20%;">ดีมาก (4 คะแนน)</th>
+                            <th style="width: 20%;">ดี (3 คะแนน)</th>
+                            <th style="width: 20%;">พอใช้ (2 คะแนน)</th>
+                            <th style="width: 20%;">ปรับปรุง (1 คะแนน)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>1. ความถูกต้องของสัญลักษณ์ผังงาน (Symbolic Precision)</strong></td>
+                            <td>ใช้สัญลักษณ์มาตรฐาน ANSI/ISO 5807 ถูกต้องสมบูรณ์ 100% ทุกรูปทรง ทิศทางหัวลูกศรชัดเจน มีจุดเริ่มต้นและสิ้นสุดเพียงจุดเดียว</td>
+                            <td>ใช้สัญลักษณ์ถูกต้องเป็นส่วนใหญ่ มีข้อผิดพลาดเล็กน้อยที่ไม่ส่งผลต่อความหมาย เช่น รูปทรงด้านขนานเอียงไม่ชัดเจน</td>
+                            <td>สับสนการใช้สัญลักษณ์บางประเภท เช่น ใช้สี่เหลี่ยมผืนผ้าแทนการรับค่า Input หรือลืมใส่ลูกศรบอกทิศทาง</td>
+                            <td>ใช้สัญลักษณ์ผิดประเภทเป็นส่วนใหญ่ ไม่เป็นไปตามมาตรฐานสากล</td>
+                        </tr>
+                        <tr>
+                            <td><strong>2. ความสมบูรณ์ของตรรกะและเงื่อนไข (Logical Correctness)</strong></td>
+                            <td>การตัดสินใจ (Decision) มีเส้นทางออกครบถ้วนพร้อมระบุเงื่อนไข ใช่/ไม่ใช่ ชัดเจน มีเงื่อนไขการหยุดลูปที่รัดกุม ปราศจาก Infinite Loop 100%</td>
+                            <td>ตรรกะถูกต้องเป็นส่วนใหญ่ การวนซ้ำมีจุดหยุดที่ชัดเจน แต่อาจขาดป้ายกำกับเงื่อนไขในบางเส้นทาง</td>
+                            <td>มีข้อผิดพลาดเชิงตรรกะ เช่น เงื่อนไขคลุมเครือ หรือมีความเสี่ยงที่จะเกิด Infinite Loop ในบางกรณี</td>
+                            <td>ตรรกะผังงานผิดพลาด เกิดทางตัน (Deadlock) หรือเกิดลูปไม่รู้จบอย่างชัดเจน</td>
+                        </tr>
+                        <tr>
+                            <td><strong>3. ความแม่นยำของรหัสลำลอง (Pseudocode Quality)</strong></td>
+                            <td>เขียนรหัสลำลองสอดคล้องกับผังงานแบบ 1 ต่อ 1 ใช้คำสงวนมาตรฐาน (INPUT, COMPUTE, IF-ELSE, WHILE) มีการย่อหน้า (Indentation) สวยงาม</td>
+                            <td>รหัสลำลองสอดคล้องกับผังงานดี โครงสร้างคำสั่งถูกต้อง แต่อาจขาดการย่อหน้าในบางจุด</td>
+                            <td>รหัสลำลองเขียนเป็นข้อความบรรยายพารากราฟยาว ไม่ได้แยกเป็นบรรทัดคำสั่งโครงสร้างคอมพิวเตอร์</td>
+                            <td>รหัสลำลองไม่สอดคล้องกับผังงาน และไม่สื่อถึงกระบวนการเชิงคำนวณ</td>
+                        </tr>
+                        <tr>
+                            <td><strong>4. การบูรณาการบริบทวิทยาศาสตร์ (Science Pedagogical Rigor)</strong></td>
+                            <td>ผังงานถ่ายทอดกระบวนการทดลองวิทยาศาสตร์ได้อย่างลึกซึ้ง ครอบคลุมทั้งตัวแปรต้น ตัวแปรตาม และการควบคุมความคลาดเคลื่อนในการทดลอง</td>
+                            <td>ผังงานแสดงขั้นตอนการทดลองได้ถูกต้องครบถ้วนตามคู่มือแล็บ</td>
+                            <td>ผังงานข้ามขั้นตอนสำคัญของการทดลองทางวิทยาศาสตร์ เช่น ลืมขั้นตอนการล้างอุปกรณ์หรือการควบคุมอุณหภูมิ</td>
+                            <td>เนื้อหาในผังงานไม่ถูกต้องตามหลักการทดลองทางวิทยาศาสตร์</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- แท็บที่ 5: ข้อสอบวัดสมรรถนะ (HOTS) -->
+    <!-- ========================================== -->
+    <div id="tab5" class="content-section">
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-brain"></i> ข้อสอบวัดสมรรถนะการคิดขั้นสูง (Higher-Order Thinking Skills: HOTS)</h2>
+            <p>
+                ข้อสอบวัดสมรรถนะคัดสรรจาก <strong>คลังข้อสอบมาตรฐานวิทยาการคำนวณ สสวท. (60 ข้อ)</strong> ที่มุ่งเน้นการตรวจแก้ข้อผิดพลาดเชิงตรรกะ (Debugging) และการสร้างแบบจำลองผังงานในงานวิทยาศาสตร์:
+            </p>
+
+            <!-- QUESTION 1 -->
+            <div class="session-block" style="background: white; border-left: 4px solid var(--accent); margin-bottom: 1.5rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                    <h4 style="color: var(--primary); margin: 0;">
+                        <i class="fas fa-question-circle text-accent"></i> ข้อที่ 1: การวิเคราะห์ข้อผิดพลาดในผังงานการทดลองวิทยาศาสตร์ (HOTS: Analyzing & Debugging)
+                    </h4>
+                    <span class="wlo-tag">สสวท. หมวด Flowchart-Debugging</span>
+                </div>
+                
+                <p><strong>สถานการณ์:</strong> นักเรียนเขียนผังงานเพื่อควบคุมระบบเซนเซอร์วัดอุณหภูมิในการทดลองต้มน้ำเดือด โดยมีลำดับขั้นตอนดังนี้:</p>
+                <div style="background: #f1f5f9; padding: 1rem; border-radius: 8px; font-family: monospace; font-size: 0.9rem; margin-bottom: 0.75rem;">
+                    [START] &rarr; [อ่านค่าอุณหภูมิ T] &rarr; &lt;T &ge; 100°C?&gt;<br>
+                    &nbsp;&nbsp;&bull; ถ้า YES &rarr; [บันทึกเวลาจุดเดือด] &rarr; [END]<br>
+                    &nbsp;&nbsp;&bull; ถ้า NO &rarr; [ส่งเสียงเตือนบี๊บ] &rarr; &lt;T &ge; 100°C?&gt; (วนกลับเข้าเงื่อนไขเดิมทันที โดยไม่ได้อ่านค่า T ใหม่)
+                </div>
+                <p>หากนำผังงานนี้ไปเขียนโปรแกรมควบคุมอุปกรณ์จริงในห้องแล็บ จะเกิดข้อผิดพลาด (Bug) ใดขึ้น?</p>
+
+                <div style="margin: 1rem 0; padding-left: 0.5rem;">
+                    <div style="margin-bottom: 0.4rem;"><strong>ก.</strong> เกิด Syntax Error เพราะไม่สามารถใช้ตัวแปร T ได้</div>
+                    <div style="margin-bottom: 0.4rem;"><strong>ข.</strong> เกิดสภาวะลูปไม่รู้จบ (Infinite Loop) และส่งเสียงเตือนไม่หยุด เพราะเมื่ออุณหภูมิยังไม่ถึง 100°C ผังงานวนกลับไปตรวจตัวแปรเดิมโดยไม่มีคำสั่ง [อ่านค่าอุณหภูมิ T ใหม่จากเซนเซอร์]</div>
+                    <div style="margin-bottom: 0.4rem;"><strong>ค.</strong> น้ำจะไม่เดือด เพราะโปรแกรมทำให้ฮีตเตอร์ตัดการทำงาน</div>
+                    <div style="margin-bottom: 0.4rem;"><strong>ง.</strong> ไม่เกิดข้อผิดพลาดใดๆ โปรแกรมทำงานได้ถูกต้องสมบูรณ์</div>
+                </div>
+
+                <div class="academic-callout tip" style="margin-top: 1rem;">
+                    <strong><i class="fas fa-check-circle"></i> เฉลย: ข. เกิดสภาวะลูปไม่รู้จบ (Infinite Loop)</strong><br>
+                    <span style="font-size: 0.92rem; color: #166534;">
+                        <em>บทวิเคราะห์เชิงวิทยาการคำนวณ:</em> โครงสร้างลูปที่ดี (Iterative Structure) ต้องมีคำสั่งปรับปรุงค่าตัวแปรควบคุมเงื่อนไข (Loop Update Step) ในแต่ละรอบ ในกรณีนี้เมื่อค่า \(T < 100\) โปรแกรมต้องวนกลับไปที่กล่องรับค่า <code>[อ่านค่าอุณหภูมิ T ใหม่จากเซนเซอร์]</code> หากวนกลับเข้ากล่อง Decision ทันที ค่า \(T\) จะคงที่ตลอดกาล ส่งผลให้เงื่อนไขเป็นเท็จไม่สิ้นสุด (Andrzejewska & Stolińska, 2022)
+                    </span>
+                </div>
+            </div>
+
+            <!-- QUESTION 2 -->
+            <div class="session-block" style="background: white; border-left: 4px solid var(--purple);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                    <h4 style="color: var(--primary); margin: 0;">
+                        <i class="fas fa-question-circle text-purple"></i> ข้อที่ 2: การแปลงรหัสลำลองการทดสอบสารชีวโมเลกุลเป็นผังงาน (HOTS: Applying & Translating)
+                    </h4>
+                    <span class="wlo-tag" style="background: #f5f3ff; color: var(--purple);">สสวท. หมวด Pseudocode-Mapping</span>
+                </div>
+
+                <p><strong>สถานการณ์:</strong> พิจารณารหัสลำลอง (Pseudocode) ของการทดสอบสารละลายตัวอย่างต่อไปนี้:</p>
+                <div style="background: #f1f5f9; padding: 1rem; border-radius: 8px; font-family: monospace; font-size: 0.9rem; margin-bottom: 0.75rem;">
+                    INPUT sample_solution<br>
+                    ADD 3 drops of Iodine<br>
+                    IF color == "Dark Blue" THEN<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;DISPLAY "Starch Positive"<br>
+                    ELSE<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;ADD Biuret Reagent<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;IF color == "Purple" THEN<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DISPLAY "Protein Positive"<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;ELSE<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;DISPLAY "Unknown Sample"<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;ENDIF<br>
+                    ENDIF<br>
+                    DISPLAY "Test Completed"
+                </div>
+                <p>จากการวิเคราะห์รหัสลำลองข้างต้น เมื่อนำไปวาดเป็นผังงานมาตรฐาน (ANSI Flowchart) จะต้องใช้ <strong>สัญลักษณ์สี่เหลี่ยมขนมเปียกปูน (Decision)</strong> และ <strong>สัญลักษณ์สี่เหลี่ยมด้านขนาน (Input/Output)</strong> รวมกันอย่างน้อยกี่รูป?</p>
+
+                <div style="margin: 1rem 0; padding-left: 0.5rem;">
+                    <div style="margin-bottom: 0.4rem;"><strong>ก.</strong> Decision 1 รูป และ Input/Output 2 รูป (รวม 3 รูป)</div>
+                    <div style="margin-bottom: 0.4rem;"><strong>ข.</strong> Decision 2 รูป และ Input/Output 5 รูป (รวม 7 รูป)</div>
+                    <div style="margin-bottom: 0.4rem;"><strong>ค.</strong> Decision 3 รูป และ Input/Output 3 รูป (รวม 6 รูป)</div>
+                    <div style="margin-bottom: 0.4rem;"><strong>ง.</strong> Decision 2 รูป และ Input/Output 2 รูป (รวม 4 รูป)</div>
+                </div>
+
+                <div class="academic-callout tip" style="margin-top: 1rem;">
+                    <strong><i class="fas fa-check-circle"></i> เฉลย: ข. Decision 2 รูป และ Input/Output 5 รูป (รวม 7 รูป)</strong><br>
+                    <span style="font-size: 0.92rem; color: #166534;">
+                        <em>บทวิเคราะห์เชิงโครงสร้าง:</em><br>
+                        1. <strong>Decision (สี่เหลี่ยมขนมเปียกปูน):</strong> มีเงื่อนไขซ้อนกัน (Nested If-Else) 2 ตำแหน่ง คือ (1) <code>color == "Dark Blue"?</code> และ (2) <code>color == "Purple"?</code> = รวม <strong>2 รูป</strong><br>
+                        2. <strong>Input/Output (สี่เหลี่ยมด้านขนาน):</strong> มีการรับค่าและแสดงผล 5 จุด ได้แก่ <code>INPUT sample_solution</code> (1 จุด), <code>DISPLAY "Starch Positive"</code> (1 จุด), <code>DISPLAY "Protein Positive"</code> (1 จุด), <code>DISPLAY "Unknown Sample"</code> (1 จุด), และ <code>DISPLAY "Test Completed"</code> (1 จุด) = รวม <strong>5 รูป</strong><br>
+                        3. ผลรวมสัญลักษณ์ทั้งสองชนิด = \(2 + 5 = 7\) รูป สะท้อนความเข้าใจเรื่องการจับคู่ระหว่างคำสงวนของรหัสลำลองกับสัญลักษณ์ผังงานอย่างแม่นยำ
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- แท็บที่ 6: เอกสารอ้างอิง (APA 7th Edition) -->
+    <!-- ========================================== -->
+    <div id="tab6" class="content-section">
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-book-reader"></i> เอกสารอ้างอิงทางวิชาการ (Academic References - APA 7th Edition)</h2>
+            <p>
+                เอกสาร ตำรา และงานวิจัยระดับสากลและระดับชาติที่ใช้ประกอบการสังเคราะห์เนื้อหาและกิจกรรมในสัปดาห์ที่ 4 (สืบค้นผ่าน Consensus.app และคลัง สสวท.):
+            </p>
+
+            <ul class="reference-list">
+                <li class="reference-item">
+                    Andrzejewska, M., & Stolińska, A. (2022). Do structured flowcharts outperform pseudocode? Evidence from eye movements. <em>IEEE Access</em>, 10, 134542–134554. <a href="https://doi.org/10.1109/access.2022.3230981" target="_blank">https://doi.org/10.1109/access.2022.3230981</a>
+                </li>
+                <li class="reference-item">
+                    Ghosh, S., Pratihar, S., Chatterji, S., & Roy, S. (2023). Matching of hand-drawn flowchart, pseudocode, and English description using transfer learning. <em>Multimedia Tools and Applications</em>, 82(14), 21543–21568. <a href="https://doi.org/10.1007/s11042-023-14346-9" target="_blank">https://doi.org/10.1007/s11042-023-14346-9</a>
+                </li>
+                <li class="reference-item">
+                    Julaihi, S. A., & Bohari, Z. (2026). Comparative analysis of pseudocode and flowcharts in algorithm development among first-year computer science students. <em>Voice of Academia</em>, 22(1), 11473. <a href="https://doi.org/10.24191/voa.v22i1.11473" target="_blank">https://doi.org/10.24191/voa.v22i1.11473</a>
+                </li>
+                <li class="reference-item">
+                    Listiaji, P., Amelia, R. N., & Molnár, G. (2026). Development and validation of a measure assessing computational thinking in science teacher education. <em>Thinking Skills and Creativity</em>, 59, 102372. <a href="https://doi.org/10.1016/j.tsc.2026.102372" target="_blank">https://doi.org/10.1016/j.tsc.2026.102372</a>
+                </li>
+                <li class="reference-item">
+                    Nieto-Leal, A., Ortega-Alvarez, J. D., & Bego, C. R. (2026). Assessing the impact of pseudocode and flowcharts on algorithmic thinking in a first-year engineering course. <em>Computers in Education Journal (CoED)</em>, 17(1), 1–15. <a href="https://doi.org/10.18260/b4b8-9a-91463" target="_blank">https://doi.org/10.18260/b4b8-9a-91463</a>
+                </li>
+                <li class="reference-item">
+                    Nita, S., & Kartikawati, S. (2020). Analysis of the impact narrative algorithm method, pseudocode and flowchart towards students understanding of the programming algorithm courses. <em>IOP Conference Series: Materials Science and Engineering</em>, 835(1), 012044. <a href="https://doi.org/10.1088/1757-899x/835/1/012044" target="_blank">https://doi.org/10.1088/1757-899x/835/1/012044</a>
+                </li>
+                <li class="reference-item">
+                    Shute, V. J., Sun, C., & Asbell-Clarke, J. (2017). Demystifying computational thinking. <em>Educational Research Review</em>, 22, 142–158. <a href="https://doi.org/10.1016/j.edurev.2017.09.003" target="_blank">https://doi.org/10.1016/j.edurev.2017.09.003</a>
+                </li>
+                <li class="reference-item">
+                    Vardasca, R., Beirante, L., Tereso, M., & Martins, C. (2025). Easy-Flowgorithm: A web-based tool towards STEM problem solving skills development. In <em>2025 7th Experiment@ International Conference (exp.at'25)</em> (pp. 112–117). IEEE. <a href="https://doi.org/10.1109/exp.at2565440.2025.11348567" target="_blank">https://doi.org/10.1109/exp.at2565440.2025.11348567</a>
+                </li>
+                <li class="reference-item">
+                    Zhang, J. H., Meng, B., Zou, L. C., Zhu, Y., & Hwang, G. J. (2021). Progressive flowchart development scaffolding to improve university students' computational thinking and programming self-efficacy. <em>Interactive Learning Environments</em>, 31(8), 5136–5152. <a href="https://doi.org/10.1080/10494820.2021.1943687" target="_blank">https://doi.org/10.1080/10494820.2021.1943687</a>
+                </li>
+                <li class="reference-item">
+                    ชีวะ ทัศนา. (2567). <em>การจัดการเรียนรู้วิทยาการคำนวณและปัญญาประดิษฐ์ในชั้นเรียนวิทยาศาสตร์ยุคดิจิทัล</em>. ภาควิชาฟิสิกส์และวิทยาศาสตร์ทั่วไป คณะวิทยาศาสตร์และเทคโนโลยี มหาวิทยาลัยราชภัฏรำไพพรรณี.
+                </li>
+                <li class="reference-item">
+                    สถาบันส่งเสริมการสอนวิทยาศาสตร์และเทคโนโลยี (สสวท.). (2561). <em>คู่มือการใช้หลักสูตรรายวิชาพื้นฐานวิทยาศาสตร์ สาระเทคโนโลยี (วิทยาการคำนวณ) กลุ่มสาระการเรียนรู้วิทยาศาสตร์ (ฉบับปรับปรุง พ.ศ. 2560)</em>. กระทรวงศึกษาธิการ.
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- ส่วนท้าย -->
+    <footer class="footer">
+        <p>© 2026 รายวิชา 4124941 วิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์ | ผู้ช่วยศาสตราจารย์ ดร.ชีวะ ทัศนา</p>
+        <p>คณะวิทยาศาสตร์และเทคโนโลยี มหาวิทยาลัยราชภัฏรำไพพรรณี</p>
+    </footer>
+</div>
+
+<script>
+    function showTab(tabId, btnElement) {
+        document.querySelectorAll('.content-section').forEach(function(section) {
+            section.classList.remove('active');
+        });
+        document.querySelectorAll('.tab-btn').forEach(function(btn) {
+            btn.classList.remove('active');
+        });
+        const targetSection = document.getElementById(tabId);
+        if (targetSection) {
+            targetSection.classList.add('active');
+        }
+        if (btnElement) {
+            btnElement.classList.add('active');
+        }
+        window.scrollTo({ top: 120, behavior: 'smooth' });
+    }
+</script>
+
+</body>
+</html>

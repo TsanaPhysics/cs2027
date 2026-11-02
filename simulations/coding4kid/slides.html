@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="th" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workshop Slides | Coding for Kids</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@300;400;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        body { background: #000; overflow: hidden; }
+        .slides-container { height: 100vh; width: 100vw; display: flex; align-items: center; justify-content: center; position: relative; }
+        .slide { 
+            position: absolute; width: 80%; height: 70%; 
+            background: var(--clr-bg-dark); border: 2px solid var(--glass-border); 
+            border-radius: 40px; padding: 4rem; display: none;
+            box-shadow: 0 0 100px rgba(99, 102, 241, 0.2);
+            flex-direction: column; justify-content: center;
+        }
+        .slide--active { display: flex; animation: slideIn 0.8s cubic-bezier(0.2, 0.8, 0.2, 1); }
+        .slide__header { margin-bottom: 2rem; border-bottom: 2px solid var(--clr-primary); padding-bottom: 1rem; }
+        .slide__content { font-size: 1.5rem; color: var(--clr-text-muted); }
+        .slide__img { max-height: 300px; margin-top: 2rem; border-radius: 20px; align-self: center; }
+        
+        .controls { position: fixed; bottom: 40px; right: 40px; display: flex; gap: 1rem; z-index: 100; }
+        .slide-num { position: fixed; bottom: 40px; left: 40px; font-weight: 800; color: var(--clr-accent); }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(100px) scale(0.9); }
+            to { opacity: 1; transform: translateX(0) scale(1); }
+        }
+        .btn-slide { padding: 1rem 2rem; border-radius: 99px; background: var(--clr-primary); color: white; border: none; cursor: pointer; font-weight: 700; }
+        .btn-slide:disabled { opacity: 0.3; }
+    </style>
+</head>
+<body>
+    <nav class="nav glass-nav">
+        <div class="container nav__container">
+            <a href="index.html" class="nav__logo">Game<span>Design</span>4Kids</a>
+            <button class="btn btn--small btn--outline lang-toggle">TH / EN</button>
+        </div>
+    </nav>
+
+    <div class="slides-container">
+        <!-- Slide 1 -->
+        <section class="slide slide--active" data-slide="1">
+            <div class="slide__header">
+                <h1 data-i18n="hero_subtitle">นักสร้างเกมรุ่นเยาว์</h1>
+            </div>
+            <div class="slide__content">
+                <p data-i18n="hero_lead">เปลี่ยนจากผู้เล่น เป็นผู้สร้าง! ออกแบบจักรวาลของคุณเองด้วยโค้ด</p>
+                <img src="assets/img/hero_banner.png" class="slide__img">
+            </div>
+        </section>
+
+        <!-- Slide 2 -->
+        <section class="slide" data-slide="2">
+            <div class="slide__header">
+                <h2 data-i18n="rec_01_title">01. ระบบควบคุมการเคลื่อนที่</h2>
+            </div>
+            <div class="slide__content">
+                <p data-i18n="rec_01_lead">พื้นฐานของการสร้างเกม คือการทำให้ผู้เล่นโต้ตอบกับตัวละครได้</p>
+                <img src="assets/img/scratch_template_catch.png" class="slide__img">
+            </div>
+        </section>
+
+        <!-- Slide 3 -->
+        <section class="slide" data-slide="3">
+            <div class="slide__header">
+                <h2 data-i18n="rec_title">เจาะลึกอัลกอริทึม</h2>
+            </div>
+            <div class="slide__content">
+                <p data-i18n="rec_lead">ทำความเข้าใจการทำงานของบล็อกโค้ดในแต่ละส่วน</p>
+                <img src="assets/img/algorithm_diagram.png" class="slide__img">
+            </div>
+        </section>
+
+        <!-- Slide 4 -->
+        <section class="slide" data-slide="4">
+            <div class="slide__header">
+                <h2 data-i18n="section_timeline">กำหนดการกิจกรรม</h2>
+            </div>
+            <div class="slide__content">
+                <ul style="list-style: none;">
+                    <li style="margin-bottom: 1rem;"><strong data-i18n="time_0900_title"></strong> - <span data-i18n="time_0900_desc"></span></li>
+                    <li style="margin-bottom: 1rem;"><strong data-i18n="time_1045_title"></strong> - <span data-i18n="time_1045_desc"></span></li>
+                    <li style="margin-bottom: 1rem;"><strong data-i18n="time_1300_title"></strong> - <span data-i18n="time_1300_desc"></span></li>
+                </ul>
+            </div>
+        </section>
+
+        <div class="slide-num">Slide <span id="current">1</span> / 4</div>
+        
+        <div class="controls">
+            <button class="btn-slide" id="prev" disabled>Previous</button>
+            <button class="btn-slide" id="next">Next</button>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script>
+        // Simple Slide Logic
+        const slides = document.querySelectorAll('.slide');
+        const nextBtn = document.getElementById('next');
+        const prevBtn = document.getElementById('prev');
+        const currentSpan = document.getElementById('current');
+        let currentSlide = 0;
+
+        const updateSlides = () => {
+            slides.forEach((s, i) => {
+                s.classList.toggle('slide--active', i === currentSlide);
+            });
+            currentSpan.textContent = currentSlide + 1;
+            prevBtn.disabled = currentSlide === 0;
+            nextBtn.disabled = currentSlide === slides.length - 1;
+        };
+
+        nextBtn.addEventListener('click', () => {
+            if(currentSlide < slides.length - 1) { currentSlide++; updateSlides(); }
+        });
+        prevBtn.addEventListener('click', () => {
+            if(currentSlide > 0) { currentSlide--; updateSlides(); }
+        });
+    </script>
+</body>
+</html>

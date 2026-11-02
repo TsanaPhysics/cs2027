@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="th" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Master Workbook | ชุดแบบฝึกหัด Scratch ครบวงจร</title>
+    <link rel="stylesheet" href="css/style.css?v=1.1">
+    <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@300;400;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        :root {
+            --wb-primary: #4C97FF;
+            --wb-bg: #f1f5f9;
+        }
+
+        body { background: var(--wb-bg); margin: 0; padding: 0; }
+
+        .workbook-container {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+            padding: 40px 0;
+        }
+
+        .workbook-page {
+            background: white;
+            width: 210mm;
+            min-height: 297mm;
+            margin: 0 auto;
+            padding: 20mm;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+            box-sizing: border-box;
+            page-break-after: always;
+        }
+
+        @media print {
+            body { background: none; }
+            .workbook-container { gap: 0; padding: 0; }
+            .workbook-page { box-shadow: none; margin: 0; width: 100%; border: none; }
+            .no-print { display: none; }
+        }
+
+        .wb-header { border-bottom: 2px solid #eee; padding-bottom: 1rem; margin-bottom: 2rem; display: flex; justify-content: space-between; }
+        .wb-header h1 { font-size: 1.5rem; color: var(--wb-primary); margin: 0; }
+        
+        .wb-section { margin-bottom: 2rem; }
+        .wb-section h2 { font-size: 1.1rem; background: #f8fafc; padding: 8px 12px; border-left: 4px solid var(--wb-primary); margin-bottom: 1rem; }
+        
+        .drawing-area { width: 100%; height: 200px; border: 1px dashed #cbd5e0; border-radius: 8px; margin-top: 10px; }
+        
+        .floating-controls {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .btn-download-all {
+            background: #6366f1;
+            color: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            border: none;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-controls no-print">
+        <button class="btn-download-all" onclick="generatePDF()">📥 ดาวน์โหลดชุดแบบฝึกหัดทั้งหมด (11 หน้า)</button>
+    </div>
+
+    <div class="workbook-container" id="master-workbook">
+        <!-- Page 1: EP 1 -->
+        <div class="workbook-page" id="page-1">
+            <div class="wb-header">
+                <div>
+                    <h1 data-i18n="ep1_title">EP 1: เริ่มต้นรู้จัก Scratch</h1>
+                    <p>Workshop: Game Creators | วิทย์ในวัง</p>
+                </div>
+                <span>Page 1</span>
+            </div>
+            <div class="wb-section">
+                <h2>กิจกรรมที่ 1: ส่วนประกอบของโปรแกรม</h2>
+                <p>จงเติมชื่อส่วนประกอบของหน้าจอ Scratch ลงในช่องว่างให้ถูกต้อง (Sprite, Stage, Blocks Palette, Script Area)</p>
+                <div style="height: 300px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 12px; position: relative; overflow: hidden;">
+                    <img src="https://scratch.mit.edu/static/assets/404d3e2308c146e2a969375171788220.svg" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0.1; width: 200px;">
+                </div>
+            </div>
+        </div>
+
+        <!-- Page 2: EP 2 -->
+        <div class="workbook-page" id="page-2">
+            <div class="wb-header">
+                <h1 data-i18n="ep2_title">EP 2: ตัวละครและพิกัด</h1>
+                <span>Page 2</span>
+            </div>
+            <div class="wb-section">
+                <h2>กิจกรรมที่ 2: เข็มทิศและทิศทาง</h2>
+                <p>จงระบุองศา (Direction) ของทิศทางต่อไปนี้</p>
+                <ul>
+                    <li>ขึ้นบน: ....... องศา</li>
+                    <li>ไปทางขวา: ....... องศา</li>
+                    <li>ลงล่าง: ....... องศา</li>
+                    <li>ไปทางซ้าย: ....... องศา</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Page 3: EP 3 -->
+        <div class="workbook-page" id="page-3">
+            <div class="wb-header">
+                <h1 data-i18n="ep3_title">EP 3: พื้นหลังพื้นฐาน</h1>
+                <span>Page 3</span>
+            </div>
+            <div class="wb-section">
+                <h2>กิจกรรมที่ 3: ออกแบบฉากหลัง</h2>
+                <p>วาดรูปฉากหลังที่นักเรียนอยากสร้างให้ตัวละคร (เช่น ป่า, อวกาศ, ใต้ทะเล)</p>
+                <div class="drawing-area"></div>
+            </div>
+        </div>
+
+        <!-- Pages 4-11 (Simplified placeholders for this demo, can be expanded) -->
+        <div class="workbook-page" id="page-4">
+            <div class="wb-header"><h1>EP 4 - 11: ภารกิจต่อเนื่อง</h1><span>Page 4-11</span></div>
+            <p>เนื้อหาในส่วนนี้จะประกอบด้วยกิจกรรม:</p>
+            <ul>
+                <li>EP 4-5: การสลับฉากและเงื่อนไข</li>
+                <li>EP 6-7: การวาดและอนิเมชั่นตัวละคร</li>
+                <li>EP 8-9: ตรรกะการต่อบล็อกและการสื่อสาร</li>
+                <li>EP 10-11: ระบบพิกัดและการควบคุมด้วยคีย์บอร์ด</li>
+            </ul>
+            <div class="drawing-area" style="height: 400px; display: flex; align-items: center; justify-content: center; font-style: italic; color: #94a3b8;">
+                พื้นที่สำหรับการออกแบบโปรเจกต์สุดท้าย
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function generatePDF() {
+            const element = document.getElementById('master-workbook');
+            const opt = {
+                margin: 0,
+                filename: 'Scratch-Master-Workbook.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2 },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+            html2pdf().set(opt).from(element).save();
+        }
+    </script>
+    <script src="js/main.js?v=1.1" defer></script>
+</body>
+</html>

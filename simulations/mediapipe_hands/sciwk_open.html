@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AR พิธีเปิดงานสัปดาห์วิทยาศาสตร์ (กดปุ่มด้วยนิ้ว)</title>
+    <!-- Three.js สำหรับเอฟเฟกต์ -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- MediaPipe Hands -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils@0.3/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils@0.3/drawing_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4/hands.js" crossorigin="anonymous"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background: #0a1a2a;
+            color: #fff;
+            overflow: hidden;
+            height: 100vh;
+            user-select: none;
+        }
+        #container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background: #0a1a2a;
+        }
+        video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+        }
+        #mediapipe-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+        }
+        #three-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+        #status {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 10;
+            background: rgba(0,0,0,0.6);
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 1rem;
+            backdrop-filter: blur(4px);
+        }
+        /* ปุ่มเมาส์สำรอง (แสดงไว้ที่มุมล่างขวา) */
+        #mouse-btn {
+            position: absolute;
+            bottom: 30px;
+            right: 30px;
+            z-index: 10;
+            background: linear-gradient(135deg, #ffd700, #f0a500);
+            color: #1a1a2e;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 50px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+            transition: 0.3s;
+            font-family: inherit;
+        }
+        #mouse-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 50px rgba(255, 215, 0, 0.6);
+        }
+        /* Title Overlay */
+        #title-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 20;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            pointer-events: none;
+            background: rgba(0,0,0,0.3);
+        }
+        #title-overlay.show {
+            display: flex;
+            animation: fadeInTitle 1.5s ease-out;
+        }
+        #title-overlay h1 {
+            font-size: 4.5rem;
+            font-weight: 700;
+            color: #ffd700;
+            text-shadow: 0 0 40px rgba(255,215,0,0.6), 0 0 80px rgba(255,215,0,0.3);
+            text-align: center;
+            padding: 0 20px;
+            letter-spacing: 4px;
+        }
+        #title-overlay h2 {
+            font-size: 2.5rem;
+            color: #fff;
+            text-shadow: 0 0 30px rgba(255,255,255,0.3);
+            margin-top: 10px;
+        }
+        #title-overlay .sub {
+            font-size: 1.5rem;
+            color: #8fcbff;
+            margin-top: 8px;
+        }
+        @keyframes fadeInTitle {
+            0% { opacity: 0; transform: scale(0.7); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+        @media (max-width: 700px) {
+            #title-overlay h1 { font-size: 2.5rem; }
+            #title-overlay h2 { font-size: 1.5rem; }
+            #mouse-btn { padding: 10px 18px; font-size: 0.9rem; bottom: 15px; right: 15px; }
+        }
+    </style>
+</head>
+<body>
+<div id="container">
+    <video id="video" autoplay playsinline></video>
+    <canvas id="mediapipe-canvas"></canvas>
+    <canvas id="three-canvas"></canvas>
+
+    <!-- Title Overlay -->
+    <div id="title-overlay">
+        <h1>🚀 งานสัปดาห์วิทยาศาสตร์แห่งชาติ</h1>
+        <h2>ประจำปี 2569</h2>
+        <div class="sub">"Intelligence Science for a Sustainable Future"</div>
+    </div>
+
+    <div id="status">🟢 กำลังเริ่มต้น...</div>
+    <button id="mouse-btn">👔 คลิกเปิดงาน (เมาส์)</button>
+</div>
+
+<script>
+    (function() {
+        // ------------------ DOM refs ------------------
+        const video = document.getElementById('video');
+        const mpCanvas = document.getElementById('mediapipe-canvas');
+        const mpCtx = mpCanvas.getContext('2d');
+        const threeCanvas = document.getElementById('three-canvas');
+        const statusDiv = document.getElementById('status');
+        const titleOverlay = document.getElementById('title-overlay');
+        const mouseBtn = document.getElementById('mouse-btn');
+
+        // ------------------ State ------------------
+        let isCeremonyActive = false;
+        let handData = null; // store landmarks of detected hand
+
+        // ------------------ Audio System ------------------
+        let audioCtx = null;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            return audioCtx;
+        }
+
+        // ------------------ ฟังก์ชันเปิดงาน ------------------
+        function playCeremony() {
+            if (isCeremonyActive) return;
+            isCeremonyActive = true;
+            statusDiv.textContent = '🎉 เปิดงานอย่างยิ่งใหญ่!';
+
+            // 1. เสียง (Epic Rise + Impact)
+            const ctx = initAudio();
+            const now = ctx.currentTime;
+
+            // เสียงค่อยๆ สูง
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(150, now);
+            osc.frequency.exponentialRampToValueAtTime(600, now + 1.2);
+            gain.gain.setValueAtTime(0.01, now);
+            gain.gain.linearRampToValueAtTime(0.3, now + 0.8);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 1.8);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now);
+            osc.stop(now + 2.0);
+
+            // เสียงตูม (Impact)
+            const osc2 = ctx.createOscillator();
+            const gain2 = ctx.createGain();
+            osc2.type = 'square';
+            osc2.frequency.setValueAtTime(80, now + 1.2);
+            osc2.frequency.exponentialRampToValueAtTime(40, now + 2.0);
+            gain2.gain.setValueAtTime(0.01, now + 1.2);
+            gain2.gain.linearRampToValueAtTime(0.4, now + 1.5);
+            gain2.gain.exponentialRampToValueAtTime(0.01, now + 2.2);
+            osc2.connect(gain2);
+            gain2.connect(ctx.destination);
+            osc2.start(now + 1.2);
+            osc2.stop(now + 2.2);
+
+            // 2. เอฟเฟกต์ปุ๊บ (อนุภาค)
+            createExplosion();
+
+            // 3. แสดงข้อความ
+            titleOverlay.classList.add('show');
+
+            // 4. ดอกไม้ไฟ 3 ดอก
+            setTimeout(() => createFirework(), 500);
+            setTimeout(() => createFirework(), 1200);
+            setTimeout(() => createFirework(), 1900);
+
+            // 5. ซ่อนข้อความและรีเซ็ต
+            setTimeout(() => {
+                titleOverlay.classList.remove('show');
+                isCeremonyActive = false;
+                statusDiv.textContent = '🎊 เปิดงานสำเร็จ! รอการกดปุ่มอีกครั้ง';
+            }, 6000);
+        }
+
+        // ------------------ เอฟเฟกต์ Three.js ------------------
+        const scene = new THREE.Scene();
+        scene.background = null;
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+        camera.position.set(3, 2, 5);
+        camera.lookAt(0, 0, 0);
+
+        const renderer = new THREE.WebGLRenderer({
+            canvas: threeCanvas,
+            alpha: true,
+            antialias: true
+        });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+        // Light (for particles if needed)
+        const ambient = new THREE.AmbientLight(0x404060);
+        scene.add(ambient);
+
+        // ฟังก์ชันสร้างอนุภาคระเบิด
+        function createExplosion() {
+            const count = 400;
+            const colors = [0xff0000, 0xffd700, 0x00ff88, 0x00aaff, 0xff66ff, 0xffaa00];
+            const particles = [];
+            const geo = new THREE.BufferGeometry();
+            const positions = new Float32Array(count * 3);
+            const sizes = new Float32Array(count);
+            const colorArray = new Float32Array(count * 3);
+
+            for (let i = 0; i < count; i++) {
+                const r = 0.3 + Math.random() * 2.0;
+                const theta2 = Math.random() * Math.PI * 2;
+                const phi = Math.acos(2 * Math.random() - 1);
+                positions[i*3] = r * Math.sin(phi) * Math.cos(theta2);
+                positions[i*3+1] = r * Math.cos(phi) + 0.5;
+                positions[i*3+2] = r * Math.sin(phi) * Math.sin(theta2);
+                sizes[i] = 0.04 + Math.random() * 0.08;
+                const col = new THREE.Color(colors[Math.floor(Math.random() * colors.length)]);
+                colorArray[i*3] = col.r;
+                colorArray[i*3+1] = col.g;
+                colorArray[i*3+2] = col.b;
+                particles.push({
+                    vx: (Math.random() - 0.5) * 3,
+                    vy: (Math.random() - 0.5) * 3 + 1,
+                    vz: (Math.random() - 0.5) * 3,
+                    life: 1.0,
+                    decay: 0.005 + Math.random() * 0.015
+                });
+            }
+
+            geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geo.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+            geo.setAttribute('color', new THREE.BufferAttribute(colorArray, 3));
+
+            const mat = new THREE.PointsMaterial({
+                size: 0.08,
+                vertexColors: true,
+                transparent: true,
+                opacity: 1,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false
+            });
+            const points = new THREE.Points(geo, mat);
+            points.position.set(0, 0.5, 0);
+            scene.add(points);
+
+            let frame = 0;
+            const maxFrames = 120;
+            const animId = setInterval(() => {
+                frame++;
+                const pos = points.geometry.attributes.position.array;
+                let allDead = true;
+                for (let i = 0; i < count; i++) {
+                    particles[i].life -= particles[i].decay;
+                    if (particles[i].life > 0) {
+                        allDead = false;
+                        pos[i*3] += particles[i].vx * 0.04;
+                        pos[i*3+1] += particles[i].vy * 0.04 - 0.02;
+                        pos[i*3+2] += particles[i].vz * 0.04;
+                        particles[i].vy -= 0.04;
+                    } else {
+                        pos[i*3] = 0;
+                        pos[i*3+1] = -10;
+                        pos[i*3+2] = 0;
+                    }
+                }
+                points.geometry.attributes.position.needsUpdate = true;
+                mat.opacity = Math.max(0, 1 - frame / maxFrames);
+                if (allDead || frame > maxFrames) {
+                    clearInterval(animId);
+                    scene.remove(points);
+                    points.geometry.dispose();
+                    mat.dispose();
+                }
+            }, 16);
+        }
+
+        // ดอกไม้ไฟ
+        function createFirework() {
+            const count = 150;
+            const colors = [0xff0044, 0xffdd00, 0x00ffaa, 0x4488ff, 0xff44ff];
+            const geo = new THREE.BufferGeometry();
+            const positions = new Float32Array(count * 3);
+            const colorArray = new Float32Array(count * 3);
+            const particles = [];
+
+            const cx = (Math.random() - 0.5) * 2;
+            const cy = Math.random() * 1.5 + 0.5;
+            const cz = (Math.random() - 0.5) * 2;
+
+            for (let i = 0; i < count; i++) {
+                const r = 0.1 + Math.random() * 1.5;
+                const theta2 = Math.random() * Math.PI * 2;
+                const phi = Math.acos(2 * Math.random() - 1);
+                positions[i*3] = cx + r * Math.sin(phi) * Math.cos(theta2);
+                positions[i*3+1] = cy + r * Math.cos(phi);
+                positions[i*3+2] = cz + r * Math.sin(phi) * Math.sin(theta2);
+                const col = new THREE.Color(colors[Math.floor(Math.random() * colors.length)]);
+                colorArray[i*3] = col.r;
+                colorArray[i*3+1] = col.g;
+                colorArray[i*3+2] = col.b;
+                particles.push({
+                    vx: (Math.random() - 0.5) * 2,
+                    vy: (Math.random() - 0.5) * 2 + 1,
+                    vz: (Math.random() - 0.5) * 2,
+                    life: 1.0,
+                    decay: 0.008 + Math.random() * 0.02
+                });
+            }
+
+            geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geo.setAttribute('color', new THREE.BufferAttribute(colorArray, 3));
+
+            const mat = new THREE.PointsMaterial({
+                size: 0.06,
+                vertexColors: true,
+                transparent: true,
+                opacity: 1,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false
+            });
+            const points = new THREE.Points(geo, mat);
+            scene.add(points);
+
+            let frame = 0;
+            const maxFrames = 100;
+            const animId = setInterval(() => {
+                frame++;
+                const pos = points.geometry.attributes.position.array;
+                let allDead = true;
+                for (let i = 0; i < count; i++) {
+                    particles[i].life -= particles[i].decay;
+                    if (particles[i].life > 0) {
+                        allDead = false;
+                        pos[i*3] += particles[i].vx * 0.03;
+                        pos[i*3+1] += particles[i].vy * 0.03 - 0.015;
+                        pos[i*3+2] += particles[i].vz * 0.03;
+                        particles[i].vy -= 0.03;
+                    } else {
+                        pos[i*3] = 0;
+                        pos[i*3+1] = -10;
+                        pos[i*3+2] = 0;
+                    }
+                }
+                points.geometry.attributes.position.needsUpdate = true;
+                mat.opacity = Math.max(0, 1 - frame / maxFrames);
+                if (allDead || frame > maxFrames) {
+                    clearInterval(animId);
+                    scene.remove(points);
+                    points.geometry.dispose();
+                    mat.dispose();
+                }
+            }, 16);
+        }
+
+        // ------------------ MediaPipe Hands ------------------
+        const hands = new Hands({
+            locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4/${file}`
+        });
+        hands.setOptions({
+            maxNumHands: 1,
+            modelComplexity: 1,
+            minDetectionConfidence: 0.5,
+            minTrackingConfidence: 0.5
+        });
+
+        hands.onResults((results) => {
+            mpCtx.clearRect(0, 0, mpCanvas.width, mpCanvas.height);
+            const w = mpCanvas.width;
+            const h = mpCanvas.height;
+
+            // วาดปุ่มเปิดงานบน Canvas
+            drawButton(w, h);
+
+            if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
+                const landmarks = results.multiHandLandmarks[0];
+                handData = landmarks;
+
+                // แปลงพิกัด
+                const pts = landmarks.map(lm => ({
+                    x: lm.x * w,
+                    y: lm.y * h
+                }));
+
+                // วาดมือ (เส้นและจุด)
+                const connections = [
+                    [0,1],[1,2],[2,3],[3,4],[0,5],[5,6],[6,7],[7,8],
+                    [0,9],[9,10],[10,11],[11,12],[0,13],[13,14],[14,15],[15,16],
+                    [0,17],[17,18],[18,19],[19,20],[5,9],[9,13],[13,17]
+                ];
+                mpCtx.strokeStyle = '#00FFAA';
+                mpCtx.lineWidth = 2.5;
+                for (let conn of connections) {
+                    const [i, j] = conn;
+                    if (i < pts.length && j < pts.length) {
+                        mpCtx.beginPath();
+                        mpCtx.moveTo(pts[i].x, pts[i].y);
+                        mpCtx.lineTo(pts[j].x, pts[j].y);
+                        mpCtx.stroke();
+                    }
+                }
+                // จุด
+                pts.forEach((p, i) => {
+                    mpCtx.beginPath();
+                    mpCtx.arc(p.x, p.y, 6, 0, 2 * Math.PI);
+                    mpCtx.fillStyle = '#FFD700';
+                    mpCtx.fill();
+                    mpCtx.strokeStyle = '#000';
+                    mpCtx.lineWidth = 1;
+                    mpCtx.stroke();
+                });
+
+                // ตรวจจับการกดปุ่ม: ใช้ Landmark 8 (ปลายนิ้วชี้) และ Landmark 4 (ปลายนิ้วโป้ง)
+                const indexTip = pts[8];
+                const thumbTip = pts[4];
+                if (indexTip && thumbTip) {
+                    // ตรวจสอบว่านิ้วชี้อยู่เหนือปุ่มหรือไม่ (ปุ่มอยู่กึ่งกลางหน้าจอ)
+                    const buttonX = w / 2;
+                    const buttonY = h / 2 + 40;
+                    const buttonRadius = Math.min(w, h) * 0.12;
+
+                    // ระยะระหว่างนิ้วชี้กับนิ้วโป้ง (ถ้าน้อยกว่า 30px ถือว่าแตะกัน)
+                    const dist = Math.hypot(indexTip.x - thumbTip.x, indexTip.y - thumbTip.y);
+                    const isPinch = dist < 30;
+
+                    // ตรวจสอบว่านิ้วชี้อยู่เหนือปุ่ม
+                    const isOverButton = Math.hypot(indexTip.x - buttonX, indexTip.y - buttonY) < buttonRadius;
+
+                    // ถ้านิ้วชี้อยู่เหนือปุ่ม และทำท่าหยิบ (pinch) -> คลิก
+                    if (isOverButton && isPinch && !isCeremonyActive) {
+                        playCeremony();
+                    }
+
+                    // แสดงสถานะ
+                    if (isOverButton) {
+                        mpCtx.fillStyle = 'rgba(255, 215, 0, 0.3)';
+                        mpCtx.beginPath();
+                        mpCtx.arc(buttonX, buttonY, buttonRadius + 10, 0, 2 * Math.PI);
+                        mpCtx.fill();
+                        if (isPinch) {
+                            mpCtx.fillStyle = '#fff';
+                            mpCtx.font = 'bold 24px Sarabun';
+                            mpCtx.shadowColor = 'rgba(0,0,0,0.8)';
+                            mpCtx.shadowBlur = 8;
+                            mpCtx.fillText('👆 คลิก!', buttonX - 40, buttonY - 60);
+                            mpCtx.shadowBlur = 0;
+                        }
+                    }
+                }
+
+                statusDiv.textContent = '🟢 ตรวจจับมือแล้ว';
+            } else {
+                handData = null;
+                statusDiv.textContent = '🟡 รอตรวจจับมือ...';
+            }
+        });
+
+        // ฟังก์ชันวาดปุ่มบน Canvas
+        function drawButton(w, h) {
+            const cx = w / 2;
+            const cy = h / 2 + 40;
+            const radius = Math.min(w, h) * 0.12;
+
+            // เงา
+            mpCtx.shadowColor = 'rgba(255, 215, 0, 0.5)';
+            mpCtx.shadowBlur = 30;
+            mpCtx.beginPath();
+            mpCtx.arc(cx, cy, radius, 0, 2 * Math.PI);
+            mpCtx.fillStyle = 'rgba(255, 215, 0, 0.15)';
+            mpCtx.fill();
+            mpCtx.shadowBlur = 0;
+
+            // วงกลมหลัก
+            const grad = mpCtx.createRadialGradient(cx-10, cy-10, 10, cx, cy, radius);
+            grad.addColorStop(0, '#ffd700');
+            grad.addColorStop(0.7, '#f0a500');
+            grad.addColorStop(1, '#b87c00');
+            mpCtx.beginPath();
+            mpCtx.arc(cx, cy, radius, 0, 2 * Math.PI);
+            mpCtx.fillStyle = grad;
+            mpCtx.fill();
+            mpCtx.strokeStyle = '#fff';
+            mpCtx.lineWidth = 3;
+            mpCtx.stroke();
+
+            // ข้อความในปุ่ม
+            mpCtx.fillStyle = '#1a1a2e';
+            mpCtx.font = `bold ${radius * 0.5}px Sarabun`;
+            mpCtx.textAlign = 'center';
+            mpCtx.textBaseline = 'middle';
+            mpCtx.fillText('👔 เปิดงาน', cx, cy);
+
+            // ป้ายบอก "ใช้นิ้วชี้กด"
+            mpCtx.fillStyle = 'rgba(255,255,255,0.7)';
+            mpCtx.font = '18px Sarabun';
+            mpCtx.textAlign = 'center';
+            mpCtx.fillText('(ใช้นิ้วชี้ + นิ้วโป้งแตะกัน)', cx, cy + radius + 40);
+        }
+
+        // ------------------ Camera ------------------
+        const cameraHelper = new Camera(video, {
+            onFrame: async () => {
+                await hands.send({ image: video });
+            },
+            width: 640,
+            height: 480
+        });
+        cameraHelper.start().then(() => {
+            statusDiv.textContent = '🟢 กล้องพร้อม';
+            resizeAll();
+        }).catch(err => {
+            statusDiv.textContent = '❌ กล้องไม่ทำงาน: ' + err.message;
+        });
+
+        // ------------------ Resize ------------------
+        function resizeAll() {
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+            mpCanvas.width = w;
+            mpCanvas.height = h;
+            threeCanvas.width = w;
+            threeCanvas.height = h;
+            renderer.setSize(w, h);
+            camera.aspect = w / h;
+            camera.updateProjectionMatrix();
+        }
+        window.addEventListener('resize', resizeAll);
+
+        // ------------------ Animation Loop (Three.js) ------------------
+        function animate() {
+            renderer.render(scene, camera);
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        // ------------------ Event Listeners ------------------
+        // ปุ่มเมาส์สำรอง
+        mouseBtn.addEventListener('click', playCeremony);
+
+        // คลิกเพื่อเปิดเสียง (autoplay policy)
+        document.addEventListener('click', function initAudioOnClick() {
+            initAudio();
+        }, { once: true });
+
+        // รอให้ทุกอย่างโหลด
+        setTimeout(resizeAll, 500);
+        setInterval(resizeAll, 3000);
+    })();
+</script>
+</body>
+</html>

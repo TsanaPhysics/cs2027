@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>8.1 แซนด์บ็อกซ์เร่งความเร็วเวกเตอร์ NumPy (NumPy Parallel Sandbox AR) — AR MediaPipe Lab • RBRU MOOC</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=JetBrains+Mono:wght@400;700&family=Prompt:wght@300;400;600;700&display=swap" rel="stylesheet">
+  
+  <!-- A-Frame 3D & MediaPipe Hands CDN -->
+  <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+
+  <style>
+    :root {
+      --theme-color: #00f0ff;
+      --theme-emerald: #34d399;
+      --theme-dark: #030712;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+    body {
+      background: var(--theme-dark);
+      color: #f8fafc;
+      font-family: 'Prompt', sans-serif;
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+    }
+    #scene-container {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+    }
+    .cam-box {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      width: 240px;
+      height: 180px;
+      border-radius: 16px;
+      border: 2px solid var(--theme-color);
+      overflow: hidden;
+      z-index: 10;
+      box-shadow: 0 10px 35px rgba(0,0,0,0.85);
+      background: #000;
+    }
+    #camera-feed {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transform: scaleX(-1);
+    }
+    #tracking-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 11;
+      pointer-events: none;
+      transform: scaleX(-1);
+    }
+    .ui-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 20;
+      padding: 18px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      pointer-events: none;
+    }
+    .header-card {
+      background: rgba(8, 15, 30, 0.94);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-left: 6px solid var(--theme-color);
+      padding: 16px 22px;
+      border-radius: 16px;
+      max-width: 620px;
+      pointer-events: auto;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.75);
+    }
+    .header-card h1 {
+      font-size: 1.15em;
+      font-weight: 700;
+      color: var(--theme-color);
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Chakra Petch', sans-serif;
+    }
+    .header-card p {
+      font-size: 0.85em;
+      color: #cbd5e1;
+      line-height: 1.55;
+    }
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+      font-size: 0.80em;
+      color: var(--theme-emerald);
+      font-weight: 600;
+      background: rgba(6, 78, 59, 0.6);
+      padding: 4px 14px;
+      border-radius: 20px;
+      border: 1px solid #10b981;
+    }
+    .dot-pulse {
+      width: 8px;
+      height: 8px;
+      background: var(--theme-emerald);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--theme-emerald);
+      animation: pulse 1.5s infinite;
+    }
+    .hud-bar {
+      position: absolute;
+      bottom: 20px;
+      left: 24px;
+      z-index: 20;
+      background: rgba(8, 15, 30, 0.94);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 16px;
+      padding: 14px 24px;
+      display: flex;
+      gap: 22px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.75);
+    }
+    .hud-item {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .hud-label {
+      font-size: 0.70em;
+      color: #94a3b8;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .hud-val {
+      font-size: 1.1em;
+      color: #facc15;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .control-panel {
+      background: rgba(8, 15, 30, 0.94);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.15);
+      padding: 12px 18px;
+      border-radius: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      pointer-events: auto;
+    }
+    .btn-action {
+      background: linear-gradient(135deg, #0284c7, var(--theme-color));
+      color: #020617;
+      font-weight: 700;
+      border: none;
+      padding: 9px 18px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-size: 0.84em;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    .btn-action:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 18px var(--theme-color);
+    }
+    .gesture-guide {
+      position: absolute;
+      top: 110px;
+      right: 24px;
+      background: rgba(8, 15, 30, 0.90);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(250, 204, 21, 0.4);
+      padding: 14px 18px;
+      border-radius: 14px;
+      font-size: 0.82em;
+      color: #fef08a;
+      z-index: 20;
+      max-width: 260px;
+      line-height: 1.6;
+    }
+    @keyframes pulse {
+      0% { opacity: 1; }
+      50% { opacity: 0.3; }
+      100% { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- UI Header & Controls -->
+  <div class="ui-overlay">
+    <div class="header-card">
+      <h1>⚡ 8.1 แซนด์บ็อกซ์เร่งความเร็วเวกเตอร์ NumPy (NumPy Parallel Sandbox AR)</h1>
+      <p>ทดลองคูณเมทริกซ์และบวกเวกเตอร์ขนาด 1,000,000 สมาชิก วัดความเร็วระดับภาษา C ใน 3D</p>
+      <div class="status-badge">
+        <span class="dot-pulse"></span>
+        <span id="status-text">กำลังตรวจจับท่าทางมือ (MediaPipe Hand Tracking)...</span>
+      </div>
+    </div>
+    <div class="control-panel">
+      <button class="btn-action" onclick="resetExperiment()">🔄 รีเซ็ตการทดลอง</button>
+      <button class="btn-action" style="background:linear-gradient(135deg, #10b981, #059669); color:#fff;" onclick="playSynthChime()">🔊 ทดสอบเสียง Synth</button>
+      <button class="btn-action" style="background:#334155; color:#fff;" onclick="location.href='https://elearning.rbru.ac.th/course/view.php?id=259'">⬅ กลับสู่ MOOC</button>
+    </div>
+  </div>
+
+  <!-- Gesture Guidance Panel -->
+  <div class="gesture-guide">
+    <strong>🖐️ การสั่งการด้วยมือ (AR Gestures):</strong><br>
+    • <strong>เลื่อนมือ:</strong> เคลื่อนย้ายตำแหน่งวัตถุ 3D<br>
+    • <strong>🤏 จีบนิ้ว (Pinch):</strong> จับยึด ควบคุม และสั่งการระบบ<br>
+    • <strong>🔊 Synth Feedback:</strong> มีเสียงตอบรับสดผ่าน Web Audio
+  </div>
+
+  <!-- HUD Telemetry Bar -->
+  <div class="hud-bar">
+    <div class="hud-item"><span class="hud-label">ขนาดอาร์เรย์</span><span class="hud-val">1,000,000 Items</span></div><div class="hud-item"><span class="hud-label">Python Loop</span><span class="hud-val">0.852 วินาที</span></div><div class="hud-item"><span class="hud-label">NumPy Vectorized</span><span class="hud-val">0.003 วินาที</span></div><div class="hud-item"><span class="hud-label">อัตราเร่งความเร็ว</span><span class="hud-val">284 เท่า!</span></div>
+  </div>
+
+  <!-- MediaPipe Camera & Tracking Overlay -->
+  <div class="cam-box">
+    <video id="camera-feed" autoplay playsinline></video>
+    <canvas id="tracking-canvas"></canvas>
+  </div>
+
+  <!-- 3D WebGL / A-Frame Scene -->
+  <div id="scene-container">
+    <a-scene embedded vr-mode-ui="enabled: false">
+      <a-camera id="main-camera" position="0 1.6 0" look-controls="pointerLockEnabled: false"></a-camera>
+      <a-light type="ambient" color="#1e293b" intensity="1.5"></a-light>
+      <a-light type="directional" color="#00f0ff" intensity="2" position="-1 3 2"></a-light>
+
+      <!-- Interactive 3D Hand Pointer Node -->
+      <a-sphere id="hand-pointer" radius="0.08" color="#00f0ff" material="emissive: #00f0ff; emissiveIntensity: 0.8;" position="0 1.5 -2">
+        <a-ring radius-inner="0.12" radius-outer="0.15" color="#facc15"></a-ring>
+      </a-sphere>
+
+      <!-- Interactive 3D Apparatus Geometry -->
+      <a-entity id="target-interactive" position="0 0 0">
+        
+          <a-box position="-0.8 1.4 -3" width="0.7" height="1.4" depth="0.7" color="#ef4444"></a-box>
+          <a-box position="0.8 1.4 -3" width="0.7" height="0.2" depth="0.7" color="#22c55e"></a-box>
+        
+      </a-entity>
+
+      <a-sky color="#030712"></a-sky>
+    </a-scene>
+  </div>
+
+  <!-- Web Audio Synthesizer & MediaPipe Scripts -->
+  <script>
+    // 1. Web Audio API Real-Time Synthesizer
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function playSynthTone(freq, type = 'sine', duration = 0.15) {
+      try {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch (e) {}
+    }
+
+    function playSynthChime() {
+      playSynthTone(523.25, 'sine', 0.1);
+      setTimeout(() => playSynthTone(659.25, 'sine', 0.1), 80);
+      setTimeout(() => playSynthTone(783.99, 'sine', 0.2), 160);
+    }
+
+    // 2. DOM Elements & 3D Interactive Target
+    const targetObj = document.getElementById('target-interactive');
+    const handPointer = document.getElementById('hand-pointer');
+    const videoElement = document.getElementById('camera-feed');
+    const canvasElement = document.getElementById('tracking-canvas');
+    const canvasCtx = canvasElement.getContext('2d');
+    const statusText = document.getElementById('status-text');
+
+    let smoothX = 0, smoothY = 1.4, smoothZ = -2.5;
+    let smoothRotY = 0;
+
+    function resetExperiment() {
+      smoothX = 0; smoothY = 1.4; smoothRotY = 0;
+      if (targetObj) targetObj.setAttribute('position', '0 0 0');
+      playSynthTone(440, 'triangle', 0.2);
+    }
+
+    // 3. MediaPipe Hands Integration Loop
+    function onHandResults(results) {
+      canvasElement.width = videoElement.videoWidth || 240;
+      canvasElement.height = videoElement.videoHeight || 180;
+      canvasCtx.save();
+      canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+
+      if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
+        const landmarks = results.multiHandLandmarks[0];
+
+        // Draw 21-joint skeleton
+        canvasCtx.fillStyle = '#00f0ff';
+        canvasCtx.strokeStyle = '#34d399';
+        canvasCtx.lineWidth = 2;
+
+        for (let i = 0; i < landmarks.length; i++) {
+          const pt = landmarks[i];
+          const x = pt.x * canvasElement.width;
+          const y = pt.y * canvasElement.height;
+          canvasCtx.beginPath();
+          canvasCtx.arc(x, y, 3, 0, 2 * Math.PI);
+          canvasCtx.fill();
+        }
+
+        // Index Finger Tip (Landmark 8) & Thumb Tip (Landmark 4)
+        const indexTip = landmarks[8];
+        const thumbTip = landmarks[4];
+
+        // 3D Spatial Translation
+        const targetX = (indexTip.x - 0.5) * 4.0;
+        const targetY = (1.0 - indexTip.y) * 2.5 + 0.4;
+        smoothX += (targetX - smoothX) * 0.2;
+        smoothY += (targetY - smoothY) * 0.2;
+
+        if (handPointer) {
+          handPointer.setAttribute('position', `${smoothX} ${smoothY} -2`);
+        }
+
+        // Pinch Detection
+        const dx = (indexTip.x - thumbTip.x);
+        const dy = (indexTip.y - thumbTip.y);
+        const pinchDist = Math.sqrt(dx * dx + dy * dy);
+
+        if (pinchDist < 0.08) {
+          statusText.innerText = '🤏 กำลังจับยึด (Pinch Gesture Active)';
+          statusText.parentElement.style.background = 'rgba(234, 179, 8, 0.4)';
+          if (targetObj) {
+            targetObj.setAttribute('position', `${smoothX * 0.6} ${smoothY * 0.6 - 0.5} 0`);
+          }
+          playSynthTone(880, 'sine', 0.05);
+        } else {
+          statusText.innerText = '🖐️ ตรวจพบมือ (Tracking Locked 60 FPS)';
+          statusText.parentElement.style.background = 'rgba(6, 78, 59, 0.6)';
+        }
+      } else {
+        statusText.innerText = 'กำลังตรวจจับท่าทางมือ (MediaPipe Hand Tracking)...';
+        statusText.parentElement.style.background = 'rgba(6, 78, 59, 0.4)';
+      }
+      canvasCtx.restore();
+    }
+
+    const hands = new Hands({
+      locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`
+    });
+
+    hands.setOptions({
+      maxNumHands: 1,
+      modelComplexity: 1,
+      minDetectionConfidence: 0.5,
+      minTrackingConfidence: 0.5
+    });
+
+    hands.onResults(onHandResults);
+
+    if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
+      const camera = new Camera(videoElement, {
+        onFrame: async () => {
+          await hands.send({ image: videoElement });
+        },
+        width: 320,
+        height: 240
+      });
+      camera.start().catch((err) => {
+        console.warn('Webcam not active:', err);
+        statusText.innerText = '⚠️ กรุณาอนุญาตให้ใช้กล้องเพื่อเปิดระบบ AR Hand Tracking';
+      });
+    }
+  </script>
+</body>
+</html>

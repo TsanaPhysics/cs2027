@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AR Physics Lab – พิธีเปิดงานสัปดาห์วิทยาศาสตร์</title>
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- MediaPipe -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils@0.3/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils@0.3/drawing_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4/hands.js" crossorigin="anonymous"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Sarabun', sans-serif;
+            background: #0a1a2a;
+            color: #fff;
+            overflow: hidden;
+            height: 100vh;
+            user-select: none;
+        }
+        #container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background: #0a1a2a;
+        }
+        video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: scaleX(1);
+            transition: transform 0.3s ease;
+            z-index: 0;
+        }
+        #mediapipe-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+        }
+        #three-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* HUD */
+        #hud {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.75);
+            padding: 18px 24px;
+            border-radius: 16px;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.15);
+            z-index: 10;
+            min-width: 220px;
+            font-size: 1.1rem;
+            line-height: 1.8;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+        #hud .title { font-weight: 700; color: #8fcbff; font-size: 1.2rem; margin-bottom: 4px; }
+        #hud .value { color: #ffd966; font-weight: 600; }
+        #hud.presentation { font-size: 1.6rem; min-width: 320px; padding: 24px 32px; top: 30px; right: 30px; }
+        #hud.presentation .title { font-size: 1.8rem; }
+
+        #graph-container {
+            position: absolute;
+            bottom: 100px;
+            left: 30px;
+            width: 360px;
+            height: 180px;
+            background: rgba(0,0,0,0.7);
+            border-radius: 16px;
+            backdrop-filter: blur(4px);
+            border: 1px solid rgba(255,255,255,0.1);
+            z-index: 10;
+            padding: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+        }
+        #graph-container canvas { width: 100%; height: 100%; border-radius: 10px; }
+
+        #status {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 10;
+            background: rgba(0,0,0,0.6);
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-size: 1rem;
+            backdrop-filter: blur(4px);
+        }
+
+        /* ปุ่มควบคุม */
+        #controls {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            justify-content: center;
+            z-index: 10;
+            background: rgba(0,0,0,0.7);
+            padding: 14px 24px;
+            border-radius: 50px;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        .btn {
+            background: #2b7be4;
+            color: #fff;
+            border: none;
+            padding: 10px 22px;
+            border-radius: 40px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+            white-space: nowrap;
+        }
+        .btn:hover { transform: scale(1.05); opacity: 0.9; }
+        .btn-secondary { background: #5e7a9a; }
+        .btn-success { background: #27ae60; }
+        .btn-warning { background: #f39c12; }
+        .btn-danger { background: #e74c3c; }
+        .btn-gold { 
+            background: linear-gradient(135deg, #ffd700, #f0a500);
+            color: #1a1a2e;
+            font-size: 1.3rem;
+            padding: 14px 36px;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+            animation: glow-gold 1.5s infinite alternate;
+        }
+        .btn-gold:hover { 
+            transform: scale(1.08);
+            box-shadow: 0 0 50px rgba(255, 215, 0, 0.6);
+        }
+        @keyframes glow-gold {
+            0% { box-shadow: 0 0 20px rgba(255, 215, 0, 0.2); }
+            100% { box-shadow: 0 0 50px rgba(255, 215, 0, 0.6); }
+        }
+        .btn-mirror.active { background: #f1c40f; color: #000; }
+        .btn-record.active { background: #e74c3c; animation: blink 0.8s infinite; }
+        .btn-sound.active { background: #2ecc71; }
+
+        /* Title Overlay สำหรับพิธีเปิด */
+        #title-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 20;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            pointer-events: none;
+            background: rgba(0,0,0,0.3);
+        }
+        #title-overlay.show {
+            display: flex;
+            animation: fadeInTitle 1.5s ease-out;
+        }
+        #title-overlay h1 {
+            font-size: 4.5rem;
+            font-weight: 700;
+            color: #ffd700;
+            text-shadow: 0 0 40px rgba(255,215,0,0.6), 0 0 80px rgba(255,215,0,0.3);
+            text-align: center;
+            padding: 0 20px;
+            letter-spacing: 4px;
+        }
+        #title-overlay h2 {
+            font-size: 2.5rem;
+            color: #fff;
+            text-shadow: 0 0 30px rgba(255,255,255,0.3);
+            margin-top: 10px;
+        }
+        #title-overlay .sub {
+            font-size: 1.5rem;
+            color: #8fcbff;
+            margin-top: 8px;
+        }
+        @keyframes fadeInTitle {
+            0% { opacity: 0; transform: scale(0.7); }
+            100% { opacity: 1; transform: scale(1); }
+        }
+
+        @media (max-width: 900px) {
+            #hud { font-size: 0.85rem; min-width: 140px; padding: 12px 16px; }
+            #graph-container { width: 200px; height: 120px; bottom: 80px; left: 15px; }
+            #controls { padding: 10px 16px; gap: 6px; bottom: 15px; }
+            .btn { padding: 6px 14px; font-size: 0.75rem; }
+            .btn-gold { font-size: 1rem; padding: 10px 24px; }
+            #title-overlay h1 { font-size: 2.5rem; }
+            #title-overlay h2 { font-size: 1.5rem; }
+        }
+        @media (max-width: 500px) {
+            #hud { display: none; }
+            #graph-container { width: 120px; height: 80px; bottom: 70px; left: 10px; }
+            .btn { padding: 4px 10px; font-size: 0.65rem; }
+            #title-overlay h1 { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+<div id="container">
+    <video id="video" autoplay playsinline></video>
+    <canvas id="mediapipe-canvas"></canvas>
+    <canvas id="three-canvas"></canvas>
+
+    <!-- Title Overlay -->
+    <div id="title-overlay">
+        <h1>🚀 งานสัปดาห์วิทยาศาสตร์แห่งชาติ</h1>
+        <h2>ประจำปี 2569</h2>
+        <div class="sub">"Intelligence Science for a Sustainable Future"</div>
+    </div>
+
+    <!-- HUD -->
+    <div id="hud">
+        <div class="title">📐 ฟิสิกส์ลูกตุ้ม</div>
+        <div>มุม θ: <span class="value" id="thetaDisplay">0.00</span> rad</div>
+        <div>ความยาว L: <span class="value" id="lengthDisplay">1.00</span> m</div>
+        <div>คาบ T: <span class="value" id="periodDisplay">—</span> s</div>
+        <div>พลังงาน: <span class="value" id="energyDisplay">0.00</span> J</div>
+        <div style="margin-top:4px; font-size:0.85rem; color:#aaa;">🎵 <span id="freqDisplay">0</span> Hz</div>
+    </div>
+
+    <!-- สถานะ -->
+    <div id="status">🟢 กำลังเริ่มต้น...</div>
+
+    <!-- กราฟ -->
+    <div id="graph-container">
+        <canvas id="graph-canvas"></canvas>
+    </div>
+
+    <!-- ปุ่มควบคุม -->
+    <div id="controls">
+        <button class="btn btn-gold" id="ceremonyBtn">👔 ประธานเปิดงาน 🎉</button>
+        <button class="btn btn-mirror" id="mirrorBtn">🔄 Mirror</button>
+        <button class="btn btn-success" id="autoBtn">▶ Auto</button>
+        <button class="btn btn-warning" id="resetBtn">↺ Reset</button>
+        <button class="btn btn-secondary" id="toggleLabelsBtn">🏷️ ป้าย</button>
+        <button class="btn btn-danger" id="recordBtn">🔴 บันทึก</button>
+        <button class="btn btn-sound" id="soundBtn">🔊 เสียง</button>
+        <button class="btn btn-secondary" id="fullscreenBtn">⛶ จอใหญ่</button>
+    </div>
+</div>
+
+<script>
+    (function() {
+        // ------------------ DOM refs ------------------
+        const container = document.getElementById('container');
+        const video = document.getElementById('video');
+        const mpCanvas = document.getElementById('mediapipe-canvas');
+        const mpCtx = mpCanvas.getContext('2d');
+        const threeCanvas = document.getElementById('three-canvas');
+        const statusDiv = document.getElementById('status');
+        const thetaDisplay = document.getElementById('thetaDisplay');
+        const lengthDisplay = document.getElementById('lengthDisplay');
+        const periodDisplay = document.getElementById('periodDisplay');
+        const energyDisplay = document.getElementById('energyDisplay');
+        const freqDisplay = document.getElementById('freqDisplay');
+        const graphCanvas = document.getElementById('graph-canvas');
+        const graphCtx = graphCanvas.getContext('2d');
+        const hud = document.getElementById('hud');
+        const graphContainer = document.getElementById('graph-container');
+        const titleOverlay = document.getElementById('title-overlay');
+
+        // ------------------ State ------------------
+        let mirrorMode = false;
+        let autoMode = false;
+        let showLabels = true;
+        let handData = { left: null, right: null };
+        let isCeremonyActive = false;
+
+        // Physics params
+        const G = 9.8;
+        let L = 1.0;
+        let theta = 0.4;
+        let omega = 0.0;
+        const history = [];
+        const MAX_HISTORY = 300;
+
+        // ------------------ Audio System ------------------
+        let audioCtx = null;
+        let oscillator = null;
+        let gainNode = null;
+        let isSoundOn = false;
+
+        function initAudio() {
+            if (audioCtx) return;
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            oscillator = audioCtx.createOscillator();
+            gainNode = audioCtx.createGain();
+            oscillator.type = 'sine';
+            oscillator.frequency.value = 220;
+            gainNode.gain.value = 0.15;
+            oscillator.connect(gainNode);
+            gainNode.connect(audioCtx.destination);
+            oscillator.start();
+            isSoundOn = true;
+            document.getElementById('soundBtn').textContent = '🔊 เสียง';
+            document.getElementById('soundBtn').classList.add('active');
+        }
+
+        function updateSound(freq) {
+            if (!audioCtx || !isSoundOn || !oscillator) return;
+            const minF = 150, maxF = 600;
+            const clamped = Math.max(0, Math.min(1, (freq + 1.5) / 3.0));
+            const mappedFreq = minF + clamped * (maxF - minF);
+            oscillator.frequency.setTargetAtTime(mappedFreq, audioCtx.currentTime, 0.05);
+            freqDisplay.textContent = Math.round(mappedFreq);
+        }
+
+        function toggleSound() {
+            const btn = document.getElementById('soundBtn');
+            if (!audioCtx) { initAudio(); return; }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+                isSoundOn = true;
+                btn.textContent = '🔊 เสียง';
+                btn.classList.add('active');
+            } else if (isSoundOn) {
+                isSoundOn = false;
+                btn.textContent = '🔇 เงียบ';
+                btn.classList.remove('active');
+                gainNode.gain.setTargetAtTime(0, audioCtx.currentTime, 0.05);
+            } else {
+                isSoundOn = true;
+                btn.textContent = '🔊 เสียง';
+                btn.classList.add('active');
+                gainNode.gain.setTargetAtTime(0.15, audioCtx.currentTime, 0.05);
+            }
+        }
+
+        // ==================== 🎊 ฟังก์ชันพิธีเปิดงาน ====================
+        function playCeremony() {
+            if (isCeremonyActive) return;
+            isCeremonyActive = true;
+            statusDiv.textContent = '🎉 เปิดงานอย่างยิ่งใหญ่!';
+
+            // 1. เสียงเปิดงาน (Epic Rising + Impact)
+            if (!audioCtx) initAudio();
+            const ctx = audioCtx;
+            if (ctx && ctx.state === 'suspended') ctx.resume();
+
+            // สร้างเสียงแบบค่อยๆ สูงขึ้น + จังหวะ
+            const now = ctx.currentTime;
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(150, now);
+            osc.frequency.exponentialRampToValueAtTime(600, now + 1.2);
+            gain.gain.setValueAtTime(0.01, now);
+            gain.gain.linearRampToValueAtTime(0.3, now + 0.8);
+            gain.gain.exponentialRampToValueAtTime(0.01, now + 1.8);
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start(now);
+            osc.stop(now + 2.0);
+
+            // เสียง impact (โทนหนัก)
+            const osc2 = ctx.createOscillator();
+            const gain2 = ctx.createGain();
+            osc2.type = 'square';
+            osc2.frequency.setValueAtTime(80, now + 1.2);
+            osc2.frequency.exponentialRampToValueAtTime(40, now + 2.0);
+            gain2.gain.setValueAtTime(0.01, now + 1.2);
+            gain2.gain.linearRampToValueAtTime(0.4, now + 1.5);
+            gain2.gain.exponentialRampToValueAtTime(0.01, now + 2.2);
+            osc2.connect(gain2);
+            gain2.connect(ctx.destination);
+            osc2.start(now + 1.2);
+            osc2.stop(now + 2.2);
+
+            // 2. เอฟเฟกต์ "ปุ๊บ" - อนุภาคระเบิดใน Three.js
+            createExplosion();
+
+            // 3. แสดงข้อความไตเติ้ล
+            titleOverlay.classList.add('show');
+
+            // 4. ดอกไม้ไฟต่อเนื่อง
+            setTimeout(() => createFirework(), 500);
+            setTimeout(() => createFirework(), 1200);
+            setTimeout(() => createFirework(), 1900);
+
+            // 5. ซ่อนข้อความหลังจาก 6 วินาที
+            setTimeout(() => {
+                titleOverlay.classList.remove('show');
+                isCeremonyActive = false;
+                statusDiv.textContent = '🎊 เปิดงานสำเร็จ!';
+            }, 6000);
+        }
+
+        // ------------------ เอฟเฟกต์ระเบิด (Three.js) ------------------
+        function createExplosion() {
+            const count = 400;
+            const colors = [0xff0000, 0xffd700, 0x00ff88, 0x00aaff, 0xff66ff, 0xffaa00];
+            const particles = [];
+            const geo = new THREE.BufferGeometry();
+            const positions = new Float32Array(count * 3);
+            const sizes = new Float32Array(count);
+            const colorArray = new Float32Array(count * 3);
+
+            for (let i = 0; i < count; i++) {
+                const r = 0.3 + Math.random() * 2.0;
+                const theta2 = Math.random() * Math.PI * 2;
+                const phi = Math.acos(2 * Math.random() - 1);
+                positions[i*3] = r * Math.sin(phi) * Math.cos(theta2);
+                positions[i*3+1] = r * Math.cos(phi) + 0.5;
+                positions[i*3+2] = r * Math.sin(phi) * Math.sin(theta2);
+                sizes[i] = 0.04 + Math.random() * 0.08;
+                const col = new THREE.Color(colors[Math.floor(Math.random() * colors.length)]);
+                colorArray[i*3] = col.r;
+                colorArray[i*3+1] = col.g;
+                colorArray[i*3+2] = col.b;
+                particles.push({
+                    vx: (Math.random() - 0.5) * 3,
+                    vy: (Math.random() - 0.5) * 3 + 1,
+                    vz: (Math.random() - 0.5) * 3,
+                    life: 1.0,
+                    decay: 0.005 + Math.random() * 0.015
+                });
+            }
+
+            geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geo.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+            geo.setAttribute('color', new THREE.BufferAttribute(colorArray, 3));
+
+            const mat = new THREE.PointsMaterial({
+                size: 0.08,
+                vertexColors: true,
+                transparent: true,
+                opacity: 1,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false
+            });
+            const points = new THREE.Points(geo, mat);
+            points.position.set(0, 0.5, 0);
+            scene.add(points);
+
+            // animate particles
+            let frame = 0;
+            const maxFrames = 120;
+            const animId = setInterval(() => {
+                frame++;
+                const pos = points.geometry.attributes.position.array;
+                let allDead = true;
+                for (let i = 0; i < count; i++) {
+                    particles[i].life -= particles[i].decay;
+                    if (particles[i].life > 0) {
+                        allDead = false;
+                        pos[i*3] += particles[i].vx * 0.04;
+                        pos[i*3+1] += particles[i].vy * 0.04 - 0.02;
+                        pos[i*3+2] += particles[i].vz * 0.04;
+                        particles[i].vy -= 0.04;
+                    } else {
+                        pos[i*3] = 0;
+                        pos[i*3+1] = -10;
+                        pos[i*3+2] = 0;
+                    }
+                }
+                points.geometry.attributes.position.needsUpdate = true;
+                mat.opacity = Math.max(0, 1 - frame / maxFrames);
+                if (allDead || frame > maxFrames) {
+                    clearInterval(animId);
+                    scene.remove(points);
+                    points.geometry.dispose();
+                    mat.dispose();
+                }
+            }, 16);
+        }
+
+        // ------------------ ดอกไม้ไฟ ------------------
+        function createFirework() {
+            const count = 150;
+            const colors = [0xff0044, 0xffdd00, 0x00ffaa, 0x4488ff, 0xff44ff];
+            const geo = new THREE.BufferGeometry();
+            const positions = new Float32Array(count * 3);
+            const colorArray = new Float32Array(count * 3);
+            const particles = [];
+
+            const cx = (Math.random() - 0.5) * 2;
+            const cy = Math.random() * 1.5 + 0.5;
+            const cz = (Math.random() - 0.5) * 2;
+
+            for (let i = 0; i < count; i++) {
+                const r = 0.1 + Math.random() * 1.5;
+                const theta2 = Math.random() * Math.PI * 2;
+                const phi = Math.acos(2 * Math.random() - 1);
+                positions[i*3] = cx + r * Math.sin(phi) * Math.cos(theta2);
+                positions[i*3+1] = cy + r * Math.cos(phi);
+                positions[i*3+2] = cz + r * Math.sin(phi) * Math.sin(theta2);
+                const col = new THREE.Color(colors[Math.floor(Math.random() * colors.length)]);
+                colorArray[i*3] = col.r;
+                colorArray[i*3+1] = col.g;
+                colorArray[i*3+2] = col.b;
+                particles.push({
+                    vx: (Math.random() - 0.5) * 2,
+                    vy: (Math.random() - 0.5) * 2 + 1,
+                    vz: (Math.random() - 0.5) * 2,
+                    life: 1.0,
+                    decay: 0.008 + Math.random() * 0.02
+                });
+            }
+
+            geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geo.setAttribute('color', new THREE.BufferAttribute(colorArray, 3));
+
+            const mat = new THREE.PointsMaterial({
+                size: 0.06,
+                vertexColors: true,
+                transparent: true,
+                opacity: 1,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false
+            });
+            const points = new THREE.Points(geo, mat);
+            scene.add(points);
+
+            let frame = 0;
+            const maxFrames = 100;
+            const animId = setInterval(() => {
+                frame++;
+                const pos = points.geometry.attributes.position.array;
+                let allDead = true;
+                for (let i = 0; i < count; i++) {
+                    particles[i].life -= particles[i].decay;
+                    if (particles[i].life > 0) {
+                        allDead = false;
+                        pos[i*3] += particles[i].vx * 0.03;
+                        pos[i*3+1] += particles[i].vy * 0.03 - 0.015;
+                        pos[i*3+2] += particles[i].vz * 0.03;
+                        particles[i].vy -= 0.03;
+                    } else {
+                        pos[i*3] = 0;
+                        pos[i*3+1] = -10;
+                        pos[i*3+2] = 0;
+                    }
+                }
+                points.geometry.attributes.position.needsUpdate = true;
+                mat.opacity = Math.max(0, 1 - frame / maxFrames);
+                if (allDead || frame > maxFrames) {
+                    clearInterval(animId);
+                    scene.remove(points);
+                    points.geometry.dispose();
+                    mat.dispose();
+                }
+            }, 16);
+        }
+
+        // ------------------ Three.js setup ------------------
+        const scene = new THREE.Scene();
+        scene.background = null;
+        const camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
+        camera.position.set(3, 2, 5);
+        camera.lookAt(0, -1, 0);
+
+        const renderer = new THREE.WebGLRenderer({
+            canvas: threeCanvas,
+            alpha: true,
+            antialias: true
+        });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+        // Lights
+        const ambient = new THREE.AmbientLight(0x404060);
+        scene.add(ambient);
+        const dirLight = new THREE.DirectionalLight(0xffffff, 1);
+        dirLight.position.set(5, 10, 7);
+        scene.add(dirLight);
+        const backLight = new THREE.DirectionalLight(0x88aaff, 0.5);
+        backLight.position.set(-3, -1, -5);
+        scene.add(backLight);
+
+        // Pendulum
+        const pendulumGroup = new THREE.Group();
+        scene.add(pendulumGroup);
+        const ropeMat = new THREE.LineBasicMaterial({ color: 0xcccccc });
+        const ropeGeo = new THREE.BufferGeometry();
+        const ropePositions = new Float32Array([0, 0, 0, 0, -1, 0]);
+        ropeGeo.setAttribute('position', new THREE.BufferAttribute(ropePositions, 3));
+        const rope = new THREE.Line(ropeGeo, ropeMat);
+        pendulumGroup.add(rope);
+
+        const sphereMat = new THREE.MeshPhongMaterial({
+            color: 0xffaa00,
+            emissive: 0x442200,
+            shininess: 30
+        });
+        const sphere = new THREE.Mesh(new THREE.SphereGeometry(0.25, 32, 32), sphereMat);
+        sphere.position.set(0, -1, 0);
+        pendulumGroup.add(sphere);
+
+        const pivotMat = new THREE.MeshBasicMaterial({ color: 0xffdd44 });
+        const pivot = new THREE.Mesh(new THREE.SphereGeometry(0.08, 16, 16), pivotMat);
+        pivot.position.set(0, 0, 0);
+        pendulumGroup.add(pivot);
+
+        const gridHelper = new THREE.GridHelper(3, 10, 0x88aaff, 0x445566);
+        gridHelper.position.y = -1.5;
+        scene.add(gridHelper);
+
+        // ------------------ Physics update ------------------
+        function updatePendulum(deltaTime) {
+            if (autoMode) {
+                const alpha = -(G / L) * Math.sin(theta);
+                omega += alpha * deltaTime;
+                theta += omega * deltaTime;
+                omega *= 0.9999;
+            } else {
+                const alpha = -(G / L) * Math.sin(theta);
+                omega += alpha * deltaTime;
+                theta += omega * deltaTime;
+                omega *= 0.9995;
+            }
+            if (theta > Math.PI/2) theta = Math.PI/2;
+            if (theta < -Math.PI/2) theta = -Math.PI/2;
+
+            const x = L * Math.sin(theta);
+            const y = -L * Math.cos(theta);
+            sphere.position.set(x, y, 0);
+            const pos = rope.geometry.attributes.position.array;
+            pos[0] = 0; pos[1] = 0; pos[2] = 0;
+            pos[3] = x; pos[4] = y; pos[5] = 0;
+            rope.geometry.attributes.position.needsUpdate = true;
+
+            thetaDisplay.textContent = theta.toFixed(3);
+            lengthDisplay.textContent = L.toFixed(2);
+            if (theta !== 0 && Math.abs(omega) > 0.01) {
+                const T = 2 * Math.PI * Math.sqrt(L / G);
+                periodDisplay.textContent = T.toFixed(3);
+            } else {
+                periodDisplay.textContent = '—';
+            }
+            const Ek = 0.5 * L * L * omega * omega;
+            const Ep = G * L * (1 - Math.cos(theta));
+            const Etot = Ek + Ep;
+            energyDisplay.textContent = Etot.toFixed(3);
+            if (isSoundOn && audioCtx) updateSound(theta);
+        }
+
+        // ------------------ Graph ------------------
+        function updateGraph() {
+            const w = graphCanvas.width;
+            const h = graphCanvas.height;
+            graphCtx.clearRect(0, 0, w, h);
+            graphCtx.fillStyle = 'rgba(0,0,0,0.4)';
+            graphCtx.fillRect(0, 0, w, h);
+            if (history.length < 2) return;
+            const maxVal = Math.max(1.2, ...history.map(Math.abs));
+            graphCtx.strokeStyle = '#00ffaa';
+            graphCtx.lineWidth = 2.5;
+            graphCtx.beginPath();
+            for (let i = 0; i < history.length; i++) {
+                const x = (i / MAX_HISTORY) * w;
+                const y = h/2 - (history[i] / maxVal) * (h/2 - 10);
+                if (i === 0) graphCtx.moveTo(x, y);
+                else graphCtx.lineTo(x, y);
+            }
+            graphCtx.stroke();
+            graphCtx.strokeStyle = 'rgba(255,255,255,0.2)';
+            graphCtx.lineWidth = 1;
+            graphCtx.setLineDash([4,4]);
+            graphCtx.beginPath();
+            graphCtx.moveTo(0, h/2);
+            graphCtx.lineTo(w, h/2);
+            graphCtx.stroke();
+            graphCtx.setLineDash([]);
+            graphCtx.fillStyle = 'rgba(255,255,255,0.5)';
+            graphCtx.font = '11px Sarabun';
+            graphCtx.fillText('θ (rad)', 6, 16);
+        }
+
+        // ------------------ MediaPipe Hands ------------------
+        const hands = new Hands({
+            locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4/${file}`
+        });
+        hands.setOptions({
+            maxNumHands: 2,
+            modelComplexity: 1,
+            minDetectionConfidence: 0.5,
+            minTrackingConfidence: 0.5
+        });
+
+        hands.onResults((results) => {
+            mpCtx.clearRect(0, 0, mpCanvas.width, mpCanvas.height);
+            if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
+                const w = mpCanvas.width;
+                const h = mpCanvas.height;
+                handData.left = null;
+                handData.right = null;
+
+                for (let idx = 0; idx < results.multiHandLandmarks.length; idx++) {
+                    const landmarks = results.multiHandLandmarks[idx];
+                    const handedness = results.multiHandedness?.[idx]?.label || 'Unknown';
+                    if (handedness === 'Left') handData.left = landmarks;
+                    else if (handedness === 'Right') handData.right = landmarks;
+
+                    const pts = landmarks.map(lm => {
+                        let x = lm.x * w;
+                        let y = lm.y * h;
+                        if (mirrorMode) x = w - x;
+                        return { x, y };
+                    });
+
+                    const connections = [
+                        [0,1],[1,2],[2,3],[3,4],[0,5],[5,6],[6,7],[7,8],
+                        [0,9],[9,10],[10,11],[11,12],[0,13],[13,14],[14,15],[15,16],
+                        [0,17],[17,18],[18,19],[19,20],[5,9],[9,13],[13,17]
+                    ];
+                    mpCtx.strokeStyle = '#00FFAA';
+                    mpCtx.lineWidth = 2.5;
+                    for (let conn of connections) {
+                        const [i, j] = conn;
+                        if (i < pts.length && j < pts.length) {
+                            mpCtx.beginPath();
+                            mpCtx.moveTo(pts[i].x, pts[i].y);
+                            mpCtx.lineTo(pts[j].x, pts[j].y);
+                            mpCtx.stroke();
+                        }
+                    }
+
+                    pts.forEach((p, i) => {
+                        mpCtx.beginPath();
+                        mpCtx.arc(p.x, p.y, 6, 0, 2 * Math.PI);
+                        mpCtx.fillStyle = '#FFD700';
+                        mpCtx.fill();
+                        mpCtx.strokeStyle = '#000';
+                        mpCtx.lineWidth = 1;
+                        mpCtx.stroke();
+                        if (showLabels) {
+                            mpCtx.fillStyle = '#fff';
+                            mpCtx.font = '10px Sarabun';
+                            mpCtx.shadowColor = 'rgba(0,0,0,0.8)';
+                            mpCtx.shadowBlur = 4;
+                            mpCtx.fillText(i, p.x + 8, p.y - 8);
+                            mpCtx.shadowBlur = 0;
+                        }
+                    });
+
+                    if (pts.length > 0) {
+                        const wrist = pts[0];
+                        mpCtx.fillStyle = '#FFD700';
+                        mpCtx.font = 'bold 16px Sarabun';
+                        mpCtx.shadowColor = 'rgba(0,0,0,0.9)';
+                        mpCtx.shadowBlur = 6;
+                        mpCtx.fillText(handedness === 'Left' ? '🖐️ ซ้าย' : '🖐️ ขวา', wrist.x - 24, wrist.y - 34);
+                        mpCtx.shadowBlur = 0;
+                    }
+                }
+
+                if (handData.left) {
+                    const lm8 = handData.left[8];
+                    let x = lm8.x;
+                    if (mirrorMode) x = 1 - x;
+                    const targetTheta = (x - 0.5) * Math.PI;
+                    theta = targetTheta;
+                    omega = 0.0;
+                }
+                if (handData.right) {
+                    const lm4 = handData.right[4];
+                    const lm8 = handData.right[8];
+                    const dx = lm4.x - lm8.x;
+                    const dy = lm4.y - lm8.y;
+                    const dist = Math.sqrt(dx*dx + dy*dy);
+                    const newL = 0.3 + dist * 5.5;
+                    L = Math.min(2.0, Math.max(0.3, newL));
+                }
+            }
+            statusDiv.textContent = '🟢 กำลังตรวจจับ';
+        });
+
+        // ------------------ Camera ------------------
+        const cameraHelper = new Camera(video, {
+            onFrame: async () => {
+                await hands.send({ image: video });
+            },
+            width: 640,
+            height: 480
+        });
+        cameraHelper.start().then(() => {
+            statusDiv.textContent = '🟢 กล้องพร้อม';
+            resizeAll();
+        }).catch(err => {
+            statusDiv.textContent = '❌ กล้องไม่ทำงาน: ' + err.message;
+        });
+
+        // ------------------ Resize ------------------
+        function resizeAll() {
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+            mpCanvas.width = w;
+            mpCanvas.height = h;
+            threeCanvas.width = w;
+            threeCanvas.height = h;
+            renderer.setSize(w, h);
+            camera.aspect = w / h;
+            camera.updateProjectionMatrix();
+            const rect = graphContainer.getBoundingClientRect();
+            graphCanvas.width = rect.width || 300;
+            graphCanvas.height = rect.height || 150;
+        }
+        window.addEventListener('resize', resizeAll);
+
+        // ------------------ Animation Loop ------------------
+        let lastTime = 0;
+        function animate(time) {
+            const delta = Math.min((time - lastTime) / 1000, 0.05);
+            lastTime = time;
+
+            if (!autoMode && handData.left) {
+                const x = L * Math.sin(theta);
+                const y = -L * Math.cos(theta);
+                sphere.position.set(x, y, 0);
+                const pos = rope.geometry.attributes.position.array;
+                pos[0] = 0; pos[1] = 0; pos[2] = 0;
+                pos[3] = x; pos[4] = y; pos[5] = 0;
+                rope.geometry.attributes.position.needsUpdate = true;
+                thetaDisplay.textContent = theta.toFixed(3);
+                lengthDisplay.textContent = L.toFixed(2);
+                const Ek = 0.5 * L * L * omega * omega;
+                const Ep = G * L * (1 - Math.cos(theta));
+                const Etot = Ek + Ep;
+                energyDisplay.textContent = Etot.toFixed(3);
+                if (isSoundOn && audioCtx) updateSound(theta);
+            } else {
+                updatePendulum(delta);
+            }
+
+            history.push(theta);
+            if (history.length > MAX_HISTORY) history.shift();
+            updateGraph();
+            renderer.render(scene, camera);
+            requestAnimationFrame(animate);
+        }
+        requestAnimationFrame(animate);
+
+        // ------------------ UI Controls ------------------
+        document.getElementById('ceremonyBtn').addEventListener('click', playCeremony);
+
+        document.getElementById('mirrorBtn').addEventListener('click', function() {
+            mirrorMode = !mirrorMode;
+            video.style.transform = mirrorMode ? 'scaleX(-1)' : 'scaleX(1)';
+            this.classList.toggle('active');
+            this.textContent = mirrorMode ? '🔄 Mirror ON' : '🔄 Mirror';
+        });
+
+        document.getElementById('autoBtn').addEventListener('click', function() {
+            autoMode = !autoMode;
+            this.textContent = autoMode ? '⏸ Auto' : '▶ Auto';
+            if (autoMode) { theta = 0.5; omega = 0.0; L = 1.0; }
+        });
+
+        document.getElementById('resetBtn').addEventListener('click', function() {
+            theta = 0.0; omega = 0.0; L = 1.0;
+            history.length = 0;
+            periodDisplay.textContent = '—';
+            energyDisplay.textContent = '0.00';
+        });
+
+        document.getElementById('toggleLabelsBtn').addEventListener('click', function() {
+            showLabels = !showLabels;
+            this.textContent = showLabels ? '🏷️ ป้าย' : '🏷️ ซ่อน';
+        });
+
+        // Recording
+        let mediaRecorder = null;
+        let recordedChunks = [];
+        let isRecording = false;
+        let stream = null;
+
+        document.getElementById('recordBtn').addEventListener('click', async function() {
+            if (isRecording) {
+                mediaRecorder.stop();
+                isRecording = false;
+                this.textContent = '🔴 บันทึก';
+                this.classList.remove('active');
+                statusDiv.textContent = '⏹️ หยุดบันทึก';
+                return;
+            }
+            try {
+                stream = await container.captureStream(30);
+                if (!stream || stream.getVideoTracks().length === 0) {
+                    statusDiv.textContent = '❌ ไม่สามารถจับภาพหน้าจอได้';
+                    return;
+                }
+                mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm;codecs=vp9' });
+                recordedChunks = [];
+                mediaRecorder.ondataavailable = (e) => { if (e.data.size > 0) recordedChunks.push(e.data); };
+                mediaRecorder.onstop = () => {
+                    const blob = new Blob(recordedChunks, { type: 'video/webm' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = `ceremony_${new Date().toISOString().slice(0,19).replace(/:/g, '-')}.webm`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    setTimeout(() => URL.revokeObjectURL(url), 10000);
+                    statusDiv.textContent = '✅ บันทึกเสร็จ!';
+                };
+                mediaRecorder.start(1000);
+                isRecording = true;
+                this.textContent = '⏹️ หยุด';
+                this.classList.add('active');
+                statusDiv.textContent = '🔴 กำลังบันทึก...';
+            } catch (err) {
+                statusDiv.textContent = '❌ บันทึกผิดพลาด: ' + err.message;
+            }
+        });
+
+        document.getElementById('soundBtn').addEventListener('click', function(e) {
+            e.stopPropagation();
+            if (!audioCtx) { initAudio(); return; }
+            toggleSound();
+        });
+
+        document.getElementById('fullscreenBtn').addEventListener('click', function() {
+            if (document.fullscreenElement) {
+                document.exitFullscreen();
+            } else {
+                document.documentElement.requestFullscreen().catch(err => {
+                    statusDiv.textContent = '❌ Fullscreen error: ' + err.message;
+                });
+            }
+        });
+
+        document.addEventListener('click', function initAudioOnClick() {
+            if (!audioCtx) initAudio();
+        }, { once: true });
+
+        setTimeout(resizeAll, 600);
+        setInterval(resizeAll, 5000);
+    })();
+</script>
+</body>
+</html>

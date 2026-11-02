@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="th" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Functional Scratch Lab | วิทย์ในวัง</title>
+    <link rel="stylesheet" href="css/style.css?v=1.1">
+    <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --scratch-event: #FFBF00;
+            --scratch-control: #FFAB19;
+            --scratch-motion: #4C97FF;
+            --scratch-sensing: #5CB1D6;
+            --scratch-variable: #FF8C1A;
+            --scratch-bg: #E1E8EE;
+            --scratch-panel: #FFFFFF;
+            --scratch-border: #D9E3EB;
+        }
+
+        body { background: #f4f7f9; overflow: hidden; }
+
+        .scratch-lab {
+            display: grid;
+            grid-template-columns: 250px 1fr 350px;
+            height: calc(100vh - 80px);
+            margin-top: 80px;
+            background: var(--scratch-bg);
+        }
+
+        /* Sidebar Palette */
+        .scratch-palette {
+            background: var(--scratch-panel);
+            border-right: 1px solid var(--scratch-border);
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            padding: 1rem;
+        }
+
+        .palette-title { font-size: 1rem; font-weight: 800; margin-bottom: 1rem; color: #333; border-bottom: 1px solid #eee; padding-bottom: 0.5rem; }
+
+        .block-template {
+            padding: 10px 15px;
+            border-radius: 4px;
+            color: white;
+            font-weight: bold;
+            font-size: 12px;
+            margin-bottom: 10px;
+            cursor: grab;
+            user-select: none;
+            position: relative;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .block-template:active { cursor: grabbing; }
+
+        /* Workspace */
+        .scratch-workspace {
+            background-color: #edf2f7;
+            background-image: radial-gradient(#cbd5e0 1px, transparent 1px);
+            background-size: 24px 24px;
+            position: relative;
+            overflow: auto;
+            padding: 50px;
+        }
+
+        /* Functional Blocks in Workspace */
+        .draggable-block {
+            position: absolute;
+            min-width: 150px;
+            padding: 12px 18px;
+            color: white;
+            font-weight: bold;
+            font-size: 13px;
+            border-radius: 4px;
+            cursor: move;
+            z-index: 10;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+
+        /* Notch styles */
+        .draggable-block::after {
+            content: ''; position: absolute; bottom: -6px; left: 20px; width: 20px; height: 6px;
+            background: inherit; border-radius: 0 0 6px 6px;
+        }
+
+        /* Stage (Right Panel) */
+        .scratch-stage-area {
+            background: white;
+            border-left: 1px solid var(--scratch-border);
+            display: flex;
+            flex-direction: column;
+            padding: 1rem;
+        }
+
+        .stage-window {
+            width: 100%;
+            aspect-ratio: 4/3;
+            background: #fff;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+
+        #sprite {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 50px;
+            transition: all 0.1s linear;
+        }
+
+        .controls-panel {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 1rem;
+            flex-grow: 1;
+        }
+
+        .flag-btn {
+            background: #4ade80;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 1rem;
+            transition: all 0.2s;
+        }
+        .flag-btn:hover { background: #22c55e; transform: scale(1.05); }
+
+        .stop-btn {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 800;
+            cursor: pointer;
+        }
+
+        .debug-console {
+            margin-top: 1rem;
+            background: #1e293b;
+            color: #4ade80;
+            font-family: monospace;
+            padding: 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            height: 100px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body class="site">
+    <header class="site-header">
+        <nav class="nav glass-nav" aria-label="Main Navigation">
+            <div class="container nav__container">
+                <a href="index.html" class="nav__logo">Game<span>Design</span>4Kids</a>
+                <ul class="nav__list" style="list-style: none; padding: 0; margin: 0; display: flex; gap: 2.5rem;">
+                    <li class="nav__item" style="list-style: none;">
+                        <a href="#" class="nav__link" style="text-decoration: none;"><span data-i18n="menu_physical">Physical Coding</span> <span class="nav__link-arrow">▼</span></a>
+                        <div class="nav__dropdown">
+                            <ul class="nav__dropdown-list" style="list-style: none; padding: 0; margin: 0;">
+                                <li style="list-style: none;"><a href="human-robot.html" class="nav__dropdown-link" data-i18n="menu_human_robot">👣 กิจกรรมสนาม (Human Robot)</a></li>
+                                <li style="list-style: none;"><a href="unplugged-collection.html" class="nav__dropdown-link" data-i18n="menu_unplugged_collection">🃏 คลังเกม Unplugged (Backup)</a></li>
+                                <li style="list-style: none;"><a href="mission-maps.html" class="nav__dropdown-link" data-i18n="menu_maps">🗺️ แผนผังการจัดสนาม</a></li>
+                                <li style="list-style: none;"><a href="print-cards.html" class="nav__dropdown-link" data-i18n="menu_print">🖨️ พิมพ์บัตรคำสั่ง (PDF)</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="nav__item" style="list-style: none;">
+                        <a href="#" class="nav__link" style="text-decoration: none;"><span data-i18n="menu_digital">Digital Logic</span> <span class="nav__link-arrow">▼</span></a>
+                        <div class="nav__dropdown">
+                            <ul class="nav__dropdown-list" style="list-style: none; padding: 0; margin: 0;">
+                                <li style="list-style: none;"><a href="unplugged-sim.html" class="nav__dropdown-link" data-i18n="menu_logic_sim">🤖 Logic Simulation</a></li>
+                                <li style="list-style: none;"><a href="builder.html" class="nav__dropdown-link" data-i18n="menu_scratch_lab">🛠️ Scratch Code Lab</a></li>
+                                <li style="list-style: none;"><a href="curriculum-hub.html" class="nav__dropdown-link" data-i18n="menu_curriculum">🎓 Curriculum Hub</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="nav__item" style="list-style: none;">
+                        <a href="#" class="nav__link" style="color: var(--clr-accent); text-decoration: none;"><span data-i18n="menu_resources">Resource Hub</span> <span class="nav__link-arrow">▼</span></a>
+                        <div class="nav__dropdown">
+                            <ul class="nav__dropdown-list" style="list-style: none; padding: 0; margin: 0;">
+                                <li style="list-style: none;"><a href="teacher-guide.html" class="nav__dropdown-link" data-i18n="menu_guide">📘 คู่มือวิทยากร (Guide)</a></li>
+                                <li style="list-style: none;"><a href="manual.html" class="nav__dropdown-link" data-i18n="menu_manual">📄 คู่มือการสอน (Manual)</a></li>
+                                <li style="list-style: none;"><a href="slides.html" class="nav__dropdown-link" data-i18n="menu_slides">📊 สไลด์ประกอบการสอน</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+                <div class="nav__actions">
+                    <button class="btn btn--small btn--outline lang-toggle">EN / ไทย</button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="scratch-lab">
+        <!-- Palette -->
+        <aside class="scratch-palette">
+            <div class="palette-title" data-i18n="lab_palette_title">Code Palette</div>
+            
+            <div class="block-template" style="background: var(--scratch-event);" draggable="true" data-type="start">
+                เมื่อคลิก 🏁 (Start)
+            </div>
+            
+            <div class="block-template" style="background: var(--scratch-motion);" draggable="true" data-type="move">
+                เดินไปข้างหน้า 10 ก้าว
+            </div>
+            
+            <div class="block-template" style="background: var(--scratch-motion);" draggable="true" data-type="turn">
+                หมุนขวา 15 องศา
+            </div>
+            
+            <div class="block-template" style="background: var(--scratch-control);" draggable="true" data-type="jump">
+                กระโดด!
+            </div>
+            
+            <div class="block-template" style="background: var(--scratch-variable);" draggable="true" data-type="say">
+                พูด "สวัสดี!"
+            </div>
+        </aside>
+
+        <!-- Workspace -->
+        <section class="scratch-workspace" id="workspace">
+            <!-- Blocks will be dropped here -->
+        </section>
+
+        <!-- Stage -->
+        <aside class="scratch-stage-area">
+            <div class="stage-window" id="stage">
+                <div id="sprite">🐱</div>
+            </div>
+
+            <div class="controls-panel">
+                <div style="display: flex; gap: 10px;">
+                    <button class="flag-btn" id="run-btn">
+                        <span>🏁</span> <span data-i18n="lab_btn_run">RUN CODE</span>
+                    </button>
+                    <button class="stop-btn" id="stop-btn">🛑 STOP</button>
+                </div>
+                
+                <div class="guide-card" style="margin-top: 10px; padding: 10px; background: #fff; border-radius: 8px; border: 1px solid #eee;">
+                    <small style="color: #64748b; font-weight: 600;" data-i18n="lab_how_to">วิธีเล่น:</small>
+                    <p style="font-size: 11px; margin: 5px 0;" data-i18n="lab_how_to_desc">ลากบล็อกคำสั่งมาวางในพื้นที่ว่าง แล้วกดปุ่มธงเขียวเพื่อเริ่มรันโปรแกรม!</p>
+                </div>
+
+                <div class="debug-console" id="console">
+                    > ระบบพร้อมทำงาน...
+                </div>
+            </div>
+        </aside>
+    </main>
+
+    <script src="js/main.js?v=1.1" defer></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const workspace = document.getElementById('workspace');
+            const sprite = document.getElementById('sprite');
+            const consoleEl = document.getElementById('console');
+            const runBtn = document.getElementById('run-btn');
+            const stopBtn = document.getElementById('stop-btn');
+            
+            let spriteState = { x: 50, y: 50, rotation: 0 };
+            let isRunning = false;
+
+            // Drag and Drop Logic
+            workspace.addEventListener('dragover', (e) => e.preventDefault());
+            
+            workspace.addEventListener('drop', (e) => {
+                e.preventDefault();
+                const type = e.dataTransfer.getData('text/plain');
+                const rect = workspace.getBoundingClientRect();
+                const x = e.clientX - rect.left - 75;
+                const y = e.clientY - rect.top - 20;
+
+                createBlock(type, x, y);
+            });
+
+            document.querySelectorAll('.block-template').forEach(template => {
+                template.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData('text/plain', e.target.getAttribute('data-type'));
+                });
+            });
+
+            function createBlock(type, x, y) {
+                const block = document.createElement('div');
+                block.className = 'draggable-block';
+                block.style.left = x + 'px';
+                block.style.top = y + 'px';
+                block.dataset.type = type;
+
+                // Color mapping
+                const colors = {
+                    start: 'var(--scratch-event)',
+                    move: 'var(--scratch-motion)',
+                    turn: 'var(--scratch-motion)',
+                    jump: 'var(--scratch-control)',
+                    say: 'var(--scratch-variable)'
+                };
+                block.style.background = colors[type];
+
+                // Text mapping
+                const labels = {
+                    start: 'เมื่อคลิก 🏁',
+                    move: 'เดินหน้า 10 ก้าว',
+                    turn: 'หมุนขวา 15 องศา',
+                    jump: 'กระโดด!',
+                    say: 'พูด "สวัสดี!"'
+                };
+                block.textContent = labels[type];
+
+                // Make draggable in workspace
+                block.draggable = true;
+                block.addEventListener('dragstart', (e) => {
+                    e.dataTransfer.setData('block-id', 'moving');
+                    block.id = 'moving';
+                });
+
+                workspace.appendChild(block);
+            }
+
+            // Execution Engine
+            async function runProgram() {
+                if (isRunning) return;
+                isRunning = true;
+                log('กำลังประมวลผลโค้ด...');
+
+                // Sort blocks by Y position to determine execution order
+                const blocks = Array.from(document.querySelectorAll('.draggable-block'))
+                    .sort((a, b) => parseInt(a.style.top) - parseInt(b.style.top));
+
+                for (const block of blocks) {
+                    if (!isRunning) break;
+                    
+                    block.style.boxShadow = '0 0 15px #fff'; // Highlight
+                    await execute(block.dataset.type);
+                    block.style.boxShadow = '0 4px 8px rgba(0,0,0,0.15)'; // Reset
+                    await new Promise(r => setTimeout(r, 500));
+                }
+
+                isRunning = false;
+                log('โปรแกรมจบการทำงาน');
+            }
+
+            async function execute(type) {
+                log(`เรียกใช้งาน: ${type}`);
+                switch(type) {
+                    case 'move':
+                        spriteState.x += 10;
+                        updateSprite();
+                        break;
+                    case 'turn':
+                        spriteState.rotation += 15;
+                        updateSprite();
+                        break;
+                    case 'jump':
+                        sprite.style.transform = `translate(-50%, -100%) rotate(${spriteState.rotation}deg)`;
+                        await new Promise(r => setTimeout(r, 200));
+                        updateSprite();
+                        break;
+                    case 'say':
+                        log('🐱: สวัสดีชาวโลก!');
+                        break;
+                }
+            }
+
+            function updateSprite() {
+                sprite.style.left = spriteState.x + '%';
+                sprite.style.top = spriteState.y + '%';
+                sprite.style.transform = `translate(-50%, -50%) rotate(${spriteState.rotation}deg)`;
+            }
+
+            function log(msg) {
+                const line = document.createElement('div');
+                line.textContent = `> ${msg}`;
+                consoleEl.appendChild(line);
+                consoleEl.scrollTop = consoleEl.scrollHeight;
+            }
+
+            runBtn.addEventListener('click', runProgram);
+            stopBtn.addEventListener('click', () => {
+                isRunning = false;
+                log('🛑 หยุดการทำงาน');
+            });
+        });
+    </script>
+</body>
+</html>

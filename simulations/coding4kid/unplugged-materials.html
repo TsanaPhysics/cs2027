@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="th" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Printable Materials | Coding4Kids</title>
+    <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;600;700&family=Outfit:wght@800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --clr-primary: #000;
+            --clr-bg: #fff;
+        }
+        
+        * { box-sizing: border-box; }
+
+        @media print {
+            .no-print { display: none !important; }
+            body { padding: 0 !important; background: white !important; }
+            .page { 
+                margin: 0 !important; 
+                box-shadow: none !important; 
+                border: 1px solid #eee !important;
+                page-break-after: always;
+            }
+        }
+
+        body { 
+            font-family: 'Anuphan', sans-serif; 
+            background: #f4f7f6; 
+            margin: 0; 
+            padding: 20px; 
+            color: #000;
+        }
+
+        /* Dashboard Header */
+        .dashboard-header {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            max-width: 900px;
+            margin: 0 auto 30px auto;
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 20px;
+            z-index: 100;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border-radius: 30px;
+            border: none;
+            cursor: pointer;
+            font-weight: 700;
+            font-family: 'Anuphan', sans-serif;
+            transition: all 0.2s;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-print { background: #000; color: white; }
+        .btn-pdf { background: #475569; color: white; }
+        .btn-back { background: #94a3b8; color: white; }
+
+        /* A4 Page Layout */
+        .page {
+            background: white;
+            width: 210mm;
+            min-height: 297mm;
+            padding: 15mm;
+            margin: 0 auto 40px auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            position: relative;
+            border: 1px solid #eee;
+        }
+
+        .page-header {
+            border-bottom: 2px solid #000;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-end;
+        }
+        .page-header h1 {
+            margin: 0;
+            font-family: 'Outfit', sans-serif;
+            font-size: 24px;
+            text-transform: uppercase;
+        }
+        .page-header span { font-size: 14px; font-weight: 600; color: #666; }
+
+        /* Cards Grid */
+        .card-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10mm;
+        }
+        .card {
+            width: calc(50% - 5mm);
+            height: 120mm;
+            border: 2px dashed #000;
+            border-radius: 15px;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            text-align: center;
+        }
+        .card-title {
+            font-family: 'Outfit', sans-serif;
+            font-size: 20px;
+            font-weight: 800;
+            margin-bottom: 5px;
+        }
+        .card img {
+            max-width: 100%;
+            height: 80mm;
+            object-fit: contain;
+            margin: auto;
+        }
+        .card .instructions {
+            background: #f8fafc;
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 13px;
+            text-align: left;
+            line-height: 1.4;
+            border-left: 4px solid #000;
+        }
+
+        /* Sorting Network Grid */
+        .id-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 5mm;
+            margin-top: 10mm;
+        }
+        .id-card {
+            border: 2px solid #000;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            font-size: 40px;
+            font-family: 'Outfit', sans-serif;
+        }
+        .id-label { font-size: 12px; color: #666; margin-bottom: 5px; font-family: 'Anuphan'; }
+
+        /* Binary Table */
+        .binary-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        .binary-table th, .binary-table td {
+            border: 1px solid #000;
+            padding: 10px;
+            text-align: center;
+        }
+        .binary-table th { background: #f1f5f9; }
+
+        /* Dot Cards */
+        .dots-container {
+            display: grid;
+            gap: 10mm;
+            margin: auto;
+        }
+        .large-dot {
+            background-color: #000 !important;
+            border: 1px solid #000;
+            border-radius: 50%;
+            margin: auto;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="no-print dashboard-header">
+        <button onclick="window.print()" class="btn btn-print">🖨️ พิมพ์ (Print)</button>
+        <button onclick="downloadPDF()" class="btn btn-pdf">📄 ดาวน์โหลด PDF</button>
+        <a href="unplugged-collection.html" class="btn btn-back">← กลับหน้ากิจกรรม</a>
+    </div>
+
+    <!-- PDF Generation Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script>
+        function downloadPDF() {
+            const element = document.body;
+            const header = document.querySelector('.dashboard-header');
+            header.style.display = 'none';
+
+            const opt = {
+                margin:       0,
+                filename:     'unplugged-materials.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2 },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+            
+            html2pdf().set(opt).from(element).save().then(() => {
+                header.style.display = 'flex';
+            });
+        }
+    </script>
+
+    <!-- PAGE 1: Monster Architect LV.1-2 -->
+    <div class="page">
+        <div class="page-header">
+            <h1>MONSTER ARCHITECT: CARDS</h1>
+            <span>LEVEL 1 & 2</span>
+        </div>
+        <div class="card-grid">
+            <div class="card">
+                <div class="card-title">MONSTER LV.1</div>
+                <img src="assets/img/monster_bw_lv1_square_1778880986053.png">
+                <div class="instructions">
+                    <b>Decomposition:</b> <br>
+                    วาดสี่เหลี่ยมจัตุรัส มีตา 2 วง และขาสี่เหลี่ยมผืนผ้า 2 ข้าง
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title">MONSTER LV.2</div>
+                <img src="assets/img/monster_bw_lv2_circle_1778880997827.png">
+                <div class="instructions">
+                    <b>Pattern:</b> <br>
+                    วาดวงกลมใหญ่ มีหูสามเหลี่ยม และตา 3 วงเรียงกัน
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 2: Monster Architect LV.3-4 -->
+    <div class="page">
+        <div class="page-header">
+            <h1>MONSTER ARCHITECT: CARDS</h1>
+            <span>LEVEL 3 & 4</span>
+        </div>
+        <div class="card-grid">
+            <div class="card">
+                <div class="card-title">MONSTER LV.3</div>
+                <img src="assets/img/monster_bw_lv3_lamp_1778881010307.png">
+                <div class="instructions">
+                    <b>Algorithm:</b> <br>
+                    วาดฐานสี่เหลี่ยมคางหมู และหัวครึ่งวงกลม
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title">MONSTER LV.4</div>
+                <img src="assets/img/monster_bw_lv4_toaster_1778881022026.png">
+                <div class="instructions">
+                    <b>Debugging:</b> <br>
+                    วาดตัวสี่เหลี่ยมขอบมน และขนมปัง 2 แผ่น
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 3: Monster Architect LV.5-6 -->
+    <div class="page">
+        <div class="page-header">
+            <h1>MONSTER ARCHITECT: CARDS</h1>
+            <span>LEVEL 5 & 6</span>
+        </div>
+        <div class="card-grid">
+            <div class="card">
+                <div class="card-title">MONSTER LV.5</div>
+                <img src="assets/img/monster_bw_lv5_fan_1778881035836.png">
+                <div class="instructions">
+                    <b>Advanced:</b> <br>
+                    วาดวงกลมที่มีใบพัด 3 แฉก และขาตั้งทรงกระบอก
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title">MONSTER LV.6</div>
+                <img src="assets/img/monster_bw_lv6_washing_machine_1778881048879.png">
+                <div class="instructions">
+                    <b>Abstraction:</b> <br>
+                    วาดสี่เหลี่ยมที่มีหน้าต่างวงกลม และแผงควบคุม
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 4: Monster Architect LV.7-8 -->
+    <div class="page">
+        <div class="page-header">
+            <h1>MONSTER ARCHITECT: CARDS</h1>
+            <span>LEVEL 7 & 8</span>
+        </div>
+        <div class="card-grid">
+            <div class="card">
+                <div class="card-title">MONSTER LV.7</div>
+                <img src="assets/img/monster_bw_lv7_tv_1778881062424.png">
+                <div class="instructions">
+                    <b>System:</b> <br>
+                    วาดจอภาพสี่เหลี่ยม มีเสาอากาศ 2 เส้น และปุ่มด้านข้าง
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-title">MONSTER LV.8</div>
+                <img src="assets/img/monster_bw_lv8_vacuum_1778881077579.png">
+                <div class="instructions">
+                    <b>Complexity:</b> <br>
+                    วาดวงทรงเตี้ยที่มีรายละเอียดเซนเซอร์รอบตัว
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 5: 6-Input Sorting Network Floor Map -->
+    <div class="page">
+        <div class="page-header">
+            <h1>6-INPUT SORTING NETWORK: FLOOR MAP</h1>
+            <span>Teacher's Diagram</span>
+        </div>
+        <div style="text-align: center; margin-top: 10mm;">
+            <img src="assets/img/sorting_network_bw_diagram_1778881480647.png" style="width: 100%; border: 2px solid #000; border-radius: 15px; padding: 10px;">
+            <div style="margin-top: 20px; text-align: left; background: #f8fafc; padding: 15px; border-left: 5px solid #000; border-radius: 10px; font-size: 14px;">
+                <h3 style="margin: 0 0 10px 0;">Setup Guide (6-Input):</h3>
+                <ol style="margin: 0; padding-left: 20px;">
+                    <li>ใช้เทปกาวติดพื้นตามเส้นในผัง (6 ทางเข้า -> 1 ทางออกสุดท้าย)</li>
+                    <li>จุดวงกลมคือจุดเปรียบเทียบ: คนเลขน้อยไปทางซ้าย คนเลขมากไปทางขวา</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 6: 8-Input Sorting Network Floor Map -->
+    <div class="page">
+        <div class="page-header">
+            <h1>8-INPUT SORTING NETWORK: FLOOR MAP</h1>
+            <span>Advanced Group Activity</span>
+        </div>
+        <div style="text-align: center; margin-top: 5mm;">
+            <img src="assets/img/sorting_network_8_input_bw_diagram_1778888192370.png" style="width: 100%; border: 2px solid #000; border-radius: 15px; padding: 10px;">
+            <div style="margin-top: 15px; text-align: left; background: #f8fafc; padding: 15px; border-left: 5px solid #000; border-radius: 10px; font-size: 14px;">
+                <h3 style="margin: 0 0 10px 0;">Setup Guide (8-Input):</h3>
+                <ol style="margin: 0; padding-left: 20px;">
+                    <li>เหมาะสำหรับกลุ่มใหญ่ (8 คน) ใช้เวลาเปรียบเทียบ 6 ขั้นตอน (A-F)</li>
+                    <li>จัดทางเข้า 8 ทาง และเดินตามเส้นเชื่อมต่อเพื่อเปรียบเทียบค่าที่จุดตัด</li>
+                    <li>ช่วยให้นักเรียนเห็นภาพอัลกอริทึมการเรียงลำดับที่ซับซ้อนขึ้น</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 7: Sorting Network ID Cards -->
+    <div class="page">
+        <div class="page-header">
+            <h1>SORTING NETWORK: ID CARDS</h1>
+            <span>Numbers 1 - 24</span>
+        </div>
+        <div class="id-grid">
+            <script>
+                for(let i=1; i<=24; i++) {
+                    document.write(`
+                        <div class="id-card">
+                            <div class="id-label">PLAYER ID</div>
+                            ${i}
+                        </div>
+                    `);
+                }
+            </script>
+        </div>
+        <div style="margin-top: 40px; border-top: 2px dashed #000; padding-top: 20px;">
+            <h3>บันทึกผลการเรียงลำดับ (Sorting Record Table)</h3>
+            <div style="display: flex; gap: 10px; margin-top: 10px;">
+                ${Array(8).fill('<div style="flex: 1; height: 40px; border: 1px solid #000; border-radius: 5px;"></div>').join('')}
+            </div>
+            <p style="font-size: 12px; margin-top: 5px; color: #666;">* เขียนตัวเลขที่ออกมาจากทางออก (1-8) เพื่อตรวจสอบความถูกต้องของการเรียงลำดับ</p>
+        </div>
+    </div>
+
+    <!-- PAGE 6: Binary Agent -->
+    <div class="page">
+        <div class="page-header">
+            <h1>BINARY SECRET AGENT</h1>
+            <span>CODE SHEET</span>
+        </div>
+        <div style="display: flex; gap: 20px;">
+            <div style="flex: 1;">
+                <img src="assets/img/binary_secret_agent_bw_card_1778881494011.png" style="width: 100%; border: 1px solid #000;">
+            </div>
+            <div style="flex: 1;">
+                <table class="binary-table">
+                    <tr><th>VALUE</th><th>16</th><th>8</th><th>4</th><th>2</th><th>1</th></tr>
+                    <tr><td>STATUS</td><td>0/1</td><td>0/1</td><td>0/1</td><td>0/1</td><td>0/1</td></tr>
+                </table>
+                <div style="margin-top: 20px; border-left: 5px solid #000; padding-left: 15px;">
+                    <b>Mission Rules:</b><br>
+                    1. Standing = 1 / Sitting = 0<br>
+                    2. Use 5 agents to represent binary numbers<br>
+                    3. Calculate the sum to find the secret code!
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PAGE 7-12: Binary Dot Cards (A4 each) -->
+    <script>
+        const dots = [1, 2, 4, 8, 16, 32];
+        dots.reverse().forEach(num => {
+            let cols = 1;
+            let dotSize = '100mm';
+            let gridWidth = '120mm';
+
+            if (num === 2) { cols = 2; dotSize = '60mm'; gridWidth = '140mm'; }
+            else if (num === 4) { cols = 2; dotSize = '60mm'; gridWidth = '140mm'; }
+            else if (num === 8) { cols = 4; dotSize = '30mm'; gridWidth = '150mm'; }
+            else if (num === 16) { cols = 4; dotSize = '30mm'; gridWidth = '150mm'; }
+            else if (num === 32) { cols = 8; dotSize = '15mm'; gridWidth = '160mm'; }
+            
+            document.write(`
+                <div class="page" style="display: flex; flex-direction: column; justify-content: center;">
+                    <div class="page-header" style="position: absolute; top: 15mm; left: 15mm; right: 15mm;">
+                        <h1>BINARY DOT CARD</h1>
+                        <span>QUANTITY: ${num}</span>
+                    </div>
+                    
+                    <div style="display: flex; justify-content: center; align-items: center; flex-grow: 1;">
+                        <div class="dots-container" style="display: grid; grid-template-columns: repeat(${cols}, 1fr); gap: 8mm; width: ${gridWidth}; justify-items: center;">
+                            ${Array(num).fill(`<div class="large-dot" style="width: ${dotSize}; height: ${dotSize};"></div>`).join('')}
+                        </div>
+                    </div>
+
+                    <div style="text-align: center; font-size: 120px; font-family: 'Outfit'; font-weight: 800; position: absolute; bottom: 15mm; left: 0; right: 0;">${num}</div>
+                </div>
+            `);
+        });
+    </script>
+
+</body>
+</html>

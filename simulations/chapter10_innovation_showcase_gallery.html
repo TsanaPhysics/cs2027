@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ห้องนิทรรศการ 3D: แกลเลอรีนวัตกรรมวิทยาการคำนวณ (Innovation Showcase Gallery)</title>
+
+  <!-- Google Fonts & FontAwesome 6 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Three.js & OrbitControls -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+  <style>
+    :root {
+      --bg-dark: #030712;
+      --card-bg: rgba(11, 19, 43, 0.94);
+      --card-border: rgba(0, 240, 255, 0.25);
+      --cyan: #00f0ff;
+      --emerald: #10b981;
+      --amber: #f59e0b;
+      --rose: #f43f5e;
+      --indigo: #6366f1;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+    body {
+      background: var(--bg-dark);
+      color: #f8fafc;
+      font-family: 'Prompt', 'Sarabun', sans-serif;
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+    }
+    #webgl-container { position: absolute; inset: 0; z-index: 1; }
+    .hud-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      pointer-events: none;
+      z-index: 10;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .hud-overlay * { pointer-events: auto; }
+
+    /* Top Bar */
+    .top-header {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.7);
+    }
+    .header-title-group h1 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Chakra Petch', sans-serif;
+    }
+    .header-title-group h1 i { color: var(--cyan); }
+    .header-subtitle { font-size: 0.8rem; color: #94a3b8; margin-top: 3px; }
+    .header-actions { display: flex; gap: 8px; }
+    .btn-header {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: #e2e8f0;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-family: inherit;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-header:hover {
+      background: rgba(0, 240, 255, 0.15);
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+
+    /* Left Control Dock */
+    .left-dock {
+      position: absolute;
+      top: 90px;
+      left: 16px;
+      width: 330px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 16px;
+      backdrop-filter: blur(14px);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-height: calc(100vh - 170px);
+      overflow-y: auto;
+    }
+    .section-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--cyan);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .proj-btn {
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      padding: 10px 12px;
+      cursor: pointer;
+      text-align: left;
+      color: #cbd5e1;
+      font-family: inherit;
+      font-size: 0.82rem;
+      transition: all 0.2s;
+    }
+    .proj-btn:hover {
+      background: rgba(2, 132, 199, 0.25);
+      border-color: var(--cyan);
+    }
+    .proj-btn.active {
+      background: linear-gradient(135deg, rgba(2, 132, 199, 0.45), rgba(0, 240, 255, 0.2));
+      border: 1.5px solid var(--cyan);
+      color: #fff;
+      font-weight: 600;
+    }
+
+    /* Right Project Detail Dock */
+    .right-dock {
+      position: absolute;
+      top: 90px;
+      right: 16px;
+      width: 340px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 18px;
+      backdrop-filter: blur(14px);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .proj-tag {
+      font-size: 0.72rem;
+      font-family: 'JetBrains Mono', monospace;
+      padding: 3px 8px;
+      border-radius: 4px;
+      background: rgba(0, 240, 255, 0.15);
+      color: var(--cyan);
+      display: inline-block;
+      margin-bottom: 4px;
+    }
+
+    /* Bottom Bar */
+    .bottom-bar {
+      margin-top: auto;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.7);
+    }
+    .tel-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+    .tel-lbl {
+      font-size: 0.7rem;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+    .tel-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <div id="webgl-container"></div>
+
+  <div class="hud-overlay">
+    <!-- Header -->
+    <header class="top-header">
+      <div class="header-title-group">
+        <h1><i class="fas fa-cubes"></i> ห้องนิทรรศการ 3D: แกลเลอรีนวัตกรรมวิทยาการคำนวณ (Innovation Showcase)</h1>
+        <div class="header-subtitle">วิชา 4124941 วิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์ | ผศ.ดร.ชีวะ ทัศนา (มรภ.รำไพพรรณี)</div>
+      </div>
+      <div class="header-actions">
+        <a href="../lessons/week_15.html" class="btn-header"><i class="fas fa-arrow-left"></i> กลับสู่บทเรียน สัปดาห์ที่ 15</a>
+      </div>
+    </header>
+
+    <!-- Left Controls -->
+    <div class="left-dock">
+      <div class="section-title"><i class="fas fa-award"></i> ผลงานนวัตกรรมนักศึกษา</div>
+      <button class="proj-btn active" onclick="selectProject(0)">
+        <strong>1. รถสำรวจแปลงเกษตร AI Vision</strong>
+        <div style="font-size: 0.72rem; color: #94a3b8; margin-top: 3px;">Edge AI ตรวจโรคพืชและระบบควบคุมหางเสือ</div>
+      </button>
+      <button class="proj-btn" onclick="selectProject(1)">
+        <strong>2. แบบจำลอง 3D ฝุ่น PM2.5</strong>
+        <div style="font-size: 0.72rem; color: #94a3b8; margin-top: 3px;">การแพร่กระจายอนุภาคตามแบบจำลอง Gaussian Plume</div>
+      </button>
+      <button class="proj-btn" onclick="selectProject(2)">
+        <strong>3. เครื่องวัด pH & ธาตุอาหารดิน IoT</strong>
+        <div style="font-size: 0.72rem; color: #94a3b8; margin-top: 3px;">เซนเซอร์ Modbus RS485 ซิงค์ขึ้น Google Sheets</div>
+      </button>
+      <button class="proj-btn" onclick="selectProject(3)">
+        <strong>4. สื่อจำลองฟิสิกส์โพรเจกไทล์ 3D</strong>
+        <div style="font-size: 0.72rem; color: #94a3b8; margin-top: 3px;">Three.js PBR สำหรับจัดการเรียนการสอน ม.4</div>
+      </button>
+    </div>
+
+    <!-- Right Project Info -->
+    <div class="right-dock" id="proj-detail-card">
+      <div>
+        <span class="proj-tag" id="tagCategory">Robotics & Agriculture</span>
+        <h3 style="font-size: 1.1rem; color: #fff; margin-top: 4px;" id="txtTitle">รถสำรวจแปลงเกษตรอัตโนมัติด้วย AI Vision</h3>
+      </div>
+      <div style="font-size: 0.8rem; color: #cbd5e1; line-height: 1.6;" id="txtDesc">
+        พัฒนาระบบตรวจจับโรคพืชในแปลงสวนผลไม้จังหวัดจันทบุรี ด้วย ESP32-CAM และโมเดล MobileNetV2 ส่งข้อมูลพิกัด GPS ผ่าน LoRa พร้อมระบบแจ้งเตือนผ่าน LINE Notify
+      </div>
+      <div style="background: rgba(15, 23, 42, 0.6); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 10px; font-size: 0.76rem; color: #94a3b8;">
+        <div><strong>คณะผู้จัดทำ:</strong> นักศึกษาชั้นปีที่ 3 สาขาวิชาวิทยาศาสตร์ทั่วไป</div>
+        <div><strong>อาจารย์ที่ปรึกษา:</strong> ผศ.ดร.ชีวะ ทัศนา</div>
+        <div><strong>ระดับผลงาน:</strong> รางวัลนวัตกรรมระดับดีเด่น (Gold Medal)</div>
+      </div>
+    </div>
+
+    <!-- Bottom Telemetry -->
+    <div class="bottom-bar">
+      <div class="tel-item">
+        <span class="tel-lbl">จำนวนผลงานจัดแสดง (Exhibits)</span>
+        <span class="tel-val" style="color: var(--cyan);">4 ผลงานนวัตกรรม</span>
+      </div>
+      <div class="tel-item">
+        <span class="tel-lbl">สภาพแวดล้อม 3D (Virtual Venue)</span>
+        <span class="tel-val" style="color: var(--emerald);">RBRU Innovation Dome</span>
+      </div>
+      <div class="tel-item">
+        <span class="tel-lbl">เกณฑ์การประเมินโครงงาน</span>
+        <span class="tel-val" style="color: var(--amber);">AUN-QA & OBE Rubrics</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let scene, camera, renderer, controls;
+    let pedestals = [];
+    let curProjIdx = 0;
+
+    const projectData = [
+      {
+        title: "รถสำรวจแปลงเกษตรอัตโนมัติด้วย AI Vision",
+        category: "Robotics & Agriculture",
+        desc: "พัฒนาระบบตรวจจับโรคพืชในแปลงสวนผลไม้จังหวัดจันทบุรี ด้วย ESP32-CAM และโมเดล MobileNetV2 ส่งข้อมูลพิกัด GPS ผ่าน LoRa พร้อมระบบแจ้งเตือนผ่าน LINE Notify",
+        color: 0x00f0ff,
+        geomType: 'rover'
+      },
+      {
+        title: "แบบจำลอง 3D การแพร่กระจายฝุ่น PM2.5",
+        category: "Atmospheric Science & Data",
+        desc: "แบบจำลองการแพร่กระจายของอนุภาคฝุ่นละอองขนาดเล็กตามกระแสลมและความกดอากาศ ด้วยสมการเชิงอนุพันธ์ Gaussian Plume Model แสดงผล 3D Heatmap",
+        color: 0xf59e0b,
+        geomType: 'cloud'
+      },
+      {
+        title: "เครื่องวัด pH & ธาตุอาหารดิน IoT",
+        category: "Smart IoT & Telemetry",
+        desc: "อุปกรณ์ตรวจวัดความเป็นกรด-ด่าง และปริมาณธาตุอาหาร N-P-K แบบแม่นยำสูง ด้วยเซนเซอร์ Modbus RTU RS485 วิเคราะห์ความเหมาะสมต่อการปลูกทุเรียน",
+        color: 0x10b981,
+        geomType: 'sensor'
+      },
+      {
+        title: "สื่อจำลองฟิสิกส์โพรเจกไทล์ 3D",
+        category: "EdTech & Interactive Simulation",
+        desc: "สื่อการเรียนรู้เสมือนจริงเรื่องการเคลื่อนที่แบบโพรเจกไทล์ในอากาศ คำนวณแรงต้านตามหลักพลศาสตร์ไหล และเปรียบเทียบค่าความเร่งโน้มถ่วงต่างดาวเคราะห์",
+        color: 0xf43f5e,
+        geomType: 'cannon'
+      }
+    ];
+
+    function init() {
+      const container = document.getElementById('webgl-container');
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x030712);
+
+      camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+      camera.position.set(0, 8, 16);
+
+      renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      container.appendChild(renderer.domElement);
+
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
+
+      scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+      const pLight = new THREE.PointLight(0x00f0ff, 1.5, 30);
+      pLight.position.set(0, 10, 5);
+      scene.add(pLight);
+
+      // Ground Hall
+      const grid = new THREE.GridHelper(30, 30, 0x00f0ff, 0x1e293b);
+      grid.position.y = -1;
+      scene.add(grid);
+
+      buildExhibitionHall();
+
+      window.addEventListener('resize', onWindowResize);
+      animate();
+    }
+
+    function buildExhibitionHall() {
+      for (let i = 0; i < 4; i++) {
+        const angle = (i / 4) * Math.PI * 2;
+        const x = Math.cos(angle) * 6;
+        const z = Math.sin(angle) * 6;
+
+        // Pedestal
+        const pGeom = new THREE.CylinderGeometry(1.2, 1.4, 1.5, 16);
+        const pMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, metalness: 0.8, roughness: 0.2 });
+        const ped = new THREE.Mesh(pGeom, pMat);
+        ped.position.set(x, -0.25, z);
+        scene.add(ped);
+
+        // Rotating Model on top
+        const mGeom = new THREE.DodecahedronGeometry(0.8, 1);
+        const mMat = new THREE.MeshStandardMaterial({
+          color: projectData[i].color,
+          metalness: 0.7,
+          roughness: 0.2,
+          emissive: projectData[i].color,
+          emissiveIntensity: 0.3
+        });
+        const model = new THREE.Mesh(mGeom, mMat);
+        model.position.set(x, 1.3, z);
+        scene.add(model);
+
+        pedestals.push({ ped, model, x, z });
+      }
+    }
+
+    function selectProject(idx) {
+      curProjIdx = idx;
+      document.querySelectorAll('.proj-btn').forEach((b, i) => b.classList.toggle('active', i === idx));
+
+      const p = projectData[idx];
+      document.getElementById('txtTitle').innerText = p.title;
+      document.getElementById('tagCategory').innerText = p.category;
+      document.getElementById('txtDesc').innerText = p.desc;
+
+      // Animate Camera Focus
+      const target = pedestals[idx];
+      controls.target.set(target.x, 1, target.z);
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+      pedestals.forEach((p, i) => {
+        p.model.rotation.y += 0.01;
+        p.model.position.y = 1.3 + Math.sin(Date.now() * 0.003 + i) * 0.1;
+      });
+      controls.update();
+      renderer.render(scene, camera);
+    }
+
+    function onWindowResize() {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    window.onload = init;
+  </script>
+</body>
+</html>

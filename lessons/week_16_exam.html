@@ -1,0 +1,1494 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แผนการสอนสัปดาห์ที่ 16 - การประเมินผลสัมฤทธิ์รวบยอดปลายภาค (Final Examination) การวัดสมรรถนะวิชาชีพครูวิทยาการคำนวณ และการตัดสินผลการเรียนรู้</title>
+    <!-- ฟอนต์ Sarabun และ Inter จาก Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- MathJax 3 for Scientific Notation & Equations -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [["$", "$"], ["\\(", "\\)"]],
+                displayMath: [["$$", "$$"], ["\\[", "\\]"]],
+                processEscapes: true,
+                processEnvironments: true
+            },
+            options: {
+                skipHtmlTags: ["script", "noscript", "style", "textarea", "pre", "code"]
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --primary: #0f172a;
+            --primary-light: #1e293b;
+            --accent: #2563eb;
+            --accent-hover: #1d4ed8;
+            --secondary: #0891b2;
+            --success: #059669;
+            --warning: #d97706;
+            --danger: #dc2626;
+            --purple: #7c3aed;
+            --amber: #f59e0b;
+            --rose: #e11d48;
+            --emerald: #10b981;
+            --indigo: #4f46e5;
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --border-focus: #94a3b8;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.08), 0 2px 4px -2px rgba(0,0,0,0.05);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.05);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Sarabun', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.8;
+            font-size: 16px;
+        }
+
+        .container {
+            max-width: 1140px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        .nav-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 1.25rem;
+            padding: 0.5rem 1rem;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.25s ease;
+        }
+
+        .nav-back:hover {
+            color: var(--accent-hover);
+            transform: translateX(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #1e3a8a 100%);
+            color: #ffffff;
+            padding: 3rem 2.5rem;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            top: -40%;
+            right: -10%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(59, 130, 246, 0.22) 0%, rgba(255, 255, 255, 0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .header-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(8px);
+            padding: 0.35rem 0.85rem;
+            border-radius: 9999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header h1 {
+            font-size: 2.1rem;
+            font-weight: 700;
+            line-height: 1.35;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.02em;
+        }
+
+        .header .subtitle {
+            font-size: 1.15rem;
+            opacity: 0.92;
+            font-weight: 400;
+            max-width: 900px;
+        }
+
+        .header .course-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 1.25rem 1.5rem;
+            border-radius: 12px;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .header .course-info span {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.92rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .tab-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 0.85rem 1.4rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            transition: all 0.25s ease;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .tab-btn:hover {
+            background: #f1f5f9;
+            color: var(--accent);
+            border-color: #cbd5e1;
+        }
+
+        .tab-btn.active {
+            background: var(--accent);
+            color: #ffffff;
+            border-color: var(--accent);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+
+        .content-section {
+            display: none;
+            animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--bg-card);
+            border-radius: 14px;
+            padding: 2.25rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+        }
+
+        .card-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding-bottom: 0.85rem;
+            border-bottom: 2px solid #f1f5f9;
+        }
+
+        .card-title i {
+            color: var(--secondary);
+        }
+
+        .highlight-box {
+            background-color: #eff6ff;
+            border-left: 4px solid var(--accent);
+            padding: 1.25rem 1.5rem;
+            border-radius: 0 10px 10px 0;
+            margin: 1.5rem 0;
+            font-size: 0.98rem;
+        }
+
+        .highlight-box.warning {
+            background-color: #fffbeb;
+            border-left-color: var(--warning);
+        }
+
+        .highlight-box.success {
+            background-color: #ecfdf5;
+            border-left-color: var(--success);
+        }
+
+        .highlight-box.purple {
+            background-color: #f5f3ff;
+            border-left-color: var(--purple);
+        }
+
+        .highlight-box.emerald {
+            background-color: #f0fdf4;
+            border-left-color: var(--emerald);
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.25rem;
+            margin: 1.5rem 0;
+        }
+
+        .feature-box {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.25s ease;
+        }
+
+        .feature-box:hover {
+            border-color: var(--accent);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .feature-box h4 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+            background: #ffffff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+        }
+
+        th, td {
+            padding: 1rem 1.25rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+
+        th {
+            background-color: #f8fafc;
+            font-weight: 700;
+            color: var(--primary);
+            border-bottom: 2px solid var(--border);
+        }
+
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background-color: #f8fafc; }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.82rem;
+            font-weight: 600;
+        }
+
+        .badge-blue { background: #dbeafe; color: #1e40af; }
+        .badge-green { background: #d1fae5; color: #065f46; }
+        .badge-purple { background: #ede9fe; color: #5b21b6; }
+        .badge-amber { background: #fef3c7; color: #92400e; }
+        .badge-red { background: #fee2e2; color: #991b1b; }
+        .badge-emerald { background: #d1fae5; color: #065f46; }
+        .badge-indigo { background: #e0e7ff; color: #3730a3; }
+
+        .time-badge {
+            background: var(--primary);
+            color: #ffffff;
+            padding: 0.35rem 0.85rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .svg-container {
+            width: 100%;
+            overflow-x: auto;
+            margin: 2rem 0;
+            border-radius: 12px;
+            background: #ffffff;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            padding: 1.5rem 1rem;
+            text-align: center;
+        }
+
+        .svg-container svg {
+            max-width: 100%;
+            height: auto;
+            display: inline-block;
+        }
+
+        .code-block {
+            background: #0f172a;
+            color: #f8fafc;
+            padding: 1.5rem;
+            border-radius: 12px;
+            font-family: 'JetBrains Mono', Consolas, Monaco, monospace;
+            font-size: 0.9rem;
+            line-height: 1.65;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            border: 1px solid #1e293b;
+            box-shadow: var(--shadow-md);
+        }
+
+        .code-comment { color: #64748b; font-style: italic; }
+        .code-keyword { color: #38bdf8; font-weight: bold; }
+        .code-func { color: #a78bfa; }
+        .code-string { color: #34d399; }
+        .code-num { color: #fbbf24; }
+
+        .quiz-option {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem 1.25rem;
+            margin-bottom: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .quiz-option:hover {
+            border-color: var(--accent);
+            background: #f8fafc;
+        }
+
+        .quiz-explanation {
+            display: none;
+            margin-top: 1.25rem;
+            padding: 1.25rem;
+            border-radius: 8px;
+            background: #f8fafc;
+            border: 1px solid var(--border);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2.5rem 0;
+            color: var(--text-muted);
+            font-size: 0.92rem;
+            border-top: 1px solid var(--border);
+            margin-top: 3rem;
+        }
+
+        @media (max-width: 768px) {
+            .header { padding: 2rem 1.5rem; }
+            .header h1 { font-size: 1.6rem; }
+            .card { padding: 1.5rem; }
+            .tab-btn { padding: 0.7rem 1.1rem; font-size: 0.88rem; }
+            .grid-2, .grid-3 { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <a href="../index.html" class="nav-back">
+        <i class="fas fa-arrow-left"></i> กลับสู่หน้าหลักรายวิชา
+    </a>
+
+    <!-- Header Section -->
+    <header class="header">
+        <div class="header-badge">
+            <i class="fas fa-graduation-cap"></i> สัปดาห์ที่ 16 • Final Examination & Summative Evaluation
+        </div>
+        <h1>การประเมินผลสัมฤทธิ์รวบยอดปลายภาค การวัดสมรรถนะวิชาชีพครูวิทยาการคำนวณ และการตัดสินผลการเรียนรู้<br><span style="font-size: 1.35rem; font-weight: 500; opacity: 0.92;">Comprehensive Final Examination, Authentic Computational Pedagogy Assessment & Course Summative Evaluation</span></h1>
+        <p class="subtitle">
+            การวัดและประเมินผลสัมฤทธิ์ทางการเรียนรู้รวบยอด (Summative Assessment 10%) ตามกรอบมาตรฐาน TQF, OBE และทฤษฎีการสอนวิทยาศาสตร์ผสานเทคโนโลยี (TPACK) ครอบคลุมการวิเคราะห์สถานการณ์จำลอง การดีบักโค้ดโปรแกรมวิทยาศาสตร์ และการตัดสินผลการเรียนอิงเกณฑ์มาตรฐานมหาวิทยาลัยราชภัฏรำไพพรรณี
+        </p>
+        <div class="course-info">
+            <span><i class="fas fa-book-open text-accent"></i> <strong>รหัสวิชา:</strong> 4124941</span>
+            <span><i class="fas fa-graduation-cap text-accent"></i> <strong>รายวิชา:</strong> วิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์</span>
+            <span><i class="fas fa-user-tie text-accent"></i> <strong>ผู้สอน:</strong> ผศ.ดร.ชีวะ ทัศนา</span>
+            <span><i class="fas fa-clock text-accent"></i> <strong>เวลาสอบ:</strong> 2 ชั่วโมง (120 นาที)</span>
+        </div>
+    </header>
+
+    <!-- Navigation Tabs (The 6-Tab Standard) -->
+    <div class="tabs">
+        <button class="tab-btn active" onclick="showTab('tab1', this)">
+            <i class="fas fa-bullseye"></i> 1. ผลลัพธ์การเรียนรู้ (WLOs)
+        </button>
+        <button class="tab-btn" onclick="showTab('tab2', this)">
+            <i class="fas fa-book-bookmark"></i> 2. สาระสำคัญ & สื่อทัศนศิลป์
+        </button>
+        <button class="tab-btn" onclick="showTab('tab3', this)">
+            <i class="fas fa-clipboard-check"></i> 3. ขั้นตอนและกติกาการสอบ
+        </button>
+        <button class="tab-btn" onclick="showTab('tab4', this)">
+            <i class="fas fa-chart-pie"></i> 4. การตัดสินเกรด & การทวนสอบ
+        </button>
+        <button class="tab-btn" onclick="showTab('tab5', this)">
+            <i class="fas fa-clipboard-question"></i> 5. ข้อสอบจำลอง HOTS
+        </button>
+        <button class="tab-btn" onclick="showTab('tab6', this)">
+            <i class="fas fa-quote-left"></i> 6. เอกสารอ้างอิง APA 7th
+        </button>
+    </div>
+
+    <!-- ==================== TAB 1: ผลลัพธ์การเรียนรู้ ==================== -->
+    <div id="tab1" class="content-section active">
+        <div class="card">
+            <h2 class="card-title">
+                <i class="fas fa-bullseye"></i> ผลลัพธ์การเรียนรู้รายสัปดาห์ (Weekly Learning Outcomes: WLOs)
+            </h2>
+            <p style="margin-bottom: 1.5rem; color: var(--text-muted);">
+                เมื่อสิ้นสุดการประเมินผลปลายภาคในสัปดาห์ที่ 16 นักศึกษาครูวิทยาศาสตร์สามารถแสดงสมรรถนะตามกรอบผลลัพธ์การเรียนรู้ 4 มิติ (K-P-A-PCK) สอดคล้องตามเกณฑ์ OBE, TQF และ Bloom's Revised Taxonomy ดังนี้:
+            </p>
+
+            <div class="grid-2">
+                <div class="feature-box">
+                    <h4><i class="fas fa-brain text-accent"></i> 1. ด้านความรู้เชิงทฤษฎีรวบยอด (Knowledge - K)</h4>
+                    <p>แสดงความรอบรู้ในทฤษฎีและมโนทัศน์รวบยอดของวิทยาการคำนวณ (Computational Thinking 4 เสาหลัก), ทฤษฎีการจัดการเรียนรู้ TPACK, หลักการลดภาระทางปัญญา (Cognitive Load Theory), กฎหมายว่าด้วยการกระทำความผิดเกี่ยวกับคอมพิวเตอร์ พ.ศ. 2560 และ พ.ร.บ. คุ้มครองข้อมูลส่วนบุคคล (PDPA) พ.ศ. 2562</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4><i class="fas fa-laptop-code text-secondary"></i> 2. ด้านทักษะและการประยุกต์ใช้ (Skills - P)</h4>
+                    <p>วิเคราะห์สถานการณ์ปัญหาในชั้นเรียนวิทยาศาสตร์ ออกแบบอัลกอริทึมและผังงานแก้ปัญหา ตรวจสอบและแก้ไขจุดบกพร่องของโค้ดโปรแกรมจำลองวิทยาศาสตร์ (Code &amp; Misconception Debugging), ออกแบบเครื่องมือวัดและประเมินผลตามสภาพจริง และวิเคราะห์ข้อมูลสถิติคะแนนห้องเรียน</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4><i class="fas fa-heart-pulse text-rose"></i> 3. ด้านเจตคติและจริยธรรมวิชาชีพ (Attitude - A)</h4>
+                    <p>ยึดมั่นในความซื่อสัตย์สุจริตทางวิชาการ (Academic Integrity) และข้อบังคับการสอบอย่างเคร่งครัด, มีจิตวิญญาณแห่งความเป็นครูวิทยาศาสตร์ที่เที่ยงธรรม, ปฏิบัติตนตามจรรยาบรรณวิชาชีพครู และเคารพสิทธิความปลอดภัยของข้อมูลดิจิทัลผู้เรียน</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4><i class="fas fa-chalkboard-user text-purple"></i> 4. ด้านความรู้เนื้อหาผสานวิธีสอนและเทคโนโลยี (PCK)</h4>
+                    <p>สังเคราะห์แผนการจัดการเรียนรู้ 5E บูรณาการวิทยาการคำนวณเพื่อแก้ไขความเข้าใจคลาดเคลื่อนทางวิทยาศาสตร์ (Scientific Misconceptions) ในบริบทโรงเรียนที่มีทรัพยากรจำกัดได้อย่างยืดหยุ่น และสะท้อนคิดเชื่อมโยงสู่การพัฒนาวิชาชีพครูวิทยาการคำนวณในศตวรรษที่ 21</p>
+                </div>
+            </div>
+
+            <div class="highlight-box emerald">
+                <div style="display: flex; gap: 0.75rem; align-items: flex-start;">
+                    <i class="fas fa-flag-checkered fa-lg text-emerald" style="margin-top: 0.2rem;"></i>
+                    <div>
+                        <strong>หมุดหมายสุดท้ายของรายวิชา (Summative Milestone):</strong>
+                        การสอบปลายภาคคิดเป็นน้ำหนัก <strong>10% ของผลการเรียนทั้งหมด</strong> (รวมคะแนนสะสมครบ 100%) เพื่อเป็นหลักฐานเชิงประจักษ์ในการทวนสอบมาตรฐานผลสัมฤทธิ์ตามกรอบหลักสูตร และเตรียมความพร้อมสู่การปฏิบัติการสอนในสถานศึกษาจริง
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== TAB 2: สาระสำคัญ & สื่อทัศนศิลป์ ==================== -->
+    <div id="tab2" class="content-section">
+        <div class="card">
+            <h2 class="card-title">
+                <i class="fas fa-book-bookmark"></i> สาระสำคัญเชิงวิชาการ & สื่อทัศนศิลป์ (Core Content & Academic Visuals)
+            </h2>
+            <p style="margin-bottom: 1.5rem; color: var(--text-muted);">
+                นำเสนอพิมพ์เขียวข้อสอบปลายภาค โครงสร้างคะแนนสะสม 100% วงจรการทวนสอบผลสัมฤทธิ์ ตารางวิเคราะห์ข้อสอบ และตัวแบบจำลองภาษา Python 3.11 ที่รันได้จริง 100% ภายใต้กฎ <strong>No Text-Wall Rule</strong>:
+            </p>
+
+            <!-- 2.1 SVG 1: Final Exam Blueprint -->
+            <div class="feature-box" style="margin-bottom: 2rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <h4><i class="fas fa-file-contract text-accent"></i> 2.1 พิมพ์เขียวข้อสอบปลายภาคและการกระจายตัวสมรรถนะ (Final Exam Blueprint &amp; Item Distribution)</h4>
+                    <span class="badge badge-blue"><i class="fas fa-chart-simple"></i> Exam Blueprint</span>
+                </div>
+                <p>
+                    ข้อสอบปลายภาคได้รับการออกแบบตามหลักการวัดผลการศึกษาของ Bloom's Taxonomy ครอบคลุม 3 ตอนสำคัญ เพื่อทดสอบความรู้ ทักษะการคิดวิเคราะห์ และการสังเคราะห์ทางวิชาชีพครู:
+                </p>
+
+                <div class="svg-container">
+                    <svg viewBox="0 0 960 500" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="bgGradExam" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#0f172a"/>
+                                <stop offset="100%" stop-color="#1e1b4b"/>
+                            </linearGradient>
+                            <linearGradient id="p1Grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#2563eb"/>
+                                <stop offset="100%" stop-color="#1d4ed8"/>
+                            </linearGradient>
+                            <linearGradient id="p2Grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#7c3aed"/>
+                                <stop offset="100%" stop-color="#6d28d9"/>
+                            </linearGradient>
+                            <linearGradient id="p3Grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#059669"/>
+                                <stop offset="100%" stop-color="#047857"/>
+                            </linearGradient>
+                            <filter id="shadowExam" x="-10%" y="-10%" width="120%" height="120%">
+                                <feDropShadow dx="0" dy="6" stdDeviation="5" flood-color="#000000" flood-opacity="0.4"/>
+                            </filter>
+                        </defs>
+
+                        <!-- Canvas Background -->
+                        <rect x="0" y="0" width="960" height="500" rx="16" fill="url(#bgGradExam)"/>
+
+                        <!-- Central Exam Title Badge -->
+                        <rect x="280" y="25" width="400" height="55" rx="27" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/>
+                        <text x="480" y="50" text-anchor="middle" fill="#ffffff" font-size="16" font-weight="bold" font-family="'Sarabun', sans-serif">FINAL EXAM BLUEPRINT (10% WEIGHT)</text>
+                        <text x="480" y="68" text-anchor="middle" fill="#93c5fd" font-size="12" font-family="'Sarabun', sans-serif">โครงสร้างข้อสอบวัดสมรรถนะรวบยอด 120 นาที</text>
+
+                        <!-- Part 1 Card -->
+                        <g filter="url(#shadowExam)">
+                            <rect x="50" y="110" width="265" height="340" rx="14" fill="url(#p1Grad)"/>
+                            <rect x="65" y="125" width="90" height="26" rx="13" fill="#ffffff" opacity="0.2"/>
+                            <text x="110" y="142" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="bold">ตอนที่ 1 (40%)</text>
+                            <text x="182" y="175" text-anchor="middle" fill="#ffffff" font-size="18" font-weight="bold" font-family="'Sarabun', sans-serif">ปรนัย 4 ตัวเลือก</text>
+                            <text x="182" y="198" text-anchor="middle" fill="#bfdbfe" font-size="14" font-family="'Sarabun', sans-serif">(20 ข้อ • 40 คะแนน)</text>
+                            
+                            <line x1="75" y1="215" x2="290" y2="215" stroke="#ffffff" stroke-width="1" opacity="0.3"/>
+                            
+                            <text x="75" y="240" fill="#ffffff" font-size="13" font-family="'Sarabun', sans-serif">• CT 4 เสาหลักในบริบทวิทย์</text>
+                            <text x="75" y="265" fill="#ffffff" font-size="13" font-family="'Sarabun', sans-serif">• ผังงาน &amp; รหัสลำลองมาตรฐาน</text>
+                            <text x="75" y="290" fill="#ffffff" font-size="13" font-family="'Sarabun', sans-serif">• ตรรกะโปรแกรม (Loop/Logic)</text>
+                            <text x="75" y="315" fill="#ffffff" font-size="13" font-family="'Sarabun', sans-serif">• ซิมูเลชันฟิสิกส์ &amp; เคมี-ชีวะ</text>
+
+                            <rect x="75" y="375" width="215" height="50" rx="8" fill="#1e293b" opacity="0.8"/>
+                            <text x="182" y="398" text-anchor="middle" fill="#38bdf8" font-size="12" font-weight="bold" font-family="'Sarabun', sans-serif">Bloom's Taxonomy:</text>
+                            <text x="182" y="415" text-anchor="middle" fill="#ffffff" font-size="11" font-family="'Sarabun', sans-serif">Remembering &amp; Understanding</text>
+                        </g>
+
+                        <!-- Part 2 Card -->
+                        <g filter="url(#shadowExam)">
+                            <rect x="348" y="110" width="265" height="340" rx="14" fill="url(#p2Grad)"/>
+                            <rect x="363" y="125" width="90" height="26" rx="13" fill="#ffffff" opacity="0.2"/>
+                            <text x="408" y="142" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="bold">ตอนที่ 2 (30%)</text>
+                            <text x="480" y="175" text-anchor="middle" fill="#ffffff" font-size="18" font-weight="bold" font-family="'Sarabun', sans-serif">ปรนัยเชิงสถานการณ์</text>
+                            <text x="480" y="198" text-anchor="middle" fill="#ede9fe" font-size="14" font-family="'Sarabun', sans-serif">(10 ข้อ • 30 คะแนน)</text>
+                            
+                            <line x1="373" y1="215" x2="588" y2="215" stroke="#ffffff" stroke-width="1" opacity="0.3"/>
+                            
+                            <text x="373" y="240" fill="#ffffff" font-size="13" font-family="'Sarabun', sans-serif">• การออกแบบแผน 5E บูรณาการ</text>
+                            <text x="373" y="265" fill="#ffffff" font-size="13" font-family="'Sarabun', sans-serif">• TPACK &amp; Cognitive Load</text>
+                            <text x="373" y="290" fill="#ffffff" font-size="13" font-family="'Sarabun', sans-serif">• PDPA ในโรงเรียน &amp; PII Masking</text>
+                            <text x="373" y="315" fill="#ffffff" font-size="13" font-family="'Sarabun', sans-serif">• Cyberbullying &amp; พ.ร.บ. คอมพ์ฯ</text>
+
+                            <rect x="373" y="375" width="215" height="50" rx="8" fill="#1e293b" opacity="0.8"/>
+                            <text x="480" y="398" text-anchor="middle" fill="#c084fc" font-size="12" font-weight="bold" font-family="'Sarabun', sans-serif">Bloom's Taxonomy:</text>
+                            <text x="480" y="415" text-anchor="middle" fill="#ffffff" font-size="11" font-family="'Sarabun', sans-serif">Applying &amp; Analyzing</text>
+                        </g>
+
+                        <!-- Part 3 Card -->
+                        <g filter="url(#shadowExam)">
+                            <rect x="645" y="110" width="265" height="340" rx="14" fill="url(#p3Grad)"/>
+                            <rect x="660" y="125" width="90" height="26" rx="13" fill="#ffffff" opacity="0.2"/>
+                            <text x="705" y="142" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="bold">ตอนที่ 3 (30%)</text>
+                            <text x="777" y="175" text-anchor="middle" fill="#ffffff" font-size="18" font-weight="bold" font-family="'Sarabun', sans-serif">อัตนัยกรณีศึกษา</text>
+                            <text x="777" y="198" text-anchor="middle" fill="#d1fae5" font-size="14" font-family="'Sarabun', sans-serif">(2 ข้อใหญ่ • 30 คะแนน)</text>
+                            
+                            <line x1="670" y1="215" x2="885" y2="215" stroke="#ffffff" stroke-width="1" opacity="0.3"/>
+                            
+                            <text x="670" y="240" fill="#ffffff" font-size="13" font-family="'Sarabun', sans-serif">• ข้อที่ 1: Code &amp; Science Debug</text>
+                            <text x="670" y="265" fill="#ffffff" font-size="13" font-family="'Sarabun', sans-serif">  แก้โค้ดซิมูเลชัน &amp; Misconception</text>
+                            <text x="670" y="290" fill="#ffffff" font-size="13" font-family="'Sarabun', sans-serif">• ข้อที่ 2: Authentic Redesign</text>
+                            <text x="670" y="315" fill="#ffffff" font-size="13" font-family="'Sarabun', sans-serif">  ออกแบบแผนสอนใน รร. ขาดแคลน</text>
+
+                            <rect x="670" y="375" width="215" height="50" rx="8" fill="#1e293b" opacity="0.8"/>
+                            <text x="777" y="398" text-anchor="middle" fill="#34d399" font-size="12" font-weight="bold" font-family="'Sarabun', sans-serif">Bloom's Taxonomy:</text>
+                            <text x="777" y="415" text-anchor="middle" fill="#ffffff" font-size="11" font-family="'Sarabun', sans-serif">Evaluating &amp; Creating</text>
+                        </g>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- 2.2 SVG 2: Summative Grading Matrix -->
+            <div class="feature-box" style="margin-bottom: 2rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <h4><i class="fas fa-chart-pie text-secondary"></i> 2.2 สัดส่วนคะแนนสะสม 100% และช่วงระดับเกรด มรภ.รำไพพรรณี (100% Course Assessment &amp; Grading Bands)</h4>
+                    <span class="badge badge-purple"><i class="fas fa-scale-balanced"></i> Grading Scheme</span>
+                </div>
+                <p>
+                    คะแนนรวมทั้งภาคการศึกษาคำนวณจาก 6 หมวดการประเมินตาม มคอ.3 และตัดเกรดอิงเกณฑ์มาตรฐานของมหาวิทยาลัยราชภัฏรำไพพรรณี:
+                </p>
+
+                <div class="svg-container">
+                    <svg viewBox="0 0 960 480" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="bgGradMatrix" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#0f172a"/>
+                                <stop offset="100%" stop-color="#1e293b"/>
+                            </linearGradient>
+                        </defs>
+
+                        <!-- Background -->
+                        <rect x="0" y="0" width="960" height="480" rx="16" fill="url(#bgGradMatrix)"/>
+
+                        <!-- Left Panel: 6 Evaluation Categories -->
+                        <rect x="40" y="30" width="460" height="420" rx="12" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+                        <text x="270" y="65" text-anchor="middle" fill="#38bdf8" font-size="16" font-weight="bold" font-family="'Sarabun', sans-serif">โครงสร้างสัดส่วนคะแนนสะสม (100%)</text>
+
+                        <!-- Item 1 -->
+                        <rect x="60" y="90" width="420" height="45" rx="8" fill="#334155"/>
+                        <text x="80" y="118" fill="#ffffff" font-size="13" font-family="'Sarabun', sans-serif">1. การมีส่วนร่วม &amp; ใบงานย่อย (Participation)</text>
+                        <rect x="400" y="98" width="65" height="28" rx="6" fill="#3b82f6"/>
+                        <text x="432" y="117" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="bold">10%</text>
+
+                        <!-- Item 2 -->
+                        <rect x="60" y="145" width="420" height="45" rx="8" fill="#334155"/>
+                        <text x="80" y="173" fill="#ffffff" font-size="13" font-family="'Sarabun', sans-serif">2. การสอบกลางภาค (Midterm Exam: Week 8)</text>
+                        <rect x="400" y="153" width="65" height="28" rx="6" fill="#8b5cf6"/>
+                        <text x="432" y="172" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="bold">20%</text>
+
+                        <!-- Item 3 -->
+                        <rect x="60" y="200" width="420" height="45" rx="8" fill="#334155"/>
+                        <text x="80" y="228" fill="#ffffff" font-size="13" font-family="'Sarabun', sans-serif">3. งานปฏิบัติการเขียนโค้ด (Programming Labs)</text>
+                        <rect x="400" y="208" width="65" height="28" rx="6" fill="#06b6d4"/>
+                        <text x="432" y="227" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="bold">20%</text>
+
+                        <!-- Item 4 -->
+                        <rect x="60" y="255" width="420" height="45" rx="8" fill="#334155"/>
+                        <text x="80" y="283" fill="#ffffff" font-size="13" font-family="'Sarabun', sans-serif">4. แผน 5E &amp; จุลการสอน (Micro-teaching 1-2)</text>
+                        <rect x="400" y="263" width="65" height="28" rx="6" fill="#10b981"/>
+                        <text x="432" y="282" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="bold">20%</text>
+
+                        <!-- Item 5 -->
+                        <rect x="60" y="310" width="420" height="45" rx="8" fill="#334155"/>
+                        <text x="80" y="338" fill="#ffffff" font-size="13" font-family="'Sarabun', sans-serif">5. โครงงาน &amp; Showcase (Final Project 360°)</text>
+                        <rect x="400" y="318" width="65" height="28" rx="6" fill="#f59e0b"/>
+                        <text x="432" y="337" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="bold">20%</text>
+
+                        <!-- Item 6 (Final Exam) -->
+                        <rect x="60" y="365" width="420" height="45" rx="8" fill="#1e1b4b" stroke="#e11d48" stroke-width="1.5"/>
+                        <text x="80" y="393" fill="#ffffff" font-size="13" font-weight="bold" font-family="'Sarabun', sans-serif">6. การสอบปลายภาค (Final Examination: Week 16)</text>
+                        <rect x="400" y="373" width="65" height="28" rx="6" fill="#e11d48"/>
+                        <text x="432" y="392" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="bold">10%</text>
+
+                        <text x="270" y="435" text-anchor="middle" fill="#94a3b8" font-size="12" font-family="'Sarabun', sans-serif">รวมทั้งสิ้น = 100 คะแนนเต็ม (สมบูรณ์ตาม มคอ.3)</text>
+
+                        <!-- Right Panel: Grade Bands RBRU -->
+                        <rect x="530" y="30" width="390" height="420" rx="12" fill="#1e293b" stroke="#334155" stroke-width="1.5"/>
+                        <text x="725" y="65" text-anchor="middle" fill="#34d399" font-size="16" font-weight="bold" font-family="'Sarabun', sans-serif">เกณฑ์การตัดเกรด มรภ.รำไพพรรณี</text>
+
+                        <!-- Grade A -->
+                        <rect x="550" y="90" width="350" height="38" rx="6" fill="#065f46"/>
+                        <text x="575" y="114" fill="#ffffff" font-size="14" font-weight="bold">A (4.0)</text>
+                        <text x="725" y="114" text-anchor="middle" fill="#d1fae5" font-size="13">80.00 - 100.00</text>
+                        <text x="870" y="114" text-anchor="end" fill="#ffffff" font-size="12">ดีเยี่ยม</text>
+
+                        <!-- Grade B+ -->
+                        <rect x="550" y="133" width="350" height="38" rx="6" fill="#047857"/>
+                        <text x="575" y="157" fill="#ffffff" font-size="14" font-weight="bold">B+ (3.5)</text>
+                        <text x="725" y="157" text-anchor="middle" fill="#d1fae5" font-size="13">75.00 - 79.99</text>
+                        <text x="870" y="157" text-anchor="end" fill="#ffffff" font-size="12">ดีมาก</text>
+
+                        <!-- Grade B -->
+                        <rect x="550" y="176" width="350" height="38" rx="6" fill="#1d4ed8"/>
+                        <text x="575" y="200" fill="#ffffff" font-size="14" font-weight="bold">B (3.0)</text>
+                        <text x="725" y="200" text-anchor="middle" fill="#bfdbfe" font-size="13">70.00 - 74.99</text>
+                        <text x="870" y="200" text-anchor="end" fill="#ffffff" font-size="12">ดี</text>
+
+                        <!-- Grade C+ -->
+                        <rect x="550" y="219" width="350" height="38" rx="6" fill="#2563eb"/>
+                        <text x="575" y="243" fill="#ffffff" font-size="14" font-weight="bold">C+ (2.5)</text>
+                        <text x="725" y="243" text-anchor="middle" fill="#bfdbfe" font-size="13">65.00 - 69.99</text>
+                        <text x="870" y="243" text-anchor="end" fill="#ffffff" font-size="12">ดีพอใช้</text>
+
+                        <!-- Grade C -->
+                        <rect x="550" y="262" width="350" height="38" rx="6" fill="#6d28d9"/>
+                        <text x="575" y="286" fill="#ffffff" font-size="14" font-weight="bold">C (2.0)</text>
+                        <text x="725" y="286" text-anchor="middle" fill="#ddd6fe" font-size="13">60.00 - 64.99</text>
+                        <text x="870" y="286" text-anchor="end" fill="#ffffff" font-size="12">พอใช้</text>
+
+                        <!-- Grade D+ -->
+                        <rect x="550" y="305" width="350" height="38" rx="6" fill="#d97706"/>
+                        <text x="575" y="329" fill="#ffffff" font-size="14" font-weight="bold">D+ (1.5)</text>
+                        <text x="725" y="329" text-anchor="middle" fill="#fef3c7" font-size="13">55.00 - 59.99</text>
+                        <text x="870" y="329" text-anchor="end" fill="#ffffff" font-size="12">อ่อน</text>
+
+                        <!-- Grade D -->
+                        <rect x="550" y="348" width="350" height="38" rx="6" fill="#b45309"/>
+                        <text x="575" y="372" fill="#ffffff" font-size="14" font-weight="bold">D (1.0)</text>
+                        <text x="725" y="372" text-anchor="middle" fill="#fef3c7" font-size="13">50.00 - 54.99</text>
+                        <text x="870" y="372" text-anchor="end" fill="#ffffff" font-size="12">อ่อนมาก</text>
+
+                        <!-- Grade F -->
+                        <rect x="550" y="391" width="350" height="38" rx="6" fill="#991b1b"/>
+                        <text x="575" y="415" fill="#ffffff" font-size="14" font-weight="bold">F (0.0)</text>
+                        <text x="725" y="415" text-anchor="middle" fill="#fee2e2" font-size="13">0.00 - 49.99</text>
+                        <text x="870" y="415" text-anchor="end" fill="#ffffff" font-size="12">ตก (ไม่ผ่าน)</text>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- 2.3 SVG 3: Continuous Quality Improvement (CQI) Loop -->
+            <div class="feature-box" style="margin-bottom: 2rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <h4><i class="fas fa-arrows-spin text-emerald"></i> 2.3 วงจรการทวนสอบมาตรฐานผลสัมฤทธิ์และการประกันคุณภาพหลักสูตร (CQI Verification Loop)</h4>
+                    <span class="badge badge-emerald"><i class="fas fa-check-double"></i> QA Verification</span>
+                </div>
+                <p>
+                    กระบวนการทวนสอบผลสัมฤทธิ์ (Verification of Learning Outcomes) เป็นกลไกประกันคุณภาพการศึกษาตามเกณฑ์ AUN-QA และมาตรฐาน มรภ.รำไพพรรณี:
+                </p>
+
+                <div class="svg-container">
+                    <svg viewBox="0 0 960 440" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="bgGradCQI" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#0f172a"/>
+                                <stop offset="100%" stop-color="#1e1b4b"/>
+                            </linearGradient>
+                        </defs>
+
+                        <!-- Background -->
+                        <rect x="0" y="0" width="960" height="440" rx="16" fill="url(#bgGradCQI)"/>
+
+                        <!-- Central Connection Circle -->
+                        <circle cx="480" cy="220" r="160" fill="none" stroke="#334155" stroke-width="3" stroke-dasharray="8,8"/>
+
+                        <!-- Center Core -->
+                        <circle cx="480" cy="220" r="60" fill="#1e293b" stroke="#38bdf8" stroke-width="2"/>
+                        <text x="480" y="215" text-anchor="middle" fill="#ffffff" font-size="14" font-weight="bold" font-family="'Sarabun', sans-serif">OBE &amp; CQI</text>
+                        <text x="480" y="235" text-anchor="middle" fill="#38bdf8" font-size="12" font-family="'Sarabun', sans-serif">การทวนสอบ</text>
+
+                        <!-- Step 1: Top (Exam Quality Audit) -->
+                        <g filter="url(#shadowExam)">
+                            <rect x="360" y="30" width="240" height="80" rx="12" fill="#2563eb"/>
+                            <text x="480" y="58" text-anchor="middle" fill="#ffffff" font-size="14" font-weight="bold" font-family="'Sarabun', sans-serif">ขั้นที่ 1: ตรวจสอบข้อสอบ</text>
+                            <text x="480" y="78" text-anchor="middle" fill="#bfdbfe" font-size="12" font-family="'Sarabun', sans-serif">เทียบสัดส่วน CLOs / PLOs</text>
+                            <text x="480" y="95" text-anchor="middle" fill="#e0e7ff" font-size="11" font-family="'Sarabun', sans-serif">คณะกรรมการประจำหลักสูตร</text>
+                        </g>
+
+                        <!-- Step 2: Right (Calibrated Grading) -->
+                        <g filter="url(#shadowExam)">
+                            <rect x="670" y="180" width="240" height="80" rx="12" fill="#7c3aed"/>
+                            <text x="790" y="208" text-anchor="middle" fill="#ffffff" font-size="14" font-weight="bold" font-family="'Sarabun', sans-serif">ขั้นที่ 2: ตรวจให้คะแนน</text>
+                            <text x="790" y="228" text-anchor="middle" fill="#ede9fe" font-size="12" font-family="'Sarabun', sans-serif">Calibrated &amp; Double-Blind</text>
+                            <text x="790" y="245" text-anchor="middle" fill="#ddd6fe" font-size="11" font-family="'Sarabun', sans-serif">เกณฑ์รูบริกส์ตามสภาพจริง</text>
+                        </g>
+
+                        <!-- Step 3: Bottom (Statistical Analysis) -->
+                        <g filter="url(#shadowExam)">
+                            <rect x="360" y="330" width="240" height="80" rx="12" fill="#059669"/>
+                            <text x="480" y="358" text-anchor="middle" fill="#ffffff" font-size="14" font-weight="bold" font-family="'Sarabun', sans-serif">ขั้นที่ 3: วิเคราะห์สถิติข้อสอบ</text>
+                            <text x="480" y="378" text-anchor="middle" fill="#d1fae5" font-size="12" font-family="'Sarabun', sans-serif">ค่าความยาก (p), อำนาจจำแนก (r)</text>
+                            <text x="480" y="395" text-anchor="middle" fill="#a7f3d0" font-size="11" font-family="'Sarabun', sans-serif">คะแนนเฉลี่ย Mean และ SD</text>
+                        </g>
+
+                        <!-- Step 4: Left (AAR & Course Revision) -->
+                        <g filter="url(#shadowExam)">
+                            <rect x="50" y="180" width="240" height="80" rx="12" fill="#d97706"/>
+                            <text x="170" y="208" text-anchor="middle" fill="#ffffff" font-size="14" font-weight="bold" font-family="'Sarabun', sans-serif">ขั้นที่ 4: สรุปผล มคอ.5</text>
+                            <text x="170" y="228" text-anchor="middle" fill="#fef3c7" font-size="12" font-family="'Sarabun', sans-serif">After Action Review (AAR)</text>
+                            <text x="170" y="245" text-anchor="middle" fill="#fde68a" font-size="11" font-family="'Sarabun', sans-serif">ปรับปรุงหลักสูตรรอบถัดไป</text>
+                        </g>
+
+                        <!-- Cycle Direction Arrows -->
+                        <path d="M 600 70 Q 750 90 770 170" fill="none" stroke="#60a5fa" stroke-width="3"/>
+                        <path d="M 790 270 Q 750 370 610 370" fill="none" stroke="#c084fc" stroke-width="3"/>
+                        <path d="M 350 370 Q 200 370 180 270" fill="none" stroke="#34d399" stroke-width="3"/>
+                        <path d="M 170 170 Q 200 70 350 70" fill="none" stroke="#fbbf24" stroke-width="3"/>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- 2.4 Academic Tables -->
+            <h3 style="color: var(--primary); margin: 2rem 0 1rem 0; font-size: 1.25rem;">
+                <i class="fas fa-table-list text-accent"></i> 2.4 ตารางวิเคราะห์เชิงวิชาการ (Exam Specification &amp; Grading Policy)
+            </h3>
+
+            <!-- Table 1 -->
+            <p><strong>ตารางที่ 1: ตารางวิเคราะห์พิมพ์เขียวข้อสอบปลายภาค (Final Examination Blueprint &amp; Item Specifications)</strong></p>
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 12%;">ตอนที่</th>
+                        <th style="width: 28%;">สาระการเรียนรู้ที่วัดสมรรถนะ</th>
+                        <th style="width: 25%;">ระดับพฤติกรรม (Bloom's Taxonomy)</th>
+                        <th style="width: 20%;">รูปแบบข้อสอบ</th>
+                        <th style="width: 15%;">น้ำหนักคะแนน</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>ตอนที่ 1</strong></td>
+                        <td>• 4 เสาหลัก Computational Thinking<br>• ผังงาน, รหัสลำลอง, ตรรกะโปรแกรมมิ่ง<br>• การประยุกต์แบบจำลองคอมพิวเตอร์ในวิทย์</td>
+                        <td>ความรู้ความจำ (Remembering)<br>ความเข้าใจ (Understanding)</td>
+                        <td>ปรนัย 4 ตัวเลือก<br>(20 ข้อ)</td>
+                        <td><span class="badge badge-blue">40 คะแนน</span><br>(40% ของข้อสอบ)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>ตอนที่ 2</strong></td>
+                        <td>• การออกแบบแผนการสอน 5E บูรณาการ CT<br>• TPACK Framework &amp; Cognitive Load<br>• จริยธรรม, PDPA, และ Cyber Safety</td>
+                        <td>การประยุกต์ใช้ (Applying)<br>การวิเคราะห์ (Analyzing)</td>
+                        <td>ปรนัยเชิงสถานการณ์<br>(10 ข้อ)</td>
+                        <td><span class="badge badge-purple">30 คะแนน</span><br>(30% ของข้อสอบ)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>ตอนที่ 3</strong></td>
+                        <td>• กรณีศึกษา 1: Code &amp; Misconception Debug<br>• กรณีศึกษา 2: การจัดการเรียนรู้ใน รร. ขาดแคลน</td>
+                        <td>การประเมินค่า (Evaluating)<br>การสร้างสรรค์ (Creating)</td>
+                        <td>อัตนัยวิเคราะห์เชิงลึก<br>(2 ข้อใหญ่)</td>
+                        <td><span class="badge badge-green">30 คะแนน</span><br>(30% ของข้อสอบ)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Table 2 -->
+            <p style="margin-top: 2rem;"><strong>ตารางที่ 2: ตารางเกณฑ์การตัดสินผลการเรียนรู้แบบอิงเกณฑ์ (Criterion-Referenced Grading Policy มรภ.รำไพพรรณี)</strong></p>
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 12%;">ระดับเกรด</th>
+                        <th style="width: 18%;">ช่วงคะแนนสะสม (100)</th>
+                        <th style="width: 12%;">ค่าระดับ (GPA)</th>
+                        <th style="width: 28%;">มาตรฐานสมรรถนะครูวิทยาศาสตร์</th>
+                        <th style="width: 30%;">ความหมายและการต่อยอดเชิงวิชาชีพ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="badge badge-green" style="font-size: 1rem;">A</span></td>
+                        <td><strong>80.00 – 100.00</strong></td>
+                        <td>4.0</td>
+                        <td><strong>ดีเยี่ยม (Mastery Innovator)</strong></td>
+                        <td>มีความเชี่ยวชาญรอบรู้ระดับสร้างนวัตกรรม พร้อมเป็นครูต้นแบบด้านวิทยาการคำนวณ</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-green">B+</span></td>
+                        <td><strong>75.00 – 79.99</strong></td>
+                        <td>3.5</td>
+                        <td><strong>ดีมาก (Advanced)</strong></td>
+                        <td>สามารถประยุกต์ใช้ TPACK และบูรณาการแนวคิดเชิงคำนวณในห้องเรียนได้อย่างมีประสิทธิภาพ</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-blue">B</span></td>
+                        <td><strong>70.00 – 74.99</strong></td>
+                        <td>3.0</td>
+                        <td><strong>ดี (Proficient)</strong></td>
+                        <td>เข้าใจหลักการและเขียนโค้ดเพื่อการจัดการเรียนรู้วิทยาศาสตร์ได้ตามมาตรฐานหลักสูตร</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-blue">C+</span></td>
+                        <td><strong>65.00 – 69.99</strong></td>
+                        <td>2.5</td>
+                        <td><strong>ดีพอใช้ (Competent)</strong></td>
+                        <td>จัดการเรียนรู้พื้นฐานได้ มีสมรรถนะผ่านเกณฑ์มาตรฐานวิชาชีพครูขั้นต่ำ</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-amber">C</span></td>
+                        <td><strong>60.00 – 64.99</strong></td>
+                        <td>2.0</td>
+                        <td><strong>พอใช้ (Developing)</strong></td>
+                        <td>ต้องพัฒนาทักษะการเขียนโปรแกรมและการเชื่อมโยง CT เพิ่มเติม</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-amber">D+</span></td>
+                        <td><strong>55.00 – 59.99</strong></td>
+                        <td>1.5</td>
+                        <td><strong>อ่อน (Basic)</strong></td>
+                        <td>มีความเข้าใจจำกัด ต้องได้รับการเสริมสร้างสมรรถนะก่อนออกฝึกสอน</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-red">D</span></td>
+                        <td><strong>50.00 – 54.99</strong></td>
+                        <td>1.0</td>
+                        <td><strong>อ่อนมาก (Passing Threshold)</strong></td>
+                        <td>ผ่านเกณฑ์ขั้นต่ำ ต้องเข้าคลินิกเสริมทักษะวิทยาการคำนวณ</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-red" style="font-size: 1rem;">F</span></td>
+                        <td><strong>0.00 – 49.99</strong></td>
+                        <td>0.0</td>
+                        <td><strong>ตก (Remedial Required)</strong></td>
+                        <td>ไม่ผ่านเกณฑ์การเรียนรู้ ต้องลงทะเบียนเรียนซ้ำในภาคการศึกษาถัดไป</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- 2.5 Python 3.11 Model Engine -->
+            <h3 style="color: var(--primary); margin: 2rem 0 1rem 0; font-size: 1.25rem;">
+                <i class="fab fa-python text-success"></i> 2.5 ตัวแบบจำลองภาษา Python 3.11: ระบบประมวลผลคะแนนรวบยอดปลายภาคและการวิเคราะห์ข้อสอบ (Comprehensive Exam &amp; Gradebook Engine)
+            </h3>
+            <p style="margin-bottom: 1rem;">
+                โมดูล Python 3.11 ที่รันได้จริง 100% สำหรับการคำนวณคะแนนสะสมทั้ง 6 หมวด ตัดเกรดมาตรฐาน มรภ.รำไพพรรณี วิเคราะห์สถิติคะแนนห้องเรียน และคำนวณค่าความยากง่าย (\(p\)) และอำนาจจำแนก (\(r\)) ของข้อสอบ:
+            </p>
+
+            <div class="code-block">
+<span class="code-comment"># ==============================================================================</span>
+<span class="code-comment"># โปรแกรม: Comprehensive Exam &amp; Gradebook Engine</span>
+<span class="code-comment"># รายวิชา: 4124941 วิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์ (Computational Science)</span>
+<span class="code-comment"># อาจารย์ผู้สอน: ผู้ช่วยศาสตราจารย์ ดร.ชีวะ ทัศนา | มหาวิทยาลัยราชภัฏรำไพพรรณี</span>
+<span class="code-comment"># มาตรฐาน: Python 3.11 Standard Library (100% Deterministic Verification)</span>
+<span class="code-comment"># ==============================================================================</span>
+
+<span class="code-keyword">import</span> unittest
+<span class="code-keyword">import</span> math
+<span class="code-keyword">from</span> typing <span class="code-keyword">import</span> Dict, Any, List
+
+<span class="code-keyword">class</span> <span class="code-func">ComprehensiveExamAndGradebookEngine</span>:
+    <span class="code-comment"># ระบบประมวลผลคะแนนรวบยอดปลายภาคและการตัดเกรดมาตรฐาน มรภ.รำไพพรรณี</span>
+
+    COURSE_WEIGHTS = {
+        <span class="code-string">'participation'</span>: <span class="code-num">0.10</span>,    <span class="code-comment"># 1. การมีส่วนร่วมและใบงานย่อย (10%)</span>
+        <span class="code-string">'midterm_exam'</span>: <span class="code-num">0.20</span>,     <span class="code-comment"># 2. สอบกลางภาค (20%)</span>
+        <span class="code-string">'programming_lab'</span>: <span class="code-num">0.20</span>,  <span class="code-comment"># 3. ปฏิบัติการเขียนโค้ด (20%)</span>
+        <span class="code-string">'microteaching'</span>: <span class="code-num">0.20</span>,    <span class="code-comment"># 4. แผนการสอนและจุลการสอน (20%)</span>
+        <span class="code-string">'final_project'</span>: <span class="code-num">0.20</span>,    <span class="code-comment"># 5. โครงงานและ Showcase (20%)</span>
+        <span class="code-string">'final_exam'</span>: <span class="code-num">0.10</span>        <span class="code-comment"># 6. สอบปลายภาค (10%)</span>
+    }
+
+    GRADE_SCALE = [
+        (<span class="code-num">80.0</span>, <span class="code-string">'A'</span>, <span class="code-num">4.0</span>, <span class="code-string">'ดีเยี่ยม (Mastery)'</span>),
+        (<span class="code-num">75.0</span>, <span class="code-string">'B+'</span>, <span class="code-num">3.5</span>, <span class="code-string">'ดีมาก (Advanced)'</span>),
+        (<span class="code-num">70.0</span>, <span class="code-string">'B'</span>, <span class="code-num">3.0</span>, <span class="code-string">'ดี (Proficient)'</span>),
+        (<span class="code-num">65.0</span>, <span class="code-string">'C+'</span>, <span class="code-num">2.5</span>, <span class="code-string">'ดีพอใช้ (Competent)'</span>),
+        (<span class="code-num">60.0</span>, <span class="code-string">'C'</span>, <span class="code-num">2.0</span>, <span class="code-string">'พอใช้ (Developing)'</span>),
+        (<span class="code-num">55.0</span>, <span class="code-string">'D+'</span>, <span class="code-num">1.5</span>, <span class="code-string">'อ่อน (Basic)'</span>),
+        (<span class="code-num">50.0</span>, <span class="code-string">'D'</span>, <span class="code-num">1.0</span>, <span class="code-string">'อ่อนมาก (Passing Threshold)'</span>),
+        (<span class="code-num">0.0</span>, <span class="code-string">'F'</span>, <span class="code-num">0.0</span>, <span class="code-string">'ไม่ผ่าน (Remedial Required)'</span>)
+    ]
+
+    <span class="code-keyword">def</span> <span class="code-func">__init__</span>(self):
+        <span class="code-keyword">pass</span>
+
+    <span class="code-keyword">def</span> <span class="code-func">calculate_student_total</span>(self, scores: Dict[str, float]) -&gt; float:
+        <span class="code-comment"># คำนวณคะแนนรวม 100% จากคะแนนดิบ 6 หมวด (คะแนนเต็ม 100 ต่อหมวด)</span>
+        total = <span class="code-num">0.0</span>
+        <span class="code-keyword">for</span> category, weight <span class="code-keyword">in</span> self.COURSE_WEIGHTS.items():
+            <span class="code-keyword">if</span> category <span class="code-keyword">not in</span> scores:
+                <span class="code-keyword">raise</span> ValueError(f<span class="code-string">"Missing category: {category}"</span>)
+            val = scores[category]
+            <span class="code-keyword">if</span> val &lt; <span class="code-num">0.0</span> <span class="code-keyword">or</span> val &gt; <span class="code-num">100.0</span>:
+                <span class="code-keyword">raise</span> ValueError(f<span class="code-string">"Score out of range [0-100] in {category}: {val}"</span>)
+            total += val * weight
+        <span class="code-keyword">return</span> round(total, <span class="code-num">2</span>)
+
+    <span class="code-keyword">def</span> <span class="code-func">determine_grade</span>(self, total_score: float) -&gt; Dict[str, Any]:
+        <span class="code-comment"># ตัดสินเกรดตามเกณฑ์คะแนนมาตรฐาน มรภ.รำไพพรรณี</span>
+        <span class="code-keyword">for</span> threshold, letter, gpa, desc <span class="code-keyword">in</span> self.GRADE_SCALE:
+            <span class="code-keyword">if</span> total_score &gt;= threshold:
+                <span class="code-keyword">return</span> {
+                    <span class="code-string">'total_score'</span>: total_score,
+                    <span class="code-string">'grade'</span>: letter,
+                    <span class="code-string">'gpa'</span>: gpa,
+                    <span class="code-string">'description'</span>: desc,
+                    <span class="code-string">'passed'</span>: letter != <span class="code-string">'F'</span>
+                }
+        <span class="code-keyword">return</span> {<span class="code-string">'total_score'</span>: total_score, <span class="code-string">'grade'</span>: <span class="code-string">'F'</span>, <span class="code-string">'gpa'</span>: <span class="code-num">0.0</span>, <span class="code-string">'description'</span>: <span class="code-string">'ไม่ผ่าน'</span>, <span class="code-string">'passed'</span>: <span class="code-keyword">False</span>}
+
+    <span class="code-keyword">def</span> <span class="code-func">analyze_item_metrics</span>(self, high_group_correct: int, low_group_correct: int, group_size: int) -&gt; Dict[str, float]:
+        <span class="code-comment"># คำนวณค่าความยากง่าย (p) และค่าอำนาจจำแนก (r) ของข้อสอบ</span>
+        <span class="code-keyword">if</span> group_size &lt;= <span class="code-num">0</span>:
+            <span class="code-keyword">raise</span> ValueError(<span class="code-string">"Group size must be positive"</span>)
+        
+        difficulty_p = (high_group_correct + low_group_correct) / (<span class="code-num">2.0</span> * group_size)
+        discrimination_r = (high_group_correct - low_group_correct) / float(group_size)
+        <span class="code-keyword">return</span> {
+            <span class="code-string">'difficulty_p'</span>: round(difficulty_p, <span class="code-num">3</span>),
+            <span class="code-string">'discrimination_r'</span>: round(discrimination_r, <span class="code-num">3</span>)
+        }
+
+    <span class="code-keyword">def</span> <span class="code-func">compute_class_statistics</span>(self, score_list: List[float]) -&gt; Dict[str, Any]:
+        <span class="code-comment"># คำนวณสถิติภาพรวมคะแนนของห้องเรียน (Mean, SD, Min, Max, Pass Rate)</span>
+        <span class="code-keyword">if</span> <span class="code-keyword">not</span> score_list:
+            <span class="code-keyword">raise</span> ValueError(<span class="code-string">"Score list is empty"</span>)
+        
+        n = len(score_list)
+        mean_score = sum(score_list) / float(n)
+        variance = sum((x - mean_score) ** <span class="code-num">2</span> <span class="code-keyword">for</span> x <span class="code-keyword">in</span> score_list) / float(n)
+        sd = math.sqrt(variance)
+        passed_count = sum(<span class="code-num">1</span> <span class="code-keyword">for</span> s <span class="code-keyword">in</span> score_list <span class="code-keyword">if</span> s &gt;= <span class="code-num">50.0</span>)
+        
+        <span class="code-keyword">return</span> {
+            <span class="code-string">'count'</span>: n,
+            <span class="code-string">'mean'</span>: round(mean_score, <span class="code-num">2</span>),
+            <span class="code-string">'sd'</span>: round(sd, <span class="code-num">2</span>),
+            <span class="code-string">'min'</span>: round(min(score_list), <span class="code-num">2</span>),
+            <span class="code-string">'max'</span>: round(max(score_list), <span class="code-num">2</span>),
+            <span class="code-string">'pass_rate_pct'</span>: round((passed_count / float(n)) * <span class="code-num">100.0</span>, <span class="code-num">1</span>)
+        }
+
+<span class="code-comment"># ==============================================================================</span>
+<span class="code-comment"># ระบบการทดสอบ Unit Test อัตโนมัติ (100% Deterministic Verification)</span>
+<span class="code-comment"># ==============================================================================</span>
+
+<span class="code-keyword">class</span> <span class="code-func">TestGradebookEngine</span>(unittest.TestCase):
+    <span class="code-keyword">def</span> <span class="code-func">setUp</span>(self):
+        self.engine = ComprehensiveExamAndGradebookEngine()
+
+    <span class="code-keyword">def</span> <span class="code-func">test_perfect_grade_a_calculation</span>(self):
+        scores = {k: <span class="code-num">95.0</span> <span class="code-keyword">for</span> k <span class="code-keyword">in</span> self.engine.COURSE_WEIGHTS}
+        total = self.engine.calculate_student_total(scores)
+        self.assertEqual(total, <span class="code-num">95.0</span>)
+        res = self.engine.determine_grade(total)
+        self.assertEqual(res[<span class="code-string">'grade'</span>], <span class="code-string">'A'</span>)
+        self.assertEqual(res[<span class="code-string">'gpa'</span>], <span class="code-num">4.0</span>)
+        self.assertTrue(res[<span class="code-string">'passed'</span>])
+
+    <span class="code-keyword">def</span> <span class="code-func">test_grading_thresholds</span>(self):
+        self.assertEqual(self.engine.determine_grade(<span class="code-num">80.0</span>)[<span class="code-string">'grade'</span>], <span class="code-string">'A'</span>)
+        self.assertEqual(self.engine.determine_grade(<span class="code-num">79.9</span>)[<span class="code-string">'grade'</span>], <span class="code-string">'B+'</span>)
+        self.assertEqual(self.engine.determine_grade(<span class="code-num">75.0</span>)[<span class="code-string">'grade'</span>], <span class="code-string">'B+'</span>)
+        self.assertEqual(self.engine.determine_grade(<span class="code-num">70.0</span>)[<span class="code-string">'grade'</span>], <span class="code-string">'B'</span>)
+        self.assertEqual(self.engine.determine_grade(<span class="code-num">65.0</span>)[<span class="code-string">'grade'</span>], <span class="code-string">'C+'</span>)
+        self.assertEqual(self.engine.determine_grade(<span class="code-num">60.0</span>)[<span class="code-string">'grade'</span>], <span class="code-string">'C'</span>)
+        self.assertEqual(self.engine.determine_grade(<span class="code-num">55.0</span>)[<span class="code-string">'grade'</span>], <span class="code-string">'D+'</span>)
+        self.assertEqual(self.engine.determine_grade(<span class="code-num">50.0</span>)[<span class="code-string">'grade'</span>], <span class="code-string">'D'</span>)
+        self.assertEqual(self.engine.determine_grade(<span class="code-num">49.9</span>)[<span class="code-string">'grade'</span>], <span class="code-string">'F'</span>)
+
+    <span class="code-keyword">def</span> <span class="code-func">test_item_analysis_metrics</span>(self):
+        metrics = self.engine.analyze_item_metrics(<span class="code-num">10</span>, <span class="code-num">4</span>, <span class="code-num">15</span>)
+        self.assertEqual(metrics[<span class="code-string">'difficulty_p'</span>], round(<span class="code-num">14</span> / <span class="code-num">30.0</span>, <span class="code-num">3</span>))
+        self.assertEqual(metrics[<span class="code-string">'discrimination_r'</span>], round(<span class="code-num">6</span> / <span class="code-num">15.0</span>, <span class="code-num">3</span>))
+
+    <span class="code-keyword">def</span> <span class="code-func">test_class_statistics_summary</span>(self):
+        scores = [<span class="code-num">85.0</span>, <span class="code-num">90.0</span>, <span class="code-num">75.0</span>, <span class="code-num">60.0</span>, <span class="code-num">45.0</span>]
+        stats = self.engine.compute_class_statistics(scores)
+        self.assertEqual(stats[<span class="code-string">'count'</span>], <span class="code-num">5</span>)
+        self.assertEqual(stats[<span class="code-string">'mean'</span>], <span class="code-num">71.0</span>)
+        self.assertEqual(stats[<span class="code-string">'max'</span>], <span class="code-num">90.0</span>)
+        self.assertEqual(stats[<span class="code-string">'min'</span>], <span class="code-num">45.0</span>)
+        self.assertEqual(stats[<span class="code-string">'pass_rate_pct'</span>], <span class="code-num">80.0</span>)
+
+    <span class="code-keyword">def</span> <span class="code-func">test_invalid_score_exception</span>(self):
+        bad_scores = {k: <span class="code-num">90.0</span> <span class="code-keyword">for</span> k <span class="code-keyword">in</span> self.engine.COURSE_WEIGHTS}
+        bad_scores[<span class="code-string">'final_exam'</span>] = <span class="code-num">105.0</span>
+        <span class="code-keyword">with</span> self.assertRaises(ValueError):
+            self.engine.calculate_student_total(bad_scores)
+
+<span class="code-keyword">if</span> __name__ == <span class="code-string">"__main__"</span>:
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestGradebookEngine)
+    runner = unittest.TextTestRunner(verbosity=<span class="code-num">2</span>)
+    result = runner.run(suite)
+    print(f<span class="code-string">"Unit Test Results: Ran {result.testsRun} tests, Errors: {len(result.errors)}, Failures: {len(result.failures)}"</span>)
+            </div>
+        </div>
+    
+        <!-- ปฏิบัติการจำลองเสมือนจริงประจำสัปดาห์ (Interactive Science Simulator & 180 Labs) -->
+        <div class="card" id="sim-section" style="border: 2px solid #0284c7; box-shadow: 0 8px 24px rgba(2, 132, 199, 0.12); margin-top: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.75rem;">
+                <h2 class="card-title" style="margin-bottom: 0; color: #0284c7;">
+                    <i class="fas fa-cube"></i> ปฏิบัติการจำลองเสมือนจริง: 10.2 ตัวสแกนความปลอดภัยและคุณภาพโค้ด (Code Security Scanner AR) — AR MediaPipe Lab • RBRU MOOC
+                </h2>
+                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                    <a href="../simulations/chapter10_code_security_scanner.html" target="_blank" class="nav-back" style="margin-bottom: 0; padding: 0.45rem 0.9rem; font-size: 0.85rem; background: #0284c7; color: #fff;">
+                        <i class="fas fa-external-link-alt"></i> เปิดแบบจำลองเต็มหน้าจอ
+                    </a>
+                    
+                </div>
+            </div>
+
+            <p style="font-size: 0.95rem; color: #334155; margin-bottom: 1rem;">
+                <strong>แบบจำลองเชิงโต้ตอบสำหรับห้องเรียนวิทยาศาสตร์:</strong> ให้นักศึกษาทดลองปรับค่าพารามิเตอร์ สังเกตการณ์เปลี่ยนแปลง และวิเคราะห์ข้อมูลตามกระบวนการคิดเชิงคำนวณ (Computational Thinking):
+            </p>
+
+            <div style="margin: 1rem 0; border-radius: 12px; overflow: hidden; border: 1px solid #cbd5e1; height: 600px; box-shadow: var(--shadow-md);">
+                <iframe src="../simulations/chapter10_code_security_scanner.html" style="width: 100%; height: 100%; border: none;"></iframe>
+            </div>
+
+            
+
+            <!-- คลังใบงานปฏิบัติการที่สอดคล้องจาก 180 Labs Manual -->
+            <div style="margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid #e2e8f0;">
+                <h3 style="font-size: 1.05rem; font-weight: 700; color: #0f172a; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-flask" style="color: #10b981;"></i> ใบงานปฏิบัติการที่สอดคล้อง (จากคู่มือปฏิบัติการ ๑๘๐ การทดลอง):
+                </h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem;">
+                    
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.1rem; border-left: 4px solid #10b981; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem; flex-wrap: wrap; gap: 0.25rem;">
+                    <span style="background: #10b981; color: #fff; font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.55rem; border-radius: 4px;">LAB 6.1.1</span>
+                    <span style="font-size: 0.78rem; color: #64748b;"><i class="far fa-clock"></i> 45 นาที | C3 (ประยุกต์ใช้)</span>
+                </div>
+                <h4 style="font-size: 0.98rem; font-weight: 700; color: #0f172a; margin-bottom: 0.2rem;">การพิสูจน์มโนทัศน์พื้นฐาน ระเบียบวิธีเชิงตัวเลขสำหรับแคลคูลัส (Finite Difference)</h4>
+                <p style="font-size: 0.82rem; color: #64748b; font-style: italic; margin-bottom: 0.5rem;">Foundational Verification: Numerical Calculus & Finite Difference</p>
+                <div style="background: #ffffff; border: 1px dashed #cbd5e1; border-radius: 6px; padding: 0.45rem 0.75rem; font-size: 0.85rem; margin-bottom: 0.5rem; overflow-x: auto;"><strong>สมการทฤษฎี:</strong> $$\text{ตัวแปรสถานะแกนกลาง}: \mathcal{S}_{6.1.1} = f(\mathbf{x}, \mathbf{p}) \quad \text{โดยที่ } \mathbf{x} \in \mathbb{R}^n$$</div>
+                <div style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.25rem;"><i class="fas fa-question-circle" style="color: #3b82f6;"></i> คำถามท้ายการทดลอง:</div>
+                <ul style="font-size: 0.82rem; color: #475569; margin-bottom: 0; padding-left: 1.25rem; line-height: 1.5;">
+                    <li style="margin-bottom: 0.25rem;">จงอธิบายความสอดคล้องระหว่างค่าที่วัดได้กับทฤษฎีใน ระเบียบวิธีเชิงตัวเลขสำหรับแคลคูลัส (Finite Difference)</li><li style="margin-bottom: 0.25rem;">หากปรับเปลี่ยนสภาวะแวดล้อม ตัวแปรควบคุมใดส่งผลต่อความไว (Sensitivity) ของระบบมากที่สุด?</li>
+                </ul>
+            </div>
+        
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ==================== TAB 3: กำหนดการและกติกาการสอบ ==================== -->
+    <div id="tab3" class="content-section">
+        <div class="card">
+            <h2 class="card-title">
+                <i class="fas fa-clipboard-check"></i> กำหนดการและขั้นตอนการสอบปลายภาค (Exam Protocol &amp; 5-Stage Administration: 120 นาที)
+            </h2>
+            <p style="margin-bottom: 1.5rem; color: var(--text-muted);">
+                การบริหารจัดการสอบปลายภาคดำเนินการภายใต้มาตรฐานความปลอดภัยทางดิจิทัลและความเที่ยงตรง แบ่งเป็น 5 ระยะเวลาการสอบ (รวม 120 นาที):
+            </p>
+
+            <div class="feature-box" style="margin-bottom: 1.5rem; border-left: 4px solid var(--accent);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                    <h4 style="margin: 0; color: var(--accent);"><i class="fas fa-id-card-clip"></i> ระยะที่ 1: การเตรียมความพร้อมและยืนยันตัวตน (Pre-Exam Identity Check)</h4>
+                    <span class="time-badge"><i class="fas fa-clock"></i> 15 นาที (08:45 – 09:00)</span>
+                </div>
+                <ul style="padding-left: 1.5rem; margin-bottom: 0;">
+                    <li>นักศึกษาเข้าสู่ระบบห้องสอบออนไลน์ ตรวจสอบสัญญาณเครือข่าย กล้องเว็บแคม และไมโครโฟน</li>
+                    <li>แสดงบัตรประจำตัวนักศึกษามหาวิทยาลัยราชภัฏรำไพพรรณีผ่านระบบยืนยันตัวตนแบบดิจิทัล</li>
+                    <li>ปิดโปรแกรมและแท็บเบราว์เซอร์อื่นๆ ทั้งหมด เปิดเฉพาะหน้าต่างข้อสอบที่ได้รับอนุญาต</li>
+                </ul>
+            </div>
+
+            <div class="feature-box" style="margin-bottom: 1.5rem; border-left: 4px solid var(--secondary);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                    <h4 style="margin: 0; color: var(--secondary);"><i class="fas fa-bullhorn"></i> ระยะที่ 2: การชี้แจงกติกาและเปิดรหัสข้อสอบ (Proctoring &amp; Key Activation)</h4>
+                    <span class="time-badge"><i class="fas fa-clock"></i> 10 นาที (09:00 – 09:10)</span>
+                </div>
+                <ul style="padding-left: 1.5rem; margin-bottom: 0;">
+                    <li>อาจารย์ผู้รับผิดชอบรายวิชา (ผศ.ดร.ชีวะ ทัศนา) ชี้แจงข้อตกลงและระเบียบการสอบ ความสำคัญของความซื่อสัตย์ทางวิชาการ</li>
+                    <li>ระบบปลดล็อกรหัสผ่านทำข้อสอบ (Exam Session Key) และเริ่มนับเวลาถอยหลังอัตโนมัติบนหน้าจอ</li>
+                </ul>
+            </div>
+
+            <div class="feature-box" style="margin-bottom: 1.5rem; border-left: 4px solid var(--indigo);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                    <h4 style="margin: 0; color: var(--indigo);"><i class="fas fa-list-check"></i> ระยะที่ 3: การทำข้อสอบตอนที่ 1 และ ตอนที่ 2 (Objective &amp; Scenario Assessment)</h4>
+                    <span class="time-badge"><i class="fas fa-clock"></i> 60 นาที (09:10 – 10:10)</span>
+                </div>
+                <ul style="padding-left: 1.5rem; margin-bottom: 0;">
+                    <li><strong>ตอนที่ 1 (20 ข้อ • 40 คะแนน):</strong> ปรนัย 4 ตัวเลือก วัดมโนทัศน์ CT 4 เสาหลัก ตรรกะโปรแกรมมิ่ง และการจำลองวิทย์</li>
+                    <li><strong>ตอนที่ 2 (10 ข้อ • 30 คะแนน):</strong> ปรนัยเชิงสถานการณ์ วัดการออกแบบแผน 5E บูรณาการ, TPACK, PDPA และ Cyberbullying</li>
+                    <li>ระบบมีการบันทึกคำตอบอัตโนมัติ (Auto-save) ทุกครั้งที่คลิกเลือกคำตอบ</li>
+                </ul>
+            </div>
+
+            <div class="feature-box" style="margin-bottom: 1.5rem; border-left: 4px solid var(--emerald);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                    <h4 style="margin: 0; color: var(--emerald);"><i class="fas fa-pen-nib"></i> ระยะที่ 4: การทำข้อสอบตอนที่ 3 กรณีศึกษาอัตนัยเชิงลึก (Authentic Case Studies)</h4>
+                    <span class="time-badge"><i class="fas fa-clock"></i> 50 นาที (10:10 – 11:00)</span>
+                </div>
+                <ul style="padding-left: 1.5rem; margin-bottom: 0;">
+                    <li><strong>ข้อที่ 1 (15 คะแนน):</strong> Code &amp; Misconception Debugging วิเคราะห์จุดบกพร่องของโค้ดซิมูเลชันวิทยาศาสตร์และเขียนอัลกอริทึมแก้ไข</li>
+                    <li><strong>ข้อที่ 2 (15 คะแนน):</strong> Authentic TPACK Lesson Redesign ออกแบบการสอนบูรณาการ CT ในโรงเรียนชนบทที่มีทรัพยากรจำกัด</li>
+                </ul>
+            </div>
+
+            <div class="feature-box" style="margin-bottom: 1.5rem; border-left: 4px solid var(--purple);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                    <h4 style="margin: 0; color: var(--purple);"><i class="fas fa-check-to-slot"></i> ระยะที่ 5: การส่งข้อสอบและการประมวลผล (Automated Submission &amp; Closing)</h4>
+                    <span class="time-badge"><i class="fas fa-clock"></i> 10 นาที (11:00 – 11:10)</span>
+                </div>
+                <ul style="padding-left: 1.5rem; margin-bottom: 0;">
+                    <li>ระบบปิดรับคำตอบอัตโนมัติเมื่อครบเวลา 120 นาที</li>
+                    <li>แสดงหลักฐานการส่งข้อสอบและรหัสยืนยัน (Submission Hash) ให้ผู้เข้าสอบบันทึกไว้เป็นหลักฐาน</li>
+                    <li>อาจารย์ผู้สอนชี้แจงกำหนดการประกาศผลคะแนนสอบและการทวนสอบเกรดทางระบบออนไลน์</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== TAB 4: การตัดสินเกรด & การทวนสอบ ==================== -->
+    <div id="tab4" class="content-section">
+        <div class="card">
+            <h2 class="card-title">
+                <i class="fas fa-chart-pie"></i> การตัดสินเกรด กฎระเบียบการสอบ และการทวนสอบมาตรฐานผลสัมฤทธิ์
+            </h2>
+            <p style="margin-bottom: 1.5rem; color: var(--text-muted);">
+                รายละเอียดเกณฑ์การให้คะแนนข้อสอบอัตนัย กฎระเบียบวินัยการสอบ และขั้นตอนการทวนสอบผลสัมฤทธิ์ตามกรอบมาตรฐานคุณวุฒิระดับอุดมศึกษา:
+            </p>
+
+            <h4 style="color: var(--primary); margin-bottom: 1rem;"><i class="fas fa-clipboard-list text-accent"></i> เกณฑ์รูบริกส์สำหรับข้อสอบอัตนัยตอนที่ 3 (ข้อละ 15 คะแนน รวม 30 คะแนน):</h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 25%;">เกณฑ์การให้คะแนน</th>
+                        <th style="width: 25%;"><span class="badge badge-green">ดีเยี่ยม (85-100%)</span></th>
+                        <th style="width: 25%;"><span class="badge badge-blue">ดี (70-84%)</span></th>
+                        <th style="width: 25%;"><span class="badge badge-amber">พอใช้ / ปรับปรุง (&lt; 70%)</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>1. ความถูกต้องทางวิทยาศาสตร์และการดีบัก</strong><br>(Scientific &amp; Code Accuracy: 5 คะแนน)</td>
+                        <td>ระบุจุดผิดพลาดของสมการและโค้ดได้แม่นยำ 100% เขียนโค้ดแก้ปัญหาได้สมบูรณ์และอธิบายหลักการวิทยาศาสตร์ได้ชัดเจน</td>
+                        <td>ระบุจุดผิดพลาดได้ถูกต้อง โค้ดที่แก้ทำงานได้เกือบสมบูรณ์ มีจุดบกพร่องเล็กน้อย</td>
+                        <td>ระบุจุดผิดพลาดไม่ตรงจุด หรือโค้ดที่แก้ไม่สามารถรันแก้ปัญหาทางวิทยาศาสตร์ได้</td>
+                    </tr>
+                    <tr>
+                        <td><strong>2. สถาปัตยกรรมแนวคิดเชิงคำนวณ</strong><br>(CT Architectural Design: 5 คะแนน)</td>
+                        <td>ระบุและประยุกต์ใช้เสาหลัก CT (Decomposition, Pattern, Abstraction, Algorithm) ครบถ้วน ลึกซึ้ง และตรงประเด็น</td>
+                        <td>แสดงแนวคิดเชิงคำนวณครบถ้วน แต่อาจมีบางเสาหลักที่อธิบายไม่ละเอียดลึกซึ้ง</td>
+                        <td>ระบุองค์ประกอบ CT ไม่ครบ หรือไม่สอดคล้องกับสถานการณ์ที่กำหนด</td>
+                    </tr>
+                    <tr>
+                        <td><strong>3. การประยุกต์สู่บริบทการจัดการเรียนรู้</strong><br>(Pedagogical Feasibility: 5 คะแนน)</td>
+                        <td>ออกแบบกิจกรรม 5E หรือการสอนในโรงเรียนชนบทได้สอดคล้องกับความเป็นจริง คำนึงถึง Cognitive Load และแก้ปัญหาได้จริง</td>
+                        <td>ออกแบบกิจกรรมได้ดี สอดรับกับสถานการณ์ แต่ยังขาดความยืดหยุ่นในบางจุด</td>
+                        <td>กิจกรรมไม่ตอบโจทย์บริบท หรือสร้างภาระทางปัญญาเกินให้แก่นักเรียน</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="highlight-box warning" style="margin-top: 1.5rem;">
+                <h4 style="margin-bottom: 0.5rem; color: var(--warning);"><i class="fas fa-gavel"></i> ข้อปฏิบัติและวินัยการสอบปลายภาค:</h4>
+                <ol style="padding-left: 1.5rem; margin-bottom: 0;">
+                    <li><strong>ความซื่อสัตย์สุจริต:</strong> การทุจริต คัดลอก ส่งต่อ หรือเปิดโปรแกรมภายนอก ถือเป็นความผิดวินัยนักศึกษาร้ายแรง มีผลให้ <strong>ปรับตก (F) ในรายวิชานี้ทันที</strong> และถูกส่งเรื่องสู่คณะกรรมการวินัยนักศึกษา</li>
+                    <li><strong>การบันทึกภาพและเสียง:</strong> ระบบมีการบันทึกภาพผู้เข้าสอบแบบสุ่ม (Proctoring Snapshot) เพื่อใช้เป็นหลักฐานประกอบการทวนสอบ</li>
+                    <li><strong>การขอทวนสอบผลคะแนน:</strong> นักศึกษามีสิทธิ์ยื่นคำร้องขอตรวจสอบคะแนนและกระดาษคำตอบได้ภายใน 7 วันหลังประกาศผลสอบ ตามประกาศของคณะวิทยาศาสตร์และเทคโนโลยี</li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== TAB 5: ข้อสอบจำลอง HOTS ==================== -->
+    <div id="tab5" class="content-section">
+        <div class="card">
+            <h2 class="card-title">
+                <i class="fas fa-clipboard-question"></i> คลังข้อสอบจำลองเสมือนจริง HOTS สสวท. (พร้อมระบบเฉลยละเอียดและกล่องเปิดโต้ตอบ)
+            </h2>
+            <p style="margin-bottom: 1.5rem; color: var(--text-muted);">
+                ตัวอย่างข้อสอบอัตนัยระดับ Higher-Order Thinking Skills (HOTS) ตอนที่ 3 เสมือนจริง พร้อมระบบเฉลยละเอียดและแนวทางการให้คะแนน:
+            </p>
+
+            <!-- HOTS Question 1 -->
+            <div class="feature-box" style="margin-bottom: 2rem; border-left: 4px solid var(--accent);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <h4 style="margin: 0; color: var(--primary);"><i class="fas fa-code text-accent"></i> ข้อที่ 1: การดีบักโค้ดแบบจำลองวิทยาศาสตร์และความเข้าใจคลาดเคลื่อน (Code &amp; Misconception Debugging)</h4>
+                    <span class="badge badge-blue">อัตนัยตอนที่ 3 • 15 คะแนน</span>
+                </div>
+                <div style="background: #f8fafc; padding: 1.25rem; border-radius: 8px; margin-bottom: 1.25rem; border: 1px solid var(--border);">
+                    <p><strong>สถานการณ์จำลอง:</strong></p>
+                    <p>
+                        นักเรียนชั้น ม.4 เขียนแบบจำลองการแพร่ของสารผ่านเยื่อหุ้มเซลล์ (Diffusion Simulation) เพื่อเปรียบเทียบระหว่าง <em>การแพร่แบบธรรมดา (Simple Diffusion)</em> กับ <em>การแพร่แบบฟาซิลิเทต (Facilitated Diffusion)</em> แต่เมื่อรันโปรแกรมและพล็อตกราฟความสัมพันธ์ระหว่าง "ความเข้มข้นสารภายนอกเซลล์ (\(C\))" กับ "อัตราเร็วการแพร่ (\(V\))" พบว่า <strong>การแพร่แบบฟาซิลิเทตมีอัตราเร็วเพิ่มขึ้นเป็นเส้นตรงเรื่อยๆ ไม่มีที่สิ้นสุด</strong> ซึ่งขัดแย้งกับหลักชีววิทยาที่ต้องเกิด <em>จุดอิ่มตัวของโปรตีนตัวพา (Vmax Saturation)</em>
+                    </p>
+                </div>
+
+                <p><strong>คำถาม:</strong> ในฐานะครูวิทยาการคำนวณ จงใช้แนวคิดเชิงนามธรรม (Abstraction) และการออกแบบขั้นตอนวิธี (Algorithm Design) อธิบายสาเหตุของข้อผิดพลาดในโค้ด และเสนอแนะสมการ/อัลกอริทึมที่ถูกต้องเพื่อปรับปรุงแบบจำลองนี้?</p>
+
+                <ul style="list-style: none; padding: 0; margin: 1.25rem 0;">
+                    <li class="quiz-option" onclick="toggleExplanation('expFinal1', false, this)">
+                        <span style="font-weight: bold; margin-right: 0.5rem;">ก.</span>
+                        <span>เกิดจากความเร็วของซีพียูคอมพิวเตอร์เร็วเกินไป ให้ใส่อัลกอริทึม time.sleep(1) เพื่อชะลอการคำนวณของโปรแกรมให้ช้าลง</span>
+                    </li>
+                    <li class="quiz-option" onclick="toggleExplanation('expFinal1', true, this)">
+                        <span style="font-weight: bold; margin-right: 0.5rem;">ข.</span>
+                        <span>เกิดจากการใช้ฟังก์ชันเส้นตรงเชิงเดี่ยว \(V = k 	imes C\) โดยไม่ได้นิยามตัวแปรข้อจำกัดจำนวนโปรตีนตัวพา (Carrier Proteins); วิธีแก้คือใช้สมการ Michaelis-Menten Kinetics: \(V = rac{V_{max} \cdot C}{K_m + C}\) ซึ่งจะลู่เข้าหาจุดอิ่มตัว \(V_{max}\) เมื่อความเข้มข้นสารสูงมาก</span>
+                    </li>
+                    <li class="quiz-option" onclick="toggleExplanation('expFinal1', false, this)">
+                        <span style="font-weight: bold; margin-right: 0.5rem;">ค.</span>
+                        <span>เกิดจากนักเรียนลืมแปลงหน่วยมวลของสารละลายจากกรัมเป็นกิโลกรัม วิธีแก้คือคูณด้วย \(10^{-3}\) ในตัวแปรความเข้มข้น</span>
+                    </li>
+                    <li class="quiz-option" onclick="toggleExplanation('expFinal1', false, this)">
+                        <span style="font-weight: bold; margin-right: 0.5rem;">ง.</span>
+                        <span>เกิดจากการใช้ภาษา Python รันกราฟ ให้เปลี่ยนไปใช้โปรแกรม Microsoft Excel วาดรูปแทนเพื่อหลีกเลี่ยงการเขียนสูตร</span>
+                    </li>
+                </ul>
+
+                <div id="expFinal1" class="quiz-explanation">
+                    <h5 style="color: var(--success); margin-bottom: 0.5rem;"><i class="fas fa-check-circle"></i> เฉลยและแนวทางการให้คะแนนข้อ 1 (Master Coach Rubric Analysis):</h5>
+                    <p>
+                        ข้อ ข. ได้รับคะแนนเต็ม 15 คะแนน เนื่องจากสะท้อนสมรรถนะครบทั้ง 3 มิติ:
+                    </p>
+                    <ul style="padding-left: 1.5rem; margin-top: 0.5rem;">
+                        <li><strong>การวิเคราะห์ทางวิทยาศาสตร์ (Scientific CK):</strong> การแพร่แบบฟาซิลิเทตอาศัยโปรตีนตัวพา (Transport Protein) บนเยื่อหุ้มเซลล์ซึ่งมีจำนวนจำกัด เมื่อถูกจับจองเต็มทุกตำแหน่ง (Carrier Saturation) อัตราการแพร่จะไม่สามารถเพิ่มขึ้นได้อีก</li>
+                        <li><strong>การสร้างแบบจำลอง CT (Abstraction &amp; Algorithm):</strong> การเปลี่ยนอัลกอริทึมจากสมการเส้นตรงมาเป็นสมการจลนพลศาสตร์แบบอิ่มตัว \(V = rac{V_{max} \cdot C}{K_m + C}\) ถือเป็นการสร้างแบบจำลองทางคณิตศาสตร์ที่ถูกต้องตามหลักสัจธรรมธรรมชาติ</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- HOTS Question 2 -->
+            <div class="feature-box" style="margin-bottom: 1.5rem; border-left: 4px solid var(--secondary);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <h4 style="margin: 0; color: var(--primary);"><i class="fas fa-lightbulb text-secondary"></i> ข้อที่ 2: การออกแบบแผนการสอนแบบ Hybrid ภายใต้ข้อจำกัดของโรงเรียน (Authentic TPACK Redesign)</h4>
+                    <span class="badge badge-purple">อัตนัยตอนที่ 3 • 15 คะแนน</span>
+                </div>
+                <div style="background: #f8fafc; padding: 1.25rem; border-radius: 8px; margin-bottom: 1.25rem; border: 1px solid var(--border);">
+                    <p><strong>สถานการณ์จำลอง:</strong></p>
+                    <p>
+                        นักศึกษาครูต้องการจัดการเรียนรู้เรื่อง <em>"กฎการเคลื่อนที่ข้อที่ 3 ของนิวตัน (แรงกิริยา-แรงปฏิกิริยา)"</em> เพื่อแก้ไขความเข้าใจผิดของนักเรียน ม.3 ที่มักคิดว่า <em>"วัตถุที่มีมวลมากกว่าจะมีแรงกระทำมากกว่าวัตถุมวลน้อย"</em> แต่โรงเรียนไม่มีห้องปฏิบัติการคอมพิวเตอร์ และมีอุปกรณ์ทดลองฟิสิกส์ไม่ครบชุด
+                    </p>
+                </div>
+
+                <p><strong>คำถาม:</strong> จงออกแบบกระบวนการจัดการเรียนรู้ 5E โดยบูรณาการกิจกรรม Unplugged ร่วมกับซิมูเลเตอร์บนสมาร์ตโฟนครูเพียงเครื่องเดียว และระบุแนวทางการวัดผลประเมินผลตามสภาพจริง?</p>
+
+                <ul style="list-style: none; padding: 0; margin: 1.25rem 0;">
+                    <li class="quiz-option" onclick="toggleExplanation('expFinal2', false, this)">
+                        <span style="font-weight: bold; margin-right: 0.5rem;">ก.</span>
+                        <span>ครูยืนหน้าห้องแล้วเปิดภาพนิ่งจากหนังสือเรียนให้นักเรียนดู พร้อมทั้งให้ท่องจำประโยค "Action = Reaction" ซ้ำๆ 10 รอบ</span>
+                    </li>
+                    <li class="quiz-option" onclick="toggleExplanation('expFinal2', true, this)">
+                        <span style="font-weight: bold; margin-right: 0.5rem;">ข.</span>
+                        <span>ใช้กิจกรรม Unplugged: ให้นักเรียนสองคนยืนบนสเก็ตบอร์ดหรือเก้าอี้มีล้อที่มีมวลต่างกัน แล้วผลักกัน (Embodied Cognition) เพื่อสังเกตการเคลื่อนที่ สลับกับการให้ตัวแทนนักเรียนมาป้อนค่ามวลในซิมูเลเตอร์บนสมาร์ตโฟนครูที่ต่อจอโปรเจกเตอร์เพื่อดูตัวเลขเวกเตอร์แรงที่เท่ากันเสมอ (\(ec{F}_{12} = -ec{F}_{21}\)) พร้อมประเมินด้วยแบบสังเกตพฤติกรรมและแผนภาพเวกเตอร์</span>
+                    </li>
+                    <li class="quiz-option" onclick="toggleExplanation('expFinal2', false, this)">
+                        <span style="font-weight: bold; margin-right: 0.5rem;">ค.</span>
+                        <span>ขอเลื่อนการสอนหัวข้อนี้ออกไปจนกว่าโรงเรียนจะได้รับการจัดสรรงบประมาณสร้างห้องคอมพิวเตอร์ใหม่</span>
+                    </li>
+                    <li class="quiz-option" onclick="toggleExplanation('expFinal2', false, this)">
+                        <span style="font-weight: bold; margin-right: 0.5rem;">ง.</span>
+                        <span>แจกข้อสอบปรนัย 30 ข้อให้นักเรียนทำทันทีโดยไม่ต้องจัดกิจกรรมการเรียนรู้ เพื่อประเมินว่านักเรียนคนใดมีความรู้เดิมมากที่สุด</span>
+                    </li>
+                </ul>
+
+                <div id="expFinal2" class="quiz-explanation">
+                    <h5 style="color: var(--success); margin-bottom: 0.5rem;"><i class="fas fa-check-circle"></i> เฉลยและแนวทางการให้คะแนนข้อ 2 (Master Coach Rubric Analysis):</h5>
+                    <p>
+                        ข้อ ข. ได้รับคะแนนเต็ม 15 คะแนน เนื่องจากสะท้อนความเป็น <strong>"ครูผู้นำนวัตกรรม (Innovative Science Teacher)"</strong> อย่างแท้จริง:
+                    </p>
+                    <ul style="padding-left: 1.5rem; margin-top: 0.5rem;">
+                        <li><strong>การจัดการเรียนรู้เชิงรุก (Active Learning):</strong> การใช้ร่างกายสร้างประสบการณ์ตรง (Embodied Cognition) ผ่านสเก็ตบอร์ด ช่วยให้นักเรียนเห็นว่าทั้งสองคนเคลื่อนที่ถอยหลังพร้อมกัน ทำลาย Misconception ที่คิดว่าคนตัวใหญ่ไม่ถูกกระทำ</li>
+                        <li><strong>การบูรณาการเทคโนโลยีแบบเหมาะสมกับบริบท (Contextual TPACK):</strong> การใช้สมาร์ตโฟนเครื่องเดียวฉายภาพซิมูเลเตอร์ยืนยันว่า แม้ความเร่งจะต่างกันเพราะมวลต่างกัน (\(a = F/m\)) แต่ขนาดของแรงทั้งสองกระทำเท่ากันเสมอ (\(|ec{F}_{12}| = |ec{F}_{21}|\)) เป็นการใช้เทคโนโลยีช่วยคิดอย่างชาญฉลาด</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== TAB 6: เอกสารอ้างอิง APA 7th ==================== -->
+    <div id="tab6" class="content-section">
+        <div class="card">
+            <h2 class="card-title">
+                <i class="fas fa-quote-left"></i> เอกสารอ้างอิงทางวิชาการมาตรฐานสากล (References - APA 7th Edition)
+            </h2>
+            <p style="margin-bottom: 1.5rem; color: var(--text-muted);">
+                รายการเอกสารอ้างอิงทางวิชาการระดับชาติและนานาชาติ (Q1 / มาตรฐานหลักสูตร) ที่ใช้ในการสร้างมาตรฐานข้อสอบและการวัดผลสัมฤทธิ์ในสัปดาห์ที่ 16 พร้อมลิงก์ DOI ที่สืบค้นได้จริง:
+            </p>
+
+            <ul style="list-style: none; padding-left: 0;">
+                <li style="margin-bottom: 1.25rem; padding-left: 1.75rem; text-indent: -1.75rem;">
+                    <i class="fas fa-bookmark text-accent" style="margin-right: 0.5rem;"></i>
+                    Anderson, L. W., &amp; Krathwohl, D. R. (Eds.). (2001). <em>A taxonomy for learning, teaching, and assessing: A revision of Bloom's taxonomy of educational objectives</em>. Longman.
+                </li>
+
+                <li style="margin-bottom: 1.25rem; padding-left: 1.75rem; text-indent: -1.75rem;">
+                    <i class="fas fa-bookmark text-accent" style="margin-right: 0.5rem;"></i>
+                    Ebel, R. L., &amp; Frisbie, D. A. (1991). <em>Essentials of educational measurement</em> (5th ed.). Prentice Hall.
+                </li>
+
+                <li style="margin-bottom: 1.25rem; padding-left: 1.75rem; text-indent: -1.75rem;">
+                    <i class="fas fa-bookmark text-accent" style="margin-right: 0.5rem;"></i>
+                    Mishra, P., &amp; Koehler, M. J. (2006). Technological pedagogical content knowledge: A framework for teacher knowledge. <em>Teachers College Record</em>, 108(6), 1017–1054. <a href="https://doi.org/10.1111/j.1467-9620.2006.00684.x" target="_blank" style="color: var(--accent); text-decoration: underline;">https://doi.org/10.1111/j.1467-9620.2006.00684.x</a>
+                </li>
+
+                <li style="margin-bottom: 1.25rem; padding-left: 1.75rem; text-indent: -1.75rem;">
+                    <i class="fas fa-bookmark text-accent" style="margin-right: 0.5rem;"></i>
+                    Wing, J. M. (2006). Computational thinking. <em>Communications of the ACM</em>, 49(3), 33–35. <a href="https://doi.org/10.1145/1118178.1118215" target="_blank" style="color: var(--accent); text-decoration: underline;">https://doi.org/10.1145/1118178.1118215</a>
+                </li>
+
+                <li style="margin-bottom: 1.25rem; padding-left: 1.75rem; text-indent: -1.75rem;">
+                    <i class="fas fa-book text-accent" style="margin-right: 0.5rem;"></i>
+                    กระทรวงการอุดมศึกษา วิทยาศาสตร์ วิจัยและนวัตกรรม. (2565). <em>เกณฑ์มาตรฐานหลักสูตรระดับปริญญาตรี พ.ศ. 2565 และแนวทางการบริหารจัดการหลักสูตรตามกรอบมาตรฐานคุณวุฒิระดับอุดมศึกษา</em>. สำนักงานปลัดกระทรวงการอุดมศึกษา วิทยาศาสตร์ วิจัยและนวัตกรรม.
+                </li>
+
+                <li style="margin-bottom: 1.25rem; padding-left: 1.75rem; text-indent: -1.75rem;">
+                    <i class="fas fa-book text-accent" style="margin-right: 0.5rem;"></i>
+                    มหาวิทยาลัยราชภัฏรำไพพรรณี. (2566). <em>ข้อบังคับมหาวิทยาลัยราชภัฏรำไพพรรณี ว่าด้วยการจัดการศึกษาระดับปริญญาตรี พ.ศ. 2566</em>. กองบริการการศึกษา มหาวิทยาลัยราชภัฏรำไพพรรณี.
+                </li>
+
+                <li style="margin-bottom: 1.25rem; padding-left: 1.75rem; text-indent: -1.75rem;">
+                    <i class="fas fa-book text-accent" style="margin-right: 0.5rem;"></i>
+                    สถาบันส่งเสริมการสอนวิทยาศาสตร์และเทคโนโลยี. (2561). <em>คู่มือการใช้หลักสูตรรายวิชาพื้นฐานวิทยาศาสตร์ สาระเทคโนโลยี (วิทยาการคำนวณ) ตามมาตรฐานการเรียนรู้และตัวชี้วัด กลุ่มสาระการเรียนรู้วิทยาศาสตร์ (ฉบับปรับปรุง พ.ศ. 2560)</em>. โรงพิมพ์แห่งจุฬาลงกรณ์มหาวิทยาลัย.
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>© 2026 รายวิชา 4124941 วิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์ | <strong>ผู้ช่วยศาสตราจารย์ ดร.ชีวะ ทัศนา</strong></p>
+        <p>คณะวิทยาศาสตร์และเทคโนโลยี มหาวิทยาลัยราชภัฏรำไพพรรณี</p>
+    </footer>
+</div>
+
+<!-- Interactive Scripts -->
+<script>
+    function showTab(tabId, btnElement) {
+        document.querySelectorAll('.content-section').forEach(function(section) {
+            section.classList.remove('active');
+        });
+        document.querySelectorAll('.tab-btn').forEach(function(btn) {
+            btn.classList.remove('active');
+        });
+        document.getElementById(tabId).classList.add('active');
+        btnElement.classList.add('active');
+        window.scrollTo({ top: 120, behavior: 'smooth' });
+    }
+
+    function toggleExplanation(expId, isCorrect, element) {
+        var expBox = document.getElementById(expId);
+        if (expBox) {
+            expBox.style.display = 'block';
+        }
+        var parentUl = element.parentElement;
+        var options = parentUl.querySelectorAll('.quiz-option');
+        options.forEach(function(opt) {
+            opt.style.borderColor = '#e2e8f0';
+            opt.style.backgroundColor = '#ffffff';
+        });
+        if (isCorrect) {
+            element.style.borderColor = '#10b981';
+            element.style.backgroundColor = '#ecfdf5';
+        } else {
+            element.style.borderColor = '#ef4444';
+            element.style.backgroundColor = '#fef2f2';
+        }
+    }
+</script>
+
+</body>
+</html>

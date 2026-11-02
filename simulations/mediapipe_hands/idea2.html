@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Multimodal Assistant – เปิดงานอัจฉริยะ</title>
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- MediaPipe -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils@0.3/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils@0.3/drawing_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4/hands.js" crossorigin="anonymous"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&display=swap');
+
+        body {
+            font-family: 'Orbitron', 'Sarabun', sans-serif;
+            background: #05080f;
+            color: #fff;
+            overflow: hidden;
+            height: 100vh;
+            user-select: none;
+        }
+
+        #container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(ellipse at center, #0f0a1a, #05080f);
+            overflow: hidden;
+        }
+
+        video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            opacity: 0.25;
+            filter: blur(3px) brightness(0.4);
+        }
+        #mediapipe-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+        }
+        #three-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* ===== AI CHAT / HUD ===== */
+        #chat-container {
+            position: absolute;
+            bottom: 100px;
+            right: 30px;
+            z-index: 10;
+            width: 400px;
+            max-height: 320px;
+            background: rgba(0, 10, 30, 0.85);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(0, 200, 255, 0.2);
+            border-radius: 16px;
+            padding: 16px 18px;
+            box-shadow: 0 0 60px rgba(0, 100, 255, 0.1);
+            transition: all 0.3s ease;
+            overflow: hidden;
+        }
+        #chat-container .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.7rem;
+            color: #00ccff;
+            letter-spacing: 2px;
+            border-bottom: 1px solid rgba(0,200,255,0.1);
+            padding-bottom: 8px;
+            margin-bottom: 8px;
+        }
+        #chat-container .header .ai-name {
+            color: #aa88ff;
+            font-weight: 700;
+        }
+        #chat-container .header .status {
+            color: #00ff88;
+            font-size: 0.6rem;
+        }
+        #chat-messages {
+            max-height: 200px;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(0,200,255,0.2) transparent;
+        }
+        #chat-messages::-webkit-scrollbar { width: 4px; }
+        #chat-messages::-webkit-scrollbar-thumb { background: rgba(0,200,255,0.3); border-radius: 10px; }
+
+        .msg {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 6px;
+            animation: fadeInMsg 0.3s ease;
+        }
+        .msg .avatar {
+            font-size: 1.2rem;
+            min-width: 28px;
+            text-align: center;
+        }
+        .msg .bubble {
+            background: rgba(255,255,255,0.05);
+            padding: 6px 12px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            line-height: 1.5;
+            color: #c8d8e8;
+            font-family: 'Sarabun', sans-serif;
+            max-width: 85%;
+            border: 1px solid rgba(255,255,255,0.03);
+        }
+        .msg.user .bubble {
+            background: rgba(0, 200, 255, 0.1);
+            border: 1px solid rgba(0, 200, 255, 0.15);
+        }
+        .msg.ai .bubble {
+            background: rgba(170, 136, 255, 0.08);
+            border: 1px solid rgba(170, 136, 255, 0.12);
+        }
+        .msg.ai .avatar { color: #aa88ff; }
+        .msg.user .avatar { color: #00ddff; }
+
+        @keyframes fadeInMsg {
+            0% { opacity: 0; transform: translateY(8px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Voice indicator */
+        #voice-indicator {
+            position: absolute;
+            bottom: 90px;
+            right: 30px;
+            z-index: 11;
+            display: none;
+            background: rgba(0, 200, 255, 0.15);
+            border: 1px solid rgba(0, 200, 255, 0.2);
+            border-radius: 30px;
+            padding: 6px 18px;
+            font-size: 0.6rem;
+            color: #00ddff;
+            letter-spacing: 2px;
+            backdrop-filter: blur(8px);
+            animation: pulseVoice 0.8s infinite alternate;
+        }
+        #voice-indicator.active { display: flex; align-items: center; gap: 10px; }
+        #voice-indicator .dot-voice {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #00ff88;
+            animation: blink 0.6s infinite;
+        }
+        @keyframes pulseVoice { 0% { opacity: 0.7; } 100% { opacity: 1; } }
+        @keyframes blink { 0%,100% { opacity:1; } 50% { opacity:0.2; } }
+
+        /* Status Bar */
+        #status-bar {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            background: rgba(0, 10, 30, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 200, 255, 0.15);
+            border-radius: 40px;
+            padding: 10px 28px;
+            font-family: 'Orbitron', monospace;
+            font-size: 0.7rem;
+            color: rgba(0, 255, 200, 0.8);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 8px; }
+        .dot.green { background: #00ff88; box-shadow: 0 0 20px #00ff88; }
+        .dot.yellow { background: #ffcc00; box-shadow: 0 0 20px #ffcc00; }
+        .dot.purple { background: #aa66ff; box-shadow: 0 0 20px #aa66ff; animation: pulse 0.8s infinite alternate; }
+        @keyframes pulse { 0% { transform: scale(1); } 100% { transform: scale(1.3); } }
+
+        /* Title Overlay */
+        #title-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 20;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            pointer-events: none;
+            background: rgba(0,0,0,0.15);
+        }
+        #title-overlay.show { display: flex; animation: fadeInTitle 1.8s cubic-bezier(0.2,0.9,0.3,1.2) forwards; }
+        @keyframes fadeInTitle { 0% { opacity:0; transform: scale(0.7); } 100% { opacity:1; transform: scale(1); } }
+        #title-overlay .main {
+            font-size: 4.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #aa66ff, #00ddff, #ff66aa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 80px rgba(170,102,255,0.3);
+            letter-spacing: 6px;
+            text-align: center;
+            padding: 0 20px;
+        }
+        #title-overlay .sub { font-size: 2.2rem; color: #ffd700; text-shadow: 0 0 40px rgba(255,215,0,0.3); margin-top: 10px; letter-spacing: 8px; }
+        #title-overlay .theme { font-size: 1.1rem; color: rgba(255,255,255,0.4); margin-top: 16px; letter-spacing: 4px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 16px; }
+
+        @media (max-width: 900px) {
+            #chat-container { width: 280px; max-height: 240px; right: 15px; bottom: 80px; padding: 12px 14px; }
+            #chat-container .msg .bubble { font-size: 0.65rem; }
+            #title-overlay .main { font-size: 2.5rem; }
+            #title-overlay .sub { font-size: 1.4rem; }
+            #status-bar { font-size: 0.55rem; padding: 6px 14px; gap: 10px; bottom: 15px; }
+        }
+        @media (max-width: 500px) {
+            #chat-container { display: none; }
+            #title-overlay .main { font-size: 1.6rem; }
+            #title-overlay .sub { font-size: 1rem; }
+            #status-bar { font-size: 0.45rem; padding: 4px 10px; }
+        }
+    </style>
+</head>
+<body>
+<div id="container">
+    <video id="video" autoplay playsinline></video>
+    <canvas id="mediapipe-canvas"></canvas>
+    <canvas id="three-canvas"></canvas>
+
+    <!-- AI Chat Container -->
+    <div id="chat-container">
+        <div class="header">
+            <span class="ai-name">🧠 AI ASSISTANT</span>
+            <span class="status" id="aiStatus">● ONLINE</span>
+        </div>
+        <div id="chat-messages">
+            <div class="msg ai">
+                <span class="avatar">🤖</span>
+                <span class="bubble">สวัสดีครับ ผมผู้ช่วยอัจฉริยะ พร้อมรับคำสั่งเปิดงานด้วยเสียงหรือท่าทาง</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Voice Indicator -->
+    <div id="voice-indicator">
+        <span class="dot-voice"></span>
+        <span id="voiceText">กำลังฟัง...</span>
+    </div>
+
+    <!-- Status Bar -->
+    <div id="status-bar">
+        <span><span class="dot green" id="statusDot"></span><span id="statusText">ระบบพร้อม</span></span>
+        <span>|</span>
+        <span>🎤 <span id="voiceStatus">รอคำสั่ง</span></span>
+        <span>|</span>
+        <span>👆 <span id="fingerStatus">รอมือ</span></span>
+    </div>
+
+    <!-- Title Overlay -->
+    <div id="title-overlay">
+        <div class="main">🚀 SCIENCE WEEK 2026</div>
+        <div class="sub">AI MULTIMODAL GENESIS</div>
+        <div class="theme">✦ INTELLIGENCE SCIENCE FOR A SUSTAINABLE FUTURE ✦</div>
+    </div>
+</div>
+
+<script>
+    (function() {
+        // ========================================================================
+        // DOM REFS
+        // ========================================================================
+        const video = document.getElementById('video');
+        const mpCanvas = document.getElementById('mediapipe-canvas');
+        const mpCtx = mpCanvas.getContext('2d');
+        const threeCanvas = document.getElementById('three-canvas');
+        const titleOverlay = document.getElementById('title-overlay');
+        const statusText = document.getElementById('statusText');
+        const statusDot = document.getElementById('statusDot');
+        const fingerStatus = document.getElementById('fingerStatus');
+        const voiceStatus = document.getElementById('voiceStatus');
+        const chatMessages = document.getElementById('chat-messages');
+        const aiStatus = document.getElementById('aiStatus');
+        const voiceIndicator = document.getElementById('voice-indicator');
+        const voiceText = document.getElementById('voiceText');
+
+        // ========================================================================
+        // STATE
+        // ========================================================================
+        let isCeremonyActive = false;
+        let isIdle = true;
+        let handLandmarks = null;
+        let isListening = false;
+        let recognition = null;
+
+        // ========================================================================
+        // AUDIO (Sound Effects)
+        // ========================================================================
+        let audioCtx = null;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            return audioCtx;
+        }
+
+        function playCeremonySound() {
+            const ctx = initAudio();
+            const now = ctx.currentTime;
+
+            // AI-like beep + rise
+            const osc1 = ctx.createOscillator();
+            const gain1 = ctx.createGain();
+            osc1.type = 'sine';
+            osc1.frequency.setValueAtTime(440, now);
+            osc1.frequency.exponentialRampToValueAtTime(880, now + 0.3);
+            gain1.gain.setValueAtTime(0.01, now);
+            gain1.gain.linearRampToValueAtTime(0.15, now + 0.1);
+            gain1.gain.exponentialRampToValueAtTime(0.01, now + 0.4);
+            osc1.connect(gain1);
+            gain1.connect(ctx.destination);
+            osc1.start(now);
+            osc1.stop(now + 0.5);
+
+            // Deep bass
+            const osc2 = ctx.createOscillator();
+            const gain2 = ctx.createGain();
+            osc2.type = 'sawtooth';
+            osc2.frequency.setValueAtTime(80, now + 0.2);
+            osc2.frequency.exponentialRampToValueAtTime(200, now + 1.0);
+            gain2.gain.setValueAtTime(0.01, now + 0.2);
+            gain2.gain.linearRampToValueAtTime(0.25, now + 0.6);
+            gain2.gain.exponentialRampToValueAtTime(0.01, now + 1.4);
+            osc2.connect(gain2);
+            gain2.connect(ctx.destination);
+            osc2.start(now + 0.2);
+            osc2.stop(now + 1.6);
+
+            // Impact
+            const osc3 = ctx.createOscillator();
+            const gain3 = ctx.createGain();
+            osc3.type = 'square';
+            osc3.frequency.setValueAtTime(60, now + 1.2);
+            osc3.frequency.exponentialRampToValueAtTime(30, now + 1.8);
+            gain3.gain.setValueAtTime(0.01, now + 1.2);
+            gain3.gain.linearRampToValueAtTime(0.4, now + 1.5);
+            gain3.gain.exponentialRampToValueAtTime(0.01, now + 2.2);
+            osc3.connect(gain3);
+            gain3.connect(ctx.destination);
+            osc3.start(now + 1.2);
+            osc3.stop(now + 2.4);
+        }
+
+        // ========================================================================
+        // TEXT-TO-SPEECH (AI Voice)
+        // ========================================================================
+        function speakAI(text, callback) {
+            if (!window.speechSynthesis) {
+                if (callback) callback();
+                return;
+            }
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'th-TH';
+            utterance.rate = 0.9;
+            utterance.pitch = 1.1;
+            utterance.volume = 1;
+
+            // Try to find a Thai voice
+            const voices = speechSynthesis.getVoices();
+            const thVoice = voices.find(v => v.lang.includes('th'));
+            if (thVoice) utterance.voice = thVoice;
+
+            utterance.onend = () => {
+                if (callback) callback();
+            };
+            speechSynthesis.speak(utterance);
+            return utterance;
+        }
+
+        // ========================================================================
+        // SPEECH-TO-TEXT (Voice Recognition)
+        // ========================================================================
+        function initSpeechRecognition() {
+            if (!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)) {
+                addChatMessage('ai', '⚠️ เบราว์เซอร์นี้ไม่รองรับการฟังเสียง กรุณาใช้ Chrome หรือ Edge');
+                return null;
+            }
+
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            const rec = new SpeechRecognition();
+            rec.lang = 'th-TH';
+            rec.continuous = true;
+            rec.interimResults = false;
+            rec.maxAlternatives = 1;
+
+            rec.onstart = () => {
+                isListening = true;
+                voiceIndicator.classList.add('active');
+                voiceText.textContent = 'กำลังฟัง...';
+                voiceStatus.textContent = '🎤 ฟัง...';
+                aiStatus.textContent = '● LISTENING';
+            };
+
+            rec.onend = () => {
+                isListening = false;
+                voiceIndicator.classList.remove('active');
+                voiceStatus.textContent = '🎤 รอคำสั่ง';
+                aiStatus.textContent = '● ONLINE';
+                // Restart if still idle
+                if (isIdle && !isCeremonyActive) {
+                    setTimeout(() => {
+                        if (isIdle && !isCeremonyActive) {
+                            try { rec.start(); } catch(e) {}
+                        }
+                    }, 300);
+                }
+            };
+
+            rec.onresult = (event) => {
+                const result = event.results[event.results.length - 1];
+                if (!result.isFinal) return;
+                const transcript = result[0].transcript.trim().toLowerCase();
+                if (!transcript) return;
+
+                addChatMessage('user', transcript);
+                voiceText.textContent = `🗣️ "${transcript}"`;
+                voiceStatus.textContent = '🎤 ได้ยิน!';
+
+                // Check for trigger words
+                const triggers = ['เปิดงาน', 'เปิด', 'start', 'begin', 'เริ่ม', 'go', 'เริ่มงาน', 'เปิดเลย'];
+                const matched = triggers.some(t => transcript.includes(t) || transcript === t);
+                if (matched && isIdle && !isCeremonyActive) {
+                    addChatMessage('ai', '✅ รับทราบคำสั่ง! กำลังเปิดงาน...');
+                    setTimeout(() => startCeremony('voice'), 500);
+                } else if (!matched && isIdle) {
+                    // Respond with AI
+                    const responses = [
+                        'ไม่เข้าใจคำสั่งครับ กรุณาพูดว่า "เปิดงาน"',
+                        'ขอโทษครับ ได้ยินไม่ชัด กรุณาพูดอีกครั้ง',
+                        'คำสั่งที่ได้รับคือ "' + transcript + '" แต่ผมรอคำว่า "เปิดงาน" ครับ',
+                        'ยังไม่เห็นคำสั่งเปิดงานครับ ลองพูดว่า "เปิดงาน" นะครับ'
+                    ];
+                    const reply = responses[Math.floor(Math.random() * responses.length)];
+                    addChatMessage('ai', reply);
+                    speakAI(reply);
+                }
+            };
+
+            rec.onerror = (event) => {
+                console.warn('Speech recognition error:', event.error);
+                if (event.error === 'not-allowed') {
+                    addChatMessage('ai', '⚠️ กรุณาอนุญาตให้ใช้ไมโครโฟน');
+                }
+                voiceStatus.textContent = '🎤 ข้อผิดพลาด';
+            };
+
+            return rec;
+        }
+
+        // ========================================================================
+        // CHAT UI
+        // ========================================================================
+        function addChatMessage(type, text) {
+            const div = document.createElement('div');
+            div.className = `msg ${type}`;
+            const avatar = type === 'ai' ? '🤖' : '👤';
+            div.innerHTML = `
+                <span class="avatar">${avatar}</span>
+                <span class="bubble">${text}</span>
+            `;
+            chatMessages.appendChild(div);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            // Keep only last 20 messages
+            while (chatMessages.children.length > 20) {
+                chatMessages.removeChild(chatMessages.firstChild);
+            }
+        }
+
+        // ========================================================================
+        // THREE.JS – Visual Effects (Particles + Fireworks)
+        // ========================================================================
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x05080f);
+        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
+        camera.position.set(0, 0, 6);
+        camera.lookAt(0, 0, 0);
+
+        const renderer = new THREE.WebGLRenderer({
+            canvas: threeCanvas,
+            alpha: false,
+            antialias: true
+        });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+        // Background particles
+        const bgCount = 600;
+        const bgGeo = new THREE.BufferGeometry();
+        const bgPos = new Float32Array(bgCount * 3);
+        for (let i = 0; i < bgCount; i++) {
+            bgPos[i*3] = (Math.random() - 0.5) * 20;
+            bgPos[i*3+1] = (Math.random() - 0.5) * 14;
+            bgPos[i*3+2] = (Math.random() - 0.5) * 10 - 5;
+        }
+        bgGeo.setAttribute('position', new THREE.BufferAttribute(bgPos, 3));
+        const bgMat = new THREE.PointsMaterial({
+            color: 0x4466aa,
+            size: 0.03,
+            transparent: true,
+            opacity: 0.5,
+            blending: THREE.AdditiveBlending
+        });
+        const bgStars = new THREE.Points(bgGeo, bgMat);
+        scene.add(bgStars);
+
+        // Firework helper
+        function createFirework(x, y, z) {
+            const count = 200;
+            const colors = [0x00ddff, 0xaa88ff, 0xff66aa, 0xffd700, 0x00ff88];
+            const geo = new THREE.BufferGeometry();
+            const positions = new Float32Array(count * 3);
+            const colorArray = new Float32Array(count * 3);
+            const particles = [];
+
+            for (let i = 0; i < count; i++) {
+                const r = 0.1 + Math.random() * 1.8;
+                const theta = Math.random() * Math.PI * 2;
+                const phi = Math.acos(2 * Math.random() - 1);
+                positions[i*3] = x + r * Math.sin(phi) * Math.cos(theta);
+                positions[i*3+1] = y + r * Math.cos(phi);
+                positions[i*3+2] = z + r * Math.sin(phi) * Math.sin(theta);
+                const col = new THREE.Color(colors[Math.floor(Math.random() * colors.length)]);
+                colorArray[i*3] = col.r;
+                colorArray[i*3+1] = col.g;
+                colorArray[i*3+2] = col.b;
+                particles.push({
+                    vx: (Math.random() - 0.5) * 2.5,
+                    vy: (Math.random() - 0.5) * 2.5 + 1.5,
+                    vz: (Math.random() - 0.5) * 2.5,
+                    life: 1,
+                    decay: 0.005 + Math.random() * 0.02
+                });
+            }
+            geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geo.setAttribute('color', new THREE.BufferAttribute(colorArray, 3));
+
+            const mat = new THREE.PointsMaterial({
+                size: 0.05,
+                vertexColors: true,
+                transparent: true,
+                opacity: 1,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false
+            });
+            const points = new THREE.Points(geo, mat);
+            scene.add(points);
+
+            let frame = 0;
+            const maxFrames = 130;
+            const animId = setInterval(() => {
+                frame++;
+                const pos = points.geometry.attributes.position.array;
+                let allDead = true;
+                for (let i = 0; i < count; i++) {
+                    particles[i].life -= particles[i].decay;
+                    if (particles[i].life > 0) {
+                        allDead = false;
+                        pos[i*3] += particles[i].vx * 0.035;
+                        pos[i*3+1] += particles[i].vy * 0.035 - 0.025;
+                        pos[i*3+2] += particles[i].vz * 0.035;
+                        particles[i].vy -= 0.035;
+                    } else {
+                        pos[i*3] = 0;
+                        pos[i*3+1] = -10;
+                        pos[i*3+2] = 0;
+                    }
+                }
+                points.geometry.attributes.position.needsUpdate = true;
+                mat.opacity = Math.max(0, 1 - frame / maxFrames);
+                if (allDead || frame > maxFrames) {
+                    clearInterval(animId);
+                    scene.remove(points);
+                    points.geometry.dispose();
+                    mat.dispose();
+                }
+            }, 16);
+        }
+
+        // ========================================================================
+        // START CEREMONY
+        // ========================================================================
+        function startCeremony(source = 'gesture') {
+            if (isCeremonyActive) return;
+            isCeremonyActive = true;
+            isIdle = false;
+
+            statusText.textContent = '🎉 กำลังเปิดงาน...';
+            statusDot.className = 'dot purple';
+            aiStatus.textContent = '● CEREMONY';
+            if (source === 'voice') {
+                addChatMessage('ai', '🎤 รับคำสั่งเสียง! กำลังเปิดงาน...');
+            } else {
+                addChatMessage('ai', '👆 ตรวจจับท่าทาง! กำลังเปิดงาน...');
+            }
+
+            // Sound
+            playCeremonySound();
+
+            // AI Speech (Opening remarks)
+            const speeches = [
+                'ขอเรียนเชิญทุกท่านร่วมเปิดงานสัปดาห์วิทยาศาสตร์แห่งชาติ ประจำปี 2569 อย่างเป็นทางการ!',
+                'ด้วยพลังแห่งปัญญาประดิษฐ์และวิทยาศาสตร์เพื่ออนาคตที่ยั่งยืน ขอเปิดงานนี้ด้วยความภาคภูมิใจ!',
+                'ขอต้อนรับสู่งานสัปดาห์วิทยาศาสตร์แห่งชาติ 2569 งานแห่งปัญญาและนวัตกรรมเพื่ออนาคตที่ยั่งยืน!',
+                'เราขอเปิดงานนี้ด้วยวิทยาศาสตร์และเทคโนโลยี เพื่ออนาคตที่สดใสของทุกคน!'
+            ];
+            const speech = speeches[Math.floor(Math.random() * speeches.length)];
+            addChatMessage('ai', '🗣️ ' + speech);
+            speakAI(speech, () => {
+                // After speech, show effects and title
+                // Fireworks
+                createFirework(0, 1.2, 0);
+                setTimeout(() => createFirework(-1.5, 0.8, 1.5), 400);
+                setTimeout(() => createFirework(1.5, 1.0, -1.2), 800);
+                setTimeout(() => createFirework(0.5, 1.5, -1.8), 1200);
+
+                // Title
+                titleOverlay.classList.add('show');
+
+                // Reset after 6s
+                setTimeout(() => {
+                    titleOverlay.classList.remove('show');
+                    isCeremonyActive = false;
+                    isIdle = true;
+                    statusText.textContent = 'ระบบพร้อม';
+                    statusDot.className = 'dot green';
+                    aiStatus.textContent = '● ONLINE';
+                    addChatMessage('ai', '✅ เปิดงานเรียบร้อย! พร้อมรับคำสั่งครั้งต่อไป');
+
+                    // Restart voice recognition
+                    if (recognition) {
+                        try { recognition.start(); } catch(e) {}
+                    }
+                }, 6000);
+            });
+        }
+
+        // ========================================================================
+        // MEDIAPIPE HANDS
+        // ========================================================================
+        const hands = new Hands({
+            locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4/${file}`
+        });
+        hands.setOptions({
+            maxNumHands: 1,
+            modelComplexity: 1,
+            minDetectionConfidence: 0.5,
+            minTrackingConfidence: 0.5
+        });
+
+        hands.onResults((results) => {
+            const w = mpCanvas.width;
+            const h = mpCanvas.height;
+            mpCtx.clearRect(0, 0, w, h);
+
+            if (isIdle) drawAIPrompt(w, h);
+
+            if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
+                const landmarks = results.multiHandLandmarks[0];
+                handLandmarks = landmarks;
+                const pts = landmarks.map(lm => ({ x: lm.x * w, y: lm.y * h }));
+
+                // Draw hand (minimal)
+                const connections = [
+                    [0,1],[1,2],[2,3],[3,4],[0,5],[5,6],[6,7],[7,8],
+                    [0,9],[9,10],[10,11],[11,12],[0,13],[13,14],[14,15],[15,16],
+                    [0,17],[17,18],[18,19],[19,20],[5,9],[9,13],[13,17]
+                ];
+                mpCtx.strokeStyle = 'rgba(0, 200, 255, 0.3)';
+                mpCtx.lineWidth = 1.5;
+                for (let conn of connections) {
+                    const [i, j] = conn;
+                    if (i < pts.length && j < pts.length) {
+                        mpCtx.beginPath();
+                        mpCtx.moveTo(pts[i].x, pts[i].y);
+                        mpCtx.lineTo(pts[j].x, pts[j].y);
+                        mpCtx.stroke();
+                    }
+                }
+                pts.forEach((p, i) => {
+                    mpCtx.beginPath();
+                    mpCtx.arc(p.x, p.y, i===8?6:3, 0, 2*Math.PI);
+                    mpCtx.fillStyle = i===8 ? '#00ddff' : '#4488aa';
+                    mpCtx.shadowColor = 'rgba(0, 200, 255, 0.3)';
+                    mpCtx.shadowBlur = 10;
+                    mpCtx.fill();
+                    mpCtx.shadowBlur = 0;
+                });
+
+                // Pinch detection for gesture trigger
+                if (isIdle) {
+                    const indexTip = pts[8];
+                    const thumbTip = pts[4];
+                    if (indexTip && thumbTip) {
+                        const cx = w/2;
+                        const cy = h/2 - 20;
+                        const radius = Math.min(w,h) * 0.06;
+                        const dist = Math.hypot(indexTip.x - thumbTip.x, indexTip.y - thumbTip.y);
+                        const isPinch = dist < 30;
+                        const isOver = Math.hypot(indexTip.x - cx, indexTip.y - cy) < radius;
+                        if (isOver && isPinch) {
+                            fingerStatus.textContent = '👆 คลิก! (ท่าทาง)';
+                            statusText.textContent = 'ตรวจจับท่าทาง!';
+                            statusDot.className = 'dot yellow';
+                            startCeremony('gesture');
+                        } else if (isOver) {
+                            fingerStatus.textContent = '✋ เหนือปุ่ม';
+                        } else {
+                            fingerStatus.textContent = '🖐️ ชี้นิ้ว';
+                        }
+                    }
+                } else {
+                    fingerStatus.textContent = '⏳ กำลังเปิด...';
+                }
+                statusText.textContent = 'ตรวจจับมือ';
+                statusDot.className = 'dot green';
+            } else {
+                handLandmarks = null;
+                fingerStatus.textContent = '⏳ รอมือ';
+                statusText.textContent = 'รอตรวจจับ...';
+                statusDot.className = 'dot yellow';
+            }
+        });
+
+        // ========================================================================
+        // DRAW AI PROMPT BUTTON
+        // ========================================================================
+        function drawAIPrompt(w, h) {
+            const cx = w/2;
+            const cy = h/2 - 20;
+            const radius = Math.min(w,h) * 0.06;
+
+            // Glow
+            const grad = mpCtx.createRadialGradient(cx, cy, 0, cx, cy, radius * 2);
+            grad.addColorStop(0, 'rgba(0, 200, 255, 0.06)');
+            grad.addColorStop(1, 'rgba(0,0,0,0)');
+            mpCtx.beginPath();
+            mpCtx.arc(cx, cy, radius * 2, 0, 2*Math.PI);
+            mpCtx.fillStyle = grad;
+            mpCtx.fill();
+
+            // Main button
+            const grad2 = mpCtx.createRadialGradient(cx-6, cy-6, 5, cx, cy, radius);
+            grad2.addColorStop(0, '#00ddff');
+            grad2.addColorStop(0.5, '#0088bb');
+            grad2.addColorStop(1, '#004466');
+            mpCtx.shadowColor = 'rgba(0, 200, 255, 0.4)';
+            mpCtx.shadowBlur = 25;
+            mpCtx.beginPath();
+            mpCtx.arc(cx, cy, radius, 0, 2*Math.PI);
+            mpCtx.fillStyle = grad2;
+            mpCtx.fill();
+            mpCtx.shadowBlur = 0;
+            mpCtx.strokeStyle = 'rgba(0, 255, 200, 0.5)';
+            mpCtx.lineWidth = 2;
+            mpCtx.stroke();
+
+            // Text
+            mpCtx.fillStyle = '#fff';
+            mpCtx.font = `bold ${radius*0.35}px Orbitron, Sarabun`;
+            mpCtx.textAlign = 'center';
+            mpCtx.textBaseline = 'middle';
+            mpCtx.shadowColor = 'rgba(0,0,0,0.8)';
+            mpCtx.shadowBlur = 8;
+            mpCtx.fillText('🎤', cx, cy - 2);
+            mpCtx.shadowBlur = 0;
+
+            // Sub
+            mpCtx.fillStyle = 'rgba(0, 255, 200, 0.4)';
+            mpCtx.font = `${radius*0.13}px Orbitron, Sarabun`;
+            mpCtx.fillText('PINCH or SPEAK', cx, cy + radius + 22);
+
+            // Voice hint
+            mpCtx.fillStyle = 'rgba(255,255,255,0.15)';
+            mpCtx.font = `${radius*0.09}px Orbitron, Sarabun`;
+            mpCtx.fillText('⌘ พูดว่า "เปิดงาน" หรือใช้นิ้ว', cx, cy + radius + 44);
+        }
+
+        // ========================================================================
+        // CAMERA
+        // ========================================================================
+        const cameraHelper = new Camera(video, {
+            onFrame: async () => {
+                await hands.send({ image: video });
+            },
+            width: 640,
+            height: 480
+        });
+        cameraHelper.start().then(() => {
+            statusText.textContent = 'กล้องพร้อม';
+            statusDot.className = 'dot green';
+            // Initialize speech recognition after camera
+            recognition = initSpeechRecognition();
+            if (recognition) {
+                setTimeout(() => {
+                    try { recognition.start(); } catch(e) {}
+                }, 500);
+            }
+        }).catch(err => {
+            statusText.textContent = '❌ ' + err.message;
+            statusDot.className = 'dot red';
+        });
+
+        // ========================================================================
+        // RESIZE
+        // ========================================================================
+        function resizeAll() {
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+            mpCanvas.width = w;
+            mpCanvas.height = h;
+            threeCanvas.width = w;
+            threeCanvas.height = h;
+            renderer.setSize(w, h);
+            camera.aspect = w / h;
+            camera.updateProjectionMatrix();
+        }
+        window.addEventListener('resize', resizeAll);
+
+        // ========================================================================
+        // ANIMATION
+        // ========================================================================
+        function animate() {
+            bgStars.rotation.y += 0.001;
+            renderer.render(scene, camera);
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        // ========================================================================
+        // EVENT LISTENERS
+        // ========================================================================
+        // Click to init audio
+        document.addEventListener('click', () => initAudio(), { once: true });
+
+        // Keyboard shortcut: 'Space' for voice simulation (testing)
+        document.addEventListener('keydown', (e) => {
+            if (e.key === ' ' && isIdle && !isCeremonyActive) {
+                e.preventDefault();
+                // Simulate voice command
+                addChatMessage('user', 'เปิดงาน (แป้นพิมพ์)');
+                startCeremony('voice');
+            }
+        });
+
+        // Mouse click on container for testing
+        document.getElementById('container').addEventListener('dblclick', () => {
+            if (isIdle && !isCeremonyActive) startCeremony('gesture');
+        });
+
+        // Load voices for speech synthesis
+        window.speechSynthesis && window.speechSynthesis.getVoices();
+        window.speechSynthesis && window.speechSynthesis.onvoiceschanged = () => {
+            window.speechSynthesis.getVoices();
+        };
+
+        setTimeout(resizeAll, 500);
+        setInterval(resizeAll, 3000);
+    })();
+</script>
+</body>
+</html>

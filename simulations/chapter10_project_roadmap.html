@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>เครื่องมือออกแบบแผนการจัดการเรียนรู้และเส้นทางโครงงาน (Lesson Plan & Roadmap Studio)</title>
+
+  <!-- Google Fonts & FontAwesome 6 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    :root {
+      --bg-dark: #030712;
+      --card-bg: rgba(11, 19, 43, 0.94);
+      --card-border: rgba(0, 240, 255, 0.25);
+      --cyan: #00f0ff;
+      --emerald: #10b981;
+      --amber: #f59e0b;
+      --rose: #f43f5e;
+      --indigo: #6366f1;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+    body {
+      background: var(--bg-dark);
+      color: #f8fafc;
+      font-family: 'Prompt', 'Sarabun', sans-serif;
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* Top Bar */
+    .top-header {
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--card-border);
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+      z-index: 10;
+    }
+    .header-title h1 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Chakra Petch', sans-serif;
+    }
+    .header-title h1 i { color: var(--cyan); }
+    .header-sub { font-size: 0.8rem; color: #94a3b8; margin-top: 2px; }
+    .header-btns { display: flex; gap: 8px; }
+    .btn-h {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: #e2e8f0;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-family: inherit;
+      cursor: pointer;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .btn-h:hover {
+      background: rgba(0, 240, 255, 0.15);
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+
+    /* Main Grid */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      flex: 1;
+      height: calc(100vh - 120px);
+      gap: 16px;
+      padding: 16px;
+      overflow: hidden;
+    }
+
+    .panel-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 16px;
+      backdrop-filter: blur(12px);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      overflow-y: auto;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+    }
+    .section-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--cyan);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .form-label {
+      font-size: 0.76rem;
+      color: #94a3b8;
+    }
+    select, input[type=text] {
+      background: #0f172a;
+      border: 1px solid #334155;
+      color: #fff;
+      padding: 7px 10px;
+      border-radius: 6px;
+      font-family: inherit;
+      font-size: 0.82rem;
+    }
+
+    .btn-gen {
+      background: var(--cyan);
+      color: #030712;
+      border: none;
+      padding: 10px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+    .btn-gen:hover { filter: brightness(1.15); box-shadow: 0 0 16px var(--cyan); }
+
+    /* Timeline & Roadmap Container */
+    .timeline-view {
+      background: #020617;
+      border: 1px solid rgba(0,240,255,0.2);
+      border-radius: 12px;
+      padding: 20px;
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+    .roadmap-stage-card {
+      background: rgba(15, 23, 42, 0.75);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-left: 4px solid var(--cyan);
+      border-radius: 8px;
+      padding: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .stage-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .stage-title {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .stage-weeks {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      background: rgba(0, 240, 255, 0.15);
+      color: var(--cyan);
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+
+    /* Bottom Bar */
+    .bottom-bar {
+      height: 48px;
+      background: var(--card-bg);
+      border-top: 1px solid var(--card-border);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 0 20px;
+      font-size: 0.82rem;
+    }
+    .badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      color: var(--cyan);
+    }
+  </style>
+</head>
+<body>
+  <header class="top-header">
+    <div class="header-title">
+      <h1><i class="fas fa-route"></i> สตูดิโอออกแบบแผนการจัดการเรียนรู้และเส้นทางโครงงานวิทยาการคำนวณ</h1>
+      <div class="header-sub">วิชา 4124941 วิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์ | ผศ.ดร.ชีวะ ทัศนา (มรภ.รำไพพรรณี)</div>
+    </div>
+    <div class="header-btns">
+      <button class="btn-h" onclick="window.print()"><i class="fas fa-print"></i> พิมพ์แผนงาน (PDF)</button>
+      <a href="../lessons/week_11.html" class="btn-h"><i class="fas fa-arrow-left"></i> กลับสู่บทเรียน สัปดาห์ที่ 11</a>
+    </div>
+  </header>
+
+  <main class="main-grid">
+    <!-- Left: Setup -->
+    <section class="panel-card">
+      <div class="section-title"><i class="fas fa-sliders-h"></i> 1. ตั้งค่าแผนการจัดการเรียนรู้</div>
+      
+      <div class="form-group">
+        <label class="form-label">ระดับชั้นเป้าหมาย (Grade Level):</label>
+        <select id="selGrade" onchange="generateRoadmap()">
+          <option value="m1">มัธยมศึกษาปีที่ 1 (แนวคิดเชิงคำนวณพื้นฐาน)</option>
+          <option value="m2">มัธยมศึกษาปีที่ 2 (การออกแบบและเขียนโปรแกรม)</option>
+          <option value="m3">มัธยมศึกษาปีที่ 3 (การพัฒนาแอปพลิเคชันและ IoT)</option>
+          <option value="m4" selected>มัธยมศึกษาปีที่ 4 (วิทยาการข้อมูลและแบบจำลองฟิสิกส์)</option>
+          <option value="m5">มัธยมศึกษาปีที่ 5 (วิทยาการข้อมูลและการตัดสินใจ)</option>
+          <option value="m6">มัธยมศึกษาปีที่ 6 (โครงงานนวัตกรรมและปัญญาประดิษฐ์)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">บูรณาการสาขาวิทยาศาสตร์ (Integration):</label>
+        <select id="selSci" onchange="generateRoadmap()">
+          <option value="phys" selected>ฟิสิกส์ (Physics & Kinematics Modeling)</option>
+          <option value="chem">เคมี (Chemistry & Reaction Rates Simulation)</option>
+          <option value="bio">ชีววิทยา (Biology & Population Genetics Ecology)</option>
+          <option value="astro">ดาราศาสตร์ (Astronomy & Planetary Orbits)</option>
+          <option value="smartfarm">เกษตรดิจิทัล (Smart Agriculture & IoT Sensors)</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">ระดับการเรียนรู้ตาม Bloom's Taxonomy:</label>
+        <select id="selBloom" onchange="generateRoadmap()">
+          <option value="apply">Applying (การประยุกต์ใช้โค้ดแก้โจทย์)</option>
+          <option value="analyze">Analyzing (การวิเคราะห์และตรวจสอบความถูกต้อง)</option>
+          <option value="create" selected>Creating (การสร้างสรรค์นวัตกรรมจำลองเสมือนจริง)</option>
+        </select>
+      </div>
+
+      <button class="btn-gen" onclick="generateRoadmap()"><i class="fas fa-magic"></i> สร้างแผนแม่บท (Generate Roadmap)</button>
+
+      <div style="background: rgba(16, 185, 129, 0.15); border: 1px solid var(--emerald); border-radius: 8px; padding: 12px; font-size: 0.76rem; color: #a7f3d0; margin-top: auto;">
+        <i class="fas fa-check-circle"></i> <strong>มาตรฐาน TQF & OBE:</strong> สร้างขึ้นตามกรอบสมรรถนะครูวิทยาศาสตร์ มหาวิทยาลัยราชภัฏรำไพพรรณี เชื่อมโยงตัวชี้วัด ว 4.2
+      </div>
+    </section>
+
+    <!-- Right: Generated Timeline -->
+    <section class="panel-card" style="padding: 0; overflow: hidden;">
+      <div class="timeline-view" id="roadmap-container">
+        <!-- Injected via JS -->
+      </div>
+    </section>
+  </main>
+
+  <footer class="bottom-bar">
+    <div>โครงสร้างแผนงาน: <span class="badge" id="botPlan">ม.4 ฟิสิกส์คำนวณ (5 ระยะ 16 สัปดาห์)</span></div>
+    <div>จำนวนชั่วโมงรวม: <span class="badge">64 ชั่วโมง (3 หน่วยกิต)</span></div>
+    <div>มาตรฐานหลักสูตร: <span class="badge" style="color: var(--emerald);">สพฐ. ว 4.2 / TQF-ED</span></div>
+  </footer>
+
+  <script>
+    function generateRoadmap() {
+      const grade = document.getElementById('selGrade').value;
+      const sci = document.getElementById('selSci').value;
+      const bloom = document.getElementById('selBloom').value;
+
+      const container = document.getElementById('roadmap-container');
+      container.innerHTML = `
+        <div style="border-bottom: 1px solid rgba(0,240,255,0.2); padding-bottom: 12px; margin-bottom: 10px;">
+          <h2 style="font-size: 1.15rem; color: #fff; font-family: 'Chakra Petch';">
+            <i class="fas fa-clipboard-list" style="color: var(--cyan);"></i> แผนแม่บทโครงงานบูรณาการวิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์
+          </h2>
+          <div style="font-size: 0.8rem; color: #94a3b8; margin-top: 4px;">
+            กรอบการจัดการเรียนรู้ 16 สัปดาห์ (Outcomes-Based Education) เน้นการสร้างแบบจำลองคอมพิวเตอร์และสื่อจำลองเสมือนจริง
+          </div>
+        </div>
+
+        <div class="roadmap-stage-card" style="border-left-color: var(--cyan);">
+          <div class="stage-header">
+            <div class="stage-title"><i class="fas fa-lightbulb" style="color: var(--cyan);"></i> ระยะที่ 1: การกำหนดปัญหาและการคิดเชิงคำนวณ (Problem Scoping & CT)</div>
+            <span class="stage-weeks">สัปดาห์ที่ 1 - 3 (12 ชม.)</span>
+          </div>
+          <p style="font-size: 0.8rem; color: #cbd5e1;">
+            • นักเรียนแบ่งกลุ่มศึกษาปรากฏการณ์วิทยาศาสตร์เป้าหมาย และใช้แนวคิด Decomposition แยกแยะตัวแปรต้น ตัวแปรตาม และตัวแปรควบคุม<br>
+            • ใช้ Abstraction คัดกรองเฉพาะตัวแปรสำคัญทางคณิตศาสตร์ และเขียนรหัสลำลองเบื้องต้น
+          </p>
+        </div>
+
+        <div class="roadmap-stage-card" style="border-left-color: var(--indigo);">
+          <div class="stage-header">
+            <div class="stage-title"><i class="fas fa-code" style="color: var(--indigo);"></i> ระยะที่ 2: การออกแบบอัลกอริทึมและเขียนโปรแกรมต้นแบบ (Algorithm & Coding)</div>
+            <span class="stage-weeks">สัปดาห์ที่ 4 - 7 (16 ชม.)</span>
+          </div>
+          <p style="font-size: 0.8rem; color: #cbd5e1;">
+            • เขียนผังงาน (Flowchart) และสร้างโครงสร้างคำสั่งวนซ้ำ (For-Loop / While) เพื่อจำลองการเคลื่อนที่หรือปฏิกิริยา<br>
+            • พัฒนาโค้ดด้วยภาษา Python หรือ Scratch และเชื่อมโยงกับการอ่านค่าเซนเซอร์จำลอง
+          </p>
+        </div>
+
+        <div class="roadmap-stage-card" style="border-left-color: var(--amber);">
+          <div class="stage-header">
+            <div class="stage-title"><i class="fas fa-bug" style="color: var(--amber);"></i> ระยะที่ 3: การทดสอบ ตรวจแก้บั๊ก และประเมินกลางภาค (Testing & Midterm)</div>
+            <span class="stage-weeks">สัปดาห์ที่ 8 - 9 (8 ชม.)</span>
+          </div>
+          <p style="font-size: 0.8rem; color: #cbd5e1;">
+            • สอบประเมินความรู้รวบยอดการไล่สายรหัส (Trace Table)<br>
+            • ตรวจหาข้อผิดพลาดทางตรรกะ (Logic Errors) และความคลาดเคลื่อนทางฟิสิกส์ (Physics Verification)
+          </p>
+        </div>
+
+        <div class="roadmap-stage-card" style="border-left-color: var(--rose);">
+          <div class="stage-header">
+            <div class="stage-title"><i class="fas fa-cubes" style="color: var(--rose);"></i> ระยะที่ 4: การพัฒนาแบบจำลอง 3D และสื่อจุลการสอน (3D Simulation & Micro-teaching)</div>
+            <span class="stage-weeks">สัปดาห์ที่ 10 - 13 (16 ชม.)</span>
+          </div>
+          <p style="font-size: 0.8rem; color: #cbd5e1;">
+            • พัฒนาโมเดลจำลอง 3D ผ่าน Three.js หรือ WebGL เพื่อให้ผู้เรียนสังเกตปรากฏการณ์ที่มองไม่เห็นด้วยตาเปล่า<br>
+            • ซักซ้อมและฝึกปฏิบัติการจุลการสอน (Micro-teaching) ในชั้นเรียน
+          </p>
+        </div>
+
+        <div class="roadmap-stage-card" style="border-left-color: var(--emerald);">
+          <div class="stage-header">
+            <div class="stage-title"><i class="fas fa-trophy" style="color: var(--emerald);"></i> ระยะที่ 5: การนำเสนอผลงานนวัตกรรมและสอบปลายภาค (Capstone & Final Exam)</div>
+            <span class="stage-weeks">สัปดาห์ที่ 14 - 16 (12 ชม.)</span>
+          </div>
+          <p style="font-size: 0.8rem; color: #cbd5e1;">
+            • จัดนิทรรศการแสดงผลงานนวัตกรรมดิจิทัล (Innovation Gallery Showcase)<br>
+            • จัดทำรายงานคู่มือครูและประเมินผลสัมฤทธิ์ปลายภาคเรียน
+          </p>
+        </div>
+      `;
+    }
+
+    window.onload = generateRoadmap;
+  </script>
+</body>
+</html>

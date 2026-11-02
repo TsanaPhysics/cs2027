@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="th" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <title>คู่มือการสอน: Coding for Kids (Printable PDF)</title>
+    <style>
+        @media print { .no-print { display: none; } }
+        body { font-family: 'Sarabun', sans-serif; line-height: 1.6; color: #333; max-width: 800px; margin: 0 auto; padding: 40px; }
+        h1, h2, h3 { color: #1e293b; border-bottom: 2px solid #6366f1; padding-bottom: 10px; }
+        .page-break { page-break-after: always; }
+        .schedule-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .schedule-table th, .schedule-table td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+        .schedule-table th { background-color: #f8fafc; }
+        .code-block { background: #f1f5f9; padding: 20px; border-radius: 10px; border-left: 5px solid #6366f1; font-family: monospace; }
+        .footer { margin-top: 50px; font-size: 0.8rem; text-align: center; color: #94a3b8; }
+        .btn-print { background: #6366f1; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; display: inline-block; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+    <a href="javascript:window.print()" class="btn-print no-print">พิมพ์เป็น PDF (Print to PDF)</a>
+
+    <header>
+        <h1>คู่มือวิทยากร: Coding for Kids (วิทย์ในวัง)</h1>
+        <p><strong>หัวข้อ:</strong> การออกแบบเกม (Game Design) สำหรับนักเรียนประถมศึกษา</p>
+        <p><strong>จำนวนนักเรียน:</strong> 16 คน | <strong>ระยะเวลา:</strong> 6 ชั่วโมง</p>
+    </header>
+
+    <section>
+        <h2>1. กำหนดการ (Schedule)</h2>
+        <table class="schedule-table">
+            <thead>
+                <tr>
+                    <th>เวลา</th>
+                    <th>กิจกรรม</th>
+                    <th>รายละเอียด</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>09:00 - 09:30</td><td>เปิดประตูสู่โลกโค้ด</td><td>Ice Breaking & Human Robot</td></tr>
+                <tr><td>09:30 - 10:30</td><td>Logic Adventurers</td><td>ตรรกะแบบ Unplugged</td></tr>
+                <tr><td>10:45 - 12:00</td><td>Game Mechanics 101</td><td>พื้นฐาน Scratch & กลไกเกม</td></tr>
+                <tr><td>13:00 - 14:30</td><td>Palace Quest</td><td>สร้างโปรเจกต์เกมในวังหลวง</td></tr>
+                <tr><td>15:45 - 16:00</td><td>Showcase</td><td>นำเสนอและมอบประกาศนียบัตร</td></tr>
+            </tbody>
+        </table>
+    </section>
+
+    <div class="page-break"></div>
+
+    <section>
+        <h2>2. รายละเอียดบล็อกโค้ด (Coding Recipes)</h2>
+        <h3>2.1 การควบคุมตัวละคร (Player Control)</h3>
+        <div class="code-block">
+            เมื่อคลิกธงเขียว -> วนซ้ำตลอดไป -> ตั้งค่า X ไปที่ [ตำแหน่งเมาส์ X]
+        </div>
+        
+        <h3>2.2 ระบบไอเทมตกจากฟ้า (Falling Logic)</h3>
+        <div class="code-block">
+            วนซ้ำตลอดไป:<br>
+            - ไปที่ x: (สุ่ม) y: 180<br>
+            - วนซ้ำจนกว่า [y < -170]:<br>
+            --- เปลี่ยน y ทีละ -5<br>
+            --- ถ้า [สัมผัส Player]:<br>
+            ----- เพิ่มคะแนน +1<br>
+            ----- ไปที่ x: (สุ่ม) y: 180 (เริ่มใหม่)
+        </div>
+    </section>
+
+    <section>
+        <h2>3. รายการอุปกรณ์ (Checklist)</h2>
+        <ul>
+            <li>คอมพิวเตอร์ 16 เครื่อง (เชื่อมต่ออินเทอร์เน็ต)</li>
+            <li>โปรเจกเตอร์สำหรับวิทยากร</li>
+            <li>บัตรคำสั่ง Unplugged Coding</li>
+            <li>เกียรติบัตรสำหรับนักเรียน</li>
+        <section>
+            <h2>4. ทรัพยากรสำหรับวิทยากร (Teacher Resources)</h2>
+            <ul>
+                <li>📖 <a href="teacher-guide.html">คู่มือวิทยากรอย่างละเอียด</a> (90 นาที)</li>
+                <li>🃏 <a href="unplugged-collection.html">คลังเกม Unplugged (Backup กรณีฉุกเฉิน)</a></li>
+                <li>📥 <a href="print-cards.html">ดาวน์โหลดบัตรคำสั่ง Coding Deck</a></li>
+                <li>🛠️ <a href="builder.html">หน้าสาธิตการต่อบล็อก (Interactive Lab)</a></li>
+            </ul>
+        </section>
+    </header>
+        © 2026 โครงการวิทย์ในวัง | สนับสนุนโดย Antigravity AI
+    </footer>
+</body>
+</html>

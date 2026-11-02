@@ -1,0 +1,1666 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แผนการสอนสัปดาห์ที่ 13 - การจุลการสอน (Micro-teaching) ครั้งที่ 1 และสิทธิความเป็นส่วนตัว/ความปลอดภัยของข้อมูลดิจิทัล (Data Privacy, PDPA & Cyber Safety)</title>
+    <!-- ฟอนต์ Sarabun และ Inter จาก Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- MathJax 3 for Scientific Notation & Equations -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [["$", "$"], ["\\(", "\\)"]],
+                displayMath: [["$$", "$$"], ["\\[", "\\]"]],
+                processEscapes: true,
+                processEnvironments: true
+            },
+            options: {
+                skipHtmlTags: ["script", "noscript", "style", "textarea", "pre", "code"]
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --primary: #0f172a;
+            --primary-light: #1e293b;
+            --accent: #2563eb;
+            --accent-hover: #1d4ed8;
+            --secondary: #0891b2;
+            --success: #059669;
+            --warning: #d97706;
+            --danger: #dc2626;
+            --purple: #7c3aed;
+            --amber: #f59e0b;
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --border-focus: #94a3b8;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.08), 0 2px 4px -2px rgba(0,0,0,0.05);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.05);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Sarabun', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.8;
+            font-size: 16px;
+        }
+
+        .container {
+            max-width: 1140px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        .nav-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 1.25rem;
+            padding: 0.5rem 1rem;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.25s ease;
+        }
+
+        .nav-back:hover {
+            color: var(--accent-hover);
+            transform: translateX(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0e7490 100%);
+            color: #ffffff;
+            padding: 3rem 2.5rem;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            top: -40%;
+            right: -10%;
+            width: 480px;
+            height: 480px;
+            background: radial-gradient(circle, rgba(14, 116, 144, 0.35) 0%, rgba(255, 255, 255, 0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .header-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(8px);
+            padding: 0.35rem 0.85rem;
+            border-radius: 9999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header h1 {
+            font-size: 2.1rem;
+            font-weight: 700;
+            line-height: 1.35;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.02em;
+        }
+
+        .header .subtitle {
+            font-size: 1.15rem;
+            opacity: 0.92;
+            font-weight: 400;
+            max-width: 880px;
+        }
+
+        .header .course-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 1.25rem 1.5rem;
+            border-radius: 12px;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .header .course-info span {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.92rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .tab-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 0.85rem 1.4rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            transition: all 0.25s ease;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .tab-btn:hover {
+            background: #f1f5f9;
+            color: var(--accent);
+            border-color: #cbd5e1;
+        }
+
+        .tab-btn.active {
+            background: var(--accent);
+            color: #ffffff;
+            border-color: var(--accent);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+
+        .content-section {
+            display: none;
+            animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--bg-card);
+            border-radius: 14px;
+            padding: 2.25rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+        }
+
+        .card-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding-bottom: 0.85rem;
+            border-bottom: 2px solid #f1f5f9;
+        }
+
+        .card-title i {
+            color: var(--secondary);
+        }
+
+        .highlight-box {
+            background-color: #eff6ff;
+            border-left: 4px solid var(--accent);
+            padding: 1.25rem 1.5rem;
+            border-radius: 0 10px 10px 0;
+            margin: 1.5rem 0;
+            font-size: 0.98rem;
+        }
+
+        .highlight-box.warning {
+            background-color: #fffbeb;
+            border-left-color: var(--warning);
+        }
+
+        .highlight-box.success {
+            background-color: #ecfdf5;
+            border-left-color: var(--success);
+        }
+
+        .highlight-box.purple {
+            background-color: #f5f3ff;
+            border-left-color: var(--purple);
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.25rem;
+            margin: 1.5rem 0;
+        }
+
+        .feature-box {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.25s ease;
+        }
+
+        .feature-box:hover {
+            border-color: var(--accent);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .feature-box h4 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+            background: #ffffff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+        }
+
+        th, td {
+            padding: 1rem 1.25rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+
+        th {
+            background-color: #f8fafc;
+            font-weight: 700;
+            color: var(--primary);
+            border-bottom: 2px solid var(--border);
+        }
+
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background-color: #f8fafc; }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.82rem;
+            font-weight: 600;
+        }
+
+        .badge-blue { background: #dbeafe; color: #1e40af; }
+        .badge-green { background: #d1fae5; color: #065f46; }
+        .badge-purple { background: #ede9fe; color: #5b21b6; }
+        .badge-amber { background: #fef3c7; color: #92400e; }
+        .badge-red { background: #fee2e2; color: #991b1b; }
+        .badge-teal { background: #ccfbf1; color: #115e59; }
+
+        .time-badge {
+            background: var(--primary);
+            color: #ffffff;
+            padding: 0.35rem 0.85rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .svg-container {
+            width: 100%;
+            overflow-x: auto;
+            margin: 2rem 0;
+            border-radius: 12px;
+            background: #ffffff;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            padding: 1.5rem 1rem;
+            text-align: center;
+        }
+
+        .svg-container svg {
+            max-width: 100%;
+            height: auto;
+            display: inline-block;
+        }
+
+        .code-block {
+            background: #0f172a;
+            color: #f8fafc;
+            padding: 1.5rem;
+            border-radius: 12px;
+            font-family: 'JetBrains Mono', Consolas, Monaco, monospace;
+            font-size: 0.9rem;
+            line-height: 1.65;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            border: 1px solid #1e293b;
+            box-shadow: var(--shadow-md);
+        }
+
+        .code-comment { color: #64748b; font-style: italic; }
+        .code-keyword { color: #38bdf8; font-weight: bold; }
+        .code-func { color: #a78bfa; }
+        .code-string { color: #34d399; }
+        .code-num { color: #fbbf24; }
+
+        .quiz-option {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem 1.25rem;
+            margin-bottom: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .quiz-option:hover {
+            border-color: var(--accent);
+            background: #f8fafc;
+        }
+
+        .quiz-explanation {
+            display: none;
+            margin-top: 1.25rem;
+            padding: 1.25rem;
+            border-radius: 8px;
+            background: #f8fafc;
+            border: 1px solid var(--border);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2.5rem 0;
+            color: var(--text-muted);
+            font-size: 0.92rem;
+            border-top: 1px solid var(--border);
+            margin-top: 3rem;
+        }
+
+        @media (max-width: 768px) {
+            .header { padding: 2rem 1.5rem; }
+            .header h1 { font-size: 1.6rem; }
+            .card { padding: 1.5rem; }
+            .tab-btn { padding: 0.7rem 1.1rem; font-size: 0.88rem; }
+            .grid-2, .grid-3 { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <a href="../index.html" class="nav-back">
+        <i class="fas fa-arrow-left"></i> กลับสู่หน้าหลักรายวิชา
+    </a>
+
+    <!-- Header Section -->
+    <header class="header">
+        <div class="header-badge">
+            <i class="fas fa-chalkboard-user"></i> สัปดาห์ที่ 13 • Micro-teaching & PDPA Compliance
+        </div>
+        <h1>การจุลการสอน (Micro-teaching) ครั้งที่ 1 และสิทธิความเป็นส่วนตัว/ความปลอดภัยของข้อมูลดิจิทัล<br><span style="font-size: 1.35rem; font-weight: 500; opacity: 0.92;">Micro-teaching Practicum 1, Student Data Privacy, PDPA Compliance & Educational Cybersecurity</span></h1>
+        <p class="subtitle">
+            ปฏิบัติการจุลการสอนเสมือนจริงครั้งที่ 1 (Micro-teaching Practicum 15-20 นาที) ประเมินสมรรถนะ TPACK และการบูรณาการแบบจำลองคอมพิวเตอร์ ควบคู่กับการปฏิบัติตาม พ.ร.บ. คุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562 (PDPA) สิทธิของเจ้าของข้อมูล (Data Subject Rights) และการสร้างสุขอนามัยไซเบอร์ (Cyber Hygiene) ในชั้นเรียนวิทยาศาสตร์
+        </p>
+        <div class="course-info">
+            <span><i class="fas fa-book-open text-accent"></i> <strong>รหัสวิชา:</strong> 4124941</span>
+            <span><i class="fas fa-graduation-cap text-accent"></i> <strong>รายวิชา:</strong> วิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์</span>
+            <span><i class="fas fa-user-tie text-accent"></i> <strong>ผู้สอน:</strong> ผศ.ดร.ชีวะ ทัศนา</span>
+            <span><i class="fas fa-clock text-accent"></i> <strong>เวลาเรียน:</strong> 4 ชั่วโมง (บรรยาย 1 ชม. / ปฏิบัติ 3 ชม.)</span>
+        </div>
+    </header>
+
+    <!-- Navigation Tabs (The 6-Tab Standard) -->
+    <div class="tabs">
+        <button class="tab-btn active" onclick="showTab('tab1', this)">
+            <i class="fas fa-bullseye"></i> 1. ผลลัพธ์การเรียนรู้ (WLOs)
+        </button>
+        <button class="tab-btn" onclick="showTab('tab2', this)">
+            <i class="fas fa-book-bookmark"></i> 2. สาระสำคัญ & สื่อทัศนศิลป์
+        </button>
+        <button class="tab-btn" onclick="showTab('tab3', this)">
+            <i class="fas fa-hands-holding-circle"></i> 3. กิจกรรมการเรียนรู้ 5E
+        </button>
+        <button class="tab-btn" onclick="showTab('tab4', this)">
+            <i class="fas fa-chart-simple"></i> 4. การวัดและประเมินผล
+        </button>
+        <button class="tab-btn" onclick="showTab('tab5', this)">
+            <i class="fas fa-clipboard-question"></i> 5. ข้อสอบวัดสมรรถนะ HOTS
+        </button>
+        <button class="tab-btn" onclick="showTab('tab6', this)">
+            <i class="fas fa-quote-left"></i> 6. เอกสารอ้างอิง APA 7th
+        </button>
+    </div>
+
+    <!-- ==================== TAB 1: ผลลัพธ์การเรียนรู้ ==================== -->
+    <div id="tab1" class="content-section active">
+        <div class="card">
+            <h2 class="card-title">
+                <i class="fas fa-bullseye"></i> ผลลัพธ์การเรียนรู้รายสัปดาห์ (Weekly Learning Outcomes: WLOs)
+            </h2>
+            <p style="margin-bottom: 1.5rem; color: var(--text-muted);">
+                เมื่อสิ้นสุดการเรียนรู้ในสัปดาห์ที่ 13 นักศึกษาครูวิทยาศาสตร์สามารถแสดงสมรรถนะตามกรอบผลลัพธ์การเรียนรู้ 4 มิติ (K-P-A-PCK) สอดคล้องตามเกณฑ์ OBE และ Bloom's Revised Taxonomy ดังนี้:
+            </p>
+
+            <div class="grid-2">
+                <div class="feature-box">
+                    <h4><i class="fas fa-brain text-accent"></i> 1. ด้านความรู้เชิงทฤษฎี (Knowledge - K)</h4>
+                    <p>อธิบายหลักการทางกฎหมายของพระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562 (PDPA) ในบริบทสถานศึกษา, จำแนกความแตกต่างระหว่างข้อมูลส่วนบุคคลทั่วไป (General PII) และข้อมูลส่วนบุคคลที่มีความอ่อนไหว (Sensitive PII), ระบุฐานความชอบธรรมในการประมวลผลข้อมูล (Legal Bases: Consent, Public Task, Vital Interest), และเข้าใจหลักการเสาหลักความปลอดภัยสารสนเทศ CIA Triad (Confidentiality, Integrity, Availability)</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4><i class="fas fa-laptop-code text-secondary"></i> 2. ด้านทักษะและการปฏิบัติการ (Skills - P)</h4>
+                    <p>ปฏิบัติการสอนจริงในการจุลการสอน (Micro-teaching Practicum 15-20 นาที) ในกลุ่ม 1–4 โดยบูรณาการโปรแกรมจำลองที่พัฒนาขึ้นได้อย่างราบรื่น, ดำเนินการคัดกรอง ปกปิด และแปลงข้อมูลระบุตัวตน (Data Sanitization & Anonymization) บนชุดข้อมูลจำลองการทดลองวิทยาศาสตร์ก่อนนำขึ้นระบบคลาวด์หรือจอภาพในห้องเรียน, และบริหารเวลาตามกระบวนการ 5E ได้อย่างแม่นยำ</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4><i class="fas fa-shield-halved text-warning"></i> 3. ด้านเจตคติและจริยธรรมดิจิทัล (Attitude - A)</h4>
+                    <p>ตระหนักรู้และแสดงความรับผิดชอบอย่างเคร่งครัดต่อการคุ้มครองสิทธิความเป็นส่วนตัวของนักเรียน (Child Rights & Digital Footprint), เคารพสิทธิของเจ้าของข้อมูล (Data Subject Rights), หลีกเลี่ยงการเปิดเผยข้อมูลส่วนบุคคลหรือภาพถ่ายผู้เรียนที่ไม่ได้รับความยินยอม, และส่งเสริมวัฒนธรรมความปลอดภัยทางไซเบอร์เชิงบวก (Positive Cyber Hygiene)</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4><i class="fas fa-chalkboard-user text-purple"></i> 4. ด้านความรู้เนื้อหาผสานวิธีสอนและเทคโนโลยี (PCK)</h4>
+                    <p>ประยุกต์ใช้ความรู้ด้านเทคโนโลยีวิธีสอนวิทยาศาสตร์ (TPACK) ในการตั้งคำถามชี้นำระดับสูง (High-Order Questioning) เพื่อดึงทักษะการคิดเชิงคำนวณ 4 เสาหลัก (Decomposition, Pattern, Abstraction, Algorithm) ของนักเรียนออกมาจากกิจกรรมจำลอง, พร้อมทั้งมีความยืดหยุ่นในการแก้ไขข้อผิดพลาดทางเทคนิค (Pedagogical Agility & Error Handling) ได้อย่างมั่นใจและเป็นมืออาชีพ</p>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <strong><i class="fas fa-circle-check text-accent"></i> ความสอดคล้องกับมาตรฐานหลักสูตร (Curriculum & OBE Alignment):</strong><br>
+                สัปดาห์นี้ทำหน้าที่เป็นจุดเชื่อมโยงสำคัญระหว่างการออกแบบแผนการจัดการเรียนรู้ (สัปดาห์ 11) และการพัฒนาสื่อดิจิทัล/การซักซ้อม (สัปดาห์ 12) เข้าสู่ <strong>"การปฏิบัติการสอนจริงในสภาพแวดล้อมจำลอง (Authentic Micro-teaching Practicum)"</strong> พร้อมสร้างความเข้มแข็งทางกฎหมายดิจิทัลและสิทธิความเป็นส่วนตัว ซึ่งเป็นสมรรถนะสำคัญของวิชาชีพครูวิทยาศาสตร์ในยุค AI และแพลตฟอร์มการศึกษาแบบเปิด
+            </div>
+
+            <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--primary); margin: 2rem 0 1rem;">
+                <i class="fas fa-table-list text-accent"></i> เมทริกซ์ความเชื่อมโยง WLOs กับระดับการเรียนรู้ตาม Bloom's Taxonomy และวิธีการประเมิน
+            </h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 20%;">ผลลัพธ์การเรียนรู้ (WLOs)</th>
+                        <th style="width: 25%;">ระดับพฤติกรรม (Bloom's Taxonomy)</th>
+                        <th style="width: 30%;">หลักฐานเชิงประจักษ์ (Evidence of Learning)</th>
+                        <th style="width: 25%;">วิธีการและเครื่องมือประเมิน</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>WLO 1 (K): กฎหมาย PDPA & Cyber Safety</strong></td>
+                        <td><span class="badge badge-blue">ระดับ 2: เข้าใจ (Understand)</span><br><span class="badge badge-purple">ระดับ 4: วิเคราะห์ (Analyze)</span></td>
+                        <td>การตอบคำถามในชั้นเรียน, การจำแนกประเภท PII ในสถานการณ์จำลอง และผลการทำข้อสอบวัดสมรรถนะ</td>
+                        <td>ข้อสอบวัดสมรรถนะ HOTS สสวท. (แท็บ 5) และการตอบคำถามอภิปราย</td>
+                    </tr>
+                    <tr>
+                        <td><strong>WLO 2 (P): ปฏิบัติการจุลการสอนจริง</strong></td>
+                        <td><span class="badge badge-green">ระดับ 3: ประยุกต์ใช้ (Apply)</span><br><span class="badge badge-teal">ระดับ 6: สร้างสรรค์ (Create)</span></td>
+                        <td>การดำเนินกิจกรรมการสอนจริง 15–20 นาที บูรณาการโปรแกรมจำลอง และการใช้ชุดสื่อสืบเสาะ</td>
+                        <td>Analytic Rubrics การจุลการสอน 20% (แท็บ 4) โดยอาจารย์และเพื่อนร่วมชั้น</td>
+                    </tr>
+                    <tr>
+                        <td><strong>WLO 3 (A): จริยธรรมและสิทธิข้อมูลเด็ก</strong></td>
+                        <td><span class="badge badge-amber">ระดับ 3: การเห็นคุณค่า (Valuing)</span></td>
+                        <td>การปฏิบัติตามแนวทาง PDPA ในการจัดการข้อมูลนักเรียนจำลอง ไม่นำภาพ/ข้อมูลลับมาเผยแพร่</td>
+                        <td>แบบสังเกตพฤติกรรมจรรยาบรรณวิชาชีพครู และ Rubric มิติที่ 3</td>
+                    </tr>
+                    <tr>
+                        <td><strong>WLO 4 (PCK): ทักษะวิธีสอนผสานเทคโนโลยี</strong></td>
+                        <td><span class="badge badge-purple">ระดับ 5: ประเมินค่า (Evaluate)</span><br><span class="badge badge-teal">ระดับ 6: สร้างสรรค์ (Create)</span></td>
+                        <td>การตั้งคำถามเชื่อมโยง CT สู่ปรากฏการณ์วิทย์, การจัดการชั้นเรียน และการแก้ปัญหาเฉพาะหน้า</td>
+                        <td>Analytic Rubrics มิติที่ 1 & 2 และแบบบันทึกสะท้อนคิด AAR</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ==================== TAB 2: สาระสำคัญเชิงวิชาการ & สื่อทัศนศิลป์ ==================== -->
+    <div id="tab2" class="content-section">
+        <div class="card">
+            <h2 class="card-title">
+                <i class="fas fa-book-bookmark"></i> สาระสำคัญเชิงวิชาการและสื่อทัศนศิลป์ (No Text-Wall Principle)
+            </h2>
+            <p style="margin-bottom: 1.5rem; color: var(--text-muted);">
+                บูรณาการองค์ความรู้ 3 แกนหลัก: (1) สถาปัตยกรรมสถานีจุลการสอนและการสะท้อนคิดคู่ขนาน (Dual-Loop Reflective Feedback), (2) พระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562 (PDPA) ในโรงเรียน, และ (3) สุขอนามัยไซเบอร์และการป้องกันข้อมูลรั่วไหลในห้องเรียนดิจิทัล
+            </p>
+
+            <!-- 2.1 สถาปัตยกรรมกระบวนการจุลการสอนจริง -->
+            <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--primary); margin: 2rem 0 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fas fa-users-rectangle text-accent"></i> 2.1 สถาปัตยกรรมกระบวนการจุลการสอนจริงและวงจรสะท้อนคิดคู่ขนาน (Empirical Micro-teaching & Dual-Loop Feedback)
+            </h3>
+            <p style="margin-bottom: 1rem;">
+                การจุลการสอน (Micro-teaching) เป็นนวัตกรรมการฝึกหัดครูที่ได้รับการพัฒนาขึ้นโดย Dwight Allen ณ มหาวิทยาลัยสแตนฟอร์ด ซึ่งมุ่งเน้นการย่อส่วนการสอน (Scaled-down Teaching Encounter) ทั้งในแง่ของเวลา (15–20 นาที) ขนาดชั้นเรียน (ผู้เรียนจำลอง 15–20 คน) และขอบเขตเนื้อหา โดยในบริบทของ <strong>วิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์</strong> ได้ยกระดับสู่ระบบ <strong>"Dual-Loop Reflective Architecture"</strong> ที่ประสานบทบาทของทีมผู้สอน 3 เสาหลักเข้ากับการสังเกตการณ์เชิงประจักษ์และการสะท้อนคิดทันที (Immediate After Action Review):
+            </p>
+
+            <div class="grid-3">
+                <div class="feature-box">
+                    <h4><i class="fas fa-chalkboard-user text-accent"></i> เสาหลักที่ 1: Lead Teacher (ครูผู้สอนหลัก)</h4>
+                    <p>ทำหน้าที่ดำเนินกระบวนการสืบเสาะ 5E, สร้างปฏิสัมพันธ์กับผู้เรียน, ใช้คำถามกระตุ้นแนวคิดเชิงคำนวณ (CT Questioning), สังเกตความเข้าใจของผู้เรียน และควบคุมเวลาในแต่ละขั้นตอน</p>
+                </div>
+                <div class="feature-box">
+                    <h4><i class="fas fa-hands-helping text-secondary"></i> เสาหลักที่ 2: Co-Teacher Facilitator (ครูผู้ช่วยจัดกระบวนการ)</h4>
+                    <p>เดินสังเกตการณ์ในกลุ่มผู้เรียนจำลอง, ให้คำแนะนำรายบุคคลในการใช้งานใบกิจกรรม (Worksheet), ตรวจสอบความถูกต้องของการทดลอง, และส่งสัญญาณเวลาให้ครูผู้สอนหลัก</p>
+                </div>
+                <div class="feature-box">
+                    <h4><i class="fas fa-laptop-code text-purple"></i> เสาหลักที่ 3: Tech & Data Controller (ผู้คุมสื่อและข้อมูล)</h4>
+                    <p>ควบคุมการฉายโปรแกรมจำลอง, บริหารจัดการเครือข่ายและจอภาพ, จัดเตรียม Plan B สำรองกรณีเทคโนโลยีขัดข้อง, และกำกับดูแลความปลอดภัยของข้อมูล/สิทธิ์ส่วนบุคคลในระบบ</p>
+                </div>
+            </div>
+
+            <!-- SVG 1: Empirical Micro-teaching Architecture -->
+            <div class="svg-container">
+                <h4 style="font-size: 1rem; font-weight: 700; color: var(--primary); margin-bottom: 1rem;">
+                    <i class="fas fa-project-diagram text-accent"></i> แผนผังที่ 1: สถาปัตยกรรมการจุลการสอนจริงและวงจรสะท้อนคิดคู่ขนาน (Empirical Micro-teaching & Dual-Loop Feedback Cycle)
+                </h4>
+                <svg viewBox="0 0 960 420" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="gradHeader" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#0f172a"/>
+                            <stop offset="100%" stop-color="#1e3a8a"/>
+                        </linearGradient>
+                        <linearGradient id="gradLead" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#eff6ff"/>
+                            <stop offset="100%" stop-color="#dbeafe"/>
+                        </linearGradient>
+                        <linearGradient id="gradCo" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#ecfdf5"/>
+                            <stop offset="100%" stop-color="#d1fae5"/>
+                        </linearGradient>
+                        <linearGradient id="gradTech" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#faf5ff"/>
+                            <stop offset="100%" stop-color="#ede9fe"/>
+                        </linearGradient>
+                        <linearGradient id="gradAAR" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#fffbeb"/>
+                            <stop offset="100%" stop-color="#fef3c7"/>
+                        </linearGradient>
+                        <filter id="shadowBox" x="-5%" y="-5%" width="110%" height="115%">
+                            <feDropShadow dx="0" dy="3" stdDeviation="4" flood-opacity="0.12"/>
+                        </filter>
+                    </defs>
+
+                    <!-- Background Box -->
+                    <rect x="10" y="10" width="940" height="400" rx="14" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5" filter="url(#shadowBox)"/>
+
+                    <!-- Header Banner inside SVG -->
+                    <rect x="25" y="25" width="910" height="46" rx="8" fill="url(#gradHeader)"/>
+                    <text x="480" y="54" fill="#ffffff" font-size="16" font-family="'Sarabun', sans-serif" font-weight="700" text-anchor="middle">
+                        AUTHENTIC MICRO-TEACHING ORCHESTRATION & DUAL-LOOP REFLECTIVE CYCLE
+                    </text>
+
+                    <!-- Station Stage Box (Left) -->
+                    <rect x="35" y="88" width="550" height="230" rx="10" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.2"/>
+                    <text x="50" y="112" fill="#0f172a" font-size="14" font-weight="700" font-family="'Sarabun', sans-serif">
+                        <tspan fill="#2563eb">●</tspan> ห้องปฏิบัติการจุลการสอนจริง (Teaching Stage: 15–20 นาที)
+                    </text>
+
+                    <!-- Lead Teacher Box -->
+                    <rect x="55" y="130" width="150" height="110" rx="8" fill="url(#gradLead)" stroke="#93c5fd" stroke-width="1.2"/>
+                    <text x="130" y="156" fill="#1e40af" font-size="13" font-weight="700" font-family="'Sarabun', sans-serif" text-anchor="middle">ครูผู้สอนหลัก (Lead)</text>
+                    <text x="130" y="178" fill="#1e3a8a" font-size="11" font-family="'Sarabun', sans-serif" text-anchor="middle">• ดำเนินการสอน 5E</text>
+                    <text x="130" y="196" fill="#1e3a8a" font-size="11" font-family="'Sarabun', sans-serif" text-anchor="middle">• ตั้งคำถามกระตุ้น CT</text>
+                    <text x="130" y="214" fill="#1e3a8a" font-size="11" font-family="'Sarabun', sans-serif" text-anchor="middle">• สื่อสารและดึงความสนใจ</text>
+
+                    <!-- Co-Teacher Facilitator Box -->
+                    <rect x="235" y="130" width="150" height="110" rx="8" fill="url(#gradCo)" stroke="#86efac" stroke-width="1.2"/>
+                    <text x="310" y="156" fill="#065f46" font-size="13" font-weight="700" font-family="'Sarabun', sans-serif" text-anchor="middle">ครูผู้ช่วย (Facilitator)</text>
+                    <text x="310" y="178" fill="#064e3b" font-size="11" font-family="'Sarabun', sans-serif" text-anchor="middle">• สังเกตการณ์รายโต๊ะ</text>
+                    <text x="310" y="196" fill="#064e3b" font-size="11" font-family="'Sarabun', sans-serif" text-anchor="middle">• แจก-เก็บ Worksheet</text>
+                    <text x="310" y="214" fill="#064e3b" font-size="11" font-family="'Sarabun', sans-serif" text-anchor="middle">• ส่งสัญญาณคุมเวลา</text>
+
+                    <!-- Tech & Data Controller Box -->
+                    <rect x="415" y="130" width="150" height="110" rx="8" fill="url(#gradTech)" stroke="#d8b4fe" stroke-width="1.2"/>
+                    <text x="490" y="156" fill="#5b21b6" font-size="13" font-weight="700" font-family="'Sarabun', sans-serif" text-anchor="middle">ผู้คุมสื่อ (Tech/Data)</text>
+                    <text x="490" y="178" fill="#4c1d95" font-size="11" font-family="'Sarabun', sans-serif" text-anchor="middle">• ควบคุมจอ & Model</text>
+                    <text x="490" y="196" fill="#4c1d95" font-size="11" font-family="'Sarabun', sans-serif" text-anchor="middle">• รัน Plan B เมื่อสะดุด</text>
+                    <text x="490" y="214" fill="#4c1d95" font-size="11" font-family="'Sarabun', sans-serif" text-anchor="middle">• รักษาความปลอดภัย PII</text>
+
+                    <!-- Audience / Peer Students -->
+                    <rect x="55" y="258" width="510" height="46" rx="6" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1"/>
+                    <text x="310" y="286" fill="#334155" font-size="12" font-weight="600" font-family="'Sarabun', sans-serif" text-anchor="middle">
+                        <tspan fill="#059669">👥 ผู้เรียนจำลอง (Peer Learners):</tspan> สวมบทบาทนักเรียนตามระดับชั้น ตอบสนองอย่างสมจริง และทดลองใช้แบบจำลอง
+                    </text>
+
+                    <!-- Arrows between Stage and Feedback Loop -->
+                    <path d="M 585 200 L 615 200" fill="none" stroke="#2563eb" stroke-width="3" stroke-linecap="round"/>
+                    <polygon points="615,195 625,200 615,205" fill="#2563eb"/>
+                    <text x="600" y="190" fill="#2563eb" font-size="10" font-weight="700" text-anchor="middle">Live Data</text>
+
+                    <!-- Feedback & AAR Column (Right) -->
+                    <rect x="625" y="88" width="300" height="230" rx="10" fill="url(#gradAAR)" stroke="#fcd34d" stroke-width="1.2"/>
+                    <text x="775" y="112" fill="#92400e" font-size="14" font-weight="700" font-family="'Sarabun', sans-serif" text-anchor="middle">
+                        <tspan fill="#d97706">🔄</tspan> Dual-Loop AAR & Rubrics (10 นาที)
+                    </text>
+
+                    <!-- Action Loop 1: Peer Feedback -->
+                    <rect x="645" y="130" width="260" height="48" rx="6" fill="#ffffff" stroke="#fde68a" stroke-width="1"/>
+                    <text x="775" y="150" fill="#b45309" font-size="12" font-weight="700" font-family="'Sarabun', sans-serif" text-anchor="middle">Loop 1: Peer Evaluation (30%)</text>
+                    <text x="775" y="168" fill="#78350f" font-size="10.5" font-family="'Sarabun', sans-serif" text-anchor="middle">เพื่อนประเมินผ่านแบบฟอร์มรูบริกส์ออนไลน์ทันที</text>
+
+                    <!-- Action Loop 2: Instructor Mastery Feedback -->
+                    <rect x="645" y="188" width="260" height="60" rx="6" fill="#ffffff" stroke="#fde68a" stroke-width="1"/>
+                    <text x="775" y="208" fill="#b45309" font-size="12" font-weight="700" font-family="'Sarabun', sans-serif" text-anchor="middle">Loop 2: Master Coaching (70%)</text>
+                    <text x="775" y="226" fill="#78350f" font-size="10.5" font-family="'Sarabun', sans-serif" text-anchor="middle">อาจารย์วิพากษ์มิติ TPACK, จังหวะสอน 5E,</text>
+                    <text x="775" y="240" fill="#78350f" font-size="10.5" font-family="'Sarabun', sans-serif" text-anchor="middle">การใช้โปรแกรมจำลอง และความสอดคล้อง PDPA</text>
+
+                    <!-- Bottom Bar: Continuous Improvement Cycle -->
+                    <rect x="35" y="332" width="890" height="62" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.2"/>
+                    <circle cx="65" cy="363" r="16" fill="#2563eb"/>
+                    <text x="65" y="369" fill="#ffffff" font-size="13" font-weight="700" text-anchor="middle">AAR</text>
+                    <text x="95" y="356" fill="#0f172a" font-size="12" font-weight="700" font-family="'Sarabun', sans-serif">
+                        หัวใจสำคัญของการสะท้อนคิด: "สิ่งที่ทำได้ยอดเยี่ยม (Praise)" → "จุดที่ต้องปรับปรุงเชิงกลยุทธ์ (Polish)" → "แผนปฏิบัติเพื่อใช้ในห้องเรียนจริง (Next Steps)"
+                    </text>
+                    <text x="95" y="378" fill="#64748b" font-size="11.5" font-family="'Sarabun', sans-serif">
+                        เน้นการพัฒนาทักษะการสอนแบบกัลยาณมิตรวิพากษ์ (Constructive & Psychological Safety Environment) เพื่อยกระดับความมั่นใจในวิชาชีพครูวิทยาศาสตร์
+                    </text>
+                </svg>
+            </div>
+
+            <!-- 2.2 กฎหมายคุ้มครองข้อมูลส่วนบุคคล (PDPA) ในสถานศึกษา -->
+            <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--primary); margin: 2.5rem 0 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fas fa-scale-balanced text-secondary"></i> 2.2 พระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562 (PDPA) ในสถานศึกษาและการสอนวิทยาศาสตร์
+            </h3>
+            <p style="margin-bottom: 1rem;">
+                พระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562 (PDPA) มีผลบังคับใช้อย่างเต็มรูปแบบ เพื่อให้ความคุ้มครอง <strong>"ข้อมูลส่วนบุคคล (Personal Data)"</strong> ซึ่งหมายถึงข้อมูลใดๆ ที่สามารถระบุตัวตนของบุคคลธรรมดาได้ ไม่ว่าทางตรงหรือทางอ้อม ในบริบทการศึกษาและห้องเรียนวิทยาศาสตร์ดิจิทัล โรงเรียนและครูผู้สอนมีสถานะเป็น <strong>ผู้ควบคุมข้อมูลส่วนบุคคล (Data Controller)</strong> ที่ต้องปฏิบัติตามหลักการคุ้มครองข้อมูลอย่างเคร่งครัด:
+            </p>
+
+            <div class="grid-2">
+                <div class="feature-box">
+                    <h4><i class="fas fa-id-card text-accent"></i> 1. ประเภทข้อมูลส่วนบุคคลในโรงเรียน</h4>
+                    <p>
+                        <strong>• ข้อมูลส่วนบุคคลทั่วไป (General PII):</strong> ชื่อ-นามสกุล, เลขประจำตัวนักเรียน, เลขบัตรประชาชน 13 หลัก, ที่อยู่, เบอร์โทรศัพท์, อีเมล, ผลการเรียน/คะแนนสอบ, ภาพถ่ายและคลิปวิดีโอที่เห็นใบหน้าชัดเจน<br>
+                        <strong>• ข้อมูลส่วนบุคคลที่มีความอ่อนไหว (Sensitive PII - มาตรา 26):</strong> ข้อมูลสุขภาพ, โรคประจำตัว, ประวัติการแพ้สารเคมีในแล็บ, ลายนิ้วมือ/ใบหน้าเพื่อสแกนเข้าห้องเรียน, เชื้อชาติ, ศาสนา และประวัติอาชญากรรม (ต้องการความยินยอมโดยชัดแจ้ง - Explicit Consent เท่านั้น)
+                    </p>
+                </div>
+                <div class="feature-box">
+                    <h4><i class="fas fa-handshake-angle text-success"></i> 2. ฐานทางกฎหมายในการประมวลผลข้อมูล (Legal Bases)</h4>
+                    <p>
+                        <strong>• ฐานการปฏิบัติหน้าที่ตามกฎหมาย / ภารกิจเพื่อประโยชน์สาธารณะ (Public Task / Legal Obligation):</strong> การบันทึกคะแนนสอบ, การประเมินผลตามหลักสูตรแกนกลาง, ข้อมูลทะเบียนนักเรียน ไม่ต้องขอ Consent จากผู้ปกครอง<br>
+                        <strong>• ฐานความยินยอม (Consent):</strong> จำเป็นอย่างยิ่งเมื่อนำภาพถ่าย/วิดีโอเด็กไปโพสต์ลงโซเชียลมีเดีย, การใช้โปรแกรมภายนอกที่ส่งข้อมูลออกนอกประเทศ, การทำสื่อประชาสัมพันธ์
+                    </p>
+                </div>
+            </div>
+
+            <!-- SVG 2: School PDPA & Student Privacy Architecture -->
+            <div class="svg-container">
+                <h4 style="font-size: 1rem; font-weight: 700; color: var(--primary); margin-bottom: 1rem;">
+                    <i class="fas fa-shield-virus text-secondary"></i> แผนผังที่ 2: สถาปัตยกรรมการคุ้มครองข้อมูลส่วนบุคคล (PDPA) ในสถานศึกษาและการจัดการเรียนการสอนวิทยาศาสตร์
+                </h4>
+                <svg viewBox="0 0 960 440" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="gradPdpaHead" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#0891b2"/>
+                            <stop offset="100%" stop-color="#0e7490"/>
+                        </linearGradient>
+                        <linearGradient id="gradDataSubject" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#eff6ff"/>
+                            <stop offset="100%" stop-color="#dbeafe"/>
+                        </linearGradient>
+                        <linearGradient id="gradController" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#ecfdf5"/>
+                            <stop offset="100%" stop-color="#d1fae5"/>
+                        </linearGradient>
+                        <linearGradient id="gradRights" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#fef3c7"/>
+                            <stop offset="100%" stop-color="#fde68a"/>
+                        </linearGradient>
+                    </defs>
+
+                    <rect x="10" y="10" width="940" height="420" rx="14" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5" filter="url(#shadowBox)"/>
+
+                    <!-- Top Title Banner -->
+                    <rect x="25" y="25" width="910" height="46" rx="8" fill="url(#gradPdpaHead)"/>
+                    <text x="480" y="54" fill="#ffffff" font-size="16" font-family="'Sarabun', sans-serif" font-weight="700" text-anchor="middle">
+                        THAILAND PERSONAL DATA PROTECTION ACT (PDPA B.E. 2562) IN SCIENCE EDUCATION
+                    </text>
+
+                    <!-- Col 1: Data Subject & Minor Special Care (Left) -->
+                    <rect x="35" y="88" width="280" height="240" rx="10" fill="url(#gradDataSubject)" stroke="#93c5fd" stroke-width="1.2"/>
+                    <text x="175" y="114" fill="#1e40af" font-size="14" font-weight="700" font-family="'Sarabun', sans-serif" text-anchor="middle">
+                        1. เจ้าของข้อมูล (Data Subject)
+                    </text>
+                    <text x="50" y="140" fill="#1e3a8a" font-size="12" font-weight="700" font-family="'Sarabun', sans-serif">นักเรียน (ผู้เยาว์ / Minors):</text>
+                    <text x="50" y="160" fill="#334155" font-size="11.5" font-family="'Sarabun', sans-serif">• อายุ &lt; 10 ปี: ขอความยินยอมจากผู้ปกครอง</text>
+                    <text x="50" y="178" fill="#334155" font-size="11.5" font-family="'Sarabun', sans-serif">• อายุ 10–20 ปี: ผู้เยาว์ยินยอมร่วมกับผู้ปกครอง</text>
+                    <text x="50" y="196" fill="#334155" font-size="11.5" font-family="'Sarabun', sans-serif">• กรณีทำนิติกรรมทั่วไปของเด็ก ยินยอมเองได้</text>
+
+                    <line x1="50" y1="210" x2="295" y2="210" stroke="#93c5fd" stroke-dasharray="3 3"/>
+                    <text x="50" y="230" fill="#1e40af" font-size="12" font-weight="700" font-family="'Sarabun', sans-serif">ประเภทข้อมูลที่รวบรวมในแล็บวิทย์:</text>
+                    <text x="50" y="250" fill="#334155" font-size="11" font-family="'Sarabun', sans-serif">1. ผลการทดลอง / Log การใช้แบบจำลอง</text>
+                    <text x="50" y="268" fill="#334155" font-size="11" font-family="'Sarabun', sans-serif">2. ภาพนิ่ง/วิดีโอบันทึกพฤติกรรมสืบเสาะ</text>
+                    <text x="50" y="286" fill="#dc2626" font-size="11" font-weight="700" font-family="'Sarabun', sans-serif">3. ข้อมูลแพ้สารเคมี (Sensitive PII - ม.26)</text>
+                    <text x="50" y="304" fill="#334155" font-size="11" font-family="'Sarabun', sans-serif">4. บัญชีเข้าใช้ LMS และรหัสผ่าน</text>
+
+                    <!-- Col 2: Data Controller & Principles (Middle) -->
+                    <rect x="335" y="88" width="290" height="240" rx="10" fill="url(#gradController)" stroke="#86efac" stroke-width="1.2"/>
+                    <text x="480" y="114" fill="#065f46" font-size="14" font-weight="700" font-family="'Sarabun', sans-serif" text-anchor="middle">
+                        2. ผู้ควบคุมข้อมูล (Data Controller)
+                    </text>
+                    <text x="350" y="140" fill="#047857" font-size="12" font-weight="700" font-family="'Sarabun', sans-serif">ครูวิทยาศาสตร์ และ โรงเรียน:</text>
+                    <text x="350" y="160" fill="#334155" font-size="11.5" font-family="'Sarabun', sans-serif">• <strong>Purpose Limitation:</strong> เก็บเพื่อการสอนเท่านั้น</text>
+                    <text x="350" y="180" fill="#334155" font-size="11.5" font-family="'Sarabun', sans-serif">• <strong>Data Minimization:</strong> เก็บเท่าที่จำเป็นจริง</text>
+                    <text x="350" y="200" fill="#334155" font-size="11.5" font-family="'Sarabun', sans-serif">• <strong>Storage Limitation:</strong> กำหนดอายุจัดเก็บชัดเจน</text>
+                    <text x="350" y="220" fill="#334155" font-size="11.5" font-family="'Sarabun', sans-serif">• <strong>Integrity & Confidentiality:</strong> เข้ารหัสปลอดภัย</text>
+
+                    <line x1="350" y1="235" x2="605" y2="235" stroke="#86efac" stroke-dasharray="3 3"/>
+                    <text x="350" y="255" fill="#065f46" font-size="12" font-weight="700" font-family="'Sarabun', sans-serif">ฐานกฎหมายที่ไม่ต้องขอ Consent:</text>
+                    <text x="350" y="275" fill="#334155" font-size="11" font-family="'Sarabun', sans-serif">✓ การวัดผลประเมินผลตามหลักสูตรกระทรวงฯ</text>
+                    <text x="350" y="293" fill="#334155" font-size="11" font-family="'Sarabun', sans-serif">✓ การปฐมพยาบาลกรณีอุบัติเหตุ (Vital Interest)</text>
+                    <text x="350" y="311" fill="#334155" font-size="11" font-family="'Sarabun', sans-serif">✗ ห้ามเผยแพร่ภาพเด็กลง Social เพื่อการโปรโมต</text>
+
+                    <!-- Col 3: Data Subject Rights 8 ประการ (Right) -->
+                    <rect x="645" y="88" width="280" height="240" rx="10" fill="url(#gradRights)" stroke="#fcd34d" stroke-width="1.2"/>
+                    <text x="785" y="114" fill="#92400e" font-size="14" font-weight="700" font-family="'Sarabun', sans-serif" text-anchor="middle">
+                        3. สิทธิของเด็ก/ผู้ปกครอง (8 Rights)
+                    </text>
+                    <text x="660" y="140" fill="#78350f" font-size="11" font-family="'Sarabun', sans-serif">1. <strong>Right to be Informed:</strong> สิทธิได้รับแจ้งก่อนเก็บ</text>
+                    <text x="660" y="160" fill="#78350f" font-size="11" font-family="'Sarabun', sans-serif">2. <strong>Right of Access:</strong> สิทธิขอเข้าถึงและรับสำเนา</text>
+                    <text x="660" y="180" fill="#78350f" font-size="11" font-family="'Sarabun', sans-serif">3. <strong>Right to Rectification:</strong> สิทธิขอแก้ไขให้ถูกต้อง</text>
+                    <text x="660" y="200" fill="#78350f" font-size="11" font-family="'Sarabun', sans-serif">4. <strong>Right to Erasure:</strong> สิทธิขอให้ลบ/ทำลาย (ลืม)</text>
+                    <text x="660" y="220" fill="#78350f" font-size="11" font-family="'Sarabun', sans-serif">5. <strong>Right to Restrict:</strong> สิทธิขอระงับการใช้</text>
+                    <text x="660" y="240" fill="#78350f" font-size="11" font-family="'Sarabun', sans-serif">6. <strong>Right to Data Portability:</strong> สิทธิขอโอนย้ายข้อมูล</text>
+                    <text x="660" y="260" fill="#78350f" font-size="11" font-family="'Sarabun', sans-serif">7. <strong>Right to Object:</strong> สิทธิคัดค้านการเก็บ/ใช้</text>
+                    <text x="660" y="280" fill="#78350f" font-size="11" font-family="'Sarabun', sans-serif">8. <strong>Right to Withdraw Consent:</strong> สิทธิถอนยินยอม</text>
+
+                    <!-- Bottom Bar: Penalty & Compliance Alert -->
+                    <rect x="35" y="342" width="890" height="72" rx="8" fill="#fef2f2" stroke="#fca5a5" stroke-width="1.2"/>
+                    <text x="50" y="366" fill="#991b1b" font-size="12.5" font-weight="700" font-family="'Sarabun', sans-serif">
+                        ⚠️ ข้อพึงระวังด้านบทลงโทษและแนวปฏิบัติที่ดี (Best Practices for Science Teachers):
+                    </text>
+                    <text x="50" y="388" fill="#7f1d1d" font-size="11.5" font-family="'Sarabun', sans-serif">
+                        • โทษทางแพ่ง: จ่ายค่าสินไหมทดแทนจริง + สินไหมลงโทษสูงสุด 2 เท่า | โทษทางอาญา: จำคุกสูงสุด 1 ปี หรือปรับสูงสุด 1 ล้านบาท (กรณีเปิดเผยข้อมูลอ่อนไหวโดยมิชอบ)
+                    </text>
+                    <text x="50" y="404" fill="#7f1d1d" font-size="11.5" font-family="'Sarabun', sans-serif">
+                        • กฎเหล็ก: เมื่อนำข้อมูลการทดลองมาให้นักศึกษาฝึกวิเคราะห์ ต้องทำ <strong>Data Anonymization (นิรนามข้อมูล)</strong> หรือ <strong>Pseudonymization (แปลงนามแฝง)</strong> เสมอ!
+                    </text>
+                </svg>
+            </div>
+
+            <!-- Academic Table 1: PII vs Sensitive PII -->
+            <h4 style="font-size: 1.15rem; font-weight: 700; color: var(--primary); margin: 2rem 0 0.75rem;">
+                <i class="fas fa-table text-accent"></i> ตารางเปรียบเทียบที่ 1: การจำแนกประเภทข้อมูลส่วนบุคคล (General PII vs Sensitive PII) ตาม พ.ร.บ. PDPA พ.ศ. 2562 ในโรงเรียน
+            </h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 18%;">หมวดหมู่ข้อมูล</th>
+                        <th style="width: 25%;">ตัวอย่างข้อมูลในโรงเรียน</th>
+                        <th style="width: 17%;">ระดับความเสี่ยง</th>
+                        <th style="width: 20%;">ฐานทางกฎหมาย (Legal Basis)</th>
+                        <th style="width: 20%;">แนวปฏิบัติสำหรับครูวิทยาศาสตร์</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>ข้อมูลระบุตัวตนทั่วไป (General PII)</strong></td>
+                        <td>ชื่อ-นามสกุล, เลขประจำตัวนักเรียน, ภาพถ่ายชุดนักเรียนที่ไม่เห็นใบหน้าชัดเจน, อีเมลโรงเรียน</td>
+                        <td><span class="badge badge-blue">ความเสี่ยงปานกลาง</span></td>
+                        <td>ภารกิจเพื่อประโยชน์สาธารณะ (Public Task) / หน้าที่ตามกฎหมายการศึกษา</td>
+                        <td>จัดเก็บใน Google Classroom หรือ LMS ที่มีรหัสผ่านเฉพาะกลุ่ม ไม่เปิดสาธารณะ</td>
+                    </tr>
+                    <tr>
+                        <td><strong>ข้อมูลผลการเรียนและการประเมิน</strong></td>
+                        <td>คะแนนสอบกลางภาค, เกรด, ผลการทำแล็บ, คะแนนทดสอบ CT</td>
+                        <td><span class="badge badge-amber">ความเสี่ยงสูง (กระทบจิตใจ)</span></td>
+                        <td>หน้าที่ตามกฎหมายการศึกษา / ความจำเป็นตามสัญญา</td>
+                        <td><strong>ห้ามติดประกาศคะแนนเรียงตามเลขที่หรือชื่อในที่สาธารณะ</strong> ให้แจ้งเป็นรายบุคคลหรือใช้รหัสนิรนาม</td>
+                    </tr>
+                    <tr>
+                        <td><strong>ข้อมูลภาพถ่ายและวิดีโอ (Visual Media)</strong></td>
+                        <td>ภาพถ่ายกิจกรรมการทดลองที่เห็นใบหน้าเด็กชัดเจน, วิดีโอบันทึกการสอนในห้องเรียน</td>
+                        <td><span class="badge badge-amber">ความเสี่ยงสูง (สิทธิเด็ก)</span></td>
+                        <td><strong>ต้องขอความยินยอม (Consent)</strong> จากผู้ปกครองและเด็ก</td>
+                        <td>หากยังไม่ได้รับแบบยินยอม (Consent Form) ต้องเบลอใบหน้า (Blur Face) และตัดป้ายชื่อออก</td>
+                    </tr>
+                    <tr>
+                        <td><strong>ข้อมูลอ่อนไหวพิเศษ (Sensitive PII - ม.26)</strong></td>
+                        <td>ประวัติการแพ้สารเคมี, โรคหอบหืด, ข้อมูลการรักษาพยาบาล, กลุ่มเลือด, ข้อมูลพันธุกรรม</td>
+                        <td><span class="badge badge-red">ความเสี่ยงวิกฤต (Critical)</span></td>
+                        <td><strong>ความยินยอมโดยชัดแจ้ง (Explicit Consent)</strong> หรือ Vital Interest</td>
+                        <td>เก็บในแฟ้มประวัติที่มีรหัสผ่านสูงสุด ครูใช้เพื่อความปลอดภัยในแล็บเท่านั้น ห้ามบันทึกบนคลาวด์เปิด</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- 2.3 สุขอนามัยไซเบอร์ในห้องเรียน -->
+            <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--primary); margin: 2.5rem 0 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fas fa-lock text-purple"></i> 2.3 สุขอนามัยไซเบอร์และการรักษาความปลอดภัยข้อมูลในชั้นเรียน (Classroom Cyber Hygiene & Defense Pipeline)
+            </h3>
+            <p style="margin-bottom: 1rem;">
+                การจัดการเรียนการสอนวิทยาศาสตร์ยุคใหม่พึ่งพาการเชื่อมต่อเครือข่าย แพลตฟอร์มคลาวด์ และอุปกรณ์พกพา (BYOD) ซึ่งนำมาซึ่งช่องโหว่ด้านความปลอดภัยไซเบอร์ (Cybersecurity Vulnerabilities) เช่น ภัยการลวงขอข้อมูล (Phishing), การดักจับข้อมูลบน Wi-Fi สาธารณะ (Man-in-the-Middle), และมัลแวร์เรียกค่าไถ่ไฟล์งานวิจัย (Ransomware) ครูวิทยาศาสตร์จึงต้องมีทักษะในการวาง <strong>"ท่อความปลอดภัย 4 ชั้น (4-Layer Defense Pipeline)"</strong>:
+            </p>
+
+            <!-- SVG 3: Educational Cybersecurity Pipeline -->
+            <div class="svg-container">
+                <h4 style="font-size: 1rem; font-weight: 700; color: var(--primary); margin-bottom: 1rem;">
+                    <i class="fas fa-shield-halved text-purple"></i> แผนผังที่ 3: ท่อความปลอดภัยไซเบอร์และมาตรการป้องกันข้อมูลรั่วไหลในห้องเรียนดิจิทัล (Educational Cybersecurity Pipeline)
+                </h4>
+                <svg viewBox="0 0 960 420" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="gradCyberHead" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#1e1b4b"/>
+                            <stop offset="100%" stop-color="#4338ca"/>
+                        </linearGradient>
+                        <linearGradient id="pipe1" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#3b82f6"/>
+                            <stop offset="100%" stop-color="#1d4ed8"/>
+                        </linearGradient>
+                        <linearGradient id="pipe2" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#10b981"/>
+                            <stop offset="100%" stop-color="#047857"/>
+                        </linearGradient>
+                        <linearGradient id="pipe3" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#f59e0b"/>
+                            <stop offset="100%" stop-color="#b45309"/>
+                        </linearGradient>
+                        <linearGradient id="pipe4" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="#8b5cf6"/>
+                            <stop offset="100%" stop-color="#6d28d9"/>
+                        </linearGradient>
+                    </defs>
+
+                    <rect x="10" y="10" width="940" height="400" rx="14" fill="#ffffff" stroke="#e2e8f0" stroke-width="1.5" filter="url(#shadowBox)"/>
+
+                    <rect x="25" y="25" width="910" height="46" rx="8" fill="url(#gradCyberHead)"/>
+                    <text x="480" y="54" fill="#ffffff" font-size="16" font-family="'Sarabun', sans-serif" font-weight="700" text-anchor="middle">
+                        MULTI-TIER DEFENSE PIPELINE AGAINST CLASSROOM CYBER THREATS
+                    </text>
+
+                    <!-- Threats Source (Left) -->
+                    <rect x="35" y="90" width="180" height="230" rx="10" fill="#fee2e2" stroke="#fca5a5" stroke-width="1.2"/>
+                    <text x="125" y="116" fill="#991b1b" font-size="13.5" font-weight="700" font-family="'Sarabun', sans-serif" text-anchor="middle">
+                        ภัยคุกคามไซเบอร์ (Threats)
+                    </text>
+                    <text x="48" y="145" fill="#7f1d1d" font-size="11" font-family="'Sarabun', sans-serif">• 🎣 <strong>Phishing Link:</strong> ลวง OTP</text>
+                    <text x="48" y="170" fill="#7f1d1d" font-size="11" font-family="'Sarabun', sans-serif">• 🔓 <strong>Weak Passwords:</strong> เดาง่าย</text>
+                    <text x="48" y="195" fill="#7f1d1d" font-size="11" font-family="'Sarabun', sans-serif">• 📡 <strong>Unsecured Wi-Fi:</strong> ดักแพ็กเก็ต</text>
+                    <text x="48" y="220" fill="#7f1d1d" font-size="11" font-family="'Sarabun', sans-serif">• 🦠 <strong>Ransomware:</strong> ล็อกไฟล์แล็บ</text>
+                    <text x="48" y="245" fill="#7f1d1d" font-size="11" font-family="'Sarabun', sans-serif">• 📸 <strong>Screen Snoop:</strong> แอบถ่ายจอ</text>
+                    <text x="48" y="270" fill="#7f1d1d" font-size="11" font-family="'Sarabun', sans-serif">• 💾 <strong>USB Malware:</strong> ไวรัสแฟลชไดรฟ์</text>
+                    <text x="48" y="295" fill="#7f1d1d" font-size="11" font-family="'Sarabun', sans-serif">• 👥 <strong>Social Eng.:</strong> สวมรอยเพื่อน</text>
+
+                    <!-- Layer 1 -->
+                    <rect x="235" y="90" width="155" height="230" rx="8" fill="#eff6ff" stroke="#93c5fd" stroke-width="1.2"/>
+                    <rect x="245" y="100" width="135" height="26" rx="4" fill="url(#pipe1)"/>
+                    <text x="312" y="118" fill="#ffffff" font-size="11.5" font-weight="700" text-anchor="middle">Layer 1: Identity</text>
+                    <text x="245" y="145" fill="#1e40af" font-size="12" font-weight="700">การยืนยันตัวตนรัดกุม:</text>
+                    <text x="245" y="165" fill="#334155" font-size="10.5">• รหัสผ่าน ≥ 12 ตัวอักษร</text>
+                    <text x="245" y="182" fill="#334155" font-size="10.5">• อักขระผสม A-z, 0-9, #$@</text>
+                    <text x="245" y="200" fill="#334155" font-size="10.5">• บังคับใช้ 2FA / MFA</text>
+                    <text x="245" y="218" fill="#334155" font-size="10.5">• ห้ามใช้รหัสซ้ำหลายเว็บ</text>
+                    <text x="245" y="236" fill="#334155" font-size="10.5">• ล็อกเอาท์ทุกครั้งหลังสอน</text>
+                    <text x="245" y="254" fill="#334155" font-size="10.5">• จัดการ Session หมดอายุ</text>
+                    <text x="245" y="280" fill="#1e40af" font-size="10" font-weight="700">🛡️ สกัด Phishing 99.9%</text>
+
+                    <!-- Layer 2 -->
+                    <rect x="410" y="90" width="155" height="230" rx="8" fill="#ecfdf5" stroke="#86efac" stroke-width="1.2"/>
+                    <rect x="420" y="100" width="135" height="26" rx="4" fill="url(#pipe2)"/>
+                    <text x="487" y="118" fill="#ffffff" font-size="11.5" font-weight="700" text-anchor="middle">Layer 2: Sanitizer</text>
+                    <text x="420" y="145" fill="#065f46" font-size="12" font-weight="700">การพิทักษ์ข้อมูล PII:</text>
+                    <text x="420" y="165" fill="#334155" font-size="10.5">• ซ่อนเลขบัตรประชาชน</text>
+                    <text x="420" y="182" fill="#334155" font-size="10.5">• แฮชข้อมูลด้วย SHA-256</text>
+                    <text x="420" y="200" fill="#334155" font-size="10.5">• แปลงนามแฝง (Pseudonym)</text>
+                    <text x="420" y="218" fill="#334155" font-size="10.5">• ตัดชื่อนักเรียนในดาต้าเซ็ต</text>
+                    <text x="420" y="236" fill="#334155" font-size="10.5">• ไม่เปิดไมค์/กล้องทิ้งไว้</text>
+                    <text x="420" y="254" fill="#334155" font-size="10.5">• ปิดการบันทึกจออัตโนมัติ</text>
+                    <text x="420" y="280" fill="#065f46" font-size="10" font-weight="700">🛡️ สอดคล้อง PDPA 100%</text>
+
+                    <!-- Layer 3 -->
+                    <rect x="585" y="90" width="155" height="230" rx="8" fill="#fffbeb" stroke="#fde68a" stroke-width="1.2"/>
+                    <rect x="595" y="100" width="135" height="26" rx="4" fill="url(#pipe3)"/>
+                    <text x="662" y="118" fill="#ffffff" font-size="11.5" font-weight="700" text-anchor="middle">Layer 3: Zero-Trust</text>
+                    <text x="595" y="145" fill="#92400e" font-size="12" font-weight="700">การควบคุมเครือข่าย:</text>
+                    <text x="595" y="165" fill="#334155" font-size="10.5">• ใช้ Wi-Fi องค์กร WPA3</text>
+                    <text x="595" y="182" fill="#334155" font-size="10.5">• แยก VLAN ครู vs นักเรียน</text>
+                    <text x="595" y="200" fill="#334155" font-size="10.5">• บล็อกเว็บอันตราย & Ad</text>
+                    <text x="595" y="218" fill="#334155" font-size="10.5">• ติดตั้ง Anti-Virus ประจำ</text>
+                    <text x="595" y="236" fill="#334155" font-size="10.5">• ปิด File Sharing สาธารณะ</text>
+                    <text x="595" y="254" fill="#334155" font-size="10.5">• ตรวจสอบใบรับรอง SSL/TLS</text>
+                    <text x="595" y="280" fill="#92400e" font-size="10" font-weight="700">🛡️ สกัดมัลแวร์ในห้องเรียน</text>
+
+                    <!-- Layer 4 -->
+                    <rect x="760" y="90" width="165" height="230" rx="8" fill="#faf5ff" stroke="#d8b4fe" stroke-width="1.2"/>
+                    <rect x="770" y="100" width="145" height="26" rx="4" fill="url(#pipe4)"/>
+                    <text x="842" y="118" fill="#ffffff" font-size="11.5" font-weight="700" text-anchor="middle">Layer 4: 3-2-1 Backup</text>
+                    <text x="770" y="145" fill="#5b21b6" font-size="12" font-weight="700">การสำรองกู้คืนข้อมูล:</text>
+                    <text x="770" y="165" fill="#334155" font-size="10.5">• กฎเหล็ก 3-2-1 Backup:</text>
+                    <text x="770" y="182" fill="#334155" font-size="10.5">  - 3 สำเนาข้อมูลชุดสอน</text>
+                    <text x="770" y="200" fill="#334155" font-size="10.5">  - 2 สื่อบันทึก (SSD + Cloud)</text>
+                    <text x="770" y="218" fill="#334155" font-size="10.5">  - 1 แห่งนอกสถานที่ (Offsite)</text>
+                    <text x="770" y="236" fill="#334155" font-size="10.5">• เข้ารหัสไฟล์แบ็กอัป</text>
+                    <text x="770" y="254" fill="#334155" font-size="10.5">• ซักซ้อมกู้คืนไฟล์ก่อนสอน</text>
+                    <text x="770" y="280" fill="#5b21b6" font-size="10" font-weight="700">🛡️ ปลอดภัยจาก Ransomware</text>
+
+                    <!-- Bottom Bar: Zero Dead Air & Safety Assurance -->
+                    <rect x="35" y="332" width="890" height="62" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.2"/>
+                    <text x="50" y="356" fill="#0f172a" font-size="12" font-weight="700" font-family="'Sarabun', sans-serif">
+                        <tspan fill="#059669">● ผลลัพธ์สูงสุด (Maximum Resilience):</tspan> ห้องเรียนวิทยาศาสตร์ดิจิทัลมีความปลอดภัย มั่นคง และดำเนินไปอย่างต่อเนื่อง (High Availability & Zero Disruption)
+                    </text>
+                    <text x="50" y="378" fill="#64748b" font-size="11.5" font-family="'Sarabun', sans-serif">
+                        เมื่อระบบไซเบอร์ปลอดภัย ข้อมูลนักเรียนไม่รั่วไหล ครูและผู้เรียนจะสามารถมุ่งเน้นการสืบเสาะทางวิทยาศาสตร์และพัฒนาแนวคิดเชิงคำนวณได้อย่างไร้กังวล
+                    </text>
+                </svg>
+            </div>
+
+            <!-- Academic Table 2: Traditional vs Simulation Micro-teaching -->
+            <h4 style="font-size: 1.15rem; font-weight: 700; color: var(--primary); margin: 2rem 0 0.75rem;">
+                <i class="fas fa-table text-accent"></i> ตารางเปรียบเทียบที่ 2: มิติการจัดการชั้นเรียน: การจุลการสอนแบบดั้งเดิม vs การจุลการสอนที่บูรณาการแนวคิดเชิงคำนวณและแบบจำลอง
+            </h4>
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 20%;">มิติการจัดการเรียนรู้</th>
+                        <th style="width: 38%;">การจุลการสอนแบบดั้งเดิม (Traditional Micro-teaching)</th>
+                        <th style="width: 42%;">การจุลการสอนบูรณาการ CT & แบบจำลอง (CT-Sim Micro-teaching)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>1. บทบาทครูและจุดเน้น</strong></td>
+                        <td>เน้นทักษะการพูด บรรยายหน้ากระดำดำ การจัดท่าทาง และการตั้งคำถามเชิงความจำ</td>
+                        <td>เป็น Facilitator ผู้คอยตั้งคำถามกระตุ้น <strong>Computational Thinking</strong> (Decomposition, Pattern, Abstraction, Algorithm) จากแบบจำลอง</td>
+                    </tr>
+                    <tr>
+                        <td><strong>2. สื่อและเครื่องมือการเรียนรู้</strong></td>
+                        <td>ชอล์ก, กระดานไวท์บอร์ด, ชาร์ตกระดาษ หรือสไลด์ PowerPoint แบบคงที่ (Static Slides)</td>
+                        <td><strong>Interactive Simulation</strong> (เช่น PhET, Python GUI, Web-based Models) ร่วมกับใบกิจกรรมสืบเสาะที่เชื่อมโยงตัวแปรฟิสิกส์</td>
+                    </tr>
+                    <tr>
+                        <td><strong>3. การรับมือกับข้อผิดพลาด (Glitch Handling)</strong></td>
+                        <td>ครูมักตกใจหรือหยุดชะงักเมื่อสื่อขัดข้อง และแก้ปัญหาโดยการข้ามเนื้อหาไปบอกผลลัพธ์แทน</td>
+                        <td>มอง Glitch หรือ Parameter ที่ผู้เรียนป้อนผิดเป็น <strong>"โอกาสทองแห่งการเรียนรู้ (Teachable Moment)"</strong> เพื่อวิเคราะห์ขอบเขตทางฟิสิกส์</td>
+                    </tr>
+                    <tr>
+                        <td><strong>4. การบริหารความปลอดภัยข้อมูล (PDPA)</strong></td>
+                        <td>ไม่ตระหนักรู้เรื่องข้อมูล มักถ่ายรูป/วิดีโอเด็กเพื่อโพสต์อวดผลงาน และติดบอร์ดประกาศคะแนนชัดเจน</td>
+                        <td>มีระบบคัดกรองข้อมูลส่วนบุคคล (PII Masking), ไม่เปิดเผยคะแนนในที่แจ้ง, เคารพสิทธิของเด็ก และจัดเก็บบันทึกบนคลาวด์ที่มีรหัสผ่านปลอดภัย</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- 2.4 ตัวแบบจำลอง Python 3.11 PII Sanitizer & Masker -->
+            <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--primary); margin: 2.5rem 0 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fab fa-python text-success"></i> 2.4 ตัวแบบจำลองภาษา Python 3.11: เครื่องมือคัดกรองและปกปิดข้อมูลส่วนบุคคลนักเรียน (PII Sanitizer & Masker Engine)
+            </h3>
+            <p style="margin-bottom: 1rem;">
+                เพื่อสนับสนุนการทำวิจัยในชั้นเรียน (Classroom Action Research) และการจัดการข้อมูลผลการทดลองวิทยาศาสตร์ให้สอดคล้องตาม พ.ร.บ. คุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562 (PDPA) จึงได้ออกแบบโมดูล Python 3.11 ที่รันได้จริง 100% สำหรับสแกน, ปกปิด (Masking), และแฮชแปลงนามแฝง (SHA-256 Pseudonymization) ข้อมูลนักเรียน พร้อมการทดสอบ Unit Test อัตโนมัติ:
+            </p>
+
+            <div class="code-block">
+<span class="code-comment"># ==============================================================================</span>
+<span class="code-comment"># โปรแกรม: Student PII Sanitizer & Privacy Compliance Engine</span>
+<span class="code-comment"># รายวิชา: 4124941 วิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์ (Computational Science)</span>
+<span class="code-comment"># อาจารย์ผู้สอน: ผู้ช่วยศาสตราจารย์ ดร.ชีวะ ทัศนา | มหาวิทยาลัยราชภัฏรำไพพรรณี</span>
+<span class="code-comment"># มาตรฐาน: Python 3.11 Standard Library (100% Standalone & Deterministic)</span>
+<span class="code-comment"># ==============================================================================</span>
+
+<span class="code-keyword">import</span> re
+<span class="code-keyword">import</span> hashlib
+<span class="code-keyword">import</span> unittest
+<span class="code-keyword">from</span> typing <span class="code-keyword">import</span> Dict, Any, List
+
+<span class="code-keyword">class</span> <span class="code-func">PIISanitizerAndMasker</span>:
+    <span class="code-comment"># เครื่องมือคัดกรอง ปกปิด และแปลงนามแฝงข้อมูลส่วนบุคคล (PII) ของนักเรียน</span>
+    <span class="code-comment"># รองรับกฎหมาย PDPA 2562 สำหรับการทำวิจัยและเผยแพร่ชุดข้อมูลการทดลองวิทยาศาสตร์</span>
+    
+    <span class="code-keyword">def</span> <span class="code-func">__init__</span>(self, salt: str = <span class="code-string">"RBRU_CS2026_SECRET_SALT"</span>):
+        self.salt = salt
+        <span class="code-comment"># นิพจน์เรกิวลาร์ (RegEx) สำหรับตรวจจับรูปแบบข้อมูลเฉพาะ</span>
+        self.thai_id_pattern = re.compile(<span class="code-string">r'\b\d{13}\b|\b\d{1}-\d{4}-\d{5}-\d{2}-\d{1}\b'</span>)
+        self.phone_pattern = re.compile(<span class="code-string">r'\b(0\d{1,2}-?\d{3,4}-?\d{4})\b'</span>)
+        self.email_pattern = re.compile(<span class="code-string">r'\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b'</span>)
+        self.sensitive_medical_keywords = [<span class="code-string">"แพ้สาร"</span>, <span class="code-string">"หอบหืด"</span>, <span class="code-string">"ลมบ้าหมู"</span>, <span class="code-string">"แพ้ยา"</span>, <span class="code-string">"ความดัน"</span>, <span class="code-string">"โรคหัวใจ"</span>]
+
+    <span class="code-keyword">def</span> <span class="code-func">mask_thai_id</span>(self, thai_id_str: str) -> str:
+        <span class="code-comment"># ปกปิดเลขบัตรประชาชน 13 หลัก ให้เห็นเฉพาะ 3 หลักสุดท้าย เช่น X-XXXX-XXXXX-12-3</span>
+        clean_digits = re.sub(<span class="code-string">r'\D'</span>, <span class="code-string">''</span>, thai_id_str)
+        <span class="code-keyword">if</span> len(clean_digits) != <span class="code-num">13</span>:
+            <span class="code-keyword">return</span> <span class="code-string">"[INVALID_ID_FORMAT]"</span>
+        <span class="code-keyword">return</span> f<span class="code-string">"X-XXXX-XXXXX-{clean_digits[-3:-1]}-{clean_digits[-1]}"</span>
+
+    <span class="code-keyword">def</span> <span class="code-func">mask_phone</span>(self, phone_str: str) -> str:
+        <span class="code-comment"># ปกปิดเบอร์โทรศัพท์ ให้เห็นเฉพาะ 3 หลักแรกและ 3 หลักสุดท้าย เช่น 089-XXX-X567</span>
+        digits = re.sub(<span class="code-string">r'\D'</span>, <span class="code-string">''</span>, phone_str)
+        <span class="code-keyword">if</span> len(digits) == <span class="code-num">10</span>:
+            <span class="code-keyword">return</span> f<span class="code-string">"{digits[:3]}-XXX-X{digits[-3:]}"</span>
+        <span class="code-keyword">return</span> <span class="code-string">"[INVALID_PHONE]"</span>
+
+    <span class="code-keyword">def</span> <span class="code-func">mask_email</span>(self, email_str: str) -> str:
+        <span class="code-comment"># ปกปิดอีเมล เช่น s***w@rbru.ac.th</span>
+        parts = email_str.split(<span class="code-string">'@'</span>)
+        <span class="code-keyword">if</span> len(parts) == <span class="code-num">2</span>:
+            username, domain = parts
+            <span class="code-keyword">if</span> len(username) &gt; <span class="code-num">2</span>:
+                masked_user = username[<span class="code-num">0</span>] + <span class="code-string">"***"</span> + username[-<span class="code-num">1</span>]
+            <span class="code-keyword">else</span>:
+                masked_user = username[<span class="code-num">0</span>] + <span class="code-string">"***"</span>
+            <span class="code-keyword">return</span> f<span class="code-string">"{masked_user}@{domain}"</span>
+        <span class="code-keyword">return</span> <span class="code-string">"[INVALID_EMAIL]"</span>
+
+    <span class="code-keyword">def</span> <span class="code-func">hash_pseudonym</span>(self, raw_identifier: str) -> str:
+        <span class="code-comment"># สร้างรหัสนามแฝงแบบทางเดียว (One-way Hash) ด้วย SHA-256 ผสม Salt</span>
+        salted_data = f<span class="code-string">"{self.salt}_{raw_identifier}"</span>.encode(<span class="code-string">'utf-8'</span>)
+        <span class="code-keyword">return</span> <span class="code-string">"STU_"</span> + hashlib.sha256(salted_data).hexdigest()[:<span class="code-num">10</span>].upper()
+
+    <span class="code-keyword">def</span> <span class="code-func">sanitize_student_record</span>(self, student_data: Dict[str, Any]) -> Dict[str, Any]:
+        <span class="code-comment"># ประมวลผลทำความสะอาดและรักษาความลับของระเบียนข้อมูลนักเรียน</span>
+        sanitized = student_data.copy()
+        
+        <span class="code-comment"># 1. แปลงรหัสนักเรียนเป็นนามแฝง (Pseudonymization)</span>
+        <span class="code-keyword">if</span> <span class="code-string">"student_id"</span> <span class="code-keyword">in</span> sanitized:
+            sanitized[<span class="code-string">"pseudonym_token"</span>] = self.hash_pseudonym(str(sanitized[<span class="code-string">"student_id"</span>]))
+            <span class="code-keyword">del</span> sanitized[<span class="code-string">"student_id"</span>]
+            
+        <span class="code-comment"># 2. ลบชื่อจริงและนามสกุลออกจากชุดข้อมูลสืบค้น</span>
+        <span class="code-keyword">if</span> <span class="code-string">"full_name"</span> <span class="code-keyword">in</span> sanitized:
+            sanitized[<span class="code-string">"full_name_masked"</span>] = sanitized[<span class="code-string">"full_name"</span>][<span class="code-num">0</span>] + <span class="code-string">"*** (นิรนาม)"</span>
+            <span class="code-keyword">del</span> sanitized[<span class="code-string">"full_name"</span>]
+
+        <span class="code-comment"># 3. ปกปิดเลขบัตรประชาชน</span>
+        <span class="code-keyword">if</span> <span class="code-string">"national_id"</span> <span class="code-keyword">in</span> sanitized:
+            sanitized[<span class="code-string">"national_id_masked"</span>] = self.mask_thai_id(sanitized[<span class="code-string">"national_id"</span>])
+            <span class="code-keyword">del</span> sanitized[<span class="code-string">"national_id"</span>]
+
+        <span class="code-comment"># 4. ปกปิดเบอร์โทรและอีเมล</span>
+        <span class="code-keyword">if</span> <span class="code-string">"phone"</span> <span class="code-keyword">in</span> sanitized:
+            sanitized[<span class="code-string">"phone_masked"</span>] = self.mask_phone(sanitized[<span class="code-string">"phone"</span>])
+            <span class="code-keyword">del</span> sanitized[<span class="code-string">"phone"</span>]
+            
+        <span class="code-keyword">if</span> <span class="code-string">"email"</span> <span class="code-keyword">in</span> sanitized:
+            sanitized[<span class="code-string">"email_masked"</span>] = self.mask_email(sanitized[<span class="code-string">"email"</span>])
+            <span class="code-keyword">del</span> sanitized[<span class="code-string">"email"</span>]
+
+        <span class="code-comment"># 5. กักกันและแยกข้อมูล Sensitive Medical Data (มาตรา 26)</span>
+        <span class="code-keyword">if</span> <span class="code-string">"medical_notes"</span> <span class="code-keyword">in</span> sanitized:
+            notes = sanitized[<span class="code-string">"medical_notes"</span>]
+            has_sensitive = any(kw <span class="code-keyword">in</span> notes <span class="code-keyword">for</span> kw <span class="code-keyword">in</span> self.sensitive_medical_keywords)
+            <span class="code-keyword">if</span> has_sensitive:
+                sanitized[<span class="code-string">"medical_status"</span>] = <span class="code-string">"[CONFIDENTIAL_SECURED_BY_TEACHER]"</span>
+                sanitized[<span class="code-string">"requires_safety_precaution"</span>] = <span class="code-keyword">True</span>
+            <span class="code-keyword">del</span> sanitized[<span class="code-string">"medical_notes"</span>]
+            
+        <span class="code-keyword">return</span> sanitized
+
+    <span class="code-keyword">def</span> <span class="code-func">calculate_privacy_index</span>(self, sanitized_data: Dict[str, Any]) -> float:
+        <span class="code-comment"># คำนวณดัชนีความสอดคล้องด้านการคุ้มครองข้อมูลส่วนบุคคล (0.0 - 1.0)</span>
+        score = <span class="code-num">1.0</span>
+        raw_keys = [<span class="code-string">"student_id"</span>, <span class="code-string">"full_name"</span>, <span class="code-string">"national_id"</span>, <span class="code-string">"phone"</span>, <span class="code-string">"email"</span>, <span class="code-string">"medical_notes"</span>]
+        <span class="code-keyword">for</span> rk <span class="code-keyword">in</span> raw_keys:
+            <span class="code-keyword">if</span> rk <span class="code-keyword">in</span> sanitized_data:
+                score -= <span class="code-num">0.2</span>
+        <span class="code-keyword">return</span> max(<span class="code-num">0.0</span>, score)
+
+<span class="code-comment"># ==============================================================================</span>
+<span class="code-comment"># ระบบการทดสอบ Unit Test อัตโนมัติ (100% Deterministic Verification)</span>
+<span class="code-comment"># ==============================================================================</span>
+
+<span class="code-keyword">class</span> <span class="code-func">TestPIISanitizer</span>(unittest.TestCase):
+    
+    <span class="code-keyword">def</span> <span class="code-func">setUp</span>(self):
+        self.engine = PIISanitizerAndMasker(salt=<span class="code-string">"TEST_SALT_2026"</span>)
+        self.sample_raw_student = {
+            <span class="code-string">"student_id"</span>: <span class="code-string">"651494101"</span>,
+            <span class="code-string">"full_name"</span>: <span class="code-string">"สมชาย วิทยาการดี"</span>,
+            <span class="code-string">"national_id"</span>: <span class="code-string">"1-2201-99887-12-3"</span>,
+            <span class="code-string">"phone"</span>: <span class="code-string">"089-123-4567"</span>,
+            <span class="code-string">"email"</span>: <span class="code-string">"somchai.w@rbru.ac.th"</span>,
+            <span class="code-string">"medical_notes"</span>: <span class="code-string">"มีประวัติหอบหืดและแพ้สารไอโอดีน"</span>,
+            <span class="code-string">"simulation_score"</span>: <span class="code-num">95.5</span>,
+            <span class="code-string">"ct_thinking_level"</span>: <span class="code-string">"High"</span>
+        }
+
+    <span class="code-keyword">def</span> <span class="code-func">test_thai_id_masking</span>(self):
+        masked = self.engine.mask_thai_id(<span class="code-string">"1220199887123"</span>)
+        self.assertEqual(masked, <span class="code-string">"X-XXXX-XXXXX-12-3"</span>)
+
+    <span class="code-keyword">def</span> <span class="code-func">test_phone_masking</span>(self):
+        masked = self.engine.mask_phone(<span class="code-string">"089-123-4567"</span>)
+        self.assertEqual(masked, <span class="code-string">"089-XXX-X567"</span>)
+
+    <span class="code-keyword">def</span> <span class="code-func">test_email_masking</span>(self):
+        masked = self.engine.mask_email(<span class="code-string">"somchai.w@rbru.ac.th"</span>)
+        self.assertEqual(masked, <span class="code-string">"s***w@rbru.ac.th"</span>)
+
+    <span class="code-keyword">def</span> <span class="code-func">test_pseudonym_deterministic</span>(self):
+        token1 = self.engine.hash_pseudonym(<span class="code-string">"651494101"</span>)
+        token2 = self.engine.hash_pseudonym(<span class="code-string">"651494101"</span>)
+        self.assertEqual(token1, token2)
+        self.assertTrue(token1.startswith(<span class="code-string">"STU_"</span>))
+
+    <span class="code-keyword">def</span> <span class="code-func">test_full_sanitization_and_privacy_index</span>(self):
+        clean_record = self.engine.sanitize_student_record(self.sample_raw_student)
+        <span class="code-comment"># ตรวจสอบว่าคีย์ข้อมูลดิบถูกลบหมดแล้ว</span>
+        self.assertNotIn(<span class="code-string">"student_id"</span>, clean_record)
+        self.assertNotIn(<span class="code-string">"full_name"</span>, clean_record)
+        self.assertNotIn(<span class="code-string">"national_id"</span>, clean_record)
+        self.assertNotIn(<span class="code-string">"medical_notes"</span>, clean_record)
+        <span class="code-comment"># ตรวจสอบคีย์ผลการเรียนยังอยู่</span>
+        self.assertEqual(clean_record[<span class="code-string">"simulation_score"</span>], <span class="code-num">95.5</span>)
+        self.assertTrue(clean_record[<span class="code-string">"requires_safety_precaution"</span>])
+        <span class="code-comment"># ตรวจสอบค่า Privacy Index สมบูรณ์ 100%</span>
+        idx = self.engine.calculate_privacy_index(clean_record)
+        self.assertEqual(idx, <span class="code-num">1.0</span>)
+
+<span class="code-keyword">if</span> __name__ == <span class="code-string">"__main__"</span>:
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestPIISanitizer)
+    runner = unittest.TextTestRunner(verbosity=<span class="code-num">2</span>)
+    result = runner.run(suite)
+    print(f<span class="code-string">"Unit Test Results: Ran {result.testsRun} tests, Errors: {len(result.errors)}, Failures: {len(result.failures)}"</span>)
+            </div>
+        </div>
+    
+        <!-- ปฏิบัติการจำลองเสมือนจริงประจำสัปดาห์ (Interactive Science Simulator & 180 Labs) -->
+        <div class="card" id="sim-section" style="border: 2px solid #0284c7; box-shadow: 0 8px 24px rgba(2, 132, 199, 0.12); margin-top: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.75rem;">
+                <h2 class="card-title" style="margin-bottom: 0; color: #0284c7;">
+                    <i class="fas fa-cube"></i> ปฏิบัติการจำลองเสมือนจริง: 8.3 ปืนใหญ่โพรเจกไทล์ 3 มิติ (3D Projectile Cannon Simulator AR) — AR MediaPipe Lab • RBRU MOOC
+                </h2>
+                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                    <a href="../simulations/chapter08_3d_projectile_cannon.html" target="_blank" class="nav-back" style="margin-bottom: 0; padding: 0.45rem 0.9rem; font-size: 0.85rem; background: #0284c7; color: #fff;">
+                        <i class="fas fa-external-link-alt"></i> เปิดแบบจำลองเต็มหน้าจอ
+                    </a>
+                    <a href="../assets/slides/Computing Science for Science Teaching - Chapter 9: Designing and Implementing Computing Science Curriculum.pptx" download class="nav-back" style="margin-bottom: 0; padding: 0.45rem 0.9rem; font-size: 0.85rem; background: #f59e0b; color: #fff;"><i class="fas fa-file-powerpoint"></i> ดาวน์โหลดสไลด์ (.pptx)</a>
+                </div>
+            </div>
+
+            <p style="font-size: 0.95rem; color: #334155; margin-bottom: 1rem;">
+                <strong>แบบจำลองเชิงโต้ตอบสำหรับห้องเรียนวิทยาศาสตร์:</strong> ให้นักศึกษาทดลองปรับค่าพารามิเตอร์ สังเกตการณ์เปลี่ยนแปลง และวิเคราะห์ข้อมูลตามกระบวนการคิดเชิงคำนวณ (Computational Thinking):
+            </p>
+
+            <div style="margin: 1rem 0; border-radius: 12px; overflow: hidden; border: 1px solid #cbd5e1; height: 600px; box-shadow: var(--shadow-md);">
+                <iframe src="../simulations/chapter08_3d_projectile_cannon.html" style="width: 100%; height: 100%; border: none;"></iframe>
+            </div>
+
+            <div style="margin: 0.85rem 0; display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;"><span style="font-size: 0.85rem; font-weight: 600; color: #64748b;"><i class="fas fa-cubes"></i> แบบจำลองเสริมในบท:</span> <a href="../simulations/chapter04_greenhouse_climate_controller.html" target="_blank" style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.35rem 0.75rem; background: #e0f2fe; color: #0284c7; border-radius: 6px; font-size: 0.82rem; font-weight: 600; text-decoration: none; border: 1px solid #bae6fd;"><i class="fas fa-play-circle"></i> 4.2 ตัวควบคุมสภาพแวดล้อมโรงเรือนเกษตร (Greenhouse Climate Lab) — AR MediaPipe Lab • RBRU MOOC</a> <a href="../simulations/chapter07_heat_vs_temp_calorimeter.html" target="_blank" style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.35rem 0.75rem; background: #e0f2fe; color: #0284c7; border-radius: 6px; font-size: 0.82rem; font-weight: 600; text-decoration: none; border: 1px solid #bae6fd;"><i class="fas fa-play-circle"></i> 7.0 เครื่องมือประเมินความซับซ้อนของโค้ด (Clean Code Visualizer AR) — AR MediaPipe Lab • RBRU MOOC</a></div>
+
+            <!-- คลังใบงานปฏิบัติการที่สอดคล้องจาก 180 Labs Manual -->
+            <div style="margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid #e2e8f0;">
+                <h3 style="font-size: 1.05rem; font-weight: 700; color: #0f172a; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-flask" style="color: #10b981;"></i> ใบงานปฏิบัติการที่สอดคล้อง (จากคู่มือปฏิบัติการ ๑๘๐ การทดลอง):
+                </h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem;">
+                    
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.1rem; border-left: 4px solid #10b981; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem; flex-wrap: wrap; gap: 0.25rem;">
+                    <span style="background: #10b981; color: #fff; font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.55rem; border-radius: 4px;">LAB 4.3.1</span>
+                    <span style="font-size: 0.78rem; color: #64748b;"><i class="far fa-clock"></i> 45 นาที | C3 (ประยุกต์ใช้)</span>
+                </div>
+                <h4 style="font-size: 0.98rem; font-weight: 700; color: #0f172a; margin-bottom: 0.2rem;">การพิสูจน์มโนทัศน์พื้นฐาน สแต็กและคิวในการประมวลผลข้อมูล</h4>
+                <p style="font-size: 0.82rem; color: #64748b; font-style: italic; margin-bottom: 0.5rem;">Foundational Verification: Stacks & Queues</p>
+                <div style="background: #ffffff; border: 1px dashed #cbd5e1; border-radius: 6px; padding: 0.45rem 0.75rem; font-size: 0.85rem; margin-bottom: 0.5rem; overflow-x: auto;"><strong>สมการทฤษฎี:</strong> $$\text{ตัวแปรสถานะแกนกลาง}: \mathcal{S}_{4.3.1} = f(\mathbf{x}, \mathbf{p}) \quad \text{โดยที่ } \mathbf{x} \in \mathbb{R}^n$$</div>
+                <div style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.25rem;"><i class="fas fa-question-circle" style="color: #3b82f6;"></i> คำถามท้ายการทดลอง:</div>
+                <ul style="font-size: 0.82rem; color: #475569; margin-bottom: 0; padding-left: 1.25rem; line-height: 1.5;">
+                    <li style="margin-bottom: 0.25rem;">จงอธิบายความสอดคล้องระหว่างค่าที่วัดได้กับทฤษฎีใน สแต็กและคิวในการประมวลผลข้อมูล</li><li style="margin-bottom: 0.25rem;">หากปรับเปลี่ยนสภาวะแวดล้อม ตัวแปรควบคุมใดส่งผลต่อความไว (Sensitivity) ของระบบมากที่สุด?</li>
+                </ul>
+            </div>
+        
+
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.1rem; border-left: 4px solid #10b981; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem; flex-wrap: wrap; gap: 0.25rem;">
+                    <span style="background: #10b981; color: #fff; font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.55rem; border-radius: 4px;">LAB 4.3.2</span>
+                    <span style="font-size: 0.78rem; color: #64748b;"><i class="far fa-clock"></i> 60 นาที | C4 (วิเคราะห์)</span>
+                </div>
+                <h4 style="font-size: 0.98rem; font-weight: 700; color: #0f172a; margin-bottom: 0.2rem;">การวิเคราะห์สมรรถนะและขั้นตอนวิธี สแต็กและคิวในการประมวลผลข้อมูล</h4>
+                <p style="font-size: 0.82rem; color: #64748b; font-style: italic; margin-bottom: 0.5rem;">Performance & Algorithmic Analysis: Stacks & Queues</p>
+                <div style="background: #ffffff; border: 1px dashed #cbd5e1; border-radius: 6px; padding: 0.45rem 0.75rem; font-size: 0.85rem; margin-bottom: 0.5rem; overflow-x: auto;"><strong>สมการทฤษฎี:</strong> $$\text{ประสิทธิภาพเชิงเวลาและความคลาดเคลื่อน}: \varepsilon = \frac{|y_{\text{measured}} - y_{\text{model}}|}{y_{\text{model}}} \times 100\%$$</div>
+                <div style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.25rem;"><i class="fas fa-question-circle" style="color: #3b82f6;"></i> คำถามท้ายการทดลอง:</div>
+                <ul style="font-size: 0.82rem; color: #475569; margin-bottom: 0; padding-left: 1.25rem; line-height: 1.5;">
+                    <li style="margin-bottom: 0.25rem;">อัตราการเพิ่มขึ้นของเวลาประมวลผลสอดคล้องกับความซับซ้อน Big-O ระดับใด?</li><li style="margin-bottom: 0.25rem;">เสนอแนะแนวทางการปรับปรุงขั้นตอนวิธีเพื่อลดการใช้หน่วยความจำลงอย่างน้อย 30%</li>
+                </ul>
+            </div>
+        
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ==================== TAB 3: กิจกรรมการเรียนรู้ 5E ==================== -->
+    <div id="tab3" class="content-section">
+        <div class="card">
+            <h2 class="card-title">
+                <i class="fas fa-hands-holding-circle"></i> กิจกรรมการเรียนรู้เชิงรุก (Active Learning 5E Model: รวม 4 ชั่วโมง / 240 นาที)
+            </h2>
+            <p style="margin-bottom: 1.5rem; color: var(--text-muted);">
+                โครงสร้างการจัดกิจกรรม 5E บูรณาการการบรรยายเชิงนโยบายความปลอดภัยไซเบอร์ (1 ชม.) ควบคู่กับการปฏิบัติการจุลการสอนจริงกลุ่มที่ 1–4 (3 ชม.) พร้อมการสะท้อนคิดแบบ Dual-Loop After Action Review (AAR):
+            </p>
+
+            <!-- Phase 1 -->
+            <div class="feature-box" style="margin-bottom: 1.5rem; border-left: 4px solid var(--accent);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                    <h4 style="margin: 0; color: var(--accent);"><i class="fas fa-bullhorn"></i> ขั้นที่ 1 & 2: Engagement & Exploration (บรรยายและซักซ้อมกติกาความปลอดภัย)</h4>
+                    <span class="time-badge"><i class="fas fa-clock"></i> 60 นาที (ชั่วโมงที่ 1)</span>
+                </div>
+                <p><strong>1.1 ขั้นสร้างความสนใจ (Engagement - 20 นาที):</strong></p>
+                <ul style="padding-left: 1.5rem; margin-bottom: 0.75rem;">
+                    <li>อาจารย์นำเสนอคลิปข่าวกรณีศึกษาจริง: ครูโรงเรียนมัธยมถ่ายคลิปนักเรียนทำแล็บระเบิดควันแล้วแชร์ลง TikTok จนกลายเป็นประเด็นล้อเลียนทั่วประเทศ (Cyberbullying & Privacy Breach)</li>
+                    <li>กระตุ้นการคิดด้วยคำถามวิพากษ์: <em>"ในฐานะครูวิทยาศาสตร์ การเผยแพร่บรรยากาศห้องเรียนมีเส้นแบ่งความพอดีระหว่าง 'การประชาสัมพันธ์นวัตกรรม' กับ 'การละเมิดสิทธิของเด็กตาม PDPA' ตรงไหน?"</em></li>
+                </ul>
+                <p><strong>1.2 ขั้นสำรวจและเรียนรู้แนวปฏิบัติ (Exploration - 40 นาที):</strong></p>
+                <ul style="padding-left: 1.5rem; margin-bottom: 0;">
+                    <li>อภิปรายสรุปสาระสำคัญของเอกสาร Google Drive: <code>2 สิทธิ์ของเรา.pdf</code> และ <code>3 ถูกต้อง ปลอดภัย ใช่เลย.pdf</code></li>
+                    <li>ชี้แจงกฎกติกาสถานีจุลการสอนจริง: การจับเวลาเป๊ะ 15 นาที สำหรับการสอน + 5 นาที สำหรับการเปลี่ยนอุปกรณ์และ AAR</li>
+                    <li>เปิดระบบประเมินผลออนไลน์ผ่าน Google Forms สำหรับให้เพื่อนร่วมชั้นทุกคนทำหน้าที่เป็น Peer Reviewers</li>
+                </ul>
+            </div>
+
+            <!-- Phase 2 -->
+            <div class="feature-box" style="margin-bottom: 1.5rem; border-left: 4px solid var(--success);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                    <h4 style="margin: 0; color: var(--success);"><i class="fas fa-chalkboard-user"></i> ขั้นที่ 3 & 4: Explanation & Elaboration (ปฏิบัติการจุลการสอนจริง กลุ่ม 1–4)</h4>
+                    <span class="time-badge" style="background: var(--success);"><i class="fas fa-clock"></i> 140 นาที (ชั่วโมงที่ 2–3.5)</span>
+                </div>
+                <p><strong>การดำเนินการสอนจริงหน้าชั้นเรียน กลุ่มละ 35 นาที (สอน 20 นาที + AAR วิพากษ์ 10 นาที + สลับกลุ่ม 5 นาที):</strong></p>
+
+                <div class="grid-2" style="margin-top: 1rem;">
+                    <div style="background: #f8fafc; padding: 1.25rem; border-radius: 8px; border: 1px solid var(--border);">
+                        <h5 style="color: var(--primary); font-weight: 700; margin-bottom: 0.5rem;">
+                            <span class="badge badge-blue">กลุ่มที่ 1 (20 นาที)</span> ฟิสิกส์: แรงลอยตัวและหลักอาร์คิมีดีส
+                        </h5>
+                        <p style="font-size: 0.92rem; color: var(--text-main);">
+                            <strong>แบบจำลอง:</strong> Interactive Buoyancy Sandbox (ปรับความหนาแน่นของของเหลวและมวลวัตถุ)<br>
+                            <strong>จุดเน้น CT:</strong> Abstraction การสกัดเฉพาะตัวแปรปริมาตรที่จม \(V_{\text{sub}}\) และแรงพยุง \(F_B = \rho V g\)<br>
+                            <strong>การจัดการ PDPA:</strong> ใช้นามแฝงทีมทดลอง (Team Alpha, Beta) แทนชื่อจริงนักเรียนบนตารางคะแนนสด
+                        </p>
+                    </div>
+
+                    <div style="background: #f8fafc; padding: 1.25rem; border-radius: 8px; border: 1px solid var(--border);">
+                        <h5 style="color: var(--primary); font-weight: 700; margin-bottom: 0.5rem;">
+                            <span class="badge badge-green">กลุ่มที่ 2 (20 นาที)</span> ชีววิทยา: การสังเคราะห์ด้วยแสงและการดูดกลืนแสง
+                        </h5>
+                        <p style="font-size: 0.92rem; color: var(--text-main);">
+                            <strong>แบบจำลอง:</strong> Photosynthesis Spectrum Sim (กราฟการดูดกลืนสเปกตรัมแสงสีแดง/น้ำเงิน)<br>
+                            <strong>จุดเน้น CT:</strong> Pattern Recognition วิเคราะห์ความสัมพันธ์ระหว่างความยาวคลื่นแสงกับอัตราการเกิดฟองแก๊ส \(O_2\)<br>
+                            <strong>การจัดการ PDPA:</strong> คัดกรองภาพวาดการทดลองของผู้เรียนจำลอง ไม่ให้ติดสัญลักษณ์ที่ระบุตัวตน
+                        </p>
+                    </div>
+
+                    <div style="background: #f8fafc; padding: 1.25rem; border-radius: 8px; border: 1px solid var(--border);">
+                        <h5 style="color: var(--primary); font-weight: 700; margin-bottom: 0.5rem;">
+                            <span class="badge badge-purple">กลุ่มที่ 3 (20 นาที)</span> ฟิสิกส์: กฎของโอห์มและวงจรไฟฟ้ากระแสตรง
+                        </h5>
+                        <p style="font-size: 0.92rem; color: var(--text-main);">
+                            <strong>แบบจำลอง:</strong> DC Circuit Simulator (ต่อตัวต้านทานอนุกรม/ขนาน และวัดโวลต์-แอมป์)<br>
+                            <strong>จุดเน้น CT:</strong> Algorithm Design การออกแบบขั้นตอนลำดับการตรวจเช็กวงจรช็อต (Short Circuit)<br>
+                            <strong>การจัดการ PDPA:</strong> แจ้งสิทธิ์การเก็บข้อมูลการล็อกอินเครื่องคอมพิวเตอร์ก่อนเริ่มกิจกรรม
+                        </p>
+                    </div>
+
+                    <div style="background: #f8fafc; padding: 1.25rem; border-radius: 8px; border: 1px solid var(--border);">
+                        <h5 style="color: var(--primary); font-weight: 700; margin-bottom: 0.5rem;">
+                            <span class="badge badge-amber">กลุ่มที่ 4 (20 นาที)</span> พันธุศาสตร์: การถ่ายทอดลักษณะตามกฎของเมนเดล
+                        </h5>
+                        <p style="font-size: 0.92rem; color: var(--text-main);">
+                            <strong>แบบจำลอง:</strong> Mendelian Punnett Square Simulator (สุ่มยีนเด่น-ยีนด้อย \(Aa \times Aa\))<br>
+                            <strong>จุดเน้น CT:</strong> Decomposition แยกคู่ยีนอัลลีล และคำนวณอัตราส่วนพันธุศาสตร์เชิงตัวเลข \(3:1\)<br>
+                            <strong>การจัดการ PDPA:</strong> ตรวจสอบว่าโจทย์ไม่นำลักษณะโรคทางพันธุกรรมของเพื่อนในห้องมาเป็นตัวอย่างล้อเลียน
+                        </p>
+                    </div>
+                </div>
+
+                <div class="highlight-box success" style="margin-top: 1.25rem;">
+                    <strong>กระบวนการ After Action Review (AAR) หลังจบแต่ละกลุ่ม (10 นาที):</strong><br>
+                    1. <strong>Self-Reflection (2 นาที):</strong> ครูผู้สอนหลักและทีมประเมินตนเอง: <em>"อะไรเป็นไปตามแผน และอะไรต้องปรับปรุงทันที?"</em><br>
+                    2. <strong>Peer Constructive Feedback (4 นาที):</strong> ตัวแทนผู้เรียนจำลอง 2 คน สะท้อนมุมมองด้านความชัดเจนของคำถามและความตื่นเต้นในการใช้โปรแกรมจำลอง<br>
+                    3. <strong>Master Coach Review (4 นาที):</strong> ผศ.ดร.ชีวะ ทัศนา ให้ข้อเสนอแนะเชิงลึกด้าน TPACK, จังหวะการสอน (Pacing), การแก้ปัญหาเฉพาะหน้า และการปฏิบัติตามมาตรฐาน PDPA
+                </div>
+            </div>
+
+            <!-- Phase 3 -->
+            <div class="feature-box" style="border-left: 4px solid var(--purple);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                    <h4 style="margin: 0; color: var(--purple);"><i class="fas fa-flag-checkered"></i> ขั้นที่ 5: Evaluation & Synthesis (สังเคราะห์รวบยอดและมอบหมายงาน)</h4>
+                    <span class="time-badge" style="background: var(--purple);"><i class="fas fa-clock"></i> 40 นาที (ชั่วโมงที่ 4)</span>
+                </div>
+                <ul style="padding-left: 1.5rem; margin-bottom: 0.75rem;">
+                    <li><strong>ประมวลผลคะแนนสด (Real-Time Rubric Dashboard):</strong> แสดงผลคะแนนเฉลี่ยจากการประเมินของเพื่อนร่วมชั้นและข้อคิดเห็นเชิงบวก</li>
+                    <li><strong>สังเคราะห์ข้อค้นพบทางวิชาชีพ (Pedagogical Takeaways):</strong> รวบรวม "Top 3 จุดเด่น" และ "Top 3 จุดควรพัฒนา" ของกลุ่มที่ 1–4 เพื่อเป็นกรณีศึกษาให้กลุ่ม 5–8 ในสัปดาห์ที่ 14</li>
+                    <li><strong>มอบหมายภารกิจ:</strong>
+                        <ul>
+                            <li>กลุ่มที่ 1–4: นำผลสะท้อนคิด (AAR) ไปปรับแก้คู่มือการใช้สื่อและแผนการสอนลงในเล่มรายงานโครงงานฉบับสมบูรณ์</li>
+                            <li>กลุ่มที่ 5–8: ทำการตรวจเช็กขั้นสุดท้าย (Final Pre-flight Check) ทั้งโปรแกรมจำลอง แผนสำรอง Plan B และใบกิจกรรม เพื่อเตรียมสอนในสัปดาห์ที่ 14</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== TAB 4: การวัดและประเมินผล ==================== -->
+    <div id="tab4" class="content-section">
+        <div class="card">
+            <h2 class="card-title">
+                <i class="fas fa-chart-simple"></i> การวัดและประเมินผล (Authentic Assessment & Analytic Rubrics - 20%)
+            </h2>
+            <p style="margin-bottom: 1.5rem; color: var(--text-muted);">
+                เกณฑ์การประเมินแบบจำแนกประเด็น (Analytic Rubrics) 4 ระดับคุณภาพ สำหรับการตัดสินผลสัมฤทธิ์การจุลการสอนจริง (Micro-teaching Practicum) สัดส่วนคะแนน 20% ของรายวิชา:
+            </p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 20%;">เกณฑ์การประเมิน (มิติ)</th>
+                        <th style="width: 20%;">ยอดเยี่ยม (4 คะแนน)<br><span class="badge badge-teal">90–100%</span></th>
+                        <th style="width: 20%;">ดี (3 คะแนน)<br><span class="badge badge-blue">75–89%</span></th>
+                        <th style="width: 20%;">พอใช้ (2 คะแนน)<br><span class="badge badge-amber">60–74%</span></th>
+                        <th style="width: 20%;">ปรับปรุง (1 คะแนน)<br><span class="badge badge-red">&lt; 60%</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <strong>1. ทักษะการสอน & คำถามกระตุ้น CT</strong><br>
+                            <span class="badge badge-blue">น้ำหนัก 30%</span><br>
+                            <small class="text-muted">• โครงสร้าง 5E ชัดเจน<br>• คำถามระดับสูง HOTS<br>• ภาษาและบุคลิกภาพครู</small>
+                        </td>
+                        <td>ดำเนินกิจกรรม 5E ครบถ้วนต่อเนื่อง, ใช้คำถามกระตุ้น 4 เสาหลัก CT อย่างโดดเด่น ผู้เรียนเกิดการวิเคราะห์เชิงลึก, บุคลิกภาพครูสง่างามและมีพลัง</td>
+                        <td>โครงสร้าง 5E ชัดเจน, มีการใช้คำถามกระตุ้น CT เป็นระยะ ผู้เรียนส่วนใหญ่เข้าใจ, บุคลิกภาพและภาษาสื่อสารดีและเหมาะสม</td>
+                        <td>ขั้นตอน 5E ไม่ต่อเนื่องบางช่วง, คำถามส่วนใหญ่ยังเป็นเชิงความจำ (LOTS), ขาดการกระตุ้นให้คิดวิเคราะห์อย่างเป็นระบบ</td>
+                        <td>สอนแบบบรรยายทางเดียว ไม่เป็นไปตาม 5E, ไม่มีการตั้งคำถามกระตุ้น CT, ขาดความมั่นใจในการสื่อสาร</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>2. การบูรณาการแบบจำลอง & แก้ปัญหาเฉพาะหน้า</strong><br>
+                            <span class="badge badge-green">น้ำหนัก 30%</span><br>
+                            <small class="text-muted">• เชื่อมโยงโปรแกรมกับวิทย์<br>• ผู้เรียนได้โต้ตอบจริง<br>• จัดการ Glitch/Plan B</small>
+                        </td>
+                        <td>แบบจำลองผสานกับแนวคิดวิทย์อย่างไร้รอยต่อ, ผู้เรียนได้ทดลองปรับตัวแปรสด, เมื่อเกิดข้อขัดข้องทางเทคนิค ทีมสลับใช้ Plan B ได้อย่างคล่องแคล่ว ไร้ Dead Air</td>
+                        <td>ใช้แบบจำลองสอดคล้องกับเนื้อหา, ผู้เรียนมีส่วนร่วมในการสังเกตผล, แก้ปัญหาเทคนิคได้ตามมาตรฐาน มีการเตรียมไฟล์สำรอง</td>
+                        <td>แบบจำลองถูกใช้เป็นเพียงภาพนิ่งประกอบการบรรยาย ผู้เรียนไม่ได้โต้ตอบ, เกิด Dead Air เล็กน้อยเมื่อเทคโนโลยีมีปัญหา</td>
+                        <td>โปรแกรมค้างหรือรันไม่ผ่านและไม่มีแผนสำรอง Plan B, แบบจำลองไม่สอดคล้องกับเนื้อหาวิทยาศาสตร์ที่สอน</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>3. การจัดการชั้นเรียน & จริยธรรม PDPA</strong><br>
+                            <span class="badge badge-purple">น้ำหนัก 20%</span><br>
+                            <small class="text-muted">• บรรยากาศเชิงบวก<br>• ความร่วมมือในทีม 3 เสา<br>• ปกป้องข้อมูลส่วนบุคคล</small>
+                        </td>
+                        <td>ทีม 3 เสาหลัก (Lead, Facilitator, Tech) ประสานงานไร้รอยต่อ, บรรยากาศเป็นกันเอง, <strong>ปฏิบัติตาม PDPA เคร่งครัด มีการปกปิด PII และเคารพสิทธิเด็ก 100%</strong></td>
+                        <td>ทีมแบ่งหน้าที่ชัดเจน ช่วยเหลือกันดี, ควบคุมความสนใจผู้เรียนได้, มีการระมัดระวังเรื่องข้อมูลส่วนบุคคลและภาพถ่ายตามเกณฑ์</td>
+                        <td>บทบาทในทีมซ้ำซ้อนหรือครูผู้สอนทำคนเดียวทั้งหมด, บรรยากาศตึงเครียด, มีการเปิดเผยคะแนนหรือชื่อจริงของผู้เรียนโดยไม่ระวัง</td>
+                        <td>เกิดความขัดแย้งหรือไม่พร้อมในทีม, ควบคุมชั้นเรียนไม่ได้, มีพฤติกรรมละเมิดข้อมูลส่วนบุคคลหรือใช้ข้อมูลอ่อนไหวมาล้อเลียน</td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <strong>4. การประเมินผลผู้เรียน & การบริหารเวลา</strong><br>
+                            <span class="badge badge-amber">น้ำหนัก 20%</span><br>
+                            <small class="text-muted">• คุณภาพใบกิจกรรม<br>• ตรวจสอบความเข้าใจ<br>• ควบคุมเวลาเป๊ะ 15–20 นาที</small>
+                        </td>
+                        <td>ใบกิจกรรม (Worksheet) ท้าทายและตรวจวัดผลได้ชัดเจน, มีการประเมินความเข้าใจระหว่างทาง (Formative), <strong>บริหารเวลา 15–20 นาที ได้อย่างแม่นยำทุกช่วง</strong></td>
+                        <td>ใบกิจกรรมสอดคล้องกับวัตถุประสงค์, มีการตรวจคำตอบสรุปร่วมกัน, จบการสอนภายในกรอบเวลาบวกลบไม่เกิน 2 นาที</td>
+                        <td>ใบกิจกรรมง่ายเกินไปหรือยาวเกินเวลา, สรุปผลการประเมินรวบรัด, เวลาคลาดเคลื่อน 3–5 นาที</td>
+                        <td>ไม่มีเครื่องมือประเมินผลผู้เรียน หรือสอนไม่จบตามแผนเนื่องจากบริหารเวลาล้มเหลว (เกินเวลามากกว่า 5 นาที)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="highlight-box purple" style="margin-top: 1.5rem;">
+                <strong>สูตรการคำนวณคะแนนสุทธิ (Total Score Calculation - 20% of Course Grade):</strong><br>
+                \[ \text{คะแนนจุลการสอน (20%)} = \left[ (S_1 \times 0.30) + (S_2 \times 0.30) + (S_3 \times 0.20) + (S_4 \times 0.20) \right] \times \frac{20}{4} \]
+                โดยคะแนนประกอบด้วย: การประเมินจากอาจารย์ผู้สอน (70%) + คะแนนเฉลี่ยจากเพื่อนร่วมชั้น (30%)
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== TAB 5: ข้อสอบวัดสมรรถนะ HOTS ==================== -->
+    <div id="tab5" class="content-section">
+        <div class="card">
+            <h2 class="card-title">
+                <i class="fas fa-clipboard-question"></i> ข้อสอบวัดสมรรถนะการคิดขั้นสูง สสวท. (HOTS Assessment & Interactive Feedback)
+            </h2>
+            <p style="margin-bottom: 1.5rem; color: var(--text-muted);">
+                แบบทดสอบสถานการณ์จำลองเพื่อวัดทักษะการตัดสินใจเชิงวิชาชีพครูวิทยาศาสตร์ (Professional Decision Making) ด้านกฎหมายคุ้มครองข้อมูลส่วนบุคคล (PDPA) และสมรรถนะการจัดการชั้นเรียนจุลการสอน:
+            </p>
+
+            <!-- Question 1 -->
+            <div style="background: #ffffff; border: 1px solid var(--border); border-radius: 12px; padding: 1.75rem; margin-bottom: 2rem; box-shadow: var(--shadow-sm);">
+                <div style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 1rem;">
+                    <span class="badge badge-blue">ข้อสอบข้อที่ 1 (สถานการณ์จริงด้าน PDPA ในโรงเรียน)</span>
+                    <span class="badge badge-purple">ระดับสมรรถนะ: การประเมินค่าและการตัดสินใจเชิงจริยธรรม</span>
+                </div>
+                <h4 style="font-size: 1.05rem; font-weight: 700; color: var(--primary); line-height: 1.7; margin-bottom: 1.25rem;">
+                    สถานการณ์: คุณครูปานวาดได้จัดกิจกรรมการเรียนรู้วิทยาศาสตร์โดยใช้โปรแกรมจำลองการเคลื่อนที่แบบโพรเจกไทล์แก่นักเรียนชั้น ม.2 โดยในระหว่างที่นักเรียนกำลังตื่นเต้นและทำคะแนนได้สูงสุด ครูปานวาดได้ใช้สมาร์ตโฟนส่วนตัวถ่ายภาพใบหน้านักเรียนคู่กับหน้าจอแท็บเล็ต ซึ่งบนหน้าจอนั้นแสดงชื่อ-นามสกุลจริง, เลขประจำตัวนักเรียน 5 หลัก, ภาพกราฟวิถีโค้ง, และคะแนนสอบก่อนเรียน (Pre-test) ที่ได้ 3/10 คะแนน จากนั้นครูปานวาดได้นำภาพดังกล่าวไปโพสต์ลงใน Facebook ส่วนตัวและแฟนเพจของกลุ่มสาระฯ เพื่อประชาสัมพันธ์ว่า "สื่อนวัตกรรมวิทยาการคำนวณช่วยเปลี่ยนเด็กหลังห้องให้เก่งขึ้น"<br><br>
+                    คำถาม: พิจารณาตามพระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562 (PDPA) และหลักการคุ้มครองสิทธิเด็ก การกระทำของคุณครูปานวาดมีความถูกต้องหรือไม่อย่างไร และหากจำเป็นต้องเผยแพร่ ควรดำเนินการตามข้อใดจึงจะถูกต้องตามกฎหมายและจรรยาบรรณวิชาชีพครูสูงสุด?
+                </h4>
+
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="toggleExplanation('exp1', false, this)">
+                        <span style="font-weight: 700; color: var(--accent);">ก.</span>
+                        <div>ถูกต้องแล้ว เพราะครูมีเจตนาบริสุทธิ์เพื่อการศึกษาและเป็นการประชาสัมพันธ์ผลงานของโรงเรียน เข้าข่ายข้อยกเว้นภารกิจเพื่อประโยชน์สาธารณะ (Public Task) โดยไม่ต้องขอความยินยอม</div>
+                    </div>
+                    <div class="quiz-option" onclick="toggleExplanation('exp1', false, this)">
+                        <span style="font-weight: 700; color: var(--accent);">ข.</span>
+                        <div>ถูกต้องบางส่วน โดยครูสามารถโพสต์ใน Facebook ส่วนตัวได้เพราะเป็นพื้นที่ส่วนบุคคล แต่ห้ามนำไปโพสต์ลงเพจกลุ่มสาระฯ ของโรงเรียน</div>
+                    </div>
+                    <div class="quiz-option" onclick="toggleExplanation('exp1', true, this)">
+                        <span style="font-weight: 700; color: var(--accent);">ค.</span>
+                        <div><strong>ไม่ถูกต้องอย่างยิ่ง</strong> เนื่องจากการโพสต์ภาพที่เห็นใบหน้าชัดเจนคู่กับคะแนนสอบก่อนเรียน (3/10) เข้าข่ายเปิดเผยข้อมูลส่วนบุคคลที่ส่งผลกระทบต่อจิตใจและศักดิ์ศรีของเด็ก (Stigmatization) โดยไม่ได้รับความยินยอม (Consent) จากผู้ปกครองและเด็ก; หากจะเผยแพร่ ครูต้องขอความยินยอมเป็นลายลักษณ์อักษร หรือทำการ <strong>เบลอใบหน้าเด็ก (Blur Face) และตัดข้อมูลระบุตัวตน ชื่อ-สกุล เลขประจำตัว และคะแนนสอบออกทั้งหมด (Data Anonymization)</strong> ก่อนเผยแพร่</div>
+                    </div>
+                    <div class="quiz-option" onclick="toggleExplanation('exp1', false, this)">
+                        <span style="font-weight: 700; color: var(--accent);">ง.</span>
+                        <div>ไม่ถูกต้องเฉพาะเรื่องเลขประจำตัวนักเรียน 5 หลักเท่านั้น ส่วนคะแนนสอบและภาพถ่ายใบหน้าสามารถเผยแพร่ได้ทันทีโดยไม่ต้องขออนุญาตใคร</div>
+                    </div>
+                </div>
+
+                <div id="exp1" class="quiz-explanation">
+                    <h5 style="color: var(--success); font-weight: 700; margin-bottom: 0.5rem;"><i class="fas fa-circle-check"></i> เฉลยข้อ ค. (ถูกต้องตามหลักวิชาการและกฎหมาย)</h5>
+                    <p style="font-size: 0.95rem; line-height: 1.7; color: var(--text-main);">
+                        <strong>คำอธิบายเชิงกฎหมายและจริยธรรมครู (PDPA & Child Rights Analysis):</strong><br>
+                        1. <strong>การละเมิดสิทธิความเป็นส่วนตัว:</strong> ภาพถ่ายใบหน้า ชื่อ-สกุล และเลขประจำตัว จัดเป็นข้อมูลส่วนบุคคลทั่วไป (General PII) ซึ่งการนำไปเผยแพร่สู่สาธารณะเพื่อการประชาสัมพันธ์ <strong>ไม่อยู่ในฐาน Public Task</strong> แต่ต้องใช้ <strong>ฐานความยินยอม (Consent)</strong> จากผู้ปกครองและตัวนักเรียน (ผู้เยาว์)<br>
+                        2. <strong>การกระทบต่อจิตใจและศักดิ์ศรีความเป็นมนุษย์ (Dignity & Stigmatization):</strong> การเปิดเผยคะแนนสอบที่ต่ำ (3/10) และใช้ถ้อยคำว่า "เด็กหลังห้อง" เป็นการตีตราเด็กบนโลกออนไลน์ ซึ่งจะทิ้งรอยเท้าดิจิทัล (Digital Footprint) ที่ส่งผลกระทบเชิงลบระยะยาวต่ออนาคตของเด็ก<br>
+                        3. <strong>แนวปฏิบัติที่ถูกต้อง:</strong> หากต้องการโชว์ความก้าวหน้าของโปรแกรมจำลอง ครูต้องนำเสนอเฉพาะภาพหน้าจอโปรแกรมจำลอง (Screenshot) หรือทำ <strong>Data Masking & Anonymization</strong> โดยเบลอหน้าเด็กและซ่อนข้อมูลระบุตัวตนทั้งหมด 100%
+                    </p>
+                </div>
+            </div>
+
+            <!-- Question 2 -->
+            <div style="background: #ffffff; border: 1px solid var(--border); border-radius: 12px; padding: 1.75rem; margin-bottom: 1rem; box-shadow: var(--shadow-sm);">
+                <div style="display: flex; gap: 0.5rem; align-items: center; margin-bottom: 1rem;">
+                    <span class="badge badge-blue">ข้อสอบข้อที่ 2 (สมรรถนะการแก้ปัญหาเฉพาะหน้าและการสอนวิทยาการคำนวณ)</span>
+                    <span class="badge badge-purple">ระดับสมรรถนะ: การประเมินสถานการณ์และการจัดการชั้นเรียน (PCK)</span>
+                </div>
+                <h4 style="font-size: 1.05rem; font-weight: 700; color: var(--primary); line-height: 1.7; margin-bottom: 1.25rem;">
+                    สถานการณ์: ในระหว่างการปฏิบัติการจุลการสอนของกลุ่มที่ 1 เรื่อง "แรงลอยตัวและหลักของอาร์คิมีดีส" ครูผู้สอนหลักได้เชิญผู้เรียนจำลองออกมาป้อนค่าตัวแปรความหนาแน่นของของเหลว (\(\rho\)) ในโปรแกรมจำลองบนแท็บเล็ตหน้าชั้นเรียน แต่ผู้เรียนจำลองได้แกล้งป้อนค่า \(\rho = -500\text{ kg/m}^3\) (ค่าติดลบ) และค่า \(V = 0\) ส่งผลให้โปรแกรมจำลองเกิดอาการค้าง (Crash) และแสดงข้อความ Error สีแดงบนจอภาพโปรเจกเตอร์ขนาดใหญ่ว่า <code>ZeroDivisionError & NegativeDensityException</code> ทำให้เพื่อนในห้องเริ่มหัวเราะและส่งเสียงฮือฮา<br><br>
+                    คำถาม: ในฐานะทีมผู้สอน (ครูผู้สอนหลัก, ครูผู้ช่วย, และผู้คุมสื่อ) การปฏิบัติตนตามข้อใดสะท้อนถึงสมรรถนะ <strong>Pedagogical Content Knowledge (PCK)</strong> และการจัดการชั้นเรียนวิทยาการคำนวณระดับ "ยอดเยี่ยม" ที่สุด?
+                </h4>
+
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="toggleExplanation('exp2', false, this)">
+                        <span style="font-weight: 700; color: var(--accent);">ก.</span>
+                        <div>ครูผู้สอนหลักกล่าวตักเตือนผู้เรียนจำลองว่าห้ามแกล้งป้อนค่าประหลาด จากนั้นผู้คุมสื่อรีบปิดโปรแกรมแล้วเปิดใหม่เพื่อเริ่มเนื้อหาเดิมต่อ</div>
+                    </div>
+                    <div class="quiz-option" onclick="toggleExplanation('exp2', false, this)">
+                        <span style="font-weight: 700; color: var(--accent);">ข.</span>
+                        <div>ครูผู้สอนหลักยืนนิ่งรอให้ผู้คุมสื่อแก้ไขโค้ดสดบนจอ ขณะที่ครูผู้ช่วยบอกให้นักเรียนทุกคนนั่งเงียบๆ รอจนกว่าโปรแกรมจะพร้อมใช้งาน</div>
+                    </div>
+                    <div class="quiz-option" onclick="toggleExplanation('exp2', true, this)">
+                        <span style="font-weight: 700; color: var(--accent);">ค.</span>
+                        <div><strong>ผู้คุมสื่อและครูผู้ช่วยดำเนินการแก้ไขทางเทคนิคและเตรียม Plan B อย่างเงียบสงบ</strong> ขณะที่ <strong>ครูผู้สอนหลักเปลี่ยนข้อผิดพลาดเป็นโอกาสทองแห่งการเรียนรู้ (Teachable Moment) ทันที</strong> โดยกล่าวชื่นชมและชวนนักเรียนทั้งห้องอภิปรายว่า <em>"ในโลกความจริงของเหลวมีความหนาแน่นติดลบได้หรือไม่? และตามสูตร \(F_B = \rho V g\) หากปริมาตรเป็น 0 แรงพยุงจะเป็นอย่างไร?"</em> พร้อมทั้งเชื่อมโยงเข้าสู่แนวคิดเชิงคำนวณเรื่อง <strong>Boundary Conditions & Input Validation (การตรวจสอบเงื่อนไขข้อมูลนำเข้าของโปรแกรม)</strong> โดยไม่ทำให้เกิด Dead Air ในชั้นเรียน</div>
+                    </div>
+                    <div class="quiz-option" onclick="toggleExplanation('exp2', false, this)">
+                        <span style="font-weight: 700; color: var(--accent);">ง.</span>
+                        <div>ยกเลิกการใช้แบบจำลองคอมพิวเตอร์ทั้งหมด แล้วเปลี่ยนไปใช้วิธีแจกเฉลยสูตรบนกระดานดำให้นักเรียนจดจำทันที</div>
+                    </div>
+                </div>
+
+                <div id="exp2" class="quiz-explanation">
+                    <h5 style="color: var(--success); font-weight: 700; margin-bottom: 0.5rem;"><i class="fas fa-circle-check"></i> เฉลยข้อ ค. (ถูกต้องระดับยอดเยี่ยม)</h5>
+                    <p style="font-size: 0.95rem; line-height: 1.7; color: var(--text-main);">
+                        <strong>คำอธิบายเชิงจิตวิทยาการสอนและ TPACK (Classroom Orchestration Mastery):</strong><br>
+                        - <strong>การเปลี่ยนวิกฤตเป็นโอกาส (Teachable Moment):</strong> ในชั้นเรียนจริง นักเรียนมักมีความอยากรู้อยากเห็นและทดลองป้อนค่าแปลกประหลาดเสมอ ครูที่มีสมรรถนะสูงจะไม่มองว่าเป็นปัญหา แต่จะใช้สถานการณ์นี้ดึงการอภิปรายทางวิทยาศาสตร์ (ขอบเขตทางกายภาพของความหนาแน่น) ร่วมกับวิทยาการคำนวณ (อัลกอริทึมการดักจับข้อผิดพลาด / Input Sanitization)<br>
+                        - <strong>Team Dynamics & Zero Dead Air:</strong> การทำงานประสานกันอย่างไร้รอยต่อระหว่างครูผู้สอนหลัก (คุมบรรยากาศและรักษาสมาธิผู้เรียน) ครูผู้ช่วย (แจกใบงานชวนวิเคราะห์) และผู้คุมสื่อ (แก้ปัญหาหรือเปิด Plan B) แสดงถึงความเป็นมืออาชีพสูงสุดตามเกณฑ์รูบริกส์มิติที่ 1 และ 2
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== TAB 6: เอกสารอ้างอิง ==================== -->
+    <div id="tab6" class="content-section">
+        <div class="card">
+            <h2 class="card-title">
+                <i class="fas fa-quote-left"></i> เอกสารและงานวิจัยอ้างอิง (References - APA 7th Edition)
+            </h2>
+            <p style="margin-bottom: 1.5rem; color: var(--text-muted);">
+                คลังวรรณกรรมวิจัยระดับนานาชาติชั้นนำ (Scopus Q1), กฎหมายคุ้มครองข้อมูลส่วนบุคคล, และเอกสารมาตรฐาน สสวท. ประจำสัปดาห์ที่ 13:
+            </p>
+
+            <ul style="list-style: none; padding-left: 0; line-height: 2;">
+                <li style="margin-bottom: 1.25rem; padding-left: 1.75rem; text-indent: -1.75rem;">
+                    <i class="fas fa-file-lines text-accent" style="margin-right: 0.5rem;"></i>
+                    Karlsen, N., & Aalbergsjø, S. G. (2026). Developing pre-service teachers’ TPACK for programming simulations in science education. <em>Educational Technology Research and Development</em>, 74(1), 1–25. 
+                    <a href="https://doi.org/10.1007/s11423-026-10674-3" target="_blank" style="color: var(--accent); text-decoration: underline;">https://doi.org/10.1007/s11423-026-10674-3</a>
+                </li>
+
+                <li style="margin-bottom: 1.25rem; padding-left: 1.75rem; text-indent: -1.75rem;">
+                    <i class="fas fa-file-lines text-accent" style="margin-right: 0.5rem;"></i>
+                    Khamdun, Fakhriyah, F., Masfuah, S., & Roysa, M. (2026). Scientific virtual laboratory-based project to improve computational thinking of pre-service teachers. <em>Multidisciplinary Reviews</em>, 9(1), e2026392. 
+                    <a href="https://doi.org/10.31893/multirev.2026392" target="_blank" style="color: var(--accent); text-decoration: underline;">https://doi.org/10.31893/multirev.2026392</a>
+                </li>
+
+                <li style="margin-bottom: 1.25rem; padding-left: 1.75rem; text-indent: -1.75rem;">
+                    <i class="fas fa-file-lines text-accent" style="margin-right: 0.5rem;"></i>
+                    Osborne, J., Pimentel, D., Alberts, B., Allchin, D., Barzilai, S., Bergstrom, C., Coffey, J., & Donovan, B. (2022). <em>Science education in an age of misinformation</em>. Stanford University. 
+                    <a href="https://doi.org/10.25740/cx564kt2998" target="_blank" style="color: var(--accent); text-decoration: underline;">https://doi.org/10.25740/cx564kt2998</a>
+                </li>
+
+                <li style="margin-bottom: 1.25rem; padding-left: 1.75rem; text-indent: -1.75rem;">
+                    <i class="fas fa-file-lines text-accent" style="margin-right: 0.5rem;"></i>
+                    Ragonis, N., Rosenberg-Kima, R. B., & Hazzan, O. (2024). A computational thinking course for all preservice K-12 teachers: implementing the four pedagogies for developing computational thinking (4P4CT) framework. <em>Educational Technology Research and Development</em>, 72(4), 2135–2161. 
+                    <a href="https://doi.org/10.1007/s11423-024-10406-5" target="_blank" style="color: var(--accent); text-decoration: underline;">https://doi.org/10.1007/s11423-024-10406-5</a>
+                </li>
+
+                <li style="margin-bottom: 1.25rem; padding-left: 1.75rem; text-indent: -1.75rem;">
+                    <i class="fas fa-file-lines text-accent" style="margin-right: 0.5rem;"></i>
+                    Saraç, H., & Özdener, N. (2026). The effects of computational thinking integrated science activities on preservice science teachers' conceptual understanding and computational skills. <em>Journal of Science Education and Technology</em>, 35(1), 88–109. 
+                    <a href="https://doi.org/10.1007/s10956-025-10189-2" target="_blank" style="color: var(--accent); text-decoration: underline;">https://doi.org/10.1007/s10956-025-10189-2</a>
+                </li>
+
+                <li style="margin-bottom: 1.25rem; padding-left: 1.75rem; text-indent: -1.75rem;">
+                    <i class="fas fa-file-lines text-accent" style="margin-right: 0.5rem;"></i>
+                    Shin, S., Park, Y., & Bae, Y. (2021). The effects of science education program applying computational thinking on science learning motivation and creative problem-solving ability. <em>Journal of the Korean Association for Science Education</em>, 41(3), 269–278. 
+                    <a href="https://doi.org/10.14697/jkase.2021.41.3.269" target="_blank" style="color: var(--accent); text-decoration: underline;">https://doi.org/10.14697/jkase.2021.41.3.269</a>
+                </li>
+
+                <li style="margin-bottom: 1.25rem; padding-left: 1.75rem; text-indent: -1.75rem;">
+                    <i class="fas fa-book text-accent" style="margin-right: 0.5rem;"></i>
+                    ราชกิจจานุเบกษา. (2562). <em>พระราชบัญญัติคุ้มครองข้อมูลส่วนบุคคล พ.ศ. 2562</em>. เล่ม 136 ตอนที่ 69 ก หน้า 33–74.
+                </li>
+
+                <li style="margin-bottom: 1.25rem; padding-left: 1.75rem; text-indent: -1.75rem;">
+                    <i class="fas fa-book text-accent" style="margin-right: 0.5rem;"></i>
+                    สถาบันส่งเสริมการสอนวิทยาศาสตร์และเทคโนโลยี. (2561). <em>คู่มือการใช้หลักสูตรรายวิชาพื้นฐานวิทยาศาสตร์ สาระเทคโนโลยี (วิทยาการคำนวณ) ตามมาตรฐานการเรียนรู้และตัวชี้วัด กลุ่มสาระการเรียนรู้วิทยาศาสตร์ (ฉบับปรับปรุง พ.ศ. 2560)</em>. โรงพิมพ์แห่งจุฬาลงกรณ์มหาวิทยาลัย.
+                </li>
+
+                <li style="margin-bottom: 1.25rem; padding-left: 1.75rem; text-indent: -1.75rem;">
+                    <i class="fas fa-book text-accent" style="margin-right: 0.5rem;"></i>
+                    สำนักงานคณะกรรมการคุ้มครองข้อมูลส่วนบุคคล (สคส.). (2565). <em>แนวปฏิบัติการคุ้มครองข้อมูลส่วนบุคคลสำหรับสถานศึกษา (Data Protection Guidelines for Educational Institutions)</em>. กระทรวงดิจิทัลเพื่อเศรษฐกิจและสังคม.
+                </li>
+
+                <li style="margin-bottom: 1.25rem; padding-left: 1.75rem; text-indent: -1.75rem;">
+                    <i class="fas fa-book text-accent" style="margin-right: 0.5rem;"></i>
+                    สำนักงานส่งเสริมเศรษฐกิจดิจิทัล (depa). (2564). <em>ชุดสื่อการเรียนรู้ความปลอดภัยทางดิจิทัลและสิทธิความเป็นส่วนตัว: 2 สิทธิ์ของเรา และ 3 ถูกต้อง ปลอดภัย ใช่เลย</em>. กระทรวงดิจิทัลเพื่อเศรษฐกิจและสังคม.
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>© 2026 รายวิชา 4124941 วิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์ | <strong>ผู้ช่วยศาสตราจารย์ ดร.ชีวะ ทัศนา</strong></p>
+        <p>คณะวิทยาศาสตร์และเทคโนโลยี มหาวิทยาลัยราชภัฏรำไพพรรณี</p>
+    </footer>
+</div>
+
+<!-- Interactive Scripts -->
+<script>
+    function showTab(tabId, btnElement) {
+        document.querySelectorAll('.content-section').forEach(function(section) {
+            section.classList.remove('active');
+        });
+        document.querySelectorAll('.tab-btn').forEach(function(btn) {
+            btn.classList.remove('active');
+        });
+        document.getElementById(tabId).classList.add('active');
+        btnElement.classList.add('active');
+        window.scrollTo({ top: 120, behavior: 'smooth' });
+    }
+
+    function toggleExplanation(expId, isCorrect, element) {
+        var expBox = document.getElementById(expId);
+        if (expBox) {
+            expBox.style.display = 'block';
+        }
+        var parentUl = element.parentElement;
+        var options = parentUl.querySelectorAll('.quiz-option');
+        options.forEach(function(opt) {
+            opt.style.borderColor = '#e2e8f0';
+            opt.style.backgroundColor = '#ffffff';
+        });
+        if (isCorrect) {
+            element.style.borderColor = '#10b981';
+            element.style.backgroundColor = '#ecfdf5';
+        } else {
+            element.style.borderColor = '#ef4444';
+            element.style.backgroundColor = '#fef2f2';
+        }
+    }
+</script>
+
+</body>
+</html>

@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ห้องทดลอง 3D: เกมจำลอง 4 เสาหลักแนวคิดเชิงคำนวณ สสวท. (IPST Computational Thinking Games)</title>
+
+  <!-- Google Fonts & FontAwesome 6 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Three.js & OrbitControls -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+  <style>
+    :root {
+      --bg-dark: #030712;
+      --card-bg: rgba(11, 19, 43, 0.94);
+      --card-border: rgba(0, 240, 255, 0.25);
+      --cyan: #00f0ff;
+      --emerald: #10b981;
+      --amber: #f59e0b;
+      --rose: #f43f5e;
+      --indigo: #6366f1;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+    body {
+      background: var(--bg-dark);
+      color: #f8fafc;
+      font-family: 'Prompt', 'Sarabun', sans-serif;
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+    }
+    #webgl-container { position: absolute; inset: 0; z-index: 1; }
+    .hud-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      pointer-events: none;
+      z-index: 10;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .hud-overlay * { pointer-events: auto; }
+
+    /* Top Bar */
+    .top-header {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.7);
+    }
+    .header-title-group h1 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Chakra Petch', sans-serif;
+    }
+    .header-title-group h1 i { color: var(--cyan); }
+    .header-subtitle { font-size: 0.8rem; color: #94a3b8; margin-top: 3px; }
+    .header-actions { display: flex; gap: 8px; }
+    .btn-header {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: #e2e8f0;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-family: inherit;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-header:hover {
+      background: rgba(0, 240, 255, 0.15);
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+
+    /* Left Control Dock */
+    .left-dock {
+      position: absolute;
+      top: 90px;
+      left: 16px;
+      width: 330px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 16px;
+      backdrop-filter: blur(14px);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-height: calc(100vh - 170px);
+      overflow-y: auto;
+    }
+    .section-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--cyan);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .mode-btn-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .mode-btn {
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      padding: 10px 12px;
+      cursor: pointer;
+      text-align: left;
+      color: #cbd5e1;
+      font-family: inherit;
+      font-size: 0.82rem;
+      transition: all 0.2s;
+    }
+    .mode-btn:hover {
+      background: rgba(2, 132, 199, 0.25);
+      border-color: var(--cyan);
+    }
+    .mode-btn.active {
+      background: linear-gradient(135deg, rgba(2, 132, 199, 0.45), rgba(0, 240, 255, 0.2));
+      border: 1.5px solid var(--cyan);
+      color: #fff;
+      font-weight: 600;
+    }
+
+    .btn-action {
+      background: var(--cyan);
+      color: #030712;
+      border: none;
+      padding: 9px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s;
+      font-size: 0.82rem;
+    }
+    .btn-action:hover { filter: brightness(1.15); box-shadow: 0 0 12px var(--cyan); }
+
+    /* Right Guide Dock */
+    .right-dock {
+      position: absolute;
+      top: 90px;
+      right: 16px;
+      width: 320px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 16px;
+      backdrop-filter: blur(14px);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .ct-pillar-card {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 0.78rem;
+      line-height: 1.5;
+    }
+
+    /* Bottom Telemetry Bar */
+    .bottom-bar {
+      margin-top: auto;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.7);
+    }
+    .tel-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+    .tel-lbl {
+      font-size: 0.7rem;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+    .tel-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <div id="webgl-container"></div>
+
+  <div class="hud-overlay">
+    <!-- Header -->
+    <header class="top-header">
+      <div class="header-title-group">
+        <h1><i class="fas fa-cubes"></i> ห้องทดลอง 3D: เกมจำลอง 4 เสาหลักแนวคิดเชิงคำนวณ สสวท.</h1>
+        <div class="header-subtitle">วิชา 4124941 วิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์ | ผศ.ดร.ชีวะ ทัศนา (มรภ.รำไพพรรณี)</div>
+      </div>
+      <div class="header-actions">
+        <button class="btn-header" onclick="resetCurrentMode()"><i class="fas fa-rotate-left"></i> สับเปลี่ยนข้อมูล/รีเซ็ต</button>
+        <a href="../lessons/week_01.html" class="btn-header"><i class="fas fa-arrow-left"></i> กลับสู่บทเรียน สัปดาห์ที่ 1</a>
+      </div>
+    </header>
+
+    <!-- Left Controls -->
+    <div class="left-dock">
+      <div class="section-title"><i class="fas fa-gamepad"></i> 1. เลือกเกมจำลองสถานการณ์ สสวท.</div>
+      <div class="mode-btn-group">
+        <button class="mode-btn active" id="btnModeBottles" onclick="switchGameMode('bottles')">
+          <strong>1. การจัดเรียงขวดตามความสูง (Sorting)</strong>
+          <div style="font-size: 0.72rem; color: #94a3b8; margin-top: 3px;">อัลกอริทึม Bubble Sort สลับขวดสารเคมีในแล็บ</div>
+        </button>
+        <button class="mode-btn" id="btnModeHello" onclick="switchGameMode('hello')">
+          <strong>2. การถอดรหัสข้อความ HELLO (Matrix)</strong>
+          <div style="font-size: 0.72rem; color: #94a3b8; margin-top: 3px;">3D Voxel Binary Grid & ถอดรหัสตัวอักษร</div>
+        </button>
+      </div>
+
+      <!-- Controls for Mode 1: Bottles -->
+      <div id="ctrl-bottles" style="display: flex; flex-direction: column; gap: 8px;">
+        <div class="section-title" style="margin-top: 6px;"><i class="fas fa-sort-amount-up-alt"></i> ควบคุมอัลกอริทึมจัดเรียงขวด</div>
+        <button class="btn-action" onclick="stepBubbleSort()"><i class="fas fa-step-forward"></i> เปรียบเทียบและสลับทีละคู่ (Step)</button>
+        <button class="btn-action" style="background: var(--emerald);" onclick="runBubbleSortAuto()"><i class="fas fa-play"></i> รัน Bubble Sort อัตโนมัติ</button>
+        <button class="btn-action" style="background: rgba(244, 63, 94, 0.2); color: var(--rose); border: 1px solid var(--rose);" onclick="shuffleBottles()"><i class="fas fa-random"></i> สุ่มขวดใหม่ (Shuffle)</button>
+        <div style="font-size: 0.75rem; color: #94a3b8; line-height: 1.4; margin-top: 4px;">
+          <i class="fas fa-hand-pointer"></i> <em>หรือคลิกที่ขวดแก้ว 2 ใบเพื่อสลับตำแหน่งด้วยตนเอง!</em>
+        </div>
+      </div>
+
+      <!-- Controls for Mode 2: Hello -->
+      <div id="ctrl-hello" style="display: none; flex-direction: column; gap: 8px;">
+        <div class="section-title" style="margin-top: 6px;"><i class="fas fa-font"></i> เลือกตัวอักษรถอดรหัส (H-E-L-L-O)</div>
+        <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 4px;">
+          <button class="btn-action" onclick="renderCharLetter('H')">H</button>
+          <button class="btn-action" onclick="renderCharLetter('E')">E</button>
+          <button class="btn-action" onclick="renderCharLetter('L')">L</button>
+          <button class="btn-action" onclick="renderCharLetter('L2')">L</button>
+          <button class="btn-action" onclick="renderCharLetter('O')">O</button>
+        </div>
+        <button class="btn-action" style="background: var(--indigo); margin-top: 4px;" onclick="playHelloSequence()"><i class="fas fa-film"></i> เล่นแอนิเมชันคำว่า HELLO ต่อเนื่อง</button>
+      </div>
+    </div>
+
+    <!-- Right Guide: 4 Pillars Analysis -->
+    <div class="right-dock">
+      <div class="section-title"><i class="fas fa-columns"></i> วิเคราะห์ 4 เสาหลัก CT (สสวท.)</div>
+      
+      <div class="ct-pillar-card" style="border-left: 3px solid var(--cyan);">
+        <strong style="color: var(--cyan);"><i class="fas fa-puzzle-piece"></i> 1. Decomposition (การย่อยปัญหา):</strong><br>
+        <span id="descDecomp">ปัญหาการเรียง 6 ขวด ย่อยเป็นการ "เปรียบเทียบทีละ 2 ขวดติดกัน" แล้วสลับถ้าตัวซ้ายสูงกว่า</span>
+      </div>
+
+      <div class="ct-pillar-card" style="border-left: 3px solid var(--amber);">
+        <strong style="color: var(--amber);"><i class="fas fa-eye"></i> 2. Pattern Recognition (การหารูปแบบ):</strong><br>
+        <span id="descPattern">เมื่อจบ 1 รอบ ขวดที่สูงที่สุดจะลอยไปอยู่ขวาสุดเสมอ ทำซ้ำรูปแบบเดิมในรอบถัดไป</span>
+      </div>
+
+      <div class="ct-pillar-card" style="border-left: 3px solid var(--emerald);">
+        <strong style="color: var(--emerald);"><i class="fas fa-cube"></i> 3. Abstraction (การคิดเชิงนามธรรม):</strong><br>
+        <span id="descAbstr">ละเลยสีของสารเคมีและชนิดของขวด โฟกัสเฉพาะ "ตัวเลขความสูง (Height)" ในการคำนวณ</span>
+      </div>
+
+      <div class="ct-pillar-card" style="border-left: 3px solid var(--rose);">
+        <strong style="color: var(--rose);"><i class="fas fa-terminal"></i> 4. Algorithm Design (ขั้นตอนวิธี):</strong><br>
+        <span id="descAlgo">วนลูปเปรียบเทียบ $N-1$ รอบ จนกระทั่งไม่มีการสลับตำแหน่งอีก (Bubble Sort $O(N^2)$)</span>
+      </div>
+    </div>
+
+    <!-- Bottom Telemetry -->
+    <div class="bottom-bar">
+      <div class="tel-item">
+        <span class="tel-lbl">สถานะเกมจำลอง (Game Status)</span>
+        <span class="tel-val" id="telStatus" style="color: var(--cyan);">พร้อมปฏิบัติการ (Ready)</span>
+      </div>
+      <div class="tel-item">
+        <span class="tel-lbl">จำนวนครั้งเปรียบเทียบ (Comparisons)</span>
+        <span class="tel-val" id="telComparisons">0 ครั้ง</span>
+      </div>
+      <div class="tel-item">
+        <span class="tel-lbl">จำนวนครั้งสลับตำแหน่ง (Swaps)</span>
+        <span class="tel-val" id="telSwaps" style="color: var(--amber);">0 ครั้ง</span>
+      </div>
+      <div class="tel-item">
+        <span class="tel-lbl">ความซับซ้อนของขั้นตอนวิธี</span>
+        <span class="tel-val" id="telBigO" style="color: var(--emerald);">O(N²) Quadratic</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let scene, camera, renderer, controls;
+    let currentMode = 'bottles'; // 'bottles' or 'hello'
+
+    // Bottle Sorting State
+    const BOTTLE_COUNT = 6;
+    let bottles = []; // { mesh, height, color, index, originalIndex }
+    let bottleHeights = [4.2, 1.8, 5.5, 2.5, 3.6, 1.2];
+    let compareCount = 0;
+    let swapCount = 0;
+    let bubbleI = 0;
+    let bubbleJ = 0;
+    let autoSorting = false;
+    let sortInterval = null;
+    let selectedBottle1 = null;
+
+    // Voxel Hello State
+    let voxelGrid = [];
+    const GRID_W = 5;
+    const GRID_H = 7;
+    const font5x7 = {
+      'H': [
+        [1,0,0,0,1],
+        [1,0,0,0,1],
+        [1,0,0,0,1],
+        [1,1,1,1,1],
+        [1,0,0,0,1],
+        [1,0,0,0,1],
+        [1,0,0,0,1]
+      ],
+      'E': [
+        [1,1,1,1,1],
+        [1,0,0,0,0],
+        [1,0,0,0,0],
+        [1,1,1,1,0],
+        [1,0,0,0,0],
+        [1,0,0,0,0],
+        [1,1,1,1,1]
+      ],
+      'L': [
+        [1,0,0,0,0],
+        [1,0,0,0,0],
+        [1,0,0,0,0],
+        [1,0,0,0,0],
+        [1,0,0,0,0],
+        [1,0,0,0,0],
+        [1,1,1,1,1]
+      ],
+      'O': [
+        [0,1,1,1,0],
+        [1,0,0,0,1],
+        [1,0,0,0,1],
+        [1,0,0,0,1],
+        [1,0,0,0,1],
+        [1,0,0,0,1],
+        [0,1,1,1,0]
+      ]
+    };
+
+    function init() {
+      const container = document.getElementById('webgl-container');
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x030712);
+      scene.fog = new THREE.FogExp2(0x030712, 0.035);
+
+      camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+      camera.position.set(0, 6, 14);
+
+      renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      container.appendChild(renderer.domElement);
+
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
+
+      // Lights
+      scene.add(new THREE.AmbientLight(0xffffff, 0.7));
+      const dirLight = new THREE.DirectionalLight(0x00f0ff, 1.2);
+      dirLight.position.set(5, 12, 8);
+      scene.add(dirLight);
+
+      const pLight = new THREE.PointLight(0xffffff, 1, 20);
+      pLight.position.set(0, 5, 0);
+      scene.add(pLight);
+
+      // Grid Ground
+      const grid = new THREE.GridHelper(18, 18, 0x00f0ff, 0x1e293b);
+      grid.position.y = -0.5;
+      scene.add(grid);
+
+      // Raycaster for clicking bottles
+      const raycaster = new THREE.Raycaster();
+      const mouse = new THREE.Vector2();
+
+      window.addEventListener('click', (e) => {
+        if (currentMode !== 'bottles' || autoSorting) return;
+        mouse.x = (e.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+        raycaster.setFromCamera(mouse, camera);
+
+        const meshes = bottles.map(b => b.mesh);
+        const intersects = raycaster.intersectObjects(meshes, true);
+        if (intersects.length > 0) {
+          let hitMesh = intersects[0].object;
+          while (hitMesh.parent && !bottles.some(b => b.mesh === hitMesh)) {
+            hitMesh = hitMesh.parent;
+          }
+          const bottleObj = bottles.find(b => b.mesh === hitMesh);
+          if (bottleObj) handleBottleClick(bottleObj);
+        }
+      });
+
+      buildBottlesScene();
+      buildHelloVoxelScene();
+      switchGameMode('bottles');
+
+      window.addEventListener('resize', onWindowResize);
+      animate();
+    }
+
+    // ==========================================
+    // MODE 1: CHEMICAL BOTTLES SORTING
+    // ==========================================
+    const bottleColors = [0x00f0ff, 0xf43f5e, 0x10b981, 0xf59e0b, 0x8b5cf6, 0xec4899];
+
+    function buildBottlesScene() {
+      bottles.forEach(b => scene.remove(b.mesh));
+      bottles = [];
+
+      for (let i = 0; i < BOTTLE_COUNT; i++) {
+        const h = bottleHeights[i];
+        const col = bottleColors[i % bottleColors.length];
+
+        const group = new THREE.Group();
+
+        // Glass Cylinder Body
+        const bodyGeom = new THREE.CylinderGeometry(0.55, 0.55, h, 24);
+        bodyGeom.translate(0, h / 2, 0);
+        const bodyMat = new THREE.MeshPhysicalMaterial({
+          color: col,
+          transparent: true,
+          opacity: 0.75,
+          roughness: 0.1,
+          metalness: 0.1,
+          transmission: 0.6,
+          ior: 1.45,
+          emissive: col,
+          emissiveIntensity: 0.2
+        });
+        const bodyMesh = new THREE.Mesh(bodyGeom, bodyMat);
+        group.add(bodyMesh);
+
+        // Bottle Cap / Stopper
+        const capGeom = new THREE.CylinderGeometry(0.3, 0.35, 0.5, 16);
+        capGeom.translate(0, h + 0.25, 0);
+        const capMat = new THREE.MeshStandardMaterial({ color: 0x334155, metalness: 0.8, roughness: 0.2 });
+        const capMesh = new THREE.Mesh(capGeom, capMat);
+        group.add(capMesh);
+
+        // Liquid Line Marker Rings
+        for (let r = 1; r < Math.floor(h); r++) {
+          const ringGeom = new THREE.TorusGeometry(0.56, 0.02, 8, 24);
+          ringGeom.rotateX(Math.PI / 2);
+          ringGeom.translate(0, r, 0);
+          const ringMat = new THREE.MeshBasicMaterial({ color: 0xffffff, transparent: true, opacity: 0.4 });
+          group.add(new THREE.Mesh(ringGeom, ringMat));
+        }
+
+        const xPos = (i - (BOTTLE_COUNT / 2) + 0.5) * 1.8;
+        group.position.set(xPos, 0, 0);
+        scene.add(group);
+
+        bottles.push({
+          mesh: group,
+          height: h,
+          color: col,
+          index: i
+        });
+      }
+    }
+
+    function handleBottleClick(bObj) {
+      if (!selectedBottle1) {
+        selectedBottle1 = bObj;
+        bObj.mesh.position.y = 0.5; // elevate to show selected
+        document.getElementById('telStatus').innerText = `เลือกขวดใบที่ ${bObj.index + 1} (สูง ${bObj.height} m) แล้ว - เลือกอีกใบเพื่อสลับ`;
+      } else {
+        if (selectedBottle1 === bObj) {
+          bObj.mesh.position.y = 0;
+          selectedBottle1 = null;
+          document.getElementById('telStatus').innerText = 'ยกเลิกการเลือก';
+          return;
+        }
+        // Swap selectedBottle1 and bObj
+        swapBottles(selectedBottle1.index, bObj.index);
+        selectedBottle1.mesh.position.y = 0;
+        selectedBottle1 = null;
+      }
+    }
+
+    function swapBottles(i, j) {
+      compareCount++;
+      swapCount++;
+
+      // Swap heights array
+      const tempH = bottleHeights[i];
+      bottleHeights[i] = bottleHeights[j];
+      bottleHeights[j] = tempH;
+
+      // Swap mesh references
+      const tempB = bottles[i];
+      bottles[i] = bottles[j];
+      bottles[j] = tempB;
+
+      bottles[i].index = i;
+      bottles[j].index = j;
+
+      // Animate positions
+      const xI = (i - (BOTTLE_COUNT / 2) + 0.5) * 1.8;
+      const xJ = (j - (BOTTLE_COUNT / 2) + 0.5) * 1.8;
+
+      bottles[i].mesh.position.x = xI;
+      bottles[j].mesh.position.x = xJ;
+
+      updateTelemetry();
+      checkSorted();
+    }
+
+    function checkSorted() {
+      let sorted = true;
+      for (let k = 0; k < bottleHeights.length - 1; k++) {
+        if (bottleHeights[k] > bottleHeights[k + 1]) {
+          sorted = false; break;
+        }
+      }
+      if (sorted) {
+        document.getElementById('telStatus').innerText = '🎉 จัดเรียงขวดตามความสูงสำเร็จ 100%!';
+        document.getElementById('telStatus').style.color = 'var(--emerald)';
+        if (sortInterval) clearInterval(sortInterval);
+        autoSorting = false;
+      }
+    }
+
+    function stepBubbleSort() {
+      if (autoSorting) return;
+      doBubbleStep();
+    }
+
+    function doBubbleStep() {
+      if (bubbleI >= BOTTLE_COUNT - 1) {
+        checkSorted();
+        return;
+      }
+
+      const cur = bubbleJ;
+      const nxt = bubbleJ + 1;
+
+      // Highlight comparing bottles
+      bottles.forEach(b => {
+        b.mesh.children[0].material.emissiveIntensity = 0.2;
+      });
+      bottles[cur].mesh.children[0].material.emissiveIntensity = 0.8;
+      bottles[nxt].mesh.children[0].material.emissiveIntensity = 0.8;
+
+      compareCount++;
+      document.getElementById('telStatus').innerText = `เปรียบเทียบขวดที่ ${cur + 1} (${bottles[cur].height}m) กับ ${nxt + 1} (${bottles[nxt].height}m)`;
+
+      if (bottles[cur].height > bottles[nxt].height) {
+        swapBottles(cur, nxt);
+      } else {
+        updateTelemetry();
+      }
+
+      bubbleJ++;
+      if (bubbleJ >= BOTTLE_COUNT - 1 - bubbleI) {
+        bubbleJ = 0;
+        bubbleI++;
+      }
+    }
+
+    function runBubbleSortAuto() {
+      if (autoSorting) return;
+      autoSorting = true;
+      document.getElementById('telStatus').innerText = 'กำลังรัน Bubble Sort อัตโนมัติ...';
+      sortInterval = setInterval(() => {
+        if (bubbleI < BOTTLE_COUNT - 1) {
+          doBubbleStep();
+        } else {
+          clearInterval(sortInterval);
+          autoSorting = false;
+          checkSorted();
+        }
+      }, 700);
+    }
+
+    function shuffleBottles() {
+      if (sortInterval) clearInterval(sortInterval);
+      autoSorting = false;
+      compareCount = 0;
+      swapCount = 0;
+      bubbleI = 0;
+      bubbleJ = 0;
+      bottleHeights = bottleHeights.sort(() => Math.random() - 0.5);
+      buildBottlesScene();
+      updateTelemetry();
+      document.getElementById('telStatus').innerText = 'สุ่มขวดเรียบร้อย พร้อมเริ่มจัดเรียง';
+      document.getElementById('telStatus').style.color = 'var(--cyan)';
+    }
+
+    // ==========================================
+    // MODE 2: VOXEL HELLO DECODER
+    // ==========================================
+    let voxelGroup;
+
+    function buildHelloVoxelScene() {
+      voxelGroup = new THREE.Group();
+      voxelGroup.position.set(0, 1.5, 0);
+
+      voxelGrid = [];
+      const boxSize = 0.7;
+      const spacing = 0.85;
+
+      for (let r = 0; r < GRID_H; r++) {
+        voxelGrid[r] = [];
+        for (let c = 0; c < GRID_W; c++) {
+          const geom = new THREE.BoxGeometry(boxSize, boxSize, boxSize);
+          const mat = new THREE.MeshStandardMaterial({
+            color: 0x1e293b,
+            metalness: 0.5,
+            roughness: 0.3,
+            transparent: true,
+            opacity: 0.35
+          });
+          const cube = new THREE.Mesh(geom, mat);
+          const x = (c - (GRID_W / 2) + 0.5) * spacing;
+          const y = ((GRID_H - 1 - r) - (GRID_H / 2) + 0.5) * spacing;
+          cube.position.set(x, y, 0);
+
+          // Wireframe
+          const wire = new THREE.LineSegments(
+            new THREE.EdgesGeometry(geom),
+            new THREE.LineBasicMaterial({ color: 0x334155 })
+          );
+          cube.add(wire);
+
+          voxelGroup.add(cube);
+          voxelGrid[r][c] = { mesh: cube, wire: wire, state: 0 };
+        }
+      }
+
+      scene.add(voxelGroup);
+      voxelGroup.visible = false;
+    }
+
+    function renderCharLetter(letterKey) {
+      const char = letterKey === 'L2' ? 'L' : letterKey;
+      const matrix = font5x7[char];
+      if (!matrix) return;
+
+      for (let r = 0; r < GRID_H; r++) {
+        for (let c = 0; c < GRID_W; c++) {
+          const val = matrix[r][c];
+          const cell = voxelGrid[r][c];
+          cell.state = val;
+          if (val === 1) {
+            cell.mesh.material.color.setHex(0x00f0ff);
+            cell.mesh.material.emissive.setHex(0x00f0ff);
+            cell.mesh.material.emissiveIntensity = 0.5;
+            cell.mesh.material.opacity = 0.95;
+            cell.wire.material.color.setHex(0xffffff);
+            cell.mesh.scale.set(1.1, 1.1, 1.1);
+          } else {
+            cell.mesh.material.color.setHex(0x1e293b);
+            cell.mesh.material.emissive.setHex(0x000000);
+            cell.mesh.material.emissiveIntensity = 0;
+            cell.mesh.material.opacity = 0.25;
+            cell.wire.material.color.setHex(0x334155);
+            cell.mesh.scale.set(1, 1, 1);
+          }
+        }
+      }
+
+      const asciiCode = char.charCodeAt(0);
+      document.getElementById('telStatus').innerText = `ถอดรหัสตัวอักษร '${char}' (ASCII: ${asciiCode}, Binary: ${asciiCode.toString(2)})`;
+    }
+
+    function playHelloSequence() {
+      const seq = ['H', 'E', 'L', 'L2', 'O'];
+      let sIdx = 0;
+      const interval = setInterval(() => {
+        if (sIdx < seq.length) {
+          renderCharLetter(seq[sIdx]);
+          sIdx++;
+        } else {
+          clearInterval(interval);
+          document.getElementById('telStatus').innerText = '🎉 ประกอบรหัสคำว่า "HELLO" ครบถ้วน!';
+        }
+      }, 900);
+    }
+
+    // ==========================================
+    // MODE SWITCHER
+    // ==========================================
+    function switchGameMode(mode) {
+      currentMode = mode;
+      document.getElementById('btnModeBottles').classList.toggle('active', mode === 'bottles');
+      document.getElementById('btnModeHello').classList.toggle('active', mode === 'hello');
+
+      document.getElementById('ctrl-bottles').style.display = mode === 'bottles' ? 'flex' : 'none';
+      document.getElementById('ctrl-hello').style.display = mode === 'hello' ? 'flex' : 'none';
+
+      if (mode === 'bottles') {
+        bottles.forEach(b => b.mesh.visible = true);
+        voxelGroup.visible = false;
+        camera.position.set(0, 6, 14);
+        controls.target.set(0, 2, 0);
+
+        document.getElementById('descDecomp').innerText = 'ปัญหาการเรียง 6 ขวด ย่อยเป็นการ "เปรียบเทียบทีละ 2 ขวดติดกัน" แล้วสลับถ้าตัวซ้ายสูงกว่า';
+        document.getElementById('descPattern').innerText = 'เมื่อจบ 1 รอบ ขวดที่สูงที่สุดจะลอยไปอยู่ขวาสุดเสมอ ทำซ้ำรูปแบบเดิมในรอบถัดไป';
+        document.getElementById('descAbstr').innerText = 'ละเลยสีของสารเคมีและชนิดของขวด โฟกัสเฉพาะ "ตัวเลขความสูง (Height)" ในการคำนวณ';
+        document.getElementById('descAlgo').innerText = 'วนลูปเปรียบเทียบ N-1 รอบ จนกระทั่งไม่มีการสลับตำแหน่งอีก (Bubble Sort O(N²))';
+        document.getElementById('telBigO').innerText = 'O(N²) Quadratic';
+        updateTelemetry();
+      } else {
+        bottles.forEach(b => b.mesh.visible = false);
+        voxelGroup.visible = true;
+        camera.position.set(0, 2, 11);
+        controls.target.set(0, 1.5, 0);
+
+        document.getElementById('descDecomp').innerText = 'ย่อยตัวอักษร HELLO ออกเป็นตารางเมทริกซ์พิกเซล 5x7 ช่อง (35 บิตข้อมูล)';
+        document.getElementById('descPattern').innerText = 'สังเกตการเปิดบิต (1) และปิดบิต (0) ที่เกิดเป็นรูปร่างเส้นตรงและส่วนโค้งของตัวอักษร';
+        document.getElementById('descAbstr').innerText = 'คอมพิวเตอร์ไม่รู้จักตัวอักษร แต่มองเห็นเป็นเลขฐานสอง (Binary Bitmap) และรหัส ASCII';
+        document.getElementById('descAlgo').innerText = 'ขั้นตอนการกวาดสแกนอ่านค่าจากแถวบนลงล่าง ซ้ายไปขวา (Raster Scan Algorithm)';
+        document.getElementById('telBigO').innerText = 'O(W × H) 35 Bits';
+        renderCharLetter('H');
+      }
+    }
+
+    function updateTelemetry() {
+      document.getElementById('telComparisons').innerText = compareCount + ' ครั้ง';
+      document.getElementById('telSwaps').innerText = swapCount + ' ครั้ง';
+    }
+
+    function resetCurrentMode() {
+      if (currentMode === 'bottles') {
+        shuffleBottles();
+      } else {
+        renderCharLetter('H');
+      }
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+      controls.update();
+      renderer.render(scene, camera);
+    }
+
+    function onWindowResize() {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    window.onload = init;
+  </script>
+</body>
+</html>

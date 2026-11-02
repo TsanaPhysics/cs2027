@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="th" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Workbook: ตะลุยโลกตัวละครและพิกัด | วิทย์ในวัง</title>
+    <link rel="stylesheet" href="css/style.css?v=1.1">
+    <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@300;400;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        :root {
+            --wb-primary: #FFAB19; /* Control Color for P2 */
+            --wb-secondary: #4C97FF;
+            --wb-accent: #6366f1;
+            --wb-bg: #f8fafc;
+        }
+
+        body { background: var(--wb-bg); }
+
+        .workbook-page {
+            background: white;
+            width: 210mm;
+            min-height: 297mm;
+            margin: 20px auto;
+            padding: 20mm;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            position: relative;
+            color: #334155;
+        }
+
+        @media print {
+            body { background: none; margin: 0; }
+            .workbook-page { box-shadow: none; margin: 0; width: 100%; }
+            .no-print { display: none; }
+        }
+
+        .wb-header {
+            border-bottom: 3px solid var(--wb-primary);
+            padding-bottom: 1rem;
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .wb-title h1 { font-size: 1.8rem; color: var(--wb-primary); margin: 0; }
+        .wb-title p { margin: 5px 0 0; font-size: 1rem; color: #64748b; }
+
+        .wb-user-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: #fffbeb;
+            border-radius: 12px;
+        }
+
+        .info-field { border-bottom: 1px dashed #94a3b8; padding: 5px; height: 30px; }
+
+        .wb-section { margin-bottom: 2.5rem; }
+        .wb-section h2 { 
+            font-size: 1.3rem; 
+            background: var(--wb-primary); 
+            color: white; 
+            padding: 8px 15px; 
+            border-radius: 8px; 
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .sprite-panel-mockup {
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1rem;
+            background: #f8fafc;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            text-align: center;
+        }
+
+        .panel-box { border: 1px solid #cbd5e0; border-radius: 8px; padding: 10px; background: white; }
+        .panel-box label { display: block; font-size: 0.7rem; color: #64748b; margin-bottom: 5px; }
+
+        .compass-grid {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 200px;
+            position: relative;
+        }
+        .compass-circle {
+            width: 150px;
+            height: 150px;
+            border: 3px solid var(--wb-primary);
+            border-radius: 50%;
+            position: relative;
+        }
+        .degree-label { position: absolute; font-weight: bold; font-size: 0.9rem; }
+
+        .wb-footer {
+            position: absolute;
+            bottom: 20mm;
+            left: 20mm;
+            right: 20mm;
+            border-top: 1px solid #e2e8f0;
+            padding-top: 1rem;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #94a3b8;
+        }
+
+        .download-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 100;
+            background: var(--wb-primary);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 50px;
+            box-shadow: 0 10px 25px rgba(255, 171, 25, 0.4);
+            cursor: pointer;
+            border: none;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+    </style>
+</head>
+<body class="site">
+    <header class="site-header no-print">
+        <nav class="nav glass-nav">
+            <div class="container nav__container">
+                <a href="index.html" class="nav__logo">Game<span>Design</span>4Kids</a>
+                <div class="nav__actions">
+                    <button class="btn btn--small btn--outline lang-toggle">EN / ไทย</button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <button class="download-btn no-print" onclick="downloadWorkbook()">
+        <span>📄</span> <span data-i18n="wb_download">Download PDF</span>
+    </button>
+
+    <div class="workbook-page" id="workbook">
+        <div class="wb-header">
+            <div class="wb-title">
+                <h1 data-i18n="wb2_main_title">Workshop Workbook: ตัวละครและพิกัด</h1>
+                <p data-i18n="wb2_subtitle">ตอนที่ 2: การจัดการ Sprite และระบบพิกัด X, Y</p>
+            </div>
+            <div class="wb-logo">
+                <img src="https://scratch.mit.edu/static/assets/404d3e2308c146e2a969375171788220.svg" width="60" style="filter: grayscale(1) opacity(0.5);">
+            </div>
+        </div>
+
+        <div class="wb-user-info">
+            <div><strong data-i18n="wb_name">ชื่อ-นามสกุล:</strong> <div class="info-field"></div></div>
+            <div><strong data-i18n="wb_class">ชั้น/กลุ่ม:</strong> <div class="info-field"></div></div>
+        </div>
+
+        <!-- Section 1: Sprite Library -->
+        <div class="wb-section">
+            <h2 data-i18n="wb2_sec1_title">กิจกรรมที่ 1: นักสืบ Library</h2>
+            <p data-i18n="wb2_sec1_desc">จงเขียนชื่อตัวละครที่คุณพบในหมวดหมู่ต่อไปนี้ (หมวดละ 1 ชื่อ)</p>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-top: 1rem;">
+                <div class="panel-box"><label>Fantasy</label> <div class="info-field"></div></div>
+                <div class="panel-box"><label>Music</label> <div class="info-field"></div></div>
+                <div class="panel-box"><label>Food</label> <div class="info-field"></div></div>
+            </div>
+        </div>
+
+        <!-- Section 2: Info Panel -->
+        <div class="wb-section">
+            <h2 data-i18n="wb2_sec2_title">กิจกรรมที่ 2: แผงควบคุมตัวละคร</h2>
+            <p data-i18n="wb2_sec2_desc">จงเติมตัวเลขหรือสัญลักษณ์ในแผงควบคุม (Sprite Info Panel) ตามสถานการณ์ที่กำหนด</p>
+            
+            <div style="margin-top: 1rem;">
+                <p>1. ถ้าต้องการให้ตัวละครมีขนาด **ครึ่งหนึ่ง** ของปกติ ต้องพิมพ์เลขอะไรในช่อง Size? → [ ......... ]</p>
+                <p>2. สัญลักษณ์รูป 👁️ (ดวงตา) ที่มีเส้นขีดทับ หมายถึงอะไร? → [ ......... ]</p>
+            </div>
+
+            <div class="sprite-panel-mockup" style="margin-top: 1.5rem;">
+                <div class="panel-box"><label>Sprite</label> Sprite1</div>
+                <div class="panel-box"><label>X</label> 0</div>
+                <div class="panel-box"><label>Y</label> 0</div>
+                <div class="panel-box"><label>Show</label> 👁️ / 👁️‍🗨️</div>
+                <div class="panel-box" style="grid-column: span 2;"><label>Size</label> [ ......... ]</div>
+                <div class="panel-box" style="grid-column: span 2;"><label>Direction</label> [ ......... ]</div>
+            </div>
+        </div>
+
+        <!-- Section 3: Direction -->
+        <div class="wb-section">
+            <h2 data-i18n="wb2_sec3_title">กิจกรรมที่ 3: เข็มทิศแห่งทิศทาง</h2>
+            <p data-i18n="wb2_sec3_desc">จงเขียนตัวเลข "องศา" (Direction) ให้ตรงกับทิศทางที่กำหนด</p>
+            
+            <div class="compass-grid">
+                <div class="compass-circle">
+                    <div class="degree-label" style="top: -25px; left: 50%; transform: translateX(-50%);">........° (ขึ้นบน)</div>
+                    <div class="degree-label" style="right: -60px; top: 50%; transform: translateY(-50%);">90° (........)</div>
+                    <div class="degree-label" style="bottom: -25px; left: 50%; transform: translateX(-50%);">........° (ลงล่าง)</div>
+                    <div class="degree-label" style="left: -60px; top: 50%; transform: translateY(-50%);">........° (ไปซ้าย)</div>
+                    <div style="position: absolute; top: 50%; left: 50%; width: 2px; height: 60px; background: red; transform-origin: top; transform: translate(-50%, 0) rotate(0deg);"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Section 4: Coordinates -->
+        <div class="wb-section">
+            <h2 data-i18n="wb2_sec4_title">กิจกรรมที่ 4: พิกัดหรรษา</h2>
+            <p data-i18n="wb2_sec4_desc">เมื่อเราลากตัวละครไปที่ **กลางหน้าจอเป๊ะๆ** ค่าพิกัดจะเป็นเท่าไหร่?</p>
+            <div style="display: flex; gap: 20px; justify-content: center; margin-top: 1rem;">
+                <div class="panel-box" style="width: 100px;"><label>X</label> [ ......... ]</div>
+                <div class="panel-box" style="width: 100px;"><label>Y</label> [ ......... ]</div>
+            </div>
+        </div>
+
+        <div class="wb-footer">
+            <p data-i18n="footer_copy">© 2026 วิทย์ในวัง - Workshop Workbook Part 2 (Ref: l8_hX1UVncU)</p>
+        </div>
+    </div>
+
+    <script src="js/main.js?v=1.1" defer></script>
+    <script>
+        function downloadWorkbook() {
+            const element = document.getElementById('workbook');
+            const opt = {
+                margin: 0,
+                filename: 'Scratch-Workbook-Part2.pdf',
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true },
+                jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+            html2pdf().set(opt).from(element).save();
+        }
+    </script>
+</body>
+</html>

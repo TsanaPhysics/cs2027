@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ห้องทดลอง 3D: การซ้อนทับและการแทรกสอดของคลื่น (Wave Superposition Lab)</title>
+
+  <!-- Google Fonts & FontAwesome 6 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Three.js & OrbitControls -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+  <style>
+    :root {
+      --bg-dark: #030712;
+      --card-bg: rgba(11, 19, 43, 0.94);
+      --card-border: rgba(0, 240, 255, 0.25);
+      --cyan: #00f0ff;
+      --emerald: #10b981;
+      --amber: #f59e0b;
+      --rose: #f43f5e;
+      --indigo: #6366f1;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+    body {
+      background: var(--bg-dark);
+      color: #f8fafc;
+      font-family: 'Prompt', 'Sarabun', sans-serif;
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+    }
+    #webgl-container { position: absolute; inset: 0; z-index: 1; }
+    .hud-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      pointer-events: none;
+      z-index: 10;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .hud-overlay * { pointer-events: auto; }
+
+    /* Top Bar */
+    .top-header {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.7);
+    }
+    .header-title-group h1 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Chakra Petch', sans-serif;
+    }
+    .header-title-group h1 i { color: var(--cyan); }
+    .header-subtitle { font-size: 0.8rem; color: #94a3b8; margin-top: 3px; }
+    .header-actions { display: flex; gap: 8px; }
+    .btn-header {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: #e2e8f0;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-family: inherit;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-header:hover {
+      background: rgba(0, 240, 255, 0.15);
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+
+    /* Left Control Dock */
+    .left-dock {
+      position: absolute;
+      top: 90px;
+      left: 16px;
+      width: 320px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 16px;
+      backdrop-filter: blur(14px);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-height: calc(100vh - 170px);
+      overflow-y: auto;
+    }
+    .section-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--cyan);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .slider-row {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-bottom: 6px;
+    }
+    .slider-lbl {
+      font-size: 0.75rem;
+      color: #94a3b8;
+      display: flex;
+      justify-content: space-between;
+    }
+    .slider-val {
+      color: var(--cyan);
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+    }
+    input[type=range] {
+      width: 100%;
+      height: 5px;
+      background: #1e293b;
+      border-radius: 4px;
+      outline: none;
+      -webkit-appearance: none;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--cyan);
+      cursor: pointer;
+    }
+    .preset-btn-group {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+    .btn-preset {
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(255,255,255,0.1);
+      color: #cbd5e1;
+      padding: 6px 8px;
+      border-radius: 6px;
+      font-size: 0.75rem;
+      font-family: inherit;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s;
+    }
+    .btn-preset:hover {
+      background: rgba(2, 132, 199, 0.25);
+      border-color: var(--cyan);
+    }
+
+    /* Right Guide */
+    .right-dock {
+      position: absolute;
+      top: 90px;
+      right: 16px;
+      width: 310px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 16px;
+      backdrop-filter: blur(14px);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .guide-box {
+      background: rgba(15, 23, 42, 0.5);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 0.76rem;
+      color: #cbd5e1;
+      line-height: 1.5;
+    }
+
+    /* Bottom Telemetry */
+    .bottom-bar {
+      margin-top: auto;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.7);
+    }
+    .tel-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+    .tel-lbl {
+      font-size: 0.7rem;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+    .tel-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <div id="webgl-container"></div>
+
+  <div class="hud-overlay">
+    <!-- Header -->
+    <header class="top-header">
+      <div class="header-title-group">
+        <h1><i class="fas fa-water"></i> ห้องทดลอง 3D: การซ้อนทับและการแทรกสอดของคลื่น (Wave Superposition)</h1>
+        <div class="header-subtitle">วิชา 4124941 วิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์ | ผศ.ดร.ชีวะ ทัศนา (มรภ.รำไพพรรณี)</div>
+      </div>
+      <div class="header-actions">
+        <button class="btn-header" onclick="resetSim()"><i class="fas fa-rotate-left"></i> รีเซ็ต</button>
+        <a href="../lessons/week_10.html" class="btn-header"><i class="fas fa-arrow-left"></i> กลับสู่บทเรียน สัปดาห์ที่ 10</a>
+      </div>
+    </header>
+
+    <!-- Left Controls -->
+    <div class="left-dock">
+      <div class="section-title"><i class="fas fa-bookmark"></i> พรีเซ็ตการทดลองฟิสิกส์</div>
+      <div class="preset-btn-group">
+        <button class="btn-preset" onclick="setPreset('constructive')">แทรกสอดแบบเสริม (In-Phase 0°)</button>
+        <button class="btn-preset" onclick="setPreset('destructive')">แทรกสอดแบบหักล้าง (180°)</button>
+        <button class="btn-preset" onclick="setPreset('standing')">คลื่นนิ่ง (Standing Wave)</button>
+        <button class="btn-preset" onclick="setPreset('beats')">บีตส์ (Beats Δf=0.3Hz)</button>
+      </div>
+
+      <div class="section-title" style="margin-top: 10px;"><i class="fas fa-sliders-h"></i> ปรับพารามิเตอร์คลื่นที่ 1 (Cyan)</div>
+      <div class="slider-row">
+        <div class="slider-lbl"><span>แอมพลิจูด A1:</span> <span class="slider-val" id="valA1">1.0 m</span></div>
+        <input type="range" id="sliderA1" min="0" max="2.0" step="0.1" value="1.0" oninput="updateWaveParams()">
+      </div>
+      <div class="slider-row">
+        <div class="slider-lbl"><span>ความถี่ f1:</span> <span class="slider-val" id="valF1">1.0 Hz</span></div>
+        <input type="range" id="sliderF1" min="0.5" max="3.0" step="0.1" value="1.0" oninput="updateWaveParams()">
+      </div>
+
+      <div class="section-title" style="margin-top: 10px;"><i class="fas fa-sliders-h"></i> ปรับพารามิเตอร์คลื่นที่ 2 (Rose)</div>
+      <div class="slider-row">
+        <div class="slider-lbl"><span>แอมพลิจูด A2:</span> <span class="slider-val" id="valA2">1.0 m</span></div>
+        <input type="range" id="sliderA2" min="0" max="2.0" step="0.1" value="1.0" oninput="updateWaveParams()">
+      </div>
+      <div class="slider-row">
+        <div class="slider-lbl"><span>ความถี่ f2:</span> <span class="slider-val" id="valF2">1.0 Hz</span></div>
+        <input type="range" id="sliderF2" min="0.5" max="3.0" step="0.1" value="1.0" oninput="updateWaveParams()">
+      </div>
+      <div class="slider-row">
+        <div class="slider-lbl"><span>ความต่างเฟส (Phase Δφ):</span> <span class="slider-val" id="valPhase">0°</span></div>
+        <input type="range" id="sliderPhase" min="0" max="360" step="15" value="0" oninput="updateWaveParams()">
+      </div>
+    </div>
+
+    <!-- Right Guide -->
+    <div class="right-dock">
+      <div class="section-title"><i class="fas fa-graduation-cap"></i> หลักการรวมคลื่น (Superposition)</div>
+      <div class="guide-box">
+        <strong style="color: var(--cyan);">สมการรวม: $y(x,t) = y_1(x,t) + y_2(x,t)$</strong><br>
+        เมื่อคลื่นสองขบวนเคลื่อนที่มาพบกัน การกระจัดของตัวกลางจะเป็นผลรวมแบบพีชคณิตของการกระจัดของคลื่นแต่ละขบวน
+      </div>
+      <div class="guide-box">
+        <strong style="color: var(--emerald);">เส้นสีเขียว (Resultant):</strong><br>
+        คือคลื่นผลลัพธ์ที่สังเกตได้จริงในธรรมชาติ เช่น เสียงสะท้อน การส่งสัญญาณ 5G หรือคลื่นผิวน้ำ
+      </div>
+      <div style="background: rgba(16, 185, 129, 0.15); border: 1px solid var(--emerald); border-radius: 8px; padding: 10px; font-size: 0.75rem; color: #a7f3d0;">
+        <i class="fas fa-mouse-pointer"></i> ลากเมาส์หมุนมุมมอง 3D รอบคลื่น เพื่อดูลักษณะความลึกและแนวสันคลื่น
+      </div>
+    </div>
+
+    <!-- Bottom Telemetry -->
+    <div class="bottom-bar">
+      <div class="tel-item">
+        <span class="tel-lbl">สภาวะการแทรกสอด (Interference Mode)</span>
+        <span class="tel-val" id="telMode" style="color: var(--cyan);">Constructive (เสริมกัน)</span>
+      </div>
+      <div class="tel-item">
+        <span class="tel-lbl">แอมพลิจูดสูงสุดผลลัพธ์ (Max Resultant A)</span>
+        <span class="tel-val" id="telMaxA" style="color: var(--emerald);">2.00 m</span>
+      </div>
+      <div class="tel-item">
+        <span class="tel-lbl">ความถี่บีตส์ (Beats Frequency |f1 - f2|)</span>
+        <span class="tel-val" id="telBeats">0.00 Hz</span>
+      </div>
+      <div class="tel-item">
+        <span class="tel-lbl">พลังงานคลื่นสัมพัทธ์ (Relative Energy ∝ A²)</span>
+        <span class="tel-val" id="telEnergy" style="color: var(--amber);">4.00x</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let scene, camera, renderer, controls;
+    let line1, line2, lineResult;
+    const NUM_PTS = 250;
+    const SPAN = 12;
+
+    let a1 = 1.0, f1 = 1.0;
+    let a2 = 1.0, f2 = 1.0, phaseDeg = 0;
+    let time = 0;
+
+    function init() {
+      const container = document.getElementById('webgl-container');
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x030712);
+
+      camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+      camera.position.set(0, 5, 11);
+
+      renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      container.appendChild(renderer.domElement);
+
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
+
+      scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+      const dLight = new THREE.DirectionalLight(0x00f0ff, 1.2);
+      dLight.position.set(5, 10, 7);
+      scene.add(dLight);
+
+      const grid = new THREE.GridHelper(16, 16, 0x00f0ff, 0x1e293b);
+      grid.position.y = -2;
+      scene.add(grid);
+
+      createWaveLines();
+
+      window.addEventListener('resize', onWindowResize);
+      animate();
+    }
+
+    function createWaveLines() {
+      // Wave 1: Cyan
+      const g1 = new THREE.BufferGeometry();
+      g1.setAttribute('position', new THREE.BufferAttribute(new Float32Array(NUM_PTS * 3), 3));
+      line1 = new THREE.Line(g1, new THREE.LineBasicMaterial({ color: 0x00f0ff, transparent: true, opacity: 0.6 }));
+      scene.add(line1);
+
+      // Wave 2: Rose
+      const g2 = new THREE.BufferGeometry();
+      g2.setAttribute('position', new THREE.BufferAttribute(new Float32Array(NUM_PTS * 3), 3));
+      line2 = new THREE.Line(g2, new THREE.LineBasicMaterial({ color: 0xf43f5e, transparent: true, opacity: 0.6 }));
+      scene.add(line2);
+
+      // Wave Resultant: Emerald thick glowing
+      const gr = new THREE.BufferGeometry();
+      gr.setAttribute('position', new THREE.BufferAttribute(new Float32Array(NUM_PTS * 3), 3));
+      lineResult = new THREE.Line(gr, new THREE.LineBasicMaterial({ color: 0x10b981, linewidth: 3 }));
+      scene.add(lineResult);
+    }
+
+    function updateWaveParams() {
+      a1 = parseFloat(document.getElementById('sliderA1').value);
+      f1 = parseFloat(document.getElementById('sliderF1').value);
+      a2 = parseFloat(document.getElementById('sliderA2').value);
+      f2 = parseFloat(document.getElementById('sliderF2').value);
+      phaseDeg = parseFloat(document.getElementById('sliderPhase').value);
+
+      document.getElementById('valA1').innerText = a1.toFixed(1) + ' m';
+      document.getElementById('valF1').innerText = f1.toFixed(1) + ' Hz';
+      document.getElementById('valA2').innerText = a2.toFixed(1) + ' m';
+      document.getElementById('valF2').innerText = f2.toFixed(1) + ' Hz';
+      document.getElementById('valPhase').innerText = phaseDeg + '°';
+
+      // Telemetry
+      const phaseRad = phaseDeg * Math.PI / 180;
+      let mode = 'General Interference';
+      if (Math.abs(f1 - f2) < 0.01) {
+        if (phaseDeg === 0 || phaseDeg === 360) mode = 'Constructive (เสริมกัน 100%)';
+        else if (phaseDeg === 180) mode = 'Destructive (หักล้าง 100%)';
+      } else {
+        mode = `Beats (ความถี่บีตส์ ${Math.abs(f1 - f2).toFixed(2)} Hz)`;
+      }
+
+      const maxA = (a1 + a2).toFixed(2);
+      const beats = Math.abs(f1 - f2).toFixed(2);
+
+      document.getElementById('telMode').innerText = mode;
+      document.getElementById('telMaxA').innerText = maxA + ' m';
+      document.getElementById('telBeats').innerText = beats + ' Hz';
+      document.getElementById('telEnergy').innerText = (maxA * maxA).toFixed(2) + 'x';
+    }
+
+    function setPreset(p) {
+      if (p === 'constructive') {
+        document.getElementById('sliderA1').value = 1.0;
+        document.getElementById('sliderF1').value = 1.0;
+        document.getElementById('sliderA2').value = 1.0;
+        document.getElementById('sliderF2').value = 1.0;
+        document.getElementById('sliderPhase').value = 0;
+      } else if (p === 'destructive') {
+        document.getElementById('sliderA1').value = 1.0;
+        document.getElementById('sliderF1').value = 1.0;
+        document.getElementById('sliderA2').value = 1.0;
+        document.getElementById('sliderF2').value = 1.0;
+        document.getElementById('sliderPhase').value = 180;
+      } else if (p === 'standing') {
+        document.getElementById('sliderA1').value = 1.0;
+        document.getElementById('sliderF1').value = 1.2;
+        document.getElementById('sliderA2').value = 1.0;
+        document.getElementById('sliderF2').value = 1.2;
+        document.getElementById('sliderPhase').value = 180;
+      } else if (p === 'beats') {
+        document.getElementById('sliderA1').value = 1.0;
+        document.getElementById('sliderF1').value = 1.5;
+        document.getElementById('sliderA2').value = 1.0;
+        document.getElementById('sliderF2').value = 1.8;
+        document.getElementById('sliderPhase').value = 0;
+      }
+      updateWaveParams();
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+      time += 0.03;
+
+      const p1 = line1.geometry.attributes.position.array;
+      const p2 = line2.geometry.attributes.position.array;
+      const pr = lineResult.geometry.attributes.position.array;
+
+      const phaseRad = phaseDeg * Math.PI / 180;
+
+      for (let i = 0; i < NUM_PTS; i++) {
+        const x = ((i / NUM_PTS) - 0.5) * SPAN;
+        const k1 = 1.5;
+        const k2 = 1.5;
+
+        // Wave 1 moving right
+        const y1 = a1 * Math.sin(2 * Math.PI * f1 * time - k1 * x);
+        // Wave 2 moving right with phase
+        const y2 = a2 * Math.sin(2 * Math.PI * f2 * time - k2 * x + phaseRad);
+        // Superposition
+        const yr = y1 + y2;
+
+        p1[i * 3] = x; p1[i * 3 + 1] = y1; p1[i * 3 + 2] = -1.2;
+        p2[i * 3] = x; p2[i * 3 + 1] = y2; p2[i * 3 + 2] = 1.2;
+        pr[i * 3] = x; pr[i * 3 + 1] = yr; pr[i * 3 + 2] = 0;
+      }
+
+      line1.geometry.attributes.position.needsUpdate = true;
+      line2.geometry.attributes.position.needsUpdate = true;
+      lineResult.geometry.attributes.position.needsUpdate = true;
+
+      controls.update();
+      renderer.render(scene, camera);
+    }
+
+    function resetSim() {
+      camera.position.set(0, 5, 11);
+      controls.target.set(0, 0, 0);
+    }
+
+    function onWindowResize() {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    window.onload = () => {
+      init();
+      updateWaveParams();
+    };
+  </script>
+</body>
+</html>

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="th" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Library | คลังโค้ดเกมสำหรับนักเรียน</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@300;400;600;700&family=Outfit:wght@400;600;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        :root {
+            --code-bg: #0B101B;
+            --code-header: #151C2C;
+            --code-accent: #00E6FF;
+        }
+        .library-grid {
+            display: grid;
+            grid-template-columns: 320px 1fr;
+            gap: 2.5rem;
+            margin-top: 3rem;
+        }
+        .sidebar-nav {
+            background: rgba(21, 28, 44, 0.6);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255,255,255,0.05);
+            border-radius: var(--radius-lg);
+            padding: 2rem;
+            height: fit-content;
+            position: sticky;
+            top: 120px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .category-title {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            color: var(--clr-accent);
+            margin: 2rem 0 1rem;
+            letter-spacing: 2px;
+            font-weight: 800;
+        }
+        .nav-item {
+            padding: 1rem 1.25rem;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: var(--transition-base);
+            color: var(--clr-text-muted);
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-weight: 500;
+        }
+        .nav-item:hover {
+            color: var(--clr-primary);
+            background: rgba(0, 230, 255, 0.05);
+            transform: translateX(8px);
+        }
+        .nav-item.active {
+            background: var(--clr-primary);
+            color: var(--clr-bg-dark);
+            box-shadow: 0 0 20px rgba(0, 230, 255, 0.4);
+            font-weight: 700;
+        }
+
+        .code-viewer {
+            background: var(--code-bg);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .viewer-header {
+            background: var(--code-header);
+            padding: 1.2rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+        }
+        .viewer-title { color: var(--clr-primary); font-family: 'Outfit', sans-serif; font-weight: 700; letter-spacing: 1px; }
+        
+        pre {
+            margin: 0;
+            padding: 2.5rem;
+            overflow-x: auto;
+            max-height: 700px;
+        }
+        code {
+            font-family: 'Fira Code', monospace;
+            font-size: 1rem;
+            line-height: 1.7;
+            color: #E2E8F0;
+        }
+
+        .meta-info {
+            background: rgba(21, 28, 44, 0.6);
+            backdrop-filter: blur(20px);
+            padding: 2rem;
+            border-radius: var(--radius-lg);
+            margin-bottom: 2rem;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            border: 1px solid rgba(255,255,255,0.05);
+        }
+        .meta-item { display: flex; flex-direction: column; gap: 4px; }
+        .meta-label { font-size: 0.75rem; color: var(--clr-text-muted); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; }
+        .meta-value { font-weight: 700; color: white; font-size: 1.1rem; }
+
+        @media (max-width: 992px) {
+            .library-grid { grid-template-columns: 1fr; }
+            .sidebar-nav { position: static; margin-bottom: 2rem; }
+        }
+    </style>
+</head>
+<body class="site">
+    <header class="site-header">
+        <nav class="nav">
+            <div class="nav__container">
+                <a href="index.html" class="nav__logo">Game<span>Design</span>4Kids</a>
+                <div class="nav__actions">
+                    <a href="https://arcade.makecode.com" target="_blank" class="btn btn--primary btn--small">🎮 OPEN ARCADE</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container" style="padding-top: 8rem; padding-bottom: 4rem;">
+        <header class="text-center" style="margin-bottom: 3rem;">
+            <h1 style="font-size: 3rem;">Student <span>Code Library</span></h1>
+            <p class="hero__lead">คลังโค้ดเกมตัวอย่าง พร้อมให้นักเรียน Copy ไปต่อยอดจินตนาการ</p>
+        </header>
+
+        <div class="library-grid">
+            <!-- Sidebar Navigation -->
+            <aside class="sidebar-nav">
+                <div class="category-title">🐣 ระดับ ป.1 - ป.2 (พื้นฐาน)</div>
+                <div class="nav-item active" data-file="star-catcher-v2.js">Star Catcher v2</div>
+                <div class="nav-item" data-file="fruit-rain-v1.js">Fruit Rain: v1 (The Base)</div>
+                <div class="nav-item" data-file="durian-garden-v1.js">🌳 Durian Garden Care</div>
+
+                <div class="category-title">🎨 ระดับ ป.3 - ป.4 (สร้างสรรค์)</div>
+                <div class="nav-item" data-file="hungry-dino-v2.js">Hungry Dino v2</div>
+                <div class="nav-item" data-file="fruit-rain-v2.js">Fruit Rain: v2 (Challenge)</div>
+                <div class="nav-item" data-file="space-adventure-v1.js">🚀 Space Adventure v1</div>
+                <div class="nav-item" data-file="car-race-v1.js">Speed Racer: v1 (Highway)</div>
+                <div class="nav-item" data-file="eco-guardian-v1.js">Eco: v1 (Trash Sorter)</div>
+
+                <div class="category-title">🚀 ระดับ ป.5 - ป.6 (นวัตกรรม)</div>
+                <div class="nav-item" data-file="fruit-rain-v3.js">Fruit Rain: v3 (Full Game)</div>
+                <div class="nav-item" data-file="car-race-v2.js">Speed Racer: v2 (Track Master)</div>
+                <div class="nav-item" data-file="platformer-v2.js">Platformer v2</div>
+                <div class="nav-item" data-file="eco-guardian-v2.js">Eco: v2 (Ocean Cleaner)</div>
+                <div class="nav-item" data-file="space-defender.js">Space Defender (Boss!)</div>
+                <div class="nav-item" data-file="maze-explorer.js">Maze Explorer (AI)</div>
+            </aside>
+
+            <!-- Main Library Content -->
+            <div class="library-main">
+                <div class="meta-info">
+                    <div class="meta-item">
+                        <span class="meta-label">Selected Game</span>
+                        <span class="meta-value" id="game-title">Fruit Rain v1</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Recommended For</span>
+                        <span class="meta-value" id="game-level">ป.1 - ป.3</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Topic</span>
+                        <span class="meta-value">Sprites & Score</span>
+                    </div>
+                </div>
+
+                <div class="code-viewer">
+                    <div class="viewer-header">
+                        <span class="viewer-title" id="file-name">fruit-rain-v1.js</span>
+                        <button class="copy-btn" id="copy-trigger">
+                            <span>📋</span> Copy Code
+                        </button>
+                    </div>
+                    <pre><code id="code-content">กำลังโหลดโค้ด...</code></pre>
+                </div>
+
+                <div style="margin-top: 2rem; padding: 1.5rem; background: rgba(99,102,241,0.1); border-radius: 15px; color: #cbd5e1;">
+                    <strong>💡 วิธีใช้:</strong> คลิกปุ่ม Copy Code แล้วนำไปวางในหน้าต่าง <strong>JavaScript</strong> ของ MakeCode Arcade ได้เลยครับ!
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const codeContent = document.getElementById('code-content');
+        const gameTitle = document.getElementById('game-title');
+        const fileNameDisp = document.getElementById('file-name');
+        const navItems = document.querySelectorAll('.nav-item');
+        const copyBtn = document.getElementById('copy-trigger');
+
+        // Function to load code from local files
+        async function loadCode(fileName, element) {
+            try {
+                const response = await fetch(`kidcode/${fileName}`);
+                if (!response.ok) throw new Error('File not found');
+                const text = await response.text();
+                // Strip the [ignoring loop detection] tag if present
+                element.innerText = text.replace('[ignoring loop detection]\n', '');
+            } catch (err) {
+                element.innerText = `// Error: ไม่สามารถโหลดโค้ดได้ (${err.message})`;
+            }
+        }
+
+        // Handle navigation
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                navItems.forEach(i => i.classList.remove('active'));
+                item.classList.add('active');
+                
+                const file = item.dataset.file;
+                gameTitle.innerText = item.innerText;
+                fileNameDisp.innerText = file;
+                loadCode(file, codeContent);
+            });
+        });
+
+        // Copy functionality
+        copyBtn.addEventListener('click', () => {
+            const text = codeContent.innerText;
+            navigator.clipboard.writeText(text).then(() => {
+                const originalText = copyBtn.innerHTML;
+                copyBtn.innerHTML = '<span>✅</span> Copied!';
+                copyBtn.style.background = '#22c55e';
+                setTimeout(() => {
+                    copyBtn.innerHTML = originalText;
+                    copyBtn.style.background = '';
+                }, 2000);
+            });
+        });
+
+        // Initial Load
+        loadCode('fruit-rain-v1.js', codeContent);
+    </script>
+</body>
+</html>

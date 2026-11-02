@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แผนการสอนสัปดาห์ที่ 8 - การสอบกลางภาคประมวลความรู้ (Midterm Examination)</title>
+    <!-- ฟอนต์ Sarabun และ Inter จาก Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- MathJax 3 for Scientific Notation & Equations -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [["$", "$"], ["\\(", "\\)"]],
+                displayMath: [["$$", "$$"], ["\\[", "\\]"]],
+                processEscapes: true,
+                processEnvironments: true
+            },
+            options: {
+                skipHtmlTags: ["script", "noscript", "style", "textarea", "pre", "code"]
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --primary: #0f172a;
+            --primary-light: #1e293b;
+            --accent: #2563eb;
+            --accent-hover: #1d4ed8;
+            --secondary: #0891b2;
+            --success: #059669;
+            --warning: #d97706;
+            --danger: #dc2626;
+            --purple: #7c3aed;
+            --exam-gold: #d97706;
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --border-focus: #94a3b8;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.08), 0 2px 4px -2px rgba(0,0,0,0.05);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.05);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Sarabun', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.8;
+            font-size: 16px;
+        }
+
+        .container {
+            max-width: 1140px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        .nav-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 1.25rem;
+            padding: 0.5rem 1rem;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.25s ease;
+        }
+
+        .nav-back:hover {
+            color: var(--accent-hover);
+            transform: translateX(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #b45309 100%);
+            color: #ffffff;
+            padding: 3rem 2.5rem;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            top: -40%;
+            right: -10%;
+            width: 480px;
+            height: 480px;
+            background: radial-gradient(circle, rgba(251, 191, 36, 0.25) 0%, rgba(255, 255, 255, 0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .header-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(8px);
+            padding: 0.35rem 0.85rem;
+            border-radius: 9999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            line-height: 1.3;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.02em;
+        }
+
+        .header .subtitle {
+            font-size: 1.15rem;
+            opacity: 0.92;
+            font-weight: 400;
+            max-width: 880px;
+        }
+
+        .header .course-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 1.25rem 1.5rem;
+            border-radius: 12px;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .header .course-info span {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.92rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .tab-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 0.85rem 1.4rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            transition: all 0.25s ease;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .tab-btn:hover {
+            background: #f1f5f9;
+            color: var(--accent);
+            border-color: #cbd5e1;
+        }
+
+        .tab-btn.active {
+            background: #b45309;
+            color: #ffffff;
+            border-color: #b45309;
+            box-shadow: 0 4px 12px rgba(180, 83, 9, 0.3);
+        }
+
+        .content-section {
+            display: none;
+            animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--bg-card);
+            border-radius: 14px;
+            padding: 2.25rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+        }
+
+        .card-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding-bottom: 0.85rem;
+            border-bottom: 2px solid #f1f5f9;
+        }
+
+        .card-title i {
+            color: var(--exam-gold);
+        }
+
+        .highlight-box {
+            background-color: #eff6ff;
+            border-left: 4px solid var(--accent);
+            padding: 1.25rem 1.5rem;
+            border-radius: 0 10px 10px 0;
+            margin: 1.5rem 0;
+            font-size: 0.98rem;
+        }
+
+        .highlight-box.warning {
+            background-color: #fffbeb;
+            border-left-color: var(--warning);
+        }
+
+        .highlight-box.success {
+            background-color: #ecfdf5;
+            border-left-color: var(--success);
+        }
+
+        .highlight-box.danger {
+            background-color: #fef2f2;
+            border-left-color: var(--danger);
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .feature-box {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.25s ease;
+        }
+
+        .feature-box:hover {
+            border-color: var(--exam-gold);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .feature-box h4 {
+            font-size: 1.1rem;
+            color: var(--primary);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .session-block {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 1.75rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border);
+            border-left: 5px solid var(--exam-gold);
+        }
+
+        .session-block h4 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .time-badge {
+            background: #fef3c7;
+            color: #92400e;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+        }
+
+        th, td {
+            padding: 0.9rem 1.1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+
+        th {
+            background-color: #f1f5f9;
+            font-weight: 700;
+            color: var(--primary);
+            border-top: 1px solid var(--border);
+        }
+
+        tr:hover td {
+            background-color: #f8fafc;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.65rem;
+            border-radius: 6px;
+            font-size: 0.82rem;
+            font-weight: 600;
+        }
+
+        .badge-blue { background: #dbeafe; color: #1e40af; }
+        .badge-green { background: #dcfce7; color: #166534; }
+        .badge-purple { background: #f3e8ff; color: #6b21a8; }
+        .badge-amber { background: #fef3c7; color: #92400e; }
+        .badge-red { background: #fee2e2; color: #991b1b; }
+
+        pre {
+            background: #0f172a;
+            color: #f8fafc;
+            padding: 1.25rem 1.5rem;
+            border-radius: 10px;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.92rem;
+            line-height: 1.6;
+            margin: 1rem 0;
+            border: 1px solid #1e293b;
+        }
+
+        code {
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            background-color: #f1f5f9;
+            color: #b91c1c;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        pre code {
+            background-color: transparent;
+            color: inherit;
+            padding: 0;
+        }
+
+        .svg-container {
+            width: 100%;
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.75rem 0;
+            box-shadow: var(--shadow-sm);
+            text-align: center;
+        }
+
+        .svg-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.75rem;
+            text-align: center;
+        }
+
+        .svg-caption {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            margin-top: 0.75rem;
+            text-align: center;
+            font-style: italic;
+        }
+
+        .quiz-card {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.75rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .quiz-question {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .quiz-options {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 1rem;
+        }
+
+        .quiz-option {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .quiz-option:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+        }
+
+        .quiz-explanation {
+            background: #ecfdf5;
+            border-left: 4px solid var(--success);
+            padding: 1rem 1.25rem;
+            border-radius: 0 8px 8px 0;
+            margin-top: 1rem;
+            font-size: 0.95rem;
+            display: none;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2.5rem 0;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border);
+            margin-top: 3rem;
+        }
+
+        @media (max-width: 768px) {
+            .header { padding: 2rem 1.5rem; }
+            .header h1 { font-size: 1.6rem; }
+            .card { padding: 1.5rem; }
+            .tabs { gap: 0.35rem; }
+            .tab-btn { padding: 0.65rem 1rem; font-size: 0.88rem; }
+            .grid-2 { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <a href="../index.html" class="nav-back">
+        <i class="fas fa-arrow-left"></i> กลับสู่หน้าหลักรายวิชา
+    </a>
+
+    <header class="header">
+        <div class="header-badge"><i class="fas fa-file-signature"></i> Summative Assessment & Competency Evaluation</div>
+        <h1>📚 แผนการสอนสัปดาห์ที่ 8</h1>
+        <p class="subtitle">การสอบกลางภาคประมวลความรู้ (Midterm Examination: Written & Practical Evaluation)</p>
+        <div class="course-info">
+            <span><i class="fas fa-book"></i> <strong>รหัสวิชา:</strong> 4124941</span>
+            <span><i class="fas fa-graduation-cap"></i> <strong>วิชา:</strong> วิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์</span>
+            <span><i class="fas fa-chalkboard-teacher"></i> <strong>ผู้สอน:</strong> ผศ.ดร.ชีวะ ทัศนา</span>
+            <span><i class="fas fa-university"></i> <strong>สังกัด:</strong> คณะวิทยาศาสตร์และเทคโนโลยี</span>
+            <span><i class="fas fa-clock"></i> <strong>เวลา:</strong> 4 ชม. (ทบทวน 1 ชม. + สอบกลางภาค 3 ชม.)</span>
+        </div>
+    </header>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="showTab('tab1', this)"><i class="fas fa-bullseye"></i> ผลลัพธ์การเรียนรู้ (WLOs)</button>
+        <button class="tab-btn" onclick="showTab('tab2', this)"><i class="fas fa-diagram-project"></i> ขอบเขต & ผังโครงสร้างข้อสอบ</button>
+        <button class="tab-btn" onclick="showTab('tab3', this)"><i class="fas fa-clipboard-list"></i> ขั้นตอนการดำเนินการสอบ</button>
+        <button class="tab-btn" onclick="showTab('tab4', this)"><i class="fas fa-award"></i> เกณฑ์การตัดสินผลการเรียน</button>
+        <button class="tab-btn" onclick="showTab('tab5', this)"><i class="fas fa-brain"></i> ข้อสอบจำลองสมรรถนะ (HOTS)</button>
+        <button class="tab-btn" onclick="showTab('tab6', this)"><i class="fas fa-book-bookmark"></i> เอกสารอ้างอิง (APA 7th)</button>
+    </div>
+
+    <!-- ==========================================
+         TAB 1: ผลลัพธ์การเรียนรู้ (WLOs)
+         ========================================== -->
+    <div id="tab1" class="content-section active">
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-bullseye"></i> ผลลัพธ์การเรียนรู้การสอบกลางภาค (Midterm Learning Outcomes: WLOs)</h2>
+            <p style="margin-bottom: 1.5rem; color: var(--text-muted);">
+                การสอบกลางภาคประมวลผลสัมฤทธิ์ทางการเรียนสัปดาห์ที่ 1 - 7 เพื่อวัดสมรรถนะ 4 มิติเชิงบูรณาการวิทยาการคำนวณในการสอนวิทยาศาสตร์:
+            </p>
+
+            <div class="grid-2">
+                <div class="feature-box" style="border-top: 4px solid var(--accent);">
+                    <h4><i class="fas fa-brain text-accent"></i> WLO 1: ความรอบรู้ในแนวคิดเชิงคำนวณ (Foundational CT Mastery)</h4>
+                    <p>แสดงออกถึงความรู้ความเข้าใจอย่างลึกซึ้งใน 4 เสาหลักของแนวคิดเชิงคำนวณ (Decomposition, Pattern Recognition, Abstraction, Algorithm Design) สามารถแยกแยะความแตกต่างและเชื่อมโยงสู่ปรากฏการณ์และการทดลองทางวิทยาศาสตร์ได้อย่างถูกต้อง 100%</p>
+                </div>
+
+                <div class="feature-box" style="border-top: 4px solid var(--secondary);">
+                    <h4><i class="fas fa-sitemap text-secondary"></i> WLO 2: การออกแบบขั้นตอนวิธีและผังงาน (Algorithmic & Modeling Proficiency)</h4>
+                    <p>สามารถวิเคราะห์ปัญหาการทดลองทางวิทยาศาสตร์ แปลงเป็นรหัสลำลอง (Pseudocode) และผังงานมาตรฐานสากล ANSI/ISO 5807 (Flowchart) ครบทั้ง 3 โครงสร้างควบคุม (Sequence, Selection, Iteration) ได้อย่างเป็นระบบและปราศจากข้อผิดพลาดเชิงตรรกะ</p>
+                </div>
+
+                <div class="feature-box" style="border-top: 4px solid var(--success);">
+                    <h4><i class="fas fa-laptop-code text-success"></i> WLO 3: ทักษะการเขียนโปรแกรมสดและการดีบัก (Live Coding & Debugging Skill)</h4>
+                    <p>สามารถเขียนโค้ดภาษา Scratch หรือ Python 3.11 เพื่อแก้โจทย์วิทยาศาสตร์สดภายใต้เวลาจำกัด ประยุกต์ใช้ตัวแปร เงื่อนไข การวนซ้ำ ฟังก์ชัน และโครงสร้างข้อมูลลิสต์/อาร์เรย์ พร้อมทั้งตรวจหาและแก้ไขข้อผิดพลาด (Syntax, Runtime, Logic Error) ได้อย่างรวดเร็วและแม่นยำ</p>
+                </div>
+
+                <div class="feature-box" style="border-top: 4px solid var(--warning);">
+                    <h4><i class="fas fa-scale-balanced text-warning"></i> WLO 4: จริยธรรมทางวิชาการและการประเมิน (Academic Integrity & Evaluation Ethics)</h4>
+                    <p>ปฏิบัติตามกฎระเบียบการสอบอย่างเคร่งครัด ยึดมั่นในความซื่อสัตย์สุจริตทางวิชาการ (Academic Integrity) ไม่ทุจริต ไม่คัดลอกผลงาน (Anti-Plagiarism) และตระหนักถึงจรรยาบรรณวิชาชีพครูในการวัดและประเมินผลทางการศึกษาอย่างเป็นธรรม</p>
+                </div>
+            </div>
+
+            <div class="highlight-box success">
+                <strong><i class="fas fa-check-double"></i> การประเมินเพื่อตัดสินผลการเรียน (Summative Assessment):</strong>
+                การสอบกลางภาคคิดเป็นน้ำหนัก <strong>20% ของคะแนนรวมทั้งรายวิชา</strong> ประเมินตรงตาม <strong>CLO1</strong> (แนวคิดเชิงคำนวณ), <strong>CLO2</strong> (การเขียนโปรแกรมจำลองแบบ), และ <strong>CLO3</strong> (จริยธรรมและความรับผิดชอบ)
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         TAB 2: ขอบเขต & ผังโครงสร้างข้อสอบ
+         ========================================== -->
+    <div id="tab2" class="content-section">
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-diagram-project"></i> ขอบเขตเนื้อหา & ผังโครงสร้างข้อสอบ (Test Blueprint & Table of Specifications)</h2>
+            <p style="margin-bottom: 1.5rem; color: var(--text-muted);">
+                โครงสร้างข้อสอบกลางภาคได้รับการออกแบบตามหลักการวัดและประเมินผลการศึกษา (Educational Assessment Engineering) โดยกระจายตามระดับพฤติกรรมทางพุทธิพิสัยของ Bloom's Taxonomy และผสานการประเมินแบบคู่ขนาน (Dual Assessment):
+            </p>
+
+            <!-- INFOGRAPHIC 8.1 SVG -->
+            <div class="svg-container">
+                <div class="svg-title"><i class="fas fa-cubes-stacked"></i> ภาพผังที่ 8.1: พิมพ์เขียวโครงสร้างข้อสอบกลางภาค (Midterm Assessment Blueprint & Cognitive Matrix)</div>
+                <svg viewBox="0 0 960 440" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="gradTotal" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#b45309" />
+                            <stop offset="100%" stop-color="#78350f" />
+                        </linearGradient>
+                        <linearGradient id="gradWritten" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#2563eb" />
+                            <stop offset="100%" stop-color="#1d4ed8" />
+                        </linearGradient>
+                        <linearGradient id="gradPractical" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#059669" />
+                            <stop offset="100%" stop-color="#047857" />
+                        </linearGradient>
+                        <filter id="shadowBox8" x="-5%" y="-5%" width="110%" height="115%" filterUnits="userSpaceOnUse">
+                            <feDropShadow dx="2" dy="4" stdDeviation="4" flood-opacity="0.12"/>
+                        </filter>
+                    </defs>
+
+                    <!-- Background Base -->
+                    <rect x="20" y="20" width="920" height="400" rx="16" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5" />
+
+                    <!-- Top Banner: Midterm 20% -->
+                    <rect x="40" y="35" width="880" height="55" rx="12" fill="url(#gradTotal)" filter="url(#shadowBox8)" />
+                    <text x="480" y="70" fill="#ffffff" font-family="'Sarabun', sans-serif" font-size="20" font-weight="700" text-anchor="middle">
+                        การสอบกลางภาคประมวลความรู้สัปดาห์ที่ 1 - 7 (Total Weight: 20% ของเกรดรวม)
+                    </text>
+
+                    <!-- Left Branch: Written Exam 12% -->
+                    <g transform="translate(60, 110)" filter="url(#shadowBox8)">
+                        <rect x="0" y="0" width="400" height="280" rx="14" fill="#ffffff" stroke="#93c5fd" stroke-width="2" />
+                        <rect x="0" y="0" width="400" height="45" rx="14" fill="url(#gradWritten)" />
+                        <text x="200" y="28" fill="#ffffff" font-family="'Sarabun', sans-serif" font-size="15" font-weight="700" text-anchor="middle">
+                            ส่วนที่ 1: การสอบข้อเขียน (Written Exam) - 12%
+                        </text>
+
+                        <!-- Sub-part 1 -->
+                        <rect x="20" y="60" width="360" height="95" rx="8" fill="#eff6ff" stroke="#bfdbfe" />
+                        <text x="35" y="85" fill="#1e40af" font-family="'Sarabun', sans-serif" font-size="13" font-weight="700">1.1 ปรนัย 4 ตัวเลือก (Multiple Choice) - 6%</text>
+                        <text x="35" y="105" fill="#334155" font-family="'Sarabun', sans-serif" font-size="12">• จำนวน 20 ข้อ (ข้อละ 0.3 คะแนน รวม 6 คะแนน)</text>
+                        <text x="35" y="125" fill="#334155" font-family="'Sarabun', sans-serif" font-size="12">• วาระ: CT 4 เสาหลัก, ตัวแปร, ไวยากรณ์, ชนิดข้อผิดพลาด</text>
+                        <text x="35" y="143" fill="#059669" font-family="'Sarabun', sans-serif" font-size="11" font-weight="600">✓ เน้นการจำ การเข้าใจ และการตีความโจทย์</text>
+
+                        <!-- Sub-part 2 -->
+                        <rect x="20" y="165" width="360" height="95" rx="8" fill="#eff6ff" stroke="#bfdbfe" />
+                        <text x="35" y="190" fill="#1e40af" font-family="'Sarabun', sans-serif" font-size="13" font-weight="700">1.2 อัตนัยประยุกต์โจทย์วิทย์ (Constructed) - 6%</text>
+                        <text x="35" y="210" fill="#334155" font-family="'Sarabun', sans-serif" font-size="12">• จำนวน 2 ข้อใหญ่ (ข้อละ 3 คะแนน รวม 6 คะแนน)</text>
+                        <text x="35" y="230" fill="#334155" font-family="'Sarabun', sans-serif" font-size="12">• วาระ: การวาด Flowchart สเต็ปทดลอง และเขียน Pseudocode</text>
+                        <text x="35" y="248" fill="#2563eb" font-family="'Sarabun', sans-serif" font-size="11" font-weight="600">✓ วัดการวิเคราะห์และการออกแบบขั้นตอนวิธี (HOTS)</text>
+                    </g>
+
+                    <!-- Right Branch: Practical Exam 8% -->
+                    <g transform="translate(500, 110)" filter="url(#shadowBox8)">
+                        <rect x="0" y="0" width="400" height="280" rx="14" fill="#ffffff" stroke="#a7f3d0" stroke-width="2" />
+                        <rect x="0" y="0" width="400" height="45" rx="14" fill="url(#gradPractical)" />
+                        <text x="200" y="28" fill="#ffffff" font-family="'Sarabun', sans-serif" font-size="15" font-weight="700" text-anchor="middle">
+                            ส่วนที่ 2: การสอบปฏิบัติการสด (Practical Lab) - 8%
+                        </text>
+
+                        <!-- Sub-part 3 -->
+                        <rect x="20" y="60" width="360" height="95" rx="8" fill="#ecfdf5" stroke="#a7f3d0" />
+                        <text x="35" y="85" fill="#065f46" font-family="'Sarabun', sans-serif" font-size="13" font-weight="700">2.1 Live Coding วิเคราะห์โจทย์แล็บวิทย์ - 5%</text>
+                        <text x="35" y="105" fill="#334155" font-family="'Sarabun', sans-serif" font-size="12">• เขียนโปรแกรม Scratch หรือ Python แก้โจทย์ 1 ข้อ</text>
+                        <text x="35" y="125" fill="#334155" font-family="'Sarabun', sans-serif" font-size="12">• บูรณาการ Function, While/For Loop, และ List Data</text>
+                        <text x="35" y="143" fill="#059669" font-family="'Sarabun', sans-serif" font-size="11" font-weight="600">✓ ตรวจสอบผ่าน Automated Test Suites รันสด</text>
+
+                        <!-- Sub-part 4 -->
+                        <rect x="20" y="165" width="360" height="95" rx="8" fill="#ecfdf5" stroke="#a7f3d0" />
+                        <text x="35" y="190" fill="#065f46" font-family="'Sarabun', sans-serif" font-size="13" font-weight="700">2.2 Bug Hunting & Code Surgery - 3%</text>
+                        <text x="35" y="210" fill="#334155" font-family="'Sarabun', sans-serif" font-size="12">• แจกโค้ดแบบจำลองที่มีบั๊กแฝง 1 ข้อ (Runtime/Logic)</text>
+                        <text x="35" y="230" fill="#334155" font-family="'Sarabun', sans-serif" font-size="12">• ชี้จุดผิด อธิบายสาเหตุ และแก้ไขให้รันผ่าน 100%</text>
+                        <text x="35" y="248" fill="#059669" font-family="'Sarabun', sans-serif" font-size="11" font-weight="600">✓ วัดสมรรถนะการตรวจแก้ข้อผิดพลาดเชิงลึก</text>
+                    </g>
+                </svg>
+                <div class="svg-caption">แสดงพิมพ์เขียวโครงสร้างข้อสอบกลางภาค สัดส่วนคะแนน 20% แบ่งเป็นข้อเขียน (12%) และปฏิบัติการสด (8%) อย่างสมดุล</div>
+            </div>
+
+            <!-- INFOGRAPHIC 8.2 SVG -->
+            <div class="svg-container">
+                <div class="svg-title"><i class="fas fa-network-wired"></i> ภาพผังที่ 8.2: สถาปัตยกรรมการประเมินคู่ขนาน (Dual Assessment Architecture: Cognitive vs. Performance-Based)</div>
+                <svg viewBox="0 0 960 380" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Background Base -->
+                    <rect x="20" y="20" width="920" height="340" rx="14" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5" />
+
+                    <!-- Step 1: Input Specs -->
+                    <g transform="translate(50, 60)">
+                        <rect x="0" y="0" width="240" height="250" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" />
+                        <rect x="0" y="0" width="240" height="36" rx="10" fill="#334155" />
+                        <text x="120" y="24" fill="#ffffff" font-family="'Sarabun', sans-serif" font-size="13" font-weight="700" text-anchor="middle">1. ขอบเขตเนื้อหาสัปดาห์ 1-7</text>
+                        <text x="20" y="65" fill="#1e293b" font-family="'Sarabun', sans-serif" font-size="12">• สัปดาห์ 1: CT-S Framework</text>
+                        <text x="20" y="95" fill="#1e293b" font-family="'Sarabun', sans-serif" font-size="12">• สัปดาห์ 2: Decomp &amp; Abstraction</text>
+                        <text x="20" y="125" fill="#1e293b" font-family="'Sarabun', sans-serif" font-size="12">• สัปดาห์ 3: Pattern &amp; Sorting</text>
+                        <text x="20" y="155" fill="#1e293b" font-family="'Sarabun', sans-serif" font-size="12">• สัปดาห์ 4: Pseudocode &amp; Flowchart</text>
+                        <text x="20" y="185" fill="#1e293b" font-family="'Sarabun', sans-serif" font-size="12">• สัปดาห์ 5: Variables &amp; Conditions</text>
+                        <text x="20" y="215" fill="#1e293b" font-family="'Sarabun', sans-serif" font-size="12">• สัปดาห์ 6: Loops &amp; Functions</text>
+                        <text x="20" y="240" fill="#1e293b" font-family="'Sarabun', sans-serif" font-size="12">• สัปดาห์ 7: Debugging &amp; V&amp;V</text>
+                    </g>
+
+                    <!-- Arrow 1 to Engine -->
+                    <line x1="290" y1="185" x2="350" y2="185" stroke="#2563eb" stroke-width="3" />
+                    <polygon points="350,180 360,185 350,190" fill="#2563eb" />
+
+                    <!-- Step 2: Dual Assessment Engine -->
+                    <g transform="translate(365, 50)">
+                        <rect x="0" y="0" width="280" height="270" rx="12" fill="#0f172a" stroke="#1e293b" stroke-width="2" />
+                        <text x="140" y="32" fill="#38bdf8" font-family="'Sarabun', sans-serif" font-size="14" font-weight="700" text-anchor="middle">Dual Assessment Engine</text>
+
+                        <!-- Box Upper: Written -->
+                        <rect x="15" y="50" width="250" height="90" rx="8" fill="#1e293b" stroke="#3b82f6" />
+                        <text x="25" y="75" fill="#93c5fd" font-family="'Sarabun', sans-serif" font-size="12" font-weight="700">✍️ Cognitive Engine (ข้อเขียน)</text>
+                        <text x="25" y="98" fill="#f8fafc" font-family="'Sarabun', sans-serif" font-size="11">วัดการตีความ, การไล่ตรรกะโค้ด,</text>
+                        <text x="25" y="118" fill="#f8fafc" font-family="'Sarabun', sans-serif" font-size="11">การเขียนผังงานมาตรฐาน ANSI</text>
+
+                        <!-- Box Lower: Live Coding -->
+                        <rect x="15" y="155" width="250" height="90" rx="8" fill="#1e293b" stroke="#10b981" />
+                        <text x="25" y="180" fill="#6ee7b7" font-family="'Sarabun', sans-serif" font-size="12" font-weight="700">💻 Performance Engine (แล็บสด)</text>
+                        <text x="25" y="203" fill="#f8fafc" font-family="'Sarabun', sans-serif" font-size="11">เขียนโปรแกรมสดใน IDE / Scratch,</text>
+                        <text x="25" y="223" fill="#f8fafc" font-family="'Sarabun', sans-serif" font-size="11">รันผ่าน Unit Test Suite อัตโนมัติ</text>
+                    </g>
+
+                    <!-- Arrow Engine to Output -->
+                    <line x1="645" y1="185" x2="705" y2="185" stroke="#10b981" stroke-width="3" />
+                    <polygon points="705,180 715,185 705,190" fill="#10b981" />
+
+                    <!-- Step 3: Outcomes & Integrity -->
+                    <g transform="translate(720, 60)">
+                        <rect x="0" y="0" width="200" height="250" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" />
+                        <rect x="0" y="0" width="200" height="36" rx="10" fill="#059669" />
+                        <text x="100" y="24" fill="#ffffff" font-family="'Sarabun', sans-serif" font-size="13" font-weight="700" text-anchor="middle">3. มาตรฐานการตัดสิน</text>
+
+                        <text x="20" y="70" fill="#1e293b" font-family="'Sarabun', sans-serif" font-size="12" font-weight="700">🎯 Summative Score</text>
+                        <text x="20" y="90" fill="#059669" font-family="'Sarabun', sans-serif" font-size="11">เต็ม 20% ของเกรด</text>
+
+                        <text x="20" y="125" fill="#1e293b" font-family="'Sarabun', sans-serif" font-size="12" font-weight="700">🔒 Anti-Plagiarism</text>
+                        <text x="20" y="145" fill="#b45309" font-family="'Sarabun', sans-serif" font-size="11">ตรวจความซ้ำซ้อนโค้ด</text>
+
+                        <text x="20" y="180" fill="#1e293b" font-family="'Sarabun', sans-serif" font-size="12" font-weight="700">📊 Diagnostic Feedback</text>
+                        <text x="20" y="200" fill="#2563eb" font-family="'Sarabun', sans-serif" font-size="11">สะท้อนจุดแข็ง/จุดอ่อน</text>
+                        <text x="20" y="220" fill="#2563eb" font-family="'Sarabun', sans-serif" font-size="11">เพื่อพัฒนาโปรเจกต์ครึ่งหลัง</text>
+                    </g>
+                </svg>
+                <div class="svg-caption">แสดงกระบวนการประเมินคู่ขนาน (Dual Assessment Architecture) ที่บูรณาการระหว่างพุทธิพิสัย (Cognitive) และทักษะพิสัย (Performance-based)</div>
+            </div>
+
+            <!-- INFOGRAPHIC 8.3 SVG -->
+            <div class="svg-container">
+                <div class="svg-title"><i class="fas fa-timeline"></i> ภาพผังที่ 8.3: แผนผังการบริหารเวลาและกระบวนการกำกับการสอบกลางภาค (Exam Execution Timeline & Proctoring Pipeline)</div>
+                <svg viewBox="0 0 960 320" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Background Base -->
+                    <rect x="20" y="20" width="920" height="280" rx="14" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5" />
+
+                    <!-- Timeline Bar -->
+                    <rect x="60" y="140" width="840" height="12" rx="6" fill="#cbd5e1" />
+
+                    <!-- Phase 1: 0 - 60 min -->
+                    <g transform="translate(60, 60)">
+                        <rect x="0" y="0" width="210" height="65" rx="8" fill="#ffffff" stroke="#b45309" stroke-width="1.5" />
+                        <text x="105" y="26" fill="#92400e" font-family="'Sarabun', sans-serif" font-size="12" font-weight="700" text-anchor="middle">ชั่วโมงที่ 1 (00:00 - 01:00)</text>
+                        <text x="105" y="48" fill="#1e293b" font-family="'Sarabun', sans-serif" font-size="11" text-anchor="middle">Pre-Exam Q&amp;A &amp; System Check</text>
+                        <circle cx="105" cy="86" r="14" fill="#b45309" />
+                        <text x="105" y="91" fill="#ffffff" font-family="'Sarabun', sans-serif" font-size="11" font-weight="700" text-anchor="middle">1</text>
+                    </g>
+
+                    <!-- Phase 2: 60 - 150 min -->
+                    <g transform="translate(300, 60)">
+                        <rect x="0" y="0" width="240" height="65" rx="8" fill="#ffffff" stroke="#2563eb" stroke-width="1.5" />
+                        <text x="120" y="26" fill="#1e40af" font-family="'Sarabun', sans-serif" font-size="12" font-weight="700" text-anchor="middle">ชั่วโมงที่ 2-3 (01:00 - 02:30)</text>
+                        <text x="120" y="48" fill="#1e293b" font-family="'Sarabun', sans-serif" font-size="11" text-anchor="middle">Written Exam (ข้อเขียน 90 นาที)</text>
+                        <circle cx="120" cy="86" r="14" fill="#2563eb" />
+                        <text x="120" y="91" fill="#ffffff" font-family="'Sarabun', sans-serif" font-size="11" font-weight="700" text-anchor="middle">2</text>
+                    </g>
+
+                    <!-- Break: 15 min -->
+                    <g transform="translate(560, 160)">
+                        <rect x="0" y="0" width="70" height="50" rx="6" fill="#fef3c7" stroke="#f59e0b" />
+                        <text x="35" y="22" fill="#b45309" font-family="'Sarabun', sans-serif" font-size="10" font-weight="700" text-anchor="middle">พัก 15 น.</text>
+                        <text x="35" y="38" fill="#92400e" font-family="'Sarabun', sans-serif" font-size="9" text-anchor="middle">สลับห้องแล็บ</text>
+                    </g>
+
+                    <!-- Phase 3: 165 - 240 min -->
+                    <g transform="translate(650, 60)">
+                        <rect x="0" y="0" width="240" height="65" rx="8" fill="#ffffff" stroke="#059669" stroke-width="1.5" />
+                        <text x="120" y="26" fill="#065f46" font-family="'Sarabun', sans-serif" font-size="12" font-weight="700" text-anchor="middle">ชั่วโมงที่ 3-4 (02:45 - 04:00)</text>
+                        <text x="120" y="48" fill="#1e293b" font-family="'Sarabun', sans-serif" font-size="11" text-anchor="middle">Practical Lab Exam (แล็บสด 75 นาที)</text>
+                        <circle cx="120" cy="86" r="14" fill="#059669" />
+                        <text x="120" y="91" fill="#ffffff" font-family="'Sarabun', sans-serif" font-size="11" font-weight="700" text-anchor="middle">3</text>
+                    </g>
+
+                    <!-- Bottom Proctoring Rules -->
+                    <g transform="translate(60, 230)">
+                        <rect x="0" y="0" width="840" height="45" rx="8" fill="#fffbeb" stroke="#fde68a" />
+                        <text x="420" y="28" fill="#92400e" font-family="'Sarabun', sans-serif" font-size="12" font-weight="600" text-anchor="middle">
+                            🛡️ กติกาการกำกับการสอบ: ไม่อนุญาตให้ใช้ AI Chatbot หรือนำเอกสารเข้าห้องสอบ / ระบบตัดสัญญาณอินเทอร์เน็ตภายนอกยกเว้นเซิร์ฟเวอร์ส่งงาน
+                        </text>
+                    </g>
+                </svg>
+                <div class="svg-caption">แสดงเส้นทางการบริหารเวลา 4 ชั่วโมงของการสอบกลางภาค พร้อมระบบการกำกับและป้องกันการทุจริตตามมาตรฐานสากล</div>
+            </div>
+
+            <!-- ตารางข้อกำหนดข้อสอบ (TOS) -->
+            <h3 style="color: var(--primary); margin: 2rem 0 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fas fa-table-cells text-accent"></i> ตารางที่ 8.1: ตารางข้อกำหนดการสร้างแบบทดสอบกลางภาค (Table of Specifications: TOS)
+            </h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 12%;">สัปดาห์</th>
+                        <th style="width: 28%;">หัวข้อเนื้อหาและมโนทัศน์วิทยาศาสตร์</th>
+                        <th style="width: 25%;">ระดับพฤติกรรมตามบลูม</th>
+                        <th style="width: 15%;">รูปแบบข้อสอบ</th>
+                        <th style="width: 20%;">น้ำหนักคะแนน</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>สัปดาห์ที่ 1</strong></td>
+                        <td>ปฐมนิเทศและ 4 เสาหลักแนวคิดเชิงคำนวณ (CT-S Framework)</td>
+                        <td>ความจำ / ความเข้าใจ (Remember/Understand)</td>
+                        <td>ปรนัย 3 ข้อ</td>
+                        <td>0.9% (3 ข้อ × 0.3)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>สัปดาห์ที่ 2</strong></td>
+                        <td>การคิดเชิงนามธรรม (Abstraction) &amp; การแยกย่อย (Decomposition)</td>
+                        <td>ความเข้าใจ / ประยุกต์ใช้ (Understand/Apply)</td>
+                        <td>ปรนัย 3 ข้อ</td>
+                        <td>0.9% (3 ข้อ × 0.3)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>สัปดาห์ที่ 3</strong></td>
+                        <td>การหารูปแบบ (Pattern) &amp; อัลกอริทึมค้นหา/เรียงลำดับวิทยาศาสตร์</td>
+                        <td>การประยุกต์ใช้ / วิเคราะห์ (Apply/Analyze)</td>
+                        <td>ปรนัย 3 ข้อ</td>
+                        <td>0.9% (3 ข้อ × 0.3)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>สัปดาห์ที่ 4</strong></td>
+                        <td>การเขียนรหัสลำลองและผังงานมาตรฐาน ANSI/ISO การทดลองวิทย์</td>
+                        <td>การวิเคราะห์ / สร้างสรรค์ (Analyze/Create)</td>
+                        <td>ปรนัย 3 ข้อ + <strong>อัตนัย 1 ข้อ</strong></td>
+                        <td>3.9% (0.9% + อัตนัย 3.0%)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>สัปดาห์ที่ 5</strong></td>
+                        <td>การเขียนโปรแกรม 1 (ตัวแปร ข้อมูล และเงื่อนไข pH/นิวตัน)</td>
+                        <td>การประยุกต์ใช้ / วิเคราะห์ (Apply/Analyze)</td>
+                        <td>ปรนัย 3 ข้อ</td>
+                        <td>0.9% (3 ข้อ × 0.3)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>สัปดาห์ที่ 6</strong></td>
+                        <td>การเขียนโปรแกรม 2 (การวนซ้ำ For/While, ฟังก์ชัน, อาร์เรย์ลิสต์)</td>
+                        <td>การวิเคราะห์ / ประเมินค่า (Analyze/Evaluate)</td>
+                        <td>ปรนัย 3 ข้อ + <strong>แล็บสด 1 ข้อ</strong></td>
+                        <td>5.9% (0.9% + แล็บสด 5.0%)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>สัปดาห์ที่ 7</strong></td>
+                        <td>การดีบัก (Syntax/Runtime/Logic) และการทดสอบแบบจำลอง V&amp;V</td>
+                        <td>การประเมินค่า / วิเคราะห์ (Evaluate/Analyze)</td>
+                        <td>ปรนัย 2 ข้อ + <strong>อัตนัย 1 ข้อ + บั๊ก 1 ข้อ</strong></td>
+                        <td>6.6% (0.6% + อัตนัย 3% + บั๊ก 3%)</td>
+                    </tr>
+                    <tr style="background-color: #fffbeb; font-weight: 700;">
+                        <td colspan="3" style="text-align: right;">รวมคะแนนการสอบกลางภาคทั้งหมด (Total Midterm Weight):</td>
+                        <td>ปรนัย 20 + อัตนัย 2 + แล็บ 2</td>
+                        <td><span class="badge badge-amber" style="font-size: 0.95rem;">20.0% เต็ม</span></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- โค้ดตัวแบบจำลองโจทย์สอบแล็บปฏิบัติการสด Python 3.11 -->
+            <h3 style="color: var(--primary); margin: 2rem 0 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fab fa-python text-accent"></i> ตัวแบบโจทย์สอบปฏิบัติการแล็บสด Python 3.11: โปรแกรมวิเคราะห์ข้อมูลฟิสิกส์และการตรวจจับ Outlier
+            </h3>
+            <p>
+                ตัวอย่างโครงร่างโจทย์สอบปฏิบัติการแล็บสด พร้อมระบบ Automated Test Suite สำหรับให้กรรมการประเมินและนักศึกษาใช้ทดสอบความถูกต้องทันที:
+            </p>
+            <pre><code># ==============================================================================
+# ข้อสอบปฏิบัติการกลางภาค (Midterm Practical Lab Exam) - วิชา 4124941
+# โจทย์: จงเขียนฟังก์ชันวิเคราะห์อัตราเร็วเฉลี่ยของการทดลองการเคลื่อนที่แนวตรง
+# พร้อมทั้งตัดข้อมูล Outlier และมีระบบป้องกันกรณีชุดข้อมูลว่าง (Empty Dataset)
+# ==============================================================================
+from typing import List, Dict
+
+def process_motion_lab_data(time_intervals: List[float], distances: List[float]) -> Dict[str, float]:
+    """
+    คำนวณอัตราเร็วเฉลี่ย v = distance / time ในแต่ละช่วง แล้วหาค่าเฉลี่ยรวม
+    
+    ข้อกำหนด:
+    1. ตรวจสอบความยาวของ time_intervals และ distances ต้องเท่ากันและไม่เป็น 0
+    2. หากมีค่าเวลา t &lt;= 0 ให้ยกเว้นค่าจุดนั้น (ป้องกัน ZeroDivisionError)
+    3. คำนวณความเร็วเฉลี่ยรวม (Total Mean Velocity)
+    """
+    if not time_intervals or not distances:
+        raise ValueError("ชุดข้อมูลเวลาและระยะทางต้องไม่ว่างเปล่า")
+    if len(time_intervals) != len(distances):
+        raise ValueError("จำนวนข้อมูลเวลาและระยะทางต้องมีขนาดเท่ากัน")
+        
+    velocities: List[float] = []
+    
+    # วนลูปคำนวณความเร็วในแต่ละช่วง
+    for t, s in zip(time_intervals, distances):
+        if t &gt; 0 and s &gt;= 0:
+            velocities.append(s / t)
+            
+    if not velocities:
+        raise ValueError("ไม่มีข้อมูลที่สามารถนำมาคำนวณความเร็วได้")
+        
+    mean_v = sum(velocities) / len(velocities)
+    
+    return {
+        "valid_points": float(len(velocities)),
+        "mean_velocity": round(mean_v, 3),
+        "max_velocity": round(max(velocities), 3),
+        "min_velocity": round(min(velocities), 3)
+    }
+
+# ------------------------------------------------------------------------------
+# Automated Grading Test Suite (ชุดทดสอบให้คะแนนอัตโนมัติ)
+# ------------------------------------------------------------------------------
+def verify_student_submission():
+    print("=" * 60)
+    print("🧪 กำลังตรวจให้คะแนนข้อสอบปฏิบัติการกลางภาค (Automated Grading)...")
+    print("=" * 60)
+    
+    # Test Case 1: ข้อมูลปกติ 4 ช่วงเวลา
+    times = [1.0, 2.0, 1.0, 2.0]
+    dists = [10.0, 20.0, 15.0, 30.0]  # v = [10.0, 10.0, 15.0, 15.0] -> mean = 12.5
+    res1 = process_motion_lab_data(times, dists)
+    assert res1["mean_velocity"] == 12.5, f"Test 1 ล้มเหลว! ได้ {res1['mean_velocity']}"
+    print("✓ Test Case 1 Passed: คำนวณความเร็วเฉลี่ยข้อมูลปกติถูกต้อง (100/100)")
+    
+    # Test Case 2: ตรวจสอบการจัดการเวลา t = 0 (Defensive Guard)
+    times_with_zero = [1.0, 0.0, 2.0]
+    dists_with_zero = [10.0, 5.0, 20.0]
+    res2 = process_motion_lab_data(times_with_zero, dists_with_zero)
+    assert res2["valid_points"] == 2.0, "Test 2 ล้มเหลว! โปรแกรมไม่ละเว้นจุดที่เวลาเป็น 0"
+    print("✓ Test Case 2 Passed: ละเว้นจุดเวลา t=0 ป้องกัน Crash สำเร็จ (100/100)")
+    
+    print("-" * 60)
+    print("🏆 ยินดีด้วย! โค้ดของท่านผ่านการทดสอบครบทุกกรณี ได้คะแนนเต็ม 5.0 คะแนน")
+
+if __name__ == "__main__":
+    verify_student_submission()</code></pre>
+        </div>
+    
+        <!-- ปฏิบัติการจำลองเสมือนจริงประจำสัปดาห์ (Interactive Science Simulator & 180 Labs) -->
+        <div class="card" id="sim-section" style="border: 2px solid #0284c7; box-shadow: 0 8px 24px rgba(2, 132, 199, 0.12); margin-top: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.75rem;">
+                <h2 class="card-title" style="margin-bottom: 0; color: #0284c7;">
+                    <i class="fas fa-cube"></i> ปฏิบัติการจำลองเสมือนจริง: LAB 2.4: การไล่ค่าตัวแปรด้วยตารางอนิเมชัน (Animated Trace Table Runner) (Hybrid 2D/3D AR)
+                </h2>
+                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                    <a href="../simulations/chapter02_trace_table_runner.html" target="_blank" class="nav-back" style="margin-bottom: 0; padding: 0.45rem 0.9rem; font-size: 0.85rem; background: #0284c7; color: #fff;">
+                        <i class="fas fa-external-link-alt"></i> เปิดแบบจำลองเต็มหน้าจอ
+                    </a>
+                    
+                </div>
+            </div>
+
+            <p style="font-size: 0.95rem; color: #334155; margin-bottom: 1rem;">
+                <strong>แบบจำลองเชิงโต้ตอบสำหรับห้องเรียนวิทยาศาสตร์:</strong> ให้นักศึกษาทดลองปรับค่าพารามิเตอร์ สังเกตการณ์เปลี่ยนแปลง และวิเคราะห์ข้อมูลตามกระบวนการคิดเชิงคำนวณ (Computational Thinking):
+            </p>
+
+            <div style="margin: 1rem 0; border-radius: 12px; overflow: hidden; border: 1px solid #cbd5e1; height: 600px; box-shadow: var(--shadow-md);">
+                <iframe src="../simulations/chapter02_trace_table_runner.html" style="width: 100%; height: 100%; border: none;"></iframe>
+            </div>
+
+            
+
+            <!-- คลังใบงานปฏิบัติการที่สอดคล้องจาก 180 Labs Manual -->
+            <div style="margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid #e2e8f0;">
+                <h3 style="font-size: 1.05rem; font-weight: 700; color: #0f172a; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-flask" style="color: #10b981;"></i> ใบงานปฏิบัติการที่สอดคล้อง (จากคู่มือปฏิบัติการ ๑๘๐ การทดลอง):
+                </h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem;">
+                    
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.1rem; border-left: 4px solid #10b981; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem; flex-wrap: wrap; gap: 0.25rem;">
+                    <span style="background: #10b981; color: #fff; font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.55rem; border-radius: 4px;">LAB 2.3.3</span>
+                    <span style="font-size: 0.78rem; color: #64748b;"><i class="far fa-clock"></i> 90 นาที | C5/C6 (ประเมิน/สร้างสรรค์)</span>
+                </div>
+                <h4 style="font-size: 0.98rem; font-weight: 700; color: #0f172a; margin-bottom: 0.2rem;">การบูรณาการแก้ปัญหาเชิงประยุกต์ เงื่อนไขและการตัดสินใจตรรกะ</h4>
+                <p style="font-size: 0.82rem; color: #64748b; font-style: italic; margin-bottom: 0.5rem;">Real-World Synthesis & Capstone: Conditionals & Logic Gates</p>
+                <div style="background: #ffffff; border: 1px dashed #cbd5e1; border-radius: 6px; padding: 0.45rem 0.75rem; font-size: 0.85rem; margin-bottom: 0.5rem; overflow-x: auto;"><strong>สมการทฤษฎี:</strong> $$\text{แบบจำลองบูรณาการเชิงประจักษ์}: \min_{\boldsymbol{\theta}} \mathcal{L}(\boldsymbol{\theta}) = \sum_{i=1}^N \ell(y_i, \hat{y}_i) + \lambda \|\boldsymbol{\theta}\|^2$$</div>
+                <div style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.25rem;"><i class="fas fa-question-circle" style="color: #3b82f6;"></i> คำถามท้ายการทดลอง:</div>
+                <ul style="font-size: 0.82rem; color: #475569; margin-bottom: 0; padding-left: 1.25rem; line-height: 1.5;">
+                    <li style="margin-bottom: 0.25rem;">จงวิเคราะห์ความเสี่ยงและความล้มเหลว (Failure Modes) ที่อาจเกิดขึ้นเมื่อนำระบบนี้ไปติดตั้งในสภาพแวดล้อมการเกษตรจริง</li><li style="margin-bottom: 0.25rem;">ออกแบบแนวทางความมั่นคงปลอดภัยและการเข้ารหัสข้อมูลเพื่อป้องกันการดักสัญญาณบนเครือข่าย</li>
+                </ul>
+            </div>
+        
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ==========================================
+         TAB 3: ขั้นตอนการดำเนินการสอบ
+         ========================================== -->
+    <div id="tab3" class="content-section">
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-clipboard-list"></i> ขั้นตอนและระเบียบการดำเนินการสอบ (Exam Administration Protocol)</h2>
+            <p style="margin-bottom: 1.5rem; color: var(--text-muted);">
+                แผนการดำเนินการสอบกลางภาค 4 ชั่วโมง (240 นาที) ตามมาตรฐานการประกันคุณภาพการศึกษา:
+            </p>
+
+            <div class="session-block">
+                <h4>
+                    <span><i class="fas fa-comments text-primary"></i> ช่วงที่ 1: คลินิกทบทวนประมวลความรู้และชี้แจงกติกา (Pre-Exam Clinic)</span>
+                    <span class="time-badge">08:30 - 09:30 น. (60 นาที)</span>
+                </h4>
+                <ul style="padding-left: 1.25rem; line-height: 1.9;">
+                    <li><strong>08:30 - 09:00 น. (สรุปประเด็น Key Concepts):</strong> อาจารย์ผู้สอนบรรยายสรุป 7 จุดเชื่อมต่อสำคัญ (CT-S Framework, Flowchart ANSI Standards, Type Casting, Loops, Functions, และ Debugging) พร้อมเปิดโอกาสให้นักศึกษาซักถามข้อสงสัยขั้นสุดท้าย</li>
+                    <li><strong>09:00 - 09:30 น. (ชี้แจงกติกาและเตรียมระบบ):</strong> ตรวจสอบรายชื่อผู้เข้าสอบ แนะนำเกณฑ์การให้คะแนน รูบริกส์ และทดสอบการเชื่อมต่อเครือข่ายอินทราเน็ตห้องแล็บคอมพิวเตอร์</li>
+                </ul>
+            </div>
+
+            <div class="session-block" style="border-left-color: var(--accent);">
+                <h4>
+                    <span><i class="fas fa-pen-nib text-accent"></i> ช่วงที่ 2: การสอบข้อเขียนประมวลความรู้ (Written Examination)</span>
+                    <span class="time-badge">09:30 - 11:00 น. (90 นาที)</span>
+                </h4>
+                <ul style="padding-left: 1.25rem; line-height: 1.9;">
+                    <li><strong>ตอนที่ 1 (ปรนัย 20 ข้อ - 6%):</strong> ข้อสอบปรนัยเลือกตอบ 4 ตัวเลือก วัดความเข้าใจและมโนทัศน์ทางวิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์ (ทำในกระดาษคำตอบ/ระบบสอบ)</li>
+                    <li><strong>ตอนที่ 2 (อัตนัย 2 ข้อใหญ่ - 6%):</strong> ข้อสอบอัตนัยวิเคราะห์กรณีศึกษาการทดลองวิทยาศาสตร์ ให้นักศึกษาออกแบบผังงานมาตรฐาน (Flowchart) และเขียนรหัสลำลอง (Pseudocode) แก้ปัญหา</li>
+                    <li><strong>11:00 - 11:15 น.:</strong> พักเบรก 15 นาที เพื่อผ่อนคลายสายตาและเตรียมพร้อมสำหรับการสอบแล็บปฏิบัติการสด</li>
+                </ul>
+            </div>
+
+            <div class="session-block" style="border-left-color: var(--success);">
+                <h4>
+                    <span><i class="fas fa-terminal text-success"></i> ช่วงที่ 3: การสอบปฏิบัติการเขียนโค้ดและดีบักสด (Live Practical Lab Exam)</span>
+                    <span class="time-badge">11:15 - 12:30 น. (75 นาที)</span>
+                </h4>
+                <ul style="padding-left: 1.25rem; line-height: 1.9;">
+                    <li><strong>โจทย์ที่ 1 (Live Coding - 5%):</strong> ดาวน์โหลดไฟล์โจทย์วิทยาศาสตร์ นักศึกษาเขียนโปรแกรม Scratch หรือ Python แก้โจทย์และส่งไฟล์เข้าสู่ระบบตรวจอัตโนมัติ</li>
+                    <li><strong>โจทย์ที่ 2 (Bug Surgery - 3%):</strong> ตรวจหาบั๊กในโค้ดแบบจำลองวิทยาศาสตร์ที่อาจารย์แจกให้ แก้ไขให้ถูกต้อง และเขียนบันทึกอธิบายสาเหตุ</li>
+                    <li><strong>12:30 น.:</strong> หมดเวลาการสอบ บันทึกผลคะแนน และสรุปภาพรวมการสอบกลางภาค</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         TAB 4: เกณฑ์การตัดสินผลการเรียน
+         ========================================== -->
+    <div id="tab4" class="content-section">
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-award"></i> เกณฑ์การตัดสินผลการเรียน (Midterm Evaluation Rubrics & Grading Standard)</h2>
+            <p style="margin-bottom: 1.5rem; color: var(--text-muted);">
+                เกณฑ์รูบริกส์การประเมินผลกลางภาคเพื่อตัดสินผลการเรียน (Summative Assessment Rubrics) จำแนก 4 ระดับคุณภาพ:
+            </p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 22%;">มิติสมรรถนะที่ประเมิน</th>
+                        <th style="width: 20%;">ดีเยี่ยม (4 คะแนน)</th>
+                        <th style="width: 20%;">ดี (3 คะแนน)</th>
+                        <th style="width: 20%;">พอใช้ (2 คะแนน)</th>
+                        <th style="width: 18%;">ปรับปรุง (1 คะแนน)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>1. ความเข้าใจแนวคิดเชิงคำนวณ (CT Comprehension)</strong></td>
+                        <td>วิเคราะห์และประยุกต์ใช้ 4 เสาหลัก CT ในการแก้ปัญหาโจทย์วิทยาศาสตร์ได้อย่างแม่นยำ สมบูรณ์ ปราศจากข้อคลาดเคลื่อน</td>
+                        <td>อธิบายและเชื่อมโยงเสาหลัก CT ได้ถูกต้องส่วนใหญ่ มีเหตุผลทางวิทยาศาสตร์รองรับชัดเจน</td>
+                        <td>ระบุเสาหลัก CT ได้ถูกต้องบางส่วน แต่ยังสับสนระหว่าง Abstraction และ Decomposition ในบางสถานการณ์</td>
+                        <td>ไม่เข้าใจความหมายของเสาหลัก CT และไม่สามารถเชื่อมโยงกับการสอนวิทยาศาสตร์ได้</td>
+                    </tr>
+                    <tr>
+                        <td><strong>2. การออกแบบผังงานและรหัสลำลอง (Flowchart &amp; Pseudocode)</strong></td>
+                        <td>ใช้สัญลักษณ์มาตรฐาน ANSI/ISO 5807 ถูกต้อง 100% โครงสร้างควบคุมชัดเจน ลำดับขั้นตอนเป็นตรรกะที่รันได้จริง</td>
+                        <td>ใช้สัญลักษณ์ผังงานถูกต้องส่วนใหญ่ ทิศทางลูกศรชัดเจน มีรหัสลำลองที่อ่านเข้าใจง่าย</td>
+                        <td>มีข้อผิดพลาดเรื่องสัญลักษณ์ผังงาน เช่น ใช้สี่เหลี่ยมผืนผ้าแทนข้าวหลามตัด หรือลูกศรไม่มีหัว</td>
+                        <td>ไม่สามารถเขียนผังงานหรือรหัสลำลองได้ โครงสร้างสับสนและไม่เป็นขั้นตอน</td>
+                    </tr>
+                    <tr>
+                        <td><strong>3. สมรรถนะการเขียนโค้ดและดีบัก (Coding &amp; Debugging)</strong></td>
+                        <td>เขียนโค้ดแก้โจทย์แล็บได้ถูกต้อง 100% ผ่านทุก Test Case มี Defensive Guard และแก้บั๊กโจทย์ที่ 2 ได้อย่างสมบูรณ์</td>
+                        <td>เขียนโค้ดแก้ปัญหาได้ถูกต้องผ่าน Normal Cases แต่ตกหล่น Boundary Cases บางข้อ แก้บั๊กได้ส่วนใหญ่</td>
+                        <td>โค้ดทำงานได้บางส่วน มีข้อผิดพลาด Runtime หรือ Logic Error ที่แก้ไม่เสร็จทันเวลา</td>
+                        <td>โค้ดมี Syntax Error ไม่สามารถรันโปรแกรมได้ และไม่สามารถหาจุดผิดพลาดของบั๊กได้</td>
+                    </tr>
+                    <tr>
+                        <td><strong>4. จริยธรรมและความเที่ยงตรง (Academic Integrity)</strong></td>
+                        <td>ปฏิบัติตามกฎการสอบอย่างเคร่งครัด 100% โค้ดเป็นผลงานที่คิดขึ้นเอง ไม่มีการคัดลอกหรือใช้เครื่องมือต้องห้าม</td>
+                        <td>ปฏิบัติตามกฎการสอบอย่างเรียบร้อย มีความซื่อสัตย์สุจริตในการสอบ</td>
+                        <td>ต้องได้รับการตักเตือนเรื่องการปฏิบัติตามระเบียบข้อบังคับการสอบบางประการ</td>
+                        <td>พบพฤติกรรมส่อไปในทางทุจริต หรือคัดลอกโค้ดผู้อื่น (ปรับตกทันทีตามระเบียบมหาวิทยาลัย)</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="highlight-box warning">
+                <strong><i class="fas fa-triangle-exclamation"></i> มาตรการทางวินัยด้านความซื่อสัตย์ทางวิชาการ:</strong>
+                หากตรวจพบการทุจริตในการสอบ (เช่น การเปิด AI Chatbot ภายนอก, การแอบดูหน้าจอ, การส่งโค้ดให้ผู้อื่น) จะได้รับการปรับคะแนนเป็น <strong>0 คะแนนในการสอบกลางภาคทันที</strong> และส่งเรื่องพิจารณาตามข้อบังคับมหาวิทยาลัยราชภัฏรำไพพรรณี
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         TAB 5: ข้อสอบจำลองสมรรถนะ (HOTS)
+         ========================================== -->
+    <div id="tab5" class="content-section">
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-brain"></i> ข้อสอบจำลองวัดสมรรถนะขั้นสูง (HOTS Simulation Exam Bank)</h2>
+            <p style="margin-bottom: 1.5rem; color: var(--text-muted);">
+                ตัวอย่างข้อสอบวัดสมรรถนะขั้นสูงเชิงการคิดคำนวณตามมาตรฐาน สสวท. สำหรับฝึกซ้อมและเตรียมตัวก่อนการสอบกลางภาค:
+            </p>
+
+            <!-- ข้อสอบข้อที่ 1 -->
+            <div class="quiz-card">
+                <div class="quiz-question">
+                    <strong>ข้อที่ 1 (ระดับการวิเคราะห์และสังเคราะห์ - Analyzing & Designing):</strong><br>
+                    ครูวิทยาศาสตร์ต้องการให้นักเรียนทำการทดลองหาอัตราเร็วเสียงในอากาศโดยใช้หลอดเรโซแนนซ์ (Resonance Tube) โดยบันทึกตำแหน่งเรโซแนนซ์ครั้งที่ 1 ($L_1$) และครั้งที่ 2 ($L_2$) เพื่อคำนวณความยาวคลื่น $\lambda = 2(L_2 - L_1)$ แล้วนำไปหาอัตราเร็วเสียง $v = f\lambda$ (เมื่อ $f$ คือความถี่ของส้อมเสียง)<br>
+                    หากต้องการเขียน <strong>ผังงาน (Flowchart)</strong> เพื่อควบคุมโปรแกรมให้รับค่า $L_1$ และ $L_2$ จากผู้ใช้ <em>โดยมีเงื่อนไขตรวจสอบว่า $L_2$ ต้องมากกว่า $L_1$ เสมอ</em> หากผู้ใช้ป้อนผิดให้แจ้งเตือนและวนกลับไปรับค่าใหม่ ข้อใดออกแบบสัญลักษณ์และขั้นตอนวิธีได้ถูกต้องตามมาตรฐาน ANSI/ISO 5807?
+                </div>
+
+                <ul class="quiz-options">
+                    <li class="quiz-option" onclick="toggleExplanation('exp1', false, this)">
+                        <span><strong>ก.</strong> ใช้รูปสี่เหลี่ยมผืนผ้า (Process) ในการตรวจสอบเงื่อนไข $L_2 > L_1$ แล้วโยงเส้นตรงไปยังจุดสิ้นสุด</span>
+                    </li>
+                    <li class="quiz-option" onclick="toggleExplanation('exp1', true, this)">
+                        <span><strong>ข.</strong> ใช้รูปสี่เหลี่ยมด้านขนาน (Input/Output) รับค่า $L_1, L_2$ จากนั้นใช้รูปสี่เหลี่ยมข้าวหลามตัด (Decision) ตรวจสอบเงื่อนไข $L_2 > L_1$ ถ้า <em>"ไม่ใช่ (False)"</em> ให้ส่งข้อความแจ้งเตือนทางรูปสี่เหลี่ยมด้านขนานแล้วลากเส้นวนลูปกลับไปรับค่าใหม่ ถ้า <em>"ใช่ (True)"</em> ให้เข้าสู่รูปสี่เหลี่ยมผืนผ้า (Process) เพื่อคำนวณสูตร</span>
+                    </li>
+                    <li class="quiz-option" onclick="toggleExplanation('exp1', false, this)">
+                        <span><strong>ค.</strong> ใช้รูปวงรี (Terminator) ตรวจสอบเงื่อนไขการคำนวณ และหยุดการทำงานทันทีหาก $L_1 \ge L_2$ โดยไม่ต้องให้ผู้ใช้ป้อนใหม่</span>
+                    </li>
+                    <li class="quiz-option" onclick="toggleExplanation('exp1', false, this)">
+                        <span><strong>ง.</strong> ใช้รูปหกเหลี่ยม (Preparation) เพื่อกำหนดให้ค่า $L_2$ เท่ากับ $2L_1$ เสมอโดยไม่ต้องรับค่าจากผู้ใช้</span>
+                    </li>
+                </ul>
+
+                <div id="exp1" class="quiz-explanation">
+                    <strong><i class="fas fa-check-circle"></i> เฉลยข้อ ข. ถูกต้อง!</strong><br>
+                    <strong>การวิเคราะห์ตามมาตรฐานสากล ANSI/ISO 5807:</strong>
+                    <ul style="margin: 0.25rem 0 0.5rem 1.25rem;">
+                        <li>การรับค่า $L_1, L_2$ จากคีย์บอร์ด ต้องใช้สัญลักษณ์ <strong>สี่เหลี่ยมด้านขนาน (Parallelogram)</strong> ซึ่งเป็นสัญลักษณ์ Input/Output มาตรฐาน</li>
+                        <li>การตรวจสอบเงื่อนไขทางวิทยาศาสตร์ ($L_2 > L_1$) เพื่อยืนยันว่าเรโซแนนซ์ครั้งที่สองต้องยาวกว่าครั้งแรก ต้องใช้ <strong>สี่เหลี่ยมข้าวหลามตัด (Diamond - Decision)</strong></li>
+                        <li>หากเงื่อนไขเป็นเท็จ (ป้อน $L_2 \le L_1$) เส้นทาง Flowline ต้องชี้กลับไปยังขั้นตอนรับค่า (Looping Validation) เพื่อเปิดโอกาสให้ผู้ใช้แก้ไขข้อมูล</li>
+                        <li>เมื่อเงื่อนไขเป็นจริง จึงเข้าสู่ <strong>สี่เหลี่ยมผืนผ้า (Rectangle - Process)</strong> เพื่อคำนวณ $v = 2f(L_2 - L_1)$</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- ข้อสอบข้อที่ 2 -->
+            <div class="quiz-card">
+                <div class="quiz-question">
+                    <strong>ข้อที่ 2 (ระดับการประเมินค่าและการดีบัก - Evaluating & Debugging):</strong><br>
+                    นักศึกษาเขียนฟังก์ชัน Python เพื่อจำลองการถ่ายทอดลักษณะทางพันธุกรรมตามกฎของเมนเดล ในการผสมระหว่างถั่วลันเตาต้นสูงพันธุ์ทาง ($Tt \times Tt$) เพื่อหาอัตราส่วนของฟีโนไทป์ (ต้นสูง : ต้นเตี้ย) จากการสุ่มตัวอย่าง 1,000 ต้น โดยเขียนโค้ดดังนี้:
+                    <pre style="margin: 0.5rem 0;"><code>import random
+
+def simulate_mendelian_cross(trials=1000):
+    tall_count = 0
+    short_count = 0
+    for i in range(trials):
+        allele1 = random.choice(['T', 't'])
+        allele2 = random.choice(['T', 't'])
+        genotype = allele1 + allele2
+        # บรรทัดตรวจสอบฟีโนไทป์
+        if genotype == 'TT' and genotype == 'Tt':
+            tall_count += 1
+        else:
+            short_count += 1
+    return tall_count, short_count
+
+tall, short = simulate_mendelian_cross(1000)
+print(f"ต้นสูง: {tall}, ต้นเตี้ย: {short}")</code></pre>
+                    เมื่อรันโปรแกรมนี้ ผลลัพธ์กลับแสดงค่า <code>ต้นสูง: 0, ต้นเตี้ย: 1000</code> ทุกครั้ง ข้อใดชี้จุดบกพร่องของ <strong>Logic Error</strong> และวิธีแก้ไขได้อย่างถูกต้องที่สุด?
+                </div>
+
+                <ul class="quiz-options">
+                    <li class="quiz-option" onclick="toggleExplanation('exp2', false, this)">
+                        <span><strong>ก.</strong> ฟังก์ชัน <code>random.choice</code> สุ่มได้แต่ตัวอักษร 't' ตัวพิมพ์เล็ก ต้องเปลี่ยนเป็น <code>random.randint(1, 2)</code></span>
+                    </li>
+                    <li class="quiz-option" onclick="toggleExplanation('exp2', false, this)">
+                        <span><strong>ข.</strong> ลูป <code>range(trials)</code> วนซ้ำไม่ถึง 1,000 รอบ ต้องแก้เป็น <code>range(1, trials + 1)</code></span>
+                    </li>
+                    <li class="quiz-option" onclick="toggleExplanation('exp2', true, this)">
+                        <span><strong>ค.</strong> การใช้ตัวดำเนินการตรรกะ <code>and</code> ในเงื่อนไข <code>genotype == 'TT' and genotype == 'Tt'</code> เป็นไปไม่ได้ในทางตรรกศาสตร์ (ตัวแปรเดียวไม่สามารถเท่ากับ 2 ข้อความพร้อมกันได้) ทำให้เงื่อนไขเป็น False เสมอ ต้องแก้ไขเป็น <code>'T' in genotype</code> หรือ <code>genotype in ['TT', 'Tt', 'tT']</code></span>
+                    </li>
+                    <li class="quiz-option" onclick="toggleExplanation('exp2', false, this)">
+                        <span><strong>ง.</strong> ตัวแปร <code>tall_count</code> ไม่ได้ประกาศเป็น Global Variable ทำให้ค่าไม่เพิ่มขึ้น</span>
+                    </li>
+                </ul>
+
+                <div id="exp2" class="quiz-explanation">
+                    <strong><i class="fas fa-check-circle"></i> เฉลยข้อ ค. ถูกต้อง!</strong><br>
+                    <strong>การวิเคราะห์เชิงลึก:</strong>
+                    <ul style="margin: 0.25rem 0 0.5rem 1.25rem;">
+                        <li>นี่คือข้อผิดพลาด Logic Error ขั้นคลาสสิก: เงื่อนไข <code>genotype == 'TT' and genotype == 'Tt'</code> กำหนดให้สตริง <code>genotype</code> ต้องเท่ากับทั้ง "TT" และ "Tt" พร้อมกัน ซึ่งในระบบตรรกะบูลีนจะประเมินค่าได้เป็น <strong>เท็จ (False) เสมอ 100%</strong></li>
+                        <li>ส่งผลให้โปรแกรมกระโดดไปทำงานในบล็อก <code>else</code> ตลอดเวลา ทำให้ <code>short_count</code> เพิ่มขึ้นจนครบ 1,000 ส่วน <code>tall_count</code> ยังคงเป็น 0</li>
+                        <li>นอกจากนี้ เมื่อสุ่ม <code>allele1</code> และ <code>allele2</code> จีโนไทป์แบบพันธุ์ทางอาจเกิดขึ้นได้ทั้ง <code>'Tt'</code> และ <code>'tT'</code> ดังนั้นวิธีเขียนที่ถูกต้องตามหลักวิทยาศาสตร์และสั้นกระชับที่สุดคือ <code>if 'T' in genotype:</code> (เพราะยีน T เป็นยีนเด่น หากมี T เพียงตัวเดียวก็จะเป็นต้นสูงทันทีตามกฎของเมนเดล)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         TAB 6: เอกสารอ้างอิง (APA 7th)
+         ========================================== -->
+    <div id="tab6" class="content-section">
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-book-bookmark"></i> เอกสารอ้างอิงทางวิชาการ (Academic References - APA 7th Edition)</h2>
+            <p style="margin-bottom: 1.5rem; color: var(--text-muted);">
+                เอกสารและงานวิจัยระดับนานาชาติและระดับชาติด้านการวัดและประเมินผลแนวคิดเชิงคำนวณในครูวิทยาศาสตร์:
+            </p>
+
+            <ul style="list-style: none; padding-left: 0; line-height: 2;">
+                <li style="margin-bottom: 1.25rem; padding-left: 1.75rem; text-indent: -1.75rem;">
+                    <i class="fas fa-file-lines text-accent" style="margin-right: 0.5rem;"></i>
+                    Adler, R. F., Hibdon, J. E., Kim, H., & Varma-Nelson, P. (2022). Assessing computational thinking across a STEM curriculum for pre-service teachers. <em>Education and Information Technologies</em>, 28(6), 6835–6856. 
+                    <a href="https://doi.org/10.1007/s10639-022-11508-4" target="_blank" style="color: var(--accent); text-decoration: underline;">https://doi.org/10.1007/s10639-022-11508-4</a>
+                </li>
+
+                <li style="margin-bottom: 1.25rem; padding-left: 1.75rem; text-indent: -1.75rem;">
+                    <i class="fas fa-file-lines text-accent" style="margin-right: 0.5rem;"></i>
+                    Cutumisu, M., Adams, C., & Lu, C. (2019). A scoping review of empirical research on recent computational thinking assessments. <em>Journal of Science Education and Technology</em>, 28(6), 651–671. 
+                    <a href="https://doi.org/10.1007/s10956-019-09799-3" target="_blank" style="color: var(--accent); text-decoration: underline;">https://doi.org/10.1007/s10956-019-09799-3</a>
+                </li>
+
+                <li style="margin-bottom: 1.25rem; padding-left: 1.75rem; text-indent: -1.75rem;">
+                    <i class="fas fa-file-lines text-accent" style="margin-right: 0.5rem;"></i>
+                    Listiaji, P., Amelia, R. N., & Molnár, G. (2026). Development and validation of a measure assessing computational thinking in science teacher education. <em>Thinking Skills and Creativity</em>, 59, 102372. 
+                    <a href="https://doi.org/10.1016/j.tsc.2026.102372" target="_blank" style="color: var(--accent); text-decoration: underline;">https://doi.org/10.1016/j.tsc.2026.102372</a>
+                </li>
+
+                <li style="margin-bottom: 1.25rem; padding-left: 1.75rem; text-indent: -1.75rem;">
+                    <i class="fas fa-file-lines text-accent" style="margin-right: 0.5rem;"></i>
+                    Lu, C., MacDonald, R., Odell, B., & Cutumisu, M. (2022). A scoping review of computational thinking assessments in higher education. <em>Journal of Computing in Higher Education</em>, 34(3), 517–551. 
+                    <a href="https://doi.org/10.1007/s12528-021-09305-y" target="_blank" style="color: var(--accent); text-decoration: underline;">https://doi.org/10.1007/s12528-021-09305-y</a>
+                </li>
+
+                <li style="margin-bottom: 1.25rem; padding-left: 1.75rem; text-indent: -1.75rem;">
+                    <i class="fas fa-file-lines text-accent" style="margin-right: 0.5rem;"></i>
+                    Zakwandi, R., & Istiyono, E. (2023). A framework for assessing computational thinking skills in the physics classroom: study on cognitive test development. <em>SN Social Sciences</em>, 3(4), 58. 
+                    <a href="https://doi.org/10.1007/s43545-023-00633-7" target="_blank" style="color: var(--accent); text-decoration: underline;">https://doi.org/10.1007/s43545-023-00633-7</a>
+                </li>
+
+                <li style="margin-bottom: 1.25rem; padding-left: 1.75rem; text-indent: -1.75rem;">
+                    <i class="fas fa-book text-accent" style="margin-right: 0.5rem;"></i>
+                    สถาบันส่งเสริมการสอนวิทยาศาสตร์และเทคโนโลยี. (2561). <em>คู่มือการใช้หลักสูตรรายวิชาพื้นฐานวิทยาศาสตร์ สาระเทคโนโลยี (วิทยาการคำนวณ) ตามมาตรฐานการเรียนรู้และตัวชี้วัด กลุ่มสาระการเรียนรู้วิทยาศาสตร์ (ฉบับปรับปรุง พ.ศ. 2560)</em>. โรงพิมพ์แห่งจุฬาลงกรณ์มหาวิทยาลัย.
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>© 2026 รายวิชา 4124941 วิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์ | <strong>ผู้ช่วยศาสตราจารย์ ดร.ชีวะ ทัศนา</strong></p>
+        <p>คณะวิทยาศาสตร์และเทคโนโลยี มหาวิทยาลัยราชภัฏรำไพพรรณี</p>
+    </footer>
+</div>
+
+<script>
+    function showTab(tabId, btnElement) {
+        document.querySelectorAll('.content-section').forEach(function(section) {
+            section.classList.remove('active');
+        });
+        document.querySelectorAll('.tab-btn').forEach(function(btn) {
+            btn.classList.remove('active');
+        });
+        document.getElementById(tabId).classList.add('active');
+        btnElement.classList.add('active');
+        window.scrollTo({ top: 120, behavior: 'smooth' });
+    }
+
+    function toggleExplanation(expId, isCorrect, element) {
+        var expBox = document.getElementById(expId);
+        if (expBox) {
+            expBox.style.display = 'block';
+        }
+        var parentUl = element.parentElement;
+        var options = parentUl.querySelectorAll('.quiz-option');
+        options.forEach(function(opt) {
+            opt.style.borderColor = '#e2e8f0';
+            opt.style.backgroundColor = '#f8fafc';
+        });
+        if (isCorrect) {
+            element.style.borderColor = '#10b981';
+            element.style.backgroundColor = '#ecfdf5';
+        } else {
+            element.style.borderColor = '#ef4444';
+            element.style.backgroundColor = '#fef2f2';
+        }
+    }
+</script>
+
+</body>
+</html>

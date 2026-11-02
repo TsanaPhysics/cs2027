@@ -1,0 +1,678 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ห้องทดลองผังงานและรหัสลำลองทางวิทยาศาสตร์ (Flowchart & Pseudocode Stepper)</title>
+
+  <!-- Google Fonts & FontAwesome 6 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    :root {
+      --bg-dark: #030712;
+      --card-bg: rgba(11, 19, 43, 0.94);
+      --card-border: rgba(0, 240, 255, 0.25);
+      --cyan: #00f0ff;
+      --emerald: #10b981;
+      --amber: #f59e0b;
+      --rose: #f43f5e;
+      --indigo: #6366f1;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+    body {
+      background: var(--bg-dark);
+      color: #f8fafc;
+      font-family: 'Prompt', 'Sarabun', sans-serif;
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Top Bar */
+    .top-header {
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--card-border);
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+      z-index: 10;
+    }
+    .header-title h1 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Chakra Petch', sans-serif;
+    }
+    .header-title h1 i { color: var(--cyan); }
+    .header-sub { font-size: 0.8rem; color: #94a3b8; margin-top: 2px; }
+    .header-btns { display: flex; gap: 8px; }
+    .btn-h {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: #e2e8f0;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-family: inherit;
+      cursor: pointer;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .btn-h:hover {
+      background: rgba(0, 240, 255, 0.15);
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+
+    /* Main Workspace Grid */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 280px 1fr 340px;
+      flex: 1;
+      height: calc(100vh - 125px);
+      gap: 14px;
+      padding: 14px;
+      overflow: hidden;
+    }
+
+    /* Side Panels */
+    .panel-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 16px;
+      backdrop-filter: blur(12px);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      overflow-y: auto;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+    }
+    .panel-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--cyan);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .preset-btn {
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      padding: 10px 12px;
+      cursor: pointer;
+      text-align: left;
+      color: #cbd5e1;
+      font-family: inherit;
+      font-size: 0.82rem;
+      transition: all 0.2s;
+    }
+    .preset-btn:hover {
+      background: rgba(2, 132, 199, 0.25);
+      border-color: var(--cyan);
+    }
+    .preset-btn.active {
+      background: linear-gradient(135deg, rgba(2, 132, 199, 0.45), rgba(0, 240, 255, 0.2));
+      border: 1.5px solid var(--cyan);
+      color: #fff;
+      font-weight: 600;
+    }
+
+    /* Flowchart Canvas Area */
+    .canvas-card {
+      background: #020617;
+      border: 1px solid rgba(0,240,255,0.2);
+      border-radius: 14px;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+    .canvas-toolbar {
+      background: rgba(15, 23, 42, 0.8);
+      padding: 8px 16px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .stepper-btns { display: flex; gap: 8px; }
+    .btn-step {
+      background: var(--cyan);
+      color: #030712;
+      font-weight: 700;
+      border: none;
+      padding: 6px 16px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.82rem;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .btn-step:hover { filter: brightness(1.15); box-shadow: 0 0 12px var(--cyan); }
+    .btn-reset {
+      background: rgba(244, 63, 94, 0.2);
+      color: var(--rose);
+      border: 1px solid var(--rose);
+      padding: 6px 14px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.82rem;
+    }
+
+    #flowchart-svg-container {
+      flex: 1;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    svg { width: 100%; height: 100%; }
+
+    /* Nodes in SVG */
+    .fc-node {
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .fc-node rect, .fc-node polygon, .fc-node path {
+      fill: #0f172a;
+      stroke: #334155;
+      stroke-width: 2;
+      transition: all 0.3s;
+    }
+    .fc-node text {
+      fill: #e2e8f0;
+      font-size: 13px;
+      font-family: 'Prompt', sans-serif;
+      text-anchor: middle;
+      dominant-baseline: middle;
+    }
+    .fc-node.active rect, .fc-node.active polygon, .fc-node.active path {
+      stroke: var(--cyan);
+      fill: rgba(0, 240, 255, 0.18);
+      filter: drop-shadow(0 0 12px rgba(0,240,255,0.6));
+    }
+    .fc-node.active text { fill: #fff; font-weight: 700; }
+
+    /* Flow lines */
+    .fc-line {
+      stroke: #475569;
+      stroke-width: 2;
+      marker-end: url(#arrow);
+      transition: all 0.3s;
+    }
+    .fc-line.active {
+      stroke: var(--cyan);
+      stroke-width: 3;
+      filter: drop-shadow(0 0 8px var(--cyan));
+    }
+
+    /* Pseudocode View */
+    .code-view {
+      background: #020617;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      padding: 12px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      line-height: 1.8;
+      color: #94a3b8;
+    }
+    .code-line {
+      padding: 2px 6px;
+      border-radius: 4px;
+      transition: all 0.2s;
+    }
+    .code-line.active {
+      background: rgba(0, 240, 255, 0.2);
+      color: #fff;
+      font-weight: 700;
+      border-left: 3px solid var(--cyan);
+    }
+
+    /* Memory state */
+    .mem-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+    }
+    .mem-table th {
+      text-align: left;
+      padding: 6px;
+      color: #64748b;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    .mem-table td {
+      padding: 6px;
+      color: #f8fafc;
+      border-bottom: 1px solid rgba(255,255,255,0.05);
+    }
+
+    /* Bottom Bar */
+    .bottom-bar {
+      height: 50px;
+      background: var(--card-bg);
+      border-top: 1px solid var(--card-border);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 0 20px;
+      font-size: 0.82rem;
+    }
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      color: var(--cyan);
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="top-header">
+    <div class="header-title">
+      <h1><i class="fas fa-project-diagram"></i> ห้องทดลองผังงานและรหัสลำลองทางวิทยาศาสตร์ (Flowchart & Pseudocode Stepper)</h1>
+      <div class="header-sub">วิชา 4124941 วิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์ | ผศ.ดร.ชีวะ ทัศนา (มรภ.รำไพพรรณี)</div>
+    </div>
+    <div class="header-btns">
+      <a href="../lessons/week_04.html" class="btn-h"><i class="fas fa-arrow-left"></i> กลับสู่บทเรียน สัปดาห์ที่ 4</a>
+    </div>
+  </header>
+
+  <!-- Main Grid -->
+  <main class="main-grid">
+    <!-- Left: Scenarios -->
+    <section class="panel-card">
+      <div class="panel-title"><i class="fas fa-flask"></i> เลือกโจทย์อัลกอริทึมวิทยาศาสตร์</div>
+      <button class="preset-btn active" onclick="loadScenario('temp')">
+        <strong>1. ระบบควบคุมอุณหภูมิโรงเรือน</strong>
+        <div style="font-size: 0.72rem; color: #94a3b8; margin-top: 3px;">เงื่อนไข If-Else: ถ้า T > 35°C ให้เปิดพัดลมพ่นหมอก</div>
+      </button>
+      <button class="preset-btn" onclick="loadScenario('speed')">
+        <strong>2. คำนวณอัตราเร็วและดักจับ Error</strong>
+        <div style="font-size: 0.72rem; color: #94a3b8; margin-top: 3px;">การคำนวณ v = s / t พร้อมตรวจสอบ t > 0 ป้องกันหารด้วย 0</div>
+      </button>
+      <button class="preset-btn" onclick="loadScenario('titration')">
+        <strong>3. ลูปไทเทรชันกรด-เบส (While Loop)</strong>
+        <div style="font-size: 0.72rem; color: #94a3b8; margin-top: 3px;">วนหยดสารทีละ 0.5 mL จนกระทั่ง pH เปลี่ยนสี (pH >= 7.0)</div>
+      </button>
+
+      <div class="panel-title" style="margin-top: 10px;"><i class="fas fa-sliders-h"></i> ป้อนค่าตัวแปรทดลอง</div>
+      <div style="display: flex; flex-direction: column; gap: 8px;" id="input-controls">
+        <!-- Injected via JS -->
+      </div>
+    </section>
+
+    <!-- Center: Interactive SVG Flowchart -->
+    <section class="canvas-card">
+      <div class="canvas-toolbar">
+        <div style="font-size: 0.82rem; color: #94a3b8;">
+          <i class="fas fa-play-circle" style="color: var(--cyan);"></i> เครื่องจำลองการประมวลผลอัลกอริทึมทีละขั้นตอน (Step-by-Step Execution)
+        </div>
+        <div class="stepper-btns">
+          <button class="btn-step" onclick="stepNext()"><i class="fas fa-step-forward"></i> ขั้นต่อไป (Next Step)</button>
+          <button class="btn-step" style="background: var(--emerald);" onclick="runAuto()"><i class="fas fa-play"></i> รันอัตโนมัติ</button>
+          <button class="btn-reset" onclick="resetExec()"><i class="fas fa-rotate-left"></i> รีเซ็ต</button>
+        </div>
+      </div>
+      <div id="flowchart-svg-container">
+        <svg id="fc-svg" viewBox="0 0 600 500">
+          <defs>
+            <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 1 L 10 5 L 0 9 z" fill="#00f0ff"/>
+            </marker>
+          </defs>
+          <g id="svg-elements"></g>
+        </svg>
+      </div>
+    </section>
+
+    <!-- Right: Pseudocode & Memory State -->
+    <section class="panel-card">
+      <div class="panel-title"><i class="fas fa-code"></i> รหัสลำลอง (Pseudocode)</div>
+      <div class="code-view" id="pseudocode-display">
+        <!-- Injected via JS -->
+      </div>
+
+      <div class="panel-title" style="margin-top: 8px;"><i class="fas fa-microchip"></i> สถานะหน่วยความจำ (RAM Variables)</div>
+      <table class="mem-table">
+        <thead>
+          <tr>
+            <th>ตัวแปร (Variable)</th>
+            <th>ประเภท (Type)</th>
+            <th>ค่าปัจจุบัน (Value)</th>
+          </tr>
+        </thead>
+        <tbody id="mem-tbody">
+          <!-- Injected via JS -->
+        </tbody>
+      </table>
+
+      <div style="background: rgba(16, 185, 129, 0.15); border: 1px solid var(--emerald); border-radius: 8px; padding: 10px; font-size: 0.75rem; color: #a7f3d0; margin-top: auto;">
+        <i class="fas fa-info-circle"></i> <strong>การสอนวิทยาศาสตร์:</strong> ช่วยให้นักเรียนเห็นภาพการไหลของตรรกะคอมพิวเตอร์ที่ใช้ในการควบคุมเครื่องมือวิทยาศาสตร์อัตโนมัติ
+      </div>
+    </section>
+  </main>
+
+  <!-- Bottom Bar -->
+  <footer class="bottom-bar">
+    <div>สถานะอัลกอริทึม: <span class="status-badge" id="botStatus">พร้อมทำงาน (Ready)</span></div>
+    <div>โหนดปัจจุบัน: <span class="status-badge" id="botNode">None</span></div>
+    <div>จำนวนคำสั่งที่ประมวลผล: <span class="status-badge" id="botSteps">0</span></div>
+  </footer>
+
+  <script>
+    const scenarios = {
+      temp: {
+        title: "ระบบควบคุมอุณหภูมิโรงเรือน",
+        inputs: [
+          { id: 'in_temp', label: 'อุณหภูมิที่วัดได้ (°C):', type: 'number', val: 38 }
+        ],
+        code: [
+          "1. START",
+          "2. READ temperature",
+          "3. IF temperature > 35 THEN",
+          "4.    fan_status = 'ON'",
+          "5.    pump_mist = 'ON'",
+          "6. ELSE",
+          "7.    fan_status = 'OFF'",
+          "8. END IF",
+          "9. DISPLAY 'Status Updated'",
+          "10. END"
+        ],
+        nodes: [
+          { id: 'n1', type: 'terminal', text: 'START', x: 300, y: 40 },
+          { id: 'n2', type: 'io', text: 'READ temperature', x: 300, y: 120 },
+          { id: 'n3', type: 'decision', text: 'temp > 35 ?', x: 300, y: 210 },
+          { id: 'n4', type: 'process', text: 'Fan=ON, Mist=ON', x: 460, y: 290 },
+          { id: 'n5', type: 'process', text: 'Fan=OFF', x: 140, y: 290 },
+          { id: 'n6', type: 'terminal', text: 'END', x: 300, y: 420 }
+        ],
+        exec: function(state) {
+          const t = state.in_temp;
+          return [
+            { node: 'n1', line: 0, mem: { temperature: t, fan: '-', mist: '-' } },
+            { node: 'n2', line: 1, mem: { temperature: t, fan: '-', mist: '-' } },
+            { node: 'n3', line: 2, mem: { temperature: t, fan: '-', mist: '-' } },
+            t > 35 
+              ? { node: 'n4', line: 3, mem: { temperature: t, fan: 'ON', mist: 'ON' } }
+              : { node: 'n5', line: 6, mem: { temperature: t, fan: 'OFF', mist: 'OFF' } },
+            { node: 'n6', line: 9, mem: { temperature: t, fan: t > 35 ? 'ON' : 'OFF', mist: t > 35 ? 'ON' : 'OFF' } }
+          ];
+        }
+      },
+      speed: {
+        title: "คำนวณอัตราเร็วและดักจับ Error",
+        inputs: [
+          { id: 'in_s', label: 'ระยะทาง s (m):', type: 'number', val: 100 },
+          { id: 'in_t', label: 'เวลา t (s):', type: 'number', val: 0 }
+        ],
+        code: [
+          "1. START",
+          "2. INPUT s, t",
+          "3. IF t <= 0 THEN",
+          "4.    PRINT 'Error: เวลาต้องมากกว่า 0'",
+          "5.    v = 0",
+          "6. ELSE",
+          "7.    v = s / t",
+          "8. END IF",
+          "9. OUTPUT v",
+          "10. END"
+        ],
+        nodes: [
+          { id: 'n1', type: 'terminal', text: 'START', x: 300, y: 40 },
+          { id: 'n2', type: 'io', text: 'INPUT s, t', x: 300, y: 120 },
+          { id: 'n3', type: 'decision', text: 't <= 0 ?', x: 300, y: 210 },
+          { id: 'n4', type: 'io', text: 'ERROR: Div by Zero', x: 460, y: 290 },
+          { id: 'n5', type: 'process', text: 'v = s / t', x: 140, y: 290 },
+          { id: 'n6', type: 'terminal', text: 'END', x: 300, y: 420 }
+        ],
+        exec: function(state) {
+          const s = state.in_s;
+          const t = state.in_t;
+          return [
+            { node: 'n1', line: 0, mem: { s: s, t: t, v: 'undefined' } },
+            { node: 'n2', line: 1, mem: { s: s, t: t, v: 'undefined' } },
+            { node: 'n3', line: 2, mem: { s: s, t: t, v: 'undefined' } },
+            t <= 0 
+              ? { node: 'n4', line: 3, mem: { s: s, t: t, v: 'ERROR' } }
+              : { node: 'n5', line: 6, mem: { s: s, t: t, v: (s / t).toFixed(2) + ' m/s' } },
+            { node: 'n6', line: 9, mem: { s: s, t: t, v: t <= 0 ? 'ERROR' : (s / t).toFixed(2) + ' m/s' } }
+          ];
+        }
+      },
+      titration: {
+        title: "ลูปไทเทรชันกรด-เบส",
+        inputs: [
+          { id: 'in_target', label: 'จุดยุติเป้าหมาย pH:', type: 'number', val: 7.0 }
+        ],
+        code: [
+          "1. START",
+          "2. pH = 3.0, vol = 0",
+          "3. WHILE pH < 7.0 DO",
+          "4.    vol = vol + 0.5",
+          "5.    pH = pH + 0.8",
+          "6. END WHILE",
+          "7. PRINT 'Equivalence Point Reached'",
+          "8. END"
+        ],
+        nodes: [
+          { id: 'n1', type: 'terminal', text: 'START', x: 300, y: 40 },
+          { id: 'n2', type: 'process', text: 'pH = 3.0, vol = 0', x: 300, y: 120 },
+          { id: 'n3', type: 'decision', text: 'pH < 7.0 ?', x: 300, y: 220 },
+          { id: 'n4', type: 'process', text: 'vol += 0.5, pH += 0.8', x: 140, y: 310 },
+          { id: 'n5', type: 'terminal', text: 'END (จุดยุติ)', x: 300, y: 420 }
+        ],
+        exec: function(state) {
+          const steps = [
+            { node: 'n1', line: 0, mem: { pH: 3.0, vol: '0 mL' } },
+            { node: 'n2', line: 1, mem: { pH: 3.0, vol: '0 mL' } }
+          ];
+          let curPH = 3.0;
+          let curVol = 0;
+          while (curPH < 7.0 && curVol < 10) {
+            steps.push({ node: 'n3', line: 2, mem: { pH: curPH.toFixed(1), vol: curVol.toFixed(1) + ' mL' } });
+            curVol += 0.5;
+            curPH += 0.8;
+            steps.push({ node: 'n4', line: 3, mem: { pH: curPH.toFixed(1), vol: curVol.toFixed(1) + ' mL' } });
+          }
+          steps.push({ node: 'n3', line: 2, mem: { pH: curPH.toFixed(1), vol: curVol.toFixed(1) + ' mL' } });
+          steps.push({ node: 'n5', line: 7, mem: { pH: curPH.toFixed(1), vol: curVol.toFixed(1) + ' mL', result: 'Equivalence!' } });
+          return steps;
+        }
+      }
+    };
+
+    let curScen = 'temp';
+    let execSteps = [];
+    let curStepIdx = -1;
+    let autoTimer = null;
+
+    function loadScenario(key) {
+      curScen = key;
+      document.querySelectorAll('.preset-btn').forEach((b, i) => {
+        b.classList.toggle('active', (key === 'temp' && i === 0) || (key === 'speed' && i === 1) || (key === 'titration' && i === 2));
+      });
+
+      const sc = scenarios[key];
+      // Input controls
+      const ctrlDiv = document.getElementById('input-controls');
+      ctrlDiv.innerHTML = '';
+      sc.inputs.forEach(inp => {
+        const box = document.createElement('div');
+        box.innerHTML = `
+          <label style="font-size: 0.78rem; color: #94a3b8;">${inp.label}</label>
+          <input type="${inp.type}" id="${inp.id}" value="${inp.val}" style="width: 100%; background: #0f172a; border: 1px solid #334155; color: #fff; padding: 6px 10px; border-radius: 6px; font-family: 'JetBrains Mono'; margin-top: 3px;" onchange="resetExec()">
+        `;
+        ctrlDiv.appendChild(box);
+      });
+
+      // Pseudocode display
+      const pcDiv = document.getElementById('pseudocode-display');
+      pcDiv.innerHTML = sc.code.map((line, idx) => `<div class="code-line" id="code-line-${idx}">${line}</div>`).join('');
+
+      renderSVG(sc);
+      resetExec();
+    }
+
+    function renderSVG(sc) {
+      const g = document.getElementById('svg-elements');
+      g.innerHTML = '';
+
+      // Draw Lines first
+      if (curScen === 'temp' || curScen === 'speed') {
+        g.innerHTML += `
+          <line x1="300" y1="65" x2="300" y2="95" class="fc-line" id="l-1-2"/>
+          <line x1="300" y1="145" x2="300" y2="185" class="fc-line" id="l-2-3"/>
+          <path d="M 360 210 L 460 210 L 460 265" fill="none" class="fc-line" id="l-3-4"/>
+          <path d="M 240 210 L 140 210 L 140 265" fill="none" class="fc-line" id="l-3-5"/>
+          <path d="M 460 315 L 460 380 L 300 380 L 300 395" fill="none" class="fc-line" id="l-4-6"/>
+          <path d="M 140 315 L 140 380 L 300 380 L 300 395" fill="none" class="fc-line" id="l-5-6"/>
+          <text x="400" y="200" fill="#10b981" font-size="12">YES</text>
+          <text x="180" y="200" fill="#f43f5e" font-size="12">NO</text>
+        `;
+      } else {
+        g.innerHTML += `
+          <line x1="300" y1="65" x2="300" y2="95" class="fc-line"/>
+          <line x1="300" y1="145" x2="300" y2="195" class="fc-line"/>
+          <path d="M 240 220 L 140 220 L 140 285" fill="none" class="fc-line"/>
+          <path d="M 140 335 L 140 370 L 260 370 L 260 245" fill="none" class="fc-line"/>
+          <line x1="300" y1="245" x2="300" y2="395" class="fc-line"/>
+          <text x="180" y="210" fill="#10b981" font-size="12">YES (Loop)</text>
+          <text x="310" y="320" fill="#f43f5e" font-size="12">NO (Exit)</text>
+        `;
+      }
+
+      // Draw Nodes
+      sc.nodes.forEach(n => {
+        let nodeHTML = '';
+        if (n.type === 'terminal') {
+          nodeHTML = `
+            <g class="fc-node" id="node-${n.id}">
+              <rect x="${n.x - 65}" y="${n.y - 25}" width="130" height="50" rx="25" ry="25"/>
+              <text x="${n.x}" y="${n.y}">${n.text}</text>
+            </g>
+          `;
+        } else if (n.type === 'io') {
+          nodeHTML = `
+            <g class="fc-node" id="node-${n.id}">
+              <polygon points="${n.x - 70},${n.y + 25} ${n.x - 50},${n.y - 25} ${n.x + 70},${n.y - 25} ${n.x + 50},${n.y + 25}"/>
+              <text x="${n.x}" y="${n.y}">${n.text}</text>
+            </g>
+          `;
+        } else if (n.type === 'decision') {
+          nodeHTML = `
+            <g class="fc-node" id="node-${n.id}">
+              <polygon points="${n.x},${n.y - 35} ${n.x + 60},${n.y} ${n.x},${n.y + 35} ${n.x - 60},${n.y}"/>
+              <text x="${n.x}" y="${n.y}">${n.text}</text>
+            </g>
+          `;
+        } else {
+          nodeHTML = `
+            <g class="fc-node" id="node-${n.id}">
+              <rect x="${n.x - 70}" y="${n.y - 25}" width="140" height="50" rx="6" ry="6"/>
+              <text x="${n.x}" y="${n.y}">${n.text}</text>
+            </g>
+          `;
+        }
+        g.innerHTML += nodeHTML;
+      });
+    }
+
+    function resetExec() {
+      if (autoTimer) clearInterval(autoTimer);
+      curStepIdx = -1;
+      const sc = scenarios[curScen];
+      const state = {};
+      sc.inputs.forEach(inp => {
+        state[inp.id] = parseFloat(document.getElementById(inp.id).value);
+      });
+      execSteps = sc.exec(state);
+
+      document.querySelectorAll('.fc-node').forEach(n => n.classList.remove('active'));
+      document.querySelectorAll('.code-line').forEach(l => l.classList.remove('active'));
+      document.getElementById('mem-tbody').innerHTML = '<tr><td colspan="3" style="text-align: center; color: #64748b;">รอเริ่มรัน (Press Step)</td></tr>';
+      document.getElementById('botStatus').innerText = 'พร้อมทำงาน (Ready)';
+      document.getElementById('botNode').innerText = 'None';
+      document.getElementById('botSteps').innerText = '0';
+    }
+
+    function stepNext() {
+      if (curStepIdx + 1 >= execSteps.length) {
+        document.getElementById('botStatus').innerText = 'สิ้นสุดอัลกอริทึม (Completed)';
+        if (autoTimer) clearInterval(autoTimer);
+        return;
+      }
+      curStepIdx++;
+      const cur = execSteps[curStepIdx];
+
+      // Highlight Node
+      document.querySelectorAll('.fc-node').forEach(n => n.classList.remove('active'));
+      const activeEl = document.getElementById('node-' + cur.node);
+      if (activeEl) activeEl.classList.add('active');
+
+      // Highlight Pseudocode
+      document.querySelectorAll('.code-line').forEach(l => l.classList.remove('active'));
+      const codeEl = document.getElementById('code-line-' + cur.line);
+      if (codeEl) codeEl.classList.add('active');
+
+      // Update Memory
+      const tbody = document.getElementById('mem-tbody');
+      tbody.innerHTML = '';
+      for (const [k, v] of Object.entries(cur.mem)) {
+        const type = typeof v === 'number' ? 'float' : 'string';
+        tbody.innerHTML += `
+          <tr>
+            <td style="color: var(--cyan); font-weight: 700;">${k}</td>
+            <td style="color: #94a3b8;">${type}</td>
+            <td style="color: #fff; font-weight: 700;">${v}</td>
+          </tr>
+        `;
+      }
+
+      document.getElementById('botStatus').innerText = 'กำลังประมวลผล (Executing)';
+      document.getElementById('botNode').innerText = cur.node.toUpperCase();
+      document.getElementById('botSteps').innerText = (curStepIdx + 1) + ' / ' + execSteps.length;
+    }
+
+    function runAuto() {
+      if (curStepIdx + 1 >= execSteps.length) resetExec();
+      if (autoTimer) clearInterval(autoTimer);
+      autoTimer = setInterval(() => {
+        if (curStepIdx + 1 < execSteps.length) {
+          stepNext();
+        } else {
+          clearInterval(autoTimer);
+        }
+      }, 900);
+    }
+
+    window.onload = () => loadScenario('temp');
+  </script>
+</body>
+</html>

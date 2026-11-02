@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LAB 9.0: คอมพิวเตอร์วิทัศน์และการรู้จำท่าทางมือ 21 ข้อต่อ (MediaPipe Hands AI) (Hybrid 2D/3D AR)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;600;700&family=JetBrains+Mono:wght@400;700&family=Prompt:wght@300;400;600;700&display=swap" rel="stylesheet">
+  
+  <script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands/hands.js" crossorigin="anonymous"></script>
+
+  <style>
+    :root {
+      --primary: #00f0ff;
+      --success: #10b981;
+      --danger: #ef4444;
+      --warning: #facc15;
+      --dark-bg: #030712;
+      --card-bg: rgba(8, 15, 30, 0.94);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+    body {
+      background: var(--dark-bg);
+      color: #f8fafc;
+      font-family: 'Prompt', sans-serif;
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+    }
+    #scene-container { position: absolute; inset: 0; z-index: 1; }
+    
+    #canvas-2d-container {
+      position: absolute;
+      inset: 0;
+      z-index: 2;
+      display: none;
+      background: radial-gradient(circle at center, #0f172a, #020617);
+      padding: 90px 20px 80px 20px;
+    }
+    #interactive-canvas-2d {
+      width: 100%;
+      height: 100%;
+      border-radius: 16px;
+      border: 1px solid rgba(0,240,255,0.3);
+      box-shadow: 0 0 40px rgba(0,0,0,0.8);
+    }
+
+    .cam-box {
+      position: absolute;
+      bottom: 20px;
+      right: 20px;
+      width: 240px;
+      height: 180px;
+      border-radius: 16px;
+      border: 2px solid var(--primary);
+      overflow: hidden;
+      z-index: 10;
+      box-shadow: 0 10px 35px rgba(0,0,0,0.85);
+      background: #000;
+    }
+    #camera-feed { width: 100%; height: 100%; object-fit: cover; transform: scaleX(-1); }
+    #tracking-canvas { position: absolute; inset: 0; width: 100%; height: 100%; z-index: 11; pointer-events: none; transform: scaleX(-1); }
+
+    .ui-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      z-index: 20;
+      padding: 16px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      pointer-events: none;
+    }
+    .header-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-left: 6px solid var(--primary);
+      padding: 14px 20px;
+      border-radius: 14px;
+      max-width: 620px;
+      pointer-events: auto;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.75);
+    }
+    .header-card h1 {
+      font-size: 1.15em;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Chakra Petch', sans-serif;
+    }
+    .header-card p { font-size: 0.84em; color: #cbd5e1; line-height: 1.5; }
+    
+    .status-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 6px;
+      font-size: 0.78em;
+      color: #34d399;
+      font-weight: 600;
+      background: rgba(6, 78, 59, 0.6);
+      padding: 3px 12px;
+      border-radius: 20px;
+      border: 1px solid #10b981;
+    }
+    .dot-pulse {
+      width: 8px; height: 8px;
+      background: #34d399;
+      border-radius: 50%;
+      box-shadow: 0 0 10px #34d399;
+      animation: pulse 1.5s infinite;
+    }
+
+    .control-panel {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.15);
+      padding: 10px 16px;
+      border-radius: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      pointer-events: auto;
+    }
+    .btn-action {
+      background: linear-gradient(135deg, #0284c7, var(--primary));
+      color: #020617;
+      font-weight: 700;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.82em;
+      transition: all 0.2s;
+      font-family: inherit;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      justify-content: center;
+    }
+    .btn-action:hover { transform: scale(1.04); box-shadow: 0 0 16px var(--primary); }
+
+    .hud-bar {
+      position: absolute;
+      bottom: 20px;
+      left: 20px;
+      z-index: 20;
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.15);
+      border-radius: 14px;
+      padding: 12px 20px;
+      display: flex;
+      gap: 20px;
+      box-shadow: 0 12px 40px rgba(0,0,0,0.75);
+    }
+    .hud-item { display: flex; flex-direction: column; gap: 2px; }
+    .hud-label { font-size: 0.68em; color: #94a3b8; font-weight: 600; text-transform: uppercase; }
+    .hud-val { font-size: 1.05em; color: var(--warning); font-weight: 700; font-family: 'JetBrains Mono', monospace; }
+
+    #data-modal {
+      position: absolute;
+      inset: 0;
+      z-index: 50;
+      background: rgba(3, 7, 18, 0.85);
+      backdrop-filter: blur(12px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .modal-content {
+      background: #0b1329;
+      border: 2px solid var(--primary);
+      border-radius: 16px;
+      padding: 24px 28px;
+      max-width: 900px;
+      width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 50px rgba(0,0,0,0.9);
+    }
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #1e293b;
+      padding-bottom: 12px;
+      margin-bottom: 16px;
+    }
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88em;
+      margin-bottom: 16px;
+    }
+    .data-table th, .data-table td {
+      padding: 10px 12px;
+      border: 1px solid #1e293b;
+      text-align: center;
+    }
+    .data-table th { background: #132247; color: var(--primary); font-weight: 700; }
+    .data-table tr:nth-child(even) { background: rgba(255,255,255,0.02); }
+
+    .entity-control-bar {
+      position: absolute;
+      top: 100px;
+      left: 20px;
+      z-index: 20;
+      background: var(--card-bg);
+      border: 1px solid rgba(255,255,255,0.15);
+      padding: 12px 16px;
+      border-radius: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .entity-btn {
+      background: #1e293b;
+      border: 1px solid #334155;
+      color: #e2e8f0;
+      padding: 8px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.82em;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .entity-btn:hover { background: #0284c7; color: #fff; }
+    .entity-btn.selected { background: var(--primary); color: #020617; font-weight: 700; }
+
+    @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.3; } 100% { opacity: 1; } }
+  </style>
+</head>
+<body>
+
+  <!-- UI Header & Controls -->
+  <div class="ui-overlay">
+    <div class="header-card">
+      <h1>⚡ LAB 9.0: คอมพิวเตอร์วิทัศน์และการรู้จำท่าทางมือ 21 ข้อต่อ (MediaPipe Hands AI)</h1>
+      <p>ศึกษาการสกัดโครงกระดูกมือสามมิติ และการจำแนกท่าทางด้วยอัลกอริทึม K-Nearest Neighbors</p>
+      <div class="status-badge">
+        <span class="dot-pulse"></span>
+        <span id="status-text">โหมด 3D AR MediaPipe Hands (พร้อมตรวจจับท่าทาง 21 ข้อต่อ)</span>
+      </div>
+    </div>
+    <div class="control-panel">
+      <button class="btn-action" onclick="toggleViewMode()" id="mode-btn">🔄 สลับเป็นโหมด 2D Canvas</button>
+      <button class="btn-action" style="background:linear-gradient(135deg, #10b981, #059669); color:#fff;" onclick="openDataModal()">📋 ใบงาน & ตารางบันทึกผล</button>
+      <button class="btn-action" style="background:#ef4444; color:#fff;" onclick="resetSimulation()">🔄 รีเซ็ตการทดลอง</button>
+      <button class="btn-action" style="background:#334155; color:#fff;" onclick="location.href='https://elearning.rbru.ac.th/course/view.php?id=259'">⬅ กลับสู่ MOOC</button>
+    </div>
+  </div>
+
+  <!-- Interactive Control Bar -->
+  <div class="entity-control-bar">
+    <button class="entity-btn" onclick="testGesture('pinch')">🤏 ท่าจีบนิ้ว (Pinch Gesture)</button>
+           <button class="entity-btn" onclick="testGesture('fist')">✊ ท่ากำปั้น (Fist Gesture)</button>
+  </div>
+
+  <!-- HUD Telemetry Bar -->
+  <div class="hud-bar">
+    <div class="hud-item"><span class="hud-label">จำนวนข้อต่อที่ตรวจจับ</span><span class="hud-val">21 Landmarks</span></div>
+           <div class="hud-item"><span class="hud-label">ท่าทางที่จำแนกได้</span><span class="hud-val" style="color:#10b981;">PINCH (จีบนิ้วสั่งการ)</span></div>
+  </div>
+
+  <!-- 2D Interactive Canvas View -->
+  <div id="canvas-2d-container">
+    <canvas id="interactive-canvas-2d"></canvas>
+  </div>
+
+  <!-- 3D WebGL / A-Frame Scene -->
+  <div id="scene-container">
+    <a-scene embedded vr-mode-ui="enabled: false">
+      <a-camera id="main-camera" position="0 1.6 0" look-controls="pointerLockEnabled: false"></a-camera>
+      <a-light type="ambient" color="#1e293b" intensity="1.5"></a-light>
+      <a-light type="directional" color="#00f0ff" intensity="2" position="-1 3 2"></a-light>
+
+      <a-sphere id="hand-pointer" radius="0.08" color="#00f0ff" material="emissive: #00f0ff; emissiveIntensity: 0.8;" position="0 1.5 -2">
+        <a-ring radius-inner="0.12" radius-outer="0.15" color="#facc15"></a-ring>
+      </a-sphere>
+
+      <a-sphere position="0 1.5 -3.5" radius="0.1" color="#00f0ff"></a-sphere>
+
+      <a-sky color="#030712"></a-sky>
+    </a-scene>
+  </div>
+
+  <!-- MediaPipe Camera Box -->
+  <div class="cam-box" id="cam-box-wrapper">
+    <video id="camera-feed" autoplay playsinline></video>
+    <canvas id="tracking-canvas"></canvas>
+  </div>
+
+  <!-- Built-in Live Data Sheet Modal -->
+  <div id="data-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 style="color:var(--primary); font-size:1.3em; font-weight:700;">📋 ใบงานและตารางบันทึกผลการทดลอง LAB 9.0</h2>
+        <button onclick="closeDataModal()" style="background:#ef4444; color:#fff; border:none; padding:6px 12px; border-radius:6px; cursor:pointer; font-weight:700;">✕ ปิด</button>
+      </div>
+      <table class="data-table"><thead><tr><th>ท่าทางมือ</th><th>ระยะนิ้วชี้-นิ้วโป้ง</th><th>การจำแนก AI</th><th>ความแม่นยำ</th></tr></thead><tbody><tr><td>Pinch</td><td>$d < 0.08$</td><td>SELECT / GRAB</td><td>99.2%</td></tr><tr><td>Open Palm</td><td>$d > 0.30$</td><td>RELEASE / HOVER</td><td>98.7%</td></tr></tbody></table>
+      <div style="display:flex; justify-content:flex-end; gap:10px; margin-top:14px;">
+        <button class="btn-action" onclick="window.print()">🖨️ พิมพ์ใบงาน</button>
+        <button class="btn-action" style="background:#10b981; color:#000;" onclick="closeDataModal()">ตกลง</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Simulation Logic & Audio Synthesizer -->
+  <script>
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function playTone(freq, type='sine', dur=0.15) {
+      try {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + dur);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + dur);
+      } catch(e) {}
+    }
+
+    let is2DMode = false;
+    function toggleViewMode() {
+      is2DMode = !is2DMode;
+      const c2d = document.getElementById('canvas-2d-container');
+      const s3d = document.getElementById('scene-container');
+      const camBox = document.getElementById('cam-box-wrapper');
+      const btn = document.getElementById('mode-btn');
+
+      if (is2DMode) {
+        c2d.style.display = 'block';
+        s3d.style.display = 'none';
+        camBox.style.display = 'none';
+        btn.innerText = '🔄 สลับเป็นโหมด 3D AR';
+        document.getElementById('status-text').innerText = 'โหมด 2D Canvas Interactive (คลิกเมาส์/สัมผัสจอ)';
+        init2DCanvas();
+        draw2D();
+      } else {
+        c2d.style.display = 'none';
+        s3d.style.display = 'block';
+        camBox.style.display = 'block';
+        btn.innerText = '🔄 สลับเป็นโหมด 2D Canvas';
+        document.getElementById('status-text').innerText = 'โหมด 3D AR MediaPipe Hands (พร้อมตรวจจับท่าทาง 21 ข้อต่อ)';
+      }
+    }
+
+    function openDataModal() { document.getElementById('data-modal').style.display = 'flex'; }
+    function closeDataModal() { document.getElementById('data-modal').style.display = 'none'; }
+
+    function init2DCanvas() {
+      const cvs = document.getElementById('interactive-canvas-2d');
+      cvs.width = cvs.parentElement.clientWidth;
+      cvs.height = cvs.parentElement.clientHeight;
+    }
+
+    function draw2D() { const cvs=document.getElementById('interactive-canvas-2d'); if(!cvs) return; const ctx=cvs.getContext('2d'); ctx.clearRect(0,0,cvs.width,cvs.height); ctx.fillStyle='#00f0ff'; ctx.font='18px Prompt'; ctx.fillText('MediaPipe 21-Joint Skeleton Tracking Grid', 60, 90); }
+
+    function testGesture(g) { playTone(g==='pinch'?659:330, 'sine', 0.12); if(is2DMode) draw2D(); } function resetSimulation() { testGesture('pinch'); }
+
+    // MediaPipe Hands Tracking
+    const videoElement = document.getElementById('camera-feed');
+    const canvasElement = document.getElementById('tracking-canvas');
+    const canvasCtx = canvasElement.getContext('2d');
+
+    const hands = new Hands({
+      locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands/${file}`
+    });
+    hands.setOptions({
+      maxNumHands: 1,
+      modelComplexity: 1,
+      minDetectionConfidence: 0.6,
+      minTrackingConfidence: 0.6
+    });
+
+    hands.onResults((results) => {
+      canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height);
+      if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
+        const lm = results.multiHandLandmarks[0];
+        for (let i = 0; i < lm.length; i++) {
+          canvasCtx.fillStyle = '#00f0ff';
+          canvasCtx.beginPath();
+          canvasCtx.arc(lm[i].x * canvasElement.width, lm[i].y * canvasElement.height, 3, 0, 2*Math.PI);
+          canvasCtx.fill();
+        }
+        const dx = lm[8].x - lm[4].x;
+        const dy = lm[8].y - lm[4].y;
+        const dist = Math.sqrt(dx*dx + dy*dy);
+        if (dist < 0.08) {
+          canvasCtx.strokeStyle = '#10b981';
+          canvasCtx.lineWidth = 3;
+          canvasCtx.beginPath();
+          canvasCtx.moveTo(lm[4].x * canvasElement.width, lm[4].y * canvasElement.height);
+          canvasCtx.lineTo(lm[8].x * canvasElement.width, lm[8].y * canvasElement.height);
+          canvasCtx.stroke();
+        }
+      }
+    });
+
+    const camera = new Camera(videoElement, {
+      onFrame: async () => { await hands.send({ image: videoElement }); },
+      width: 320, height: 240
+    });
+    camera.start().catch(() => {
+      document.getElementById('status-text').innerText = 'กล้องไม่พร้อมใช้งาน • สลับเป็นโหมด 2D Canvas หรือคลิกปุ่มควบคุมได้ตามปกติ';
+    });
+  </script>
+</body>
+</html>

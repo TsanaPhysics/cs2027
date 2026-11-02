@@ -1,0 +1,1135 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ห้องทดลอง 3D: การแยกย่อยปัญหาและสถาปัตยกรรมเชิงโมดูล (Decomposition Tree Sandbox)</title>
+
+  <!-- Google Fonts & FontAwesome 6 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Three.js & OrbitControls -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+  <style>
+    :root {
+      --bg-dark: #030712;
+      --card-bg: rgba(11, 19, 43, 0.94);
+      --card-border: rgba(0, 240, 255, 0.25);
+      --cyan: #00f0ff;
+      --cyan-glow: rgba(0, 240, 255, 0.4);
+      --emerald: #10b981;
+      --amber: #f59e0b;
+      --rose: #ef4444;
+      --purple: #a855f7;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+
+    body {
+      background: var(--bg-dark);
+      color: #f8fafc;
+      font-family: 'Prompt', 'Sarabun', sans-serif;
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+    }
+
+    #webgl-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    /* Top HUD Header */
+    .top-bar {
+      position: absolute;
+      top: 14px;
+      left: 16px;
+      right: 16px;
+      z-index: 30;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      pointer-events: none;
+    }
+
+    .brand-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--card-border);
+      border-left: 5px solid var(--cyan);
+      border-radius: 14px;
+      padding: 10px 18px;
+      pointer-events: auto;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .brand-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #0284c7, #00f0ff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      color: #030712;
+      box-shadow: 0 0 20px var(--cyan-glow);
+    }
+    .brand-text h1 {
+      font-family: 'Chakra Petch', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .brand-text p {
+      font-size: 0.8rem;
+      color: #94a3b8;
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 8px;
+      pointer-events: auto;
+    }
+
+    .btn-nav {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--card-border);
+      color: #e2e8f0;
+      padding: 9px 14px;
+      border-radius: 10px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+      font-family: inherit;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    }
+    .btn-nav:hover {
+      transform: translateY(-2px);
+      border-color: var(--cyan);
+      color: #fff;
+      box-shadow: 0 0 15px var(--cyan-glow);
+    }
+    .btn-nav.primary {
+      background: linear-gradient(135deg, #0284c7, #00f0ff);
+      color: #030712;
+      font-weight: 700;
+      border: none;
+    }
+
+    /* Left Control Dock */
+    .left-dock {
+      position: absolute;
+      top: 90px;
+      left: 16px;
+      z-index: 30;
+      width: 330px;
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-height: calc(100vh - 170px);
+      overflow-y: auto;
+    }
+
+    .section-title {
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: var(--cyan);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 2px;
+    }
+
+    /* Exploded View Slider Box */
+    .dock-box {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 12px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .slider-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.8rem;
+      color: #cbd5e1;
+    }
+    .slider-header strong {
+      color: var(--cyan);
+      font-family: 'JetBrains Mono', monospace;
+    }
+    input[type=range] {
+      width: 100%;
+      height: 6px;
+      border-radius: 3px;
+      background: #1e293b;
+      outline: none;
+      accent-color: var(--cyan);
+      cursor: pointer;
+    }
+
+    /* Modules List */
+    .modules-list {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+    .module-card {
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      padding: 10px 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #cbd5e1;
+      font-family: inherit;
+    }
+    .module-card:hover {
+      background: rgba(2, 132, 199, 0.25);
+      border-color: var(--cyan);
+      transform: translateX(3px);
+    }
+    .module-card.selected {
+      background: linear-gradient(135deg, rgba(2, 132, 199, 0.4), rgba(0, 240, 255, 0.15));
+      border: 1.5px solid var(--cyan);
+      color: #fff;
+      box-shadow: 0 0 16px rgba(0, 240, 255, 0.25);
+    }
+    .module-card.faulted {
+      background: rgba(239, 68, 68, 0.25) !important;
+      border: 1.5px solid var(--rose) !important;
+      color: #fca5a5 !important;
+      box-shadow: 0 0 16px rgba(239, 68, 68, 0.4) !important;
+    }
+
+    .mod-badge {
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 6px;
+    }
+    .badge-bms { background: rgba(56, 189, 248, 0.2); color: #38bdf8; }
+    .badge-motor { background: rgba(16, 185, 129, 0.2); color: #34d399; }
+    .badge-ai { background: rgba(245, 158, 11, 0.2); color: #fbbf24; }
+    .badge-brake { background: rgba(244, 63, 94, 0.2); color: #f43f5e; }
+
+    /* Step Guide Banner (Top Center) */
+    .guide-banner {
+      position: absolute;
+      top: 90px;
+      left: 362px;
+      right: 16px;
+      z-index: 20;
+      background: rgba(11, 19, 43, 0.85);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      pointer-events: none;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.6);
+    }
+    .guide-steps {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      font-size: 0.8rem;
+    }
+    .guide-step {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #cbd5e1;
+    }
+    .step-num {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--cyan);
+      color: #030712;
+      font-size: 0.72rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Bottom Telemetry HUD */
+    .bottom-hud {
+      position: absolute;
+      bottom: 16px;
+      left: 16px;
+      right: 16px;
+      z-index: 30;
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 12px 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+      pointer-events: none;
+    }
+    .hud-block {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .hud-caption {
+      font-size: 0.68rem;
+      color: #94a3b8;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .hud-value {
+      font-size: 1.05rem;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      color: #fff;
+    }
+    .hud-sub {
+      font-size: 0.72rem;
+      color: #64748b;
+    }
+
+    /* 3D 360 View Indicator */
+    .orbit-hint {
+      position: absolute;
+      bottom: 110px;
+      right: 20px;
+      z-index: 20;
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 0.75rem;
+      color: #94a3b8;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Worksheet Modal */
+    #modal-worksheet {
+      position: absolute;
+      inset: 0;
+      z-index: 100;
+      background: rgba(3, 7, 18, 0.9);
+      backdrop-filter: blur(14px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .modal-box {
+      background: #0b1329;
+      border: 2px solid var(--cyan);
+      border-radius: 16px;
+      padding: 24px;
+      max-width: 820px;
+      width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.9);
+    }
+    .modal-box table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 0.88rem;
+    }
+    .modal-box th, .modal-box td {
+      border: 1px solid #1e293b;
+      padding: 9px 12px;
+      text-align: center;
+    }
+    .modal-box th {
+      background: #132247;
+      color: var(--cyan);
+    }
+
+    @media (max-width: 900px) {
+      .guide-banner { display: none; }
+      .left-dock { width: 260px; top: 80px; }
+      .bottom-hud { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 3D Canvas Stage -->
+  <div id="webgl-canvas"></div>
+
+  <!-- Top Navigation & Branding -->
+  <div class="top-bar">
+    <div class="brand-card">
+      <div class="brand-icon"><i class="fas fa-sitemap"></i></div>
+      <div class="brand-text">
+        <h1>การแยกย่อยปัญหาและสถาปัตยกรรมเชิงโมดูล (Decomposition Tree)</h1>
+        <p>บทเรียนวิทยาการคำนวณและสถาปัตยกรรมระบบ • มหาวิทยาลัยราชภัฏรำไพพรรณี</p>
+      </div>
+    </div>
+
+    <div class="top-actions">
+      <button class="btn-nav" onclick="openWorksheet()"><i class="fas fa-file-alt"></i> ใบงาน & ทฤษฎี</button>
+      <button class="btn-nav" onclick="toggleExplosionPreset()"><i class="fas fa-compress-arrows-alt"></i> ยุบ/กระจายโมเดล</button>
+      <button class="btn-nav primary" onclick="goBackToCourse()"><i class="fas fa-arrow-left"></i> กลับสู่บทเรียน</button>
+    </div>
+  </div>
+
+  <!-- Step-by-Step Guide Banner -->
+  <div class="guide-banner">
+    <div class="guide-steps">
+      <div class="guide-step">
+        <span class="step-num">1</span>
+        <span><strong>แยกชิ้นส่วน:</strong> เลื่อนแถบสไลด์เพื่อระเบิดโมเดลออกเป็น 4 โมดูล (Exploded View)</span>
+      </div>
+      <div class="guide-step">
+        <span class="step-num">2</span>
+        <span><strong>คลิกเลือกโมดูล:</strong> ดูเส้นเชื่อมโยงลำดับชั้นต้นไม้ (Hierarchy Tree)</span>
+      </div>
+      <div class="guide-step">
+        <span class="step-num">3</span>
+        <span><strong>ทดสอบบั๊ก:</strong> กดฉีดข้อผิดพลาด เพื่อดูผลกระทบลูกโซ่ (Coupling & Ripple Effect)</span>
+      </div>
+    </div>
+    <span style="color:var(--emerald); font-weight:700; font-size:0.78rem;"><i class="fas fa-check-circle"></i> พร้อมทดลอง</span>
+  </div>
+
+  <!-- Left Interactive Control Dock -->
+  <div class="left-dock">
+    <div class="section-title"><i class="fas fa-arrows-alt-v"></i> 1. การกระจายชิ้นส่วน (Exploded View):</div>
+    <div class="dock-box">
+      <div class="slider-header">
+        <span>ระยะการแยกส่วนประกอบ:</span>
+        <strong id="val-explode">50%</strong>
+      </div>
+      <input type="range" id="range-explode" min="0" max="100" value="50" oninput="onExplodeSlider(this.value)">
+      <div style="display:flex; justify-content:space-between; font-size:0.72rem; color:#64748b;">
+        <span>0% (รวมคัน)</span>
+        <span>50% (4 โมดูล)</span>
+        <span>100% (แยกย่อยลึก)</span>
+      </div>
+    </div>
+
+    <div class="section-title" style="margin-top:6px;"><i class="fas fa-cubes"></i> 2. โมดูลย่อยของระบบ (Subsystems):</div>
+    <div class="modules-list">
+      <div class="module-card selected" id="card-mod-bms" onclick="selectModule('bms')">
+        <div>
+          <div style="font-weight:700; font-size:0.85rem;">🔋 แบตเตอรี่ (BMS Module)</div>
+          <div style="font-size:0.72rem; color:#94a3b8;">จัดการพลังงานและแรงดันไฟฟ้า</div>
+        </div>
+        <span class="mod-badge badge-bms" id="status-bms">ปกติ</span>
+      </div>
+
+      <div class="module-card" id="card-mod-motor" onclick="selectModule('motor')">
+        <div>
+          <div style="font-weight:700; font-size:0.85rem;">⚡ มอเตอร์ขับเคลื่อน (Powertrain)</div>
+          <div style="font-size:0.72rem; color:#94a3b8;">สร้างแรงบิดหมุนล้อขับเคลื่อน</div>
+        </div>
+        <span class="mod-badge badge-motor" id="status-motor">ปกติ</span>
+      </div>
+
+      <div class="module-card" id="card-mod-ai" onclick="selectModule('ai')">
+        <div>
+          <div style="font-weight:700; font-size:0.85rem;">📷 ปัญญาประดิษฐ์ (AI Vision Dome)</div>
+          <div style="font-size:0.72rem; color:#94a3b8;">ตรวจจับเลนถนนและสิ่งกีดขวาง</div>
+        </div>
+        <span class="mod-badge badge-ai" id="status-ai">ปกติ</span>
+      </div>
+
+      <div class="module-card" id="card-mod-brake" onclick="selectModule('brake')">
+        <div>
+          <div style="font-weight:700; font-size:0.85rem;">🛑 ระบบเบรกและแชสซี (Chassis/Brake)</div>
+          <div style="font-size:0.72rem; color:#94a3b8;">เบรกไฟฟ้า ABS และระบบความปลอดภัย</div>
+        </div>
+        <span class="mod-badge badge-brake" id="status-brake">ปกติ</span>
+      </div>
+    </div>
+
+    <div class="section-title" style="margin-top:6px;"><i class="fas fa-bug"></i> 3. ทดสอบฉีดข้อผิดพลาด (Fault Injection):</div>
+    <button class="btn-nav" id="btn-fault" onclick="toggleSelectedFault()" style="justify-content:center; background:rgba(239,68,68,0.2); border-color:var(--rose); color:#fca5a5;">
+      <i class="fas fa-radiation"></i> ฉีดบั๊กให้โมดูลที่เลือก
+    </button>
+    <button class="btn-nav" onclick="resetAllFaults()" style="justify-content:center;">
+      <i class="fas fa-check-double"></i> เคลียร์ข้อผิดพลาดทั้งหมด
+    </button>
+  </div>
+
+  <!-- 3D Orbit Controls Hint -->
+  <div class="orbit-hint">
+    <i class="fas fa-mouse"></i> คลิกซ้ายค้างเพื่อหมุน 360° | เลื่อนล้อเมาส์เพื่อซูม
+  </div>
+
+  <!-- Bottom Telemetry HUD -->
+  <div class="bottom-hud">
+    <div class="hud-block">
+      <span class="hud-caption">ระบบแม่แบบ (Root Architecture)</span>
+      <span class="hud-value" style="color:var(--cyan);">EV SMART MOBILITY</span>
+      <span class="hud-sub">สถาปัตยกรรมแบบแยกส่วน (Modular)</span>
+    </div>
+
+    <div class="hud-block">
+      <span class="hud-caption">โมดูลที่กำลังตรวจสอบ</span>
+      <span class="hud-value" id="hud-selected-name" style="color:var(--amber);">🔋 แบตเตอรี่ (BMS)</span>
+      <span class="hud-sub" id="hud-coupling-info">ระดับ Coupling: สูง (Critical)</span>
+    </div>
+
+    <div class="hud-block">
+      <span class="hud-caption">สถานะการทำงานระบบ (System Health)</span>
+      <span class="hud-value" id="hud-health" style="color:var(--emerald);">พร้อมใช้งาน 100%</span>
+      <span class="hud-sub" id="hud-health-sub">ทุกโมดูลทำงานปกติ</span>
+    </div>
+
+    <div class="hud-block">
+      <span class="hud-caption">ผลกระทบลูกโซ่ (Ripple Effect)</span>
+      <span class="hud-value" id="hud-impact" style="color:#cbd5e1;">ไม่มีผลกระทบ</span>
+      <span class="hud-sub" id="hud-impact-sub">ระบบทำงานอิสระอย่างมีเสถียรภาพ</span>
+    </div>
+
+    <div class="hud-block">
+      <span class="hud-caption">เป้าหมายเชิงคำนวณ (Decomposition Goal)</span>
+      <span class="hud-value" style="color:var(--cyan);">ISOLATE & SOLVE</span>
+      <span class="hud-sub">ย่อยปัญหาใหญ่เป็นส่วนย่อย</span>
+    </div>
+  </div>
+
+  <!-- Modal Worksheet -->
+  <div id="modal-worksheet">
+    <div class="modal-box">
+      <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #1e293b; padding-bottom:12px;">
+        <h2 style="font-size:1.2rem; color:var(--cyan); font-family:'Chakra Petch';">
+          <i class="fas fa-book-open"></i> ใบความรู้: การแยกย่อยปัญหา (Decomposition) และการเชื่อมโยงระบบ
+        </h2>
+        <button class="btn-nav" onclick="closeWorksheet()" style="padding:4px 10px; background:#ef4444; color:#fff; border:none;">✕ ปิด</button>
+      </div>
+
+      <div style="margin-top:14px; font-size:0.88rem; line-height:1.7; color:#cbd5e1;">
+        <p><strong>ความหมายของการคิดเชิงแยกส่วน (Decomposition):</strong></p>
+        <p>คือกระบวนการแตกปัญหาใหญ่ที่ซับซ้อน หรือระบบขนาดใหญ่ (Complex System) ออกเป็นส่วนประกอบย่อยๆ ที่มีขนาดเล็กลง เพื่อให้สามารถวิเคราะห์ ทำความเข้าใจ ออกแบบ พัฒนา และแก้ไขจุดบกพร่อง (Debugging) ได้อย่างตรงจุดทีละส่วน</p>
+        <p><strong>ระดับการพึ่งพาซึ่งกันและกัน (Coupling):</strong></p>
+        <ul style="padding-left:1.25rem;">
+          <li><strong>High Coupling (พึ่งพากันสูง):</strong> เช่น ระบบแบตเตอรี่ BMS หากดับลง ทั้งรถจะหยุดทำงานทันที</li>
+          <li><strong>Low Coupling (แยกส่วนอิสระ/พึ่งพาต่ำ):</strong> เช่น กล้อง AI Vision หากขัดข้อง รถยังสามารถให้มนุษย์ขับขี่ต่อได้โดยระบบขับเคลื่อนและเบรกไม่พังตามไปด้วย</li>
+        </ul>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>โมดูลย่อย</th>
+            <th>หน้าที่หลักในระบบ</th>
+            <th>ระดับความสัมพันธ์ (Coupling)</th>
+            <th>ผลกระทบเมื่อขัดข้อง</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>🔋 BMS</strong></td>
+            <td>ควบคุมไฟฟ้าและอุณหภูมิเซลล์</td>
+            <td>สูง (High Coupling)</td>
+            <td>ระบบตัดไฟฟ้าหลัก รถหยุดนิ่งเพื่อความปลอดภัย</td>
+          </tr>
+          <tr>
+            <td><strong>⚡ Powertrain</strong></td>
+            <td>สร้างแรงบิดหมุนล้อขับเคลื่อน</td>
+            <td>ปานกลาง (Medium)</td>
+            <td>รถไม่เคลื่อนที่ แต่ระบบเบรกและไฟฉุกเฉินยังทำงาน</td>
+          </tr>
+          <tr>
+            <td><strong>📷 AI Vision</strong></td>
+            <td>ตรวจจับถนนและสิ่งกีดขวาง</td>
+            <td>ต่ำ (Low Coupling)</td>
+            <td>ตัดเข้าสู่โหมดควบคุมด้วยตนเอง (Manual Driving)</td>
+          </tr>
+          <tr>
+            <td><strong>🛑 Brake/Chassis</strong></td>
+            <td>ลดความเร็วและควบคุมทิศทาง</td>
+            <td>อิสระ (Safety First)</td>
+            <td>แจ้งเตือนหน้าปัดคนขับ สามารถชะลอรถฉุกเฉินได้</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div style="display:flex; justify-content:flex-end; gap:8px;">
+        <button class="btn-nav" onclick="window.print()"><i class="fas fa-print"></i> พิมพ์ใบงาน A4</button>
+        <button class="btn-nav primary" onclick="closeWorksheet()">เข้าใจแล้ว</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Audio Synthesizer -->
+  <script>
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function beep(freq = 440, type = 'sine', duration = 0.12) {
+      try {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch(e) {}
+    }
+  </script>
+
+  <!-- Three.js 3D Decomposition Architecture Engine -->
+  <script>
+    let scene, camera, renderer, controls;
+    let carRootGroup;
+    let groupBody, groupBms, groupMotor, groupAi, groupBrake;
+    let hierarchyLinesGroup;
+    let selectedMod = 'bms';
+    let explodeFactor = 0.5; // 0.0 to 1.0
+
+    // Fault states for each module
+    const faultState = {
+      bms: false,
+      motor: false,
+      ai: false,
+      brake: false
+    };
+
+    function initEngine() {
+      const container = document.getElementById('webgl-canvas');
+      const w = container.clientWidth || window.innerWidth;
+      const h = container.clientHeight || window.innerHeight;
+
+      // 1. Scene
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x030712);
+      scene.fog = new THREE.FogExp2(0x030712, 0.028);
+
+      // 2. Camera
+      camera = new THREE.PerspectiveCamera(45, w / h, 0.1, 100);
+      camera.position.set(5.5, 4.5, 7.5);
+
+      // 3. Renderer with PBR
+      renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+      renderer.setSize(w, h);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.1;
+      container.appendChild(renderer.domElement);
+
+      // 4. Orbit Controls
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.06;
+      controls.maxPolarAngle = Math.PI / 2 - 0.02;
+      controls.minDistance = 3;
+      controls.maxDistance = 24;
+      controls.target.set(0, 1.2, 0);
+
+      // 5. High-Tech Studio Lighting
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.7);
+      scene.add(ambientLight);
+
+      const keyLight = new THREE.DirectionalLight(0x00f0ff, 1.3);
+      keyLight.position.set(8, 14, 10);
+      keyLight.castShadow = true;
+      keyLight.shadow.mapSize.width = 2048;
+      keyLight.shadow.mapSize.height = 2048;
+      scene.add(keyLight);
+
+      const purpleLight = new THREE.DirectionalLight(0xa855f7, 0.9);
+      purpleLight.position.set(-10, 8, -8);
+      scene.add(purpleLight);
+
+      // 6. Holographic Platform Floor
+      buildPlatform();
+
+      // 7. Root Car Hierarchy Group
+      carRootGroup = new THREE.Group();
+      carRootGroup.position.set(0, 0, 0);
+      scene.add(carRootGroup);
+
+      // 8. Build 4 Exploded Subsystem Modules
+      buildModules();
+
+      // 9. Hierarchy Connecting Lines
+      buildHierarchyLines();
+
+      // Update Initial Explosion
+      updateExplosionPositions();
+      selectModule('bms');
+
+      window.addEventListener('resize', onResize);
+      renderLoop();
+    }
+
+    function buildPlatform() {
+      // Hexagonal Lab Platform
+      const platGeo = new THREE.CylinderGeometry(5.2, 5.5, 0.3, 6);
+      const platMat = new THREE.MeshStandardMaterial({
+        color: 0x081024,
+        roughness: 0.35,
+        metalness: 0.6
+      });
+      const platform = new THREE.Mesh(platGeo, platMat);
+      platform.position.y = -0.15;
+      platform.receiveShadow = true;
+      scene.add(platform);
+
+      // Glowing Cyan Border Ring
+      const ringGeo = new THREE.RingGeometry(5.22, 5.35, 6);
+      const ringMat = new THREE.MeshBasicMaterial({ color: 0x00f0ff, side: THREE.DoubleSide });
+      const ring = new THREE.Mesh(ringGeo, ringMat);
+      ring.rotation.x = -Math.PI / 2;
+      ring.position.y = 0.01;
+      scene.add(ring);
+
+      // Cyber Grid
+      const grid = new THREE.GridHelper(50, 50, 0x00f0ff, 0x0f172a);
+      grid.position.y = -0.01;
+      scene.add(grid);
+    }
+
+    function buildModules() {
+      // ----------------------------------------------------
+      // MODULE 0: Main Glass Chassis & Cabin Shell
+      // ----------------------------------------------------
+      groupBody = new THREE.Group();
+      const bodyMat = new THREE.MeshStandardMaterial({
+        color: 0x0284c7,
+        metalness: 0.8,
+        roughness: 0.2,
+        transparent: true,
+        opacity: 0.35,
+        wireframe: false
+      });
+      const bodyMesh = new THREE.Mesh(new THREE.BoxGeometry(3.6, 0.6, 1.8), bodyMat);
+      bodyMesh.castShadow = true;
+      groupBody.add(bodyMesh);
+
+      const cabinMesh = new THREE.Mesh(new THREE.BoxGeometry(1.8, 0.5, 1.4), bodyMat);
+      cabinMesh.position.set(-0.2, 0.5, 0);
+      groupBody.add(cabinMesh);
+
+      carRootGroup.add(groupBody);
+
+      // ----------------------------------------------------
+      // MODULE 1: 🔋 BMS & Lithium Battery Pack (Blue/Cyan Core)
+      // ----------------------------------------------------
+      groupBms = new THREE.Group();
+      const bmsBaseMat = new THREE.MeshStandardMaterial({ color: 0x0f172a, roughness: 0.4 });
+      const bmsBase = new THREE.Mesh(new THREE.BoxGeometry(2.0, 0.25, 1.2), bmsBaseMat);
+      bmsBase.castShadow = true;
+      groupBms.add(bmsBase);
+
+      // Individual Glowing Battery Cells
+      const cellGeo = new THREE.CylinderGeometry(0.08, 0.08, 0.28, 16);
+      const cellMat = new THREE.MeshStandardMaterial({
+        color: 0x38bdf8,
+        emissive: 0x0284c7,
+        emissiveIntensity: 0.7,
+        metalness: 0.8
+      });
+
+      for (let x = -0.8; x <= 0.8; x += 0.25) {
+        for (let z = -0.4; z <= 0.4; z += 0.25) {
+          const cell = new THREE.Mesh(cellGeo, cellMat);
+          cell.position.set(x, 0.08, z);
+          groupBms.add(cell);
+        }
+      }
+      groupBms.userData = { id: 'bms', name: '🔋 แบตเตอรี่ (BMS)' };
+      carRootGroup.add(groupBms);
+
+      // ----------------------------------------------------
+      // MODULE 2: ⚡ Electric Powertrain & Dual Motors (Emerald Green)
+      // ----------------------------------------------------
+      groupMotor = new THREE.Group();
+      const motorMat = new THREE.MeshStandardMaterial({
+        color: 0x10b981,
+        emissive: 0x059669,
+        emissiveIntensity: 0.5,
+        metalness: 0.9,
+        roughness: 0.2
+      });
+
+      // Front & Rear Inverters & Electric Motors
+      [-1.1, 1.1].forEach(xPos => {
+        const motorCase = new THREE.Mesh(new THREE.CylinderGeometry(0.28, 0.28, 0.8, 24), motorMat);
+        motorCase.rotation.z = Math.PI / 2;
+        motorCase.position.set(xPos, 0, 0);
+        motorCase.castShadow = true;
+        groupMotor.add(motorCase);
+
+        // Drive shafts
+        const shaft = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.05, 1.6, 12), new THREE.MeshStandardMaterial({ color: 0xe2e8f0, metalness: 0.9 }));
+        shaft.rotation.x = Math.PI / 2;
+        shaft.position.set(xPos, 0, 0);
+        groupMotor.add(shaft);
+      });
+      groupMotor.userData = { id: 'motor', name: '⚡ มอเตอร์ขับเคลื่อน (Powertrain)' };
+      carRootGroup.add(groupMotor);
+
+      // ----------------------------------------------------
+      // MODULE 3: 📷 AI Vision & LiDAR Sensor Dome (Amber / Gold)
+      // ----------------------------------------------------
+      groupAi = new THREE.Group();
+      const aiMat = new THREE.MeshStandardMaterial({
+        color: 0xf59e0b,
+        emissive: 0xd97706,
+        emissiveIntensity: 0.8,
+        metalness: 0.8
+      });
+
+      // Roof Mounted LiDAR Dome
+      const lidarDome = new THREE.Mesh(new THREE.CylinderGeometry(0.18, 0.22, 0.18, 24), aiMat);
+      lidarDome.position.set(0, 0, 0);
+      groupAi.add(lidarDome);
+
+      // Front Camera Sensor Bar
+      const camBar = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.1, 0.6), aiMat);
+      camBar.position.set(0.6, -0.3, 0);
+      groupAi.add(camBar);
+
+      // Laser Sensor Cone
+      const coneGeo = new THREE.ConeGeometry(0.9, 2.0, 16, 1, true);
+      const coneMat = new THREE.MeshBasicMaterial({ color: 0xfacc15, transparent: true, opacity: 0.2, wireframe: true });
+      const laserCone = new THREE.Mesh(coneGeo, coneMat);
+      laserCone.rotation.z = -Math.PI / 2;
+      laserCone.position.set(1.6, -0.3, 0);
+      groupAi.add(laserCone);
+
+      groupAi.userData = { id: 'ai', name: '📷 ปัญญาประดิษฐ์ (AI Vision)' };
+      carRootGroup.add(groupAi);
+
+      // ----------------------------------------------------
+      // MODULE 4: 🛑 Chassis, Smart Braking & 4 Wheels (Rose / Red)
+      // ----------------------------------------------------
+      groupBrake = new THREE.Group();
+      const tireMat = new THREE.MeshStandardMaterial({ color: 0x111827, roughness: 0.85 });
+      const brakeMat = new THREE.MeshStandardMaterial({ color: 0xf43f5e, metalness: 0.9, roughness: 0.2 });
+
+      const wheelPositions = [
+        [1.15, 0, 0.95],
+        [-1.15, 0, 0.95],
+        [1.15, 0, -0.95],
+        [-1.15, 0, -0.95]
+      ];
+
+      wheelPositions.forEach(p => {
+        const wGrp = new THREE.Group();
+        const tire = new THREE.Mesh(new THREE.CylinderGeometry(0.38, 0.38, 0.28, 32), tireMat);
+        tire.rotation.x = Math.PI / 2;
+        tire.castShadow = true;
+        wGrp.add(tire);
+
+        // Glowing Red Brake Caliper
+        const caliper = new THREE.Mesh(new THREE.BoxGeometry(0.15, 0.18, 0.12), brakeMat);
+        caliper.position.set(0, 0.22, 0);
+        wGrp.add(caliper);
+
+        wGrp.position.set(p[0], p[1], p[2]);
+        groupBrake.add(wGrp);
+      });
+      groupBrake.userData = { id: 'brake', name: '🛑 ระบบเบรก & แชสซี' };
+      carRootGroup.add(groupBrake);
+    }
+
+    // Build Glowing Holographic Hierarchy Tree Lines
+    function buildHierarchyLines() {
+      hierarchyLinesGroup = new THREE.Group();
+      scene.add(hierarchyLinesGroup);
+    }
+
+    function updateHierarchyLines() {
+      // Clear old lines
+      while (hierarchyLinesGroup.children.length > 0) {
+        hierarchyLinesGroup.remove(hierarchyLinesGroup.children[0]);
+      }
+
+      if (explodeFactor < 0.15) return; // Don't show lines when fully assembled
+
+      const rootPos = new THREE.Vector3(0, groupBody.position.y + 1.2, 0);
+
+      // Root Sphere Node
+      const rootSphere = new THREE.Mesh(new THREE.SphereGeometry(0.12, 16, 16), new THREE.MeshBasicMaterial({ color: 0x00f0ff }));
+      rootSphere.position.copy(rootPos);
+      hierarchyLinesGroup.add(rootSphere);
+
+      const targets = [
+        { grp: groupBms, col: 0x38bdf8 },
+        { grp: groupMotor, col: 0x10b981 },
+        { grp: groupAi, col: 0xf59e0b },
+        { grp: groupBrake, col: 0xf43f5e }
+      ];
+
+      targets.forEach(t => {
+        const p = new THREE.Vector3();
+        t.grp.getWorldPosition(p);
+
+        // Line geometry
+        const lineGeo = new THREE.BufferGeometry().setFromPoints([rootPos, p]);
+        const lineMat = new THREE.LineBasicMaterial({ color: t.col, transparent: true, opacity: 0.85, linewidth: 2 });
+        const line = new THREE.Line(lineGeo, lineMat);
+        hierarchyLinesGroup.add(line);
+
+        // Target Sphere Node
+        const nodeSphere = new THREE.Mesh(new THREE.SphereGeometry(0.08, 16, 16), new THREE.MeshBasicMaterial({ color: t.col }));
+        nodeSphere.position.copy(p);
+        hierarchyLinesGroup.add(nodeSphere);
+      });
+    }
+
+    // Exploded View Interpolation
+    function updateExplosionPositions() {
+      const f = explodeFactor; // 0.0 to 1.0
+
+      // Body (Elevates upward)
+      groupBody.position.set(0, 0.55 + (f * 1.6), 0);
+
+      // BMS Battery (Drops to floor level)
+      groupBms.position.set(0, 0.25 - (f * 0.15), 0);
+
+      // Electric Motors (Shift outwards front & back)
+      groupMotor.position.set(0, 0.35 + (f * 0.4), (f * 1.5));
+
+      // AI Dome (Shoots high up on top)
+      groupAi.position.set(0, 1.25 + (f * 2.2), -(f * 1.2));
+
+      // Wheels & Brakes (Spreads wider sideways)
+      groupBrake.position.set(0, 0.38, -(f * 1.6));
+
+      updateHierarchyLines();
+    }
+
+    function onExplodeSlider(val) {
+      explodeFactor = parseFloat(val) / 100.0;
+      document.getElementById('val-explode').innerText = `${val}%`;
+      updateExplosionPositions();
+      beep(320 + explodeFactor * 240, 'sine', 0.08);
+    }
+
+    function toggleExplosionPreset() {
+      const slider = document.getElementById('range-explode');
+      const nextVal = (explodeFactor >= 0.5) ? 0 : 75;
+      slider.value = nextVal;
+      onExplodeSlider(nextVal);
+    }
+
+    // Select and inspect a subsystem module
+    function selectModule(modId) {
+      selectedMod = modId;
+
+      // Update UI cards
+      ['bms', 'motor', 'ai', 'brake'].forEach(id => {
+        const card = document.getElementById(`card-mod-${id}`);
+        if (card) card.classList.toggle('selected', id === modId);
+      });
+
+      const infoMap = {
+        bms: {
+          name: '🔋 แบตเตอรี่ (BMS Module)',
+          coupling: 'ระดับ Coupling: สูง (Critical Power Source)',
+          impact: faultState.bms ? 'ระบบดับสนิท (ตัดไฟทุกระบบ)' : 'ไม่มีผลกระทบ (จ่ายไฟ 400V ปกติ)'
+        },
+        motor: {
+          name: '⚡ มอเตอร์ขับเคลื่อน (Powertrain)',
+          coupling: 'ระดับ Coupling: ปานกลาง (ขับเคลื่อน)',
+          impact: faultState.motor ? 'รถหยุดวิ่ง (แต่ระบบไฟและเบรกยังทำงาน)' : 'ไม่มีผลกระทบ (พร้อมเร่ง 0-100 ใน 3.8s)'
+        },
+        ai: {
+          name: '📷 ปัญญาประดิษฐ์ (AI Vision)',
+          coupling: 'ระดับ Coupling: ต่ำ (Loose Coupling)',
+          impact: faultState.ai ? 'ตัดเข้าโหมดคนขับ Manual (รถยังวิ่งได้)' : 'ไม่มีผลกระทบ (ตรวจจับเลน 60 FPS)'
+        },
+        brake: {
+          name: '🛑 ระบบเบรก & แชสซี',
+          coupling: 'ระดับ Coupling: อิสระ (Safety Isolated)',
+          impact: faultState.brake ? 'แจ้งเตือนไฟเบรก (มีระบบเบรกกลไกสำรอง)' : 'ไม่มีผลกระทบ (ระบบ ABS ปกติ)'
+        }
+      };
+
+      const info = infoMap[modId];
+      document.getElementById('hud-selected-name').innerText = info.name;
+      document.getElementById('hud-coupling-info').innerText = info.coupling;
+      document.getElementById('hud-impact').innerText = info.impact;
+
+      const faultBtn = document.getElementById('btn-fault');
+      if (faultState[modId]) {
+        faultBtn.innerHTML = '<i class="fas fa-wrench"></i> ซ่อมแซมโมดูลนี้ (Clear Fault)';
+        faultBtn.style.background = 'rgba(16,185,129,0.2)';
+        faultBtn.style.borderColor = 'var(--emerald)';
+        faultBtn.style.color = '#6ee7b7';
+      } else {
+        faultBtn.innerHTML = '<i class="fas fa-radiation"></i> ฉีดบั๊กให้โมดูลที่เลือก (Inject Fault)';
+        faultBtn.style.background = 'rgba(239,68,68,0.2)';
+        faultBtn.style.borderColor = 'var(--rose)';
+        faultBtn.style.color = '#fca5a5';
+      }
+
+      beep(380, 'sine', 0.1);
+    }
+
+    // Inject / Clear Fault in Module
+    function toggleSelectedFault() {
+      faultState[selectedMod] = !faultState[selectedMod];
+      applyFaultStyles();
+      selectModule(selectedMod);
+      beep(faultState[selectedMod] ? 220 : 540, 'triangle', 0.18);
+    }
+
+    function resetAllFaults() {
+      ['bms', 'motor', 'ai', 'brake'].forEach(id => faultState[id] = false);
+      applyFaultStyles();
+      selectModule(selectedMod);
+      beep(600, 'sine', 0.2);
+    }
+
+    function applyFaultStyles() {
+      let anyFault = false;
+
+      ['bms', 'motor', 'ai', 'brake'].forEach(id => {
+        const card = document.getElementById(`card-mod-${id}`);
+        const statusBadge = document.getElementById(`status-${id}`);
+        const isFaulted = faultState[id];
+
+        if (card) card.classList.toggle('faulted', isFaulted);
+        if (statusBadge) {
+          statusBadge.textContent = isFaulted ? 'ขัดข้อง (FAULT)' : 'ปกติ';
+          statusBadge.style.color = isFaulted ? '#fca5a5' : '';
+        }
+        if (isFaulted) anyFault = true;
+      });
+
+      // Update Overall System Health
+      const healthEl = document.getElementById('hud-health');
+      const healthSub = document.getElementById('hud-health-sub');
+      const impactSub = document.getElementById('hud-impact-sub');
+
+      if (faultState.bms) {
+        healthEl.innerText = 'ระบบล้มเหลววิกฤต (CRITICAL)';
+        healthEl.style.color = 'var(--rose)';
+        healthSub.innerText = 'BMS ตัดไฟหลัก ทุกระบบหยุดทำงาน';
+        impactSub.innerText = 'High Coupling: ปัญหาในโมดูลเดียวลามทั้งระบบ!';
+      } else if (faultState.motor || faultState.brake) {
+        healthEl.innerText = 'เสื่อมถอย (Degraded)';
+        healthEl.style.color = 'var(--amber)';
+        healthSub.innerText = 'ระบบขับเคลื่อน/เบรกขัดข้องบางส่วน';
+        impactSub.innerText = 'Isolated Impact: กระทบเฉพาะฟังก์ชันขับขี่';
+      } else if (faultState.ai) {
+        healthEl.innerText = 'พร้อมทำงาน 90% (Safe)';
+        healthEl.style.color = 'var(--cyan)';
+        healthSub.innerText = 'กล้อง AI ดับ ขับขี่ด้วยมือ (Manual)';
+        impactSub.innerText = 'Low Coupling: ปลอดภัยสูง ระบบอื่นไม่พังตาม';
+      } else {
+        healthEl.innerText = 'พร้อมใช้งาน 100%';
+        healthEl.style.color = 'var(--emerald)';
+        healthSub.innerText = 'ทุกโมดูลทำงานปกติ';
+        impactSub.innerText = 'ระบบทำงานอิสระอย่างมีเสถียรภาพ';
+      }
+    }
+
+    // Animation Render Loop
+    function renderLoop() {
+      requestAnimationFrame(renderLoop);
+
+      // Subtle breathing pulse for active components
+      const time = Date.now() * 0.003;
+
+      // Rotate AI LiDAR Dome
+      if (groupAi && !faultState.ai) {
+        groupAi.rotation.y = time * 0.8;
+      }
+
+      // Blink red if faulted
+      ['bms', 'motor', 'ai', 'brake'].forEach(id => {
+        const grp = (id === 'bms') ? groupBms : (id === 'motor' ? groupMotor : (id === 'ai' ? groupAi : groupBrake));
+        if (grp) {
+          if (faultState[id]) {
+            const blink = (Math.sin(time * 3) + 1) * 0.5;
+            grp.scale.setScalar(1.0 + blink * 0.06);
+          } else {
+            grp.scale.setScalar(1.0);
+          }
+        }
+      });
+
+      if (controls) controls.update();
+      if (renderer && scene && camera) renderer.render(scene, camera);
+    }
+
+    function onResize() {
+      const container = document.getElementById('webgl-canvas');
+      if (!container || !renderer || !camera) return;
+      const w = container.clientWidth || window.innerWidth;
+      const h = container.clientHeight || window.innerHeight;
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+      renderer.setSize(w, h);
+    }
+
+    function openWorksheet() {
+      document.getElementById('modal-worksheet').style.display = 'flex';
+      beep(480, 'sine', 0.1);
+    }
+    function closeWorksheet() {
+      document.getElementById('modal-worksheet').style.display = 'none';
+    }
+
+    function goBackToCourse() {
+      if (window.parent && window.parent !== window) {
+        if (typeof window.parent.closeSimModal === 'function') {
+          window.parent.closeSimModal();
+          return;
+        }
+      }
+      window.location.href = '../lessons/week_01.html';
+    }
+
+    // Startup on page load
+    window.addEventListener('DOMContentLoaded', () => {
+      initEngine();
+    });
+  </script>
+</body>
+</html>

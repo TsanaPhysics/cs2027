@@ -1,0 +1,1093 @@
+<!DOCTYPE html>
+<html lang="th" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>4124941 วิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์ | มหาวิทยาลัยราชภัฏรำไพพรรณี</title>
+    
+    <!-- Meta SEO & Open Graph -->
+    <meta name="description" content="ระบบสื่อการเรียนรู้ออนไลน์และประเมินผลสัมฤทธิ์เต็มรูปแบบ รายวิชา 4124941 วิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์ คณะวิทยาศาสตร์และเทคโนโลยี มหาวิทยาลัยราชภัฏรำไพพรรณี โดย ผศ.ดร.ชีวะ ทัศนา">
+    <meta name="author" content="ผศ.ดร.ชีวะ ทัศนา">
+    
+    <!-- Google Fonts & Font Awesome 6 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Sarabun:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Master Design System CSS -->
+    <link rel="stylesheet" href="assets/css/main.css">
+    <!-- MathJax for Scientific LaTeX Formulas -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+    <!-- 1. Top HUD Navigation Bar -->
+    <header class="hud-navbar">
+        <div class="hud-container">
+            <a href="#" class="hud-brand" onclick="switchMainView('courseware')">
+                <div class="hud-logo">CS</div>
+                <div class="hud-brand-text">
+                    <h1>4124941 วิทยาการคำนวณสำหรับการสอนวิทย์</h1>
+                    <p>คณะวิทยาศาสตร์และเทคโนโลยี มหาวิทยาลัยราชภัฏรำไพพรรณี</p>
+                </div>
+            </a>
+
+            <nav>
+                <ul class="hud-nav-links">
+                    <li>
+                        <button class="hud-nav-btn active" data-view="courseware" onclick="switchMainView('courseware')">
+                            <i class="fas fa-book-open"></i> คลังบทเรียน (16 สัปดาห์)
+                        </button>
+                    </li>
+                    <li>
+                        <button class="hud-nav-btn" data-view="voxelLab" onclick="switchMainView('voxelLab')">
+                            <i class="fas fa-cube" style="color: #38bdf8;"></i> 3D Voxel Lab
+                        </button>
+                    </li>
+                    <li>
+                        <button class="hud-nav-btn" data-view="simulatorsHub" onclick="switchMainView('simulatorsHub')">
+                            <i class="fas fa-cubes" style="color: #10b981;"></i> แบบจำลอง 135+ ตัว
+                        </button>
+                    </li>
+                    <li>
+                        <button class="hud-nav-btn" data-view="labsHub" onclick="switchMainView('labsHub')">
+                            <i class="fas fa-flask" style="color: #f59e0b;"></i> 180 Labs & ใบงาน
+                        </button>
+                    </li>
+                    <li>
+                        <button class="hud-nav-btn" data-view="elibrary" onclick="switchMainView('elibrary')">
+                            <i class="fas fa-file-powerpoint" style="color: #ec4899;"></i> สไลด์ & ตำรา (E-Library)
+                        </button>
+                    </li>
+                    <li>
+                        <button class="hud-nav-btn" data-view="gradebook" onclick="switchMainView('gradebook')">
+                            <i class="fas fa-chart-line"></i> ผลการประเมิน
+                        </button>
+                    </li>
+                    <li>
+                        <button class="hud-nav-btn" data-view="aiAssessment" onclick="switchMainView('aiAssessment')">
+                            <i class="fas fa-robot" style="color: #6366f1;"></i> ส่งงาน & AI ประเมินผู้เรียน
+                        </button>
+                    </li>
+                    <li>
+                        <button class="hud-nav-btn" data-view="curriculum" onclick="switchMainView('curriculum')">
+                            <i class="fas fa-file-alt"></i> มคอ.3
+                        </button>
+                    </li>
+                    <li>
+                        <a href="admin.php" class="hud-nav-btn" style="background: rgba(2, 132, 199, 0.25); border: 1px solid #0284c7; color: #38bdf8; text-decoration: none; display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.5rem 0.85rem; border-radius: 8px; font-weight: 600;">
+                            <i class="fas fa-user-shield"></i> ระบบอาจารย์ (Admin)
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="hud-actions" style="display: flex; align-items: center; gap: 0.75rem;">
+                <div id="userAuthSection" style="display: flex; align-items: center; gap: 0.5rem;"></div>
+                <button class="theme-toggle-btn" id="themeToggleBtn" title="สลับโหมดกลางวัน/กลางคืน">
+                    <i class="fas fa-moon" id="themeIcon"></i>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- 2. Hero Banner Section -->
+    <section class="hero-section">
+        <div class="hero-wrapper">
+            <div>
+                <div class="hero-badges-row">
+                    <span class="hero-badge"><i class="fas fa-university"></i> มรภ.รำไพพรรณี</span>
+                    <span class="hero-badge"><i class="fas fa-graduation-cap"></i> ครุศาสตรบัณฑิต (4 ปี) ปรับปรุง 2567</span>
+                    <span class="hero-badge"><i class="fas fa-code-branch"></i> สะเต็มศึกษาและวิทยาการคำนวณ</span>
+                </div>
+                <h1 class="hero-title">วิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์</h1>
+                <p class="hero-subtitle">
+                    Computational Science for Teaching Science (3 หน่วยกิต) — บูรณาการแนวคิดเชิงคำนวณ 4 เสาหลัก การสร้างโปรแกรมจำลอง และการจัดการเรียนรู้เชิงรุกสำหรับครูวิทยาศาสตร์ในศตวรรษที่ 21
+                </p>
+
+                <div class="hero-meta-grid">
+                    <div class="meta-item">
+                        <div class="meta-icon"><i class="fas fa-barcode"></i></div>
+                        <div class="meta-content">
+                            <span>รหัสรายวิชา</span>
+                            <strong>4124941</strong>
+                        </div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-icon"><i class="fas fa-award"></i></div>
+                        <div class="meta-content">
+                            <span>หน่วยกิต</span>
+                            <strong>3(2-2-5) หน่วยกิต</strong>
+                        </div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-icon"><i class="fas fa-chalkboard-teacher"></i></div>
+                        <div class="meta-content">
+                            <span>ผู้รับผิดชอบ & ผู้สอน</span>
+                            <strong>ผศ.ดร.ชีวะ ทัศนา</strong>
+                        </div>
+                    </div>
+                    <div class="meta-item">
+                        <div class="meta-icon"><i class="fas fa-laptop-code"></i></div>
+                        <div class="meta-content">
+                            <span>การจัดการเรียนรู้</span>
+                            <strong>บรรยาย 30 ชม. + แล็บ 30 ชม.</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Hero Right Card: Progress Overview -->
+            <div class="hero-card">
+                <div class="hero-card-header">
+                    <h3><i class="fas fa-tasks" style="color: var(--rbru-cyan);"></i> ความก้าวหน้าการเรียนรู้</h3>
+                    <span style="font-size: 0.82rem; opacity: 0.85;">OBE Mastery</span>
+                </div>
+
+                <div class="progress-circle-wrap">
+                    <div class="circle-chart">
+                        <svg width="86" height="86" viewBox="0 0 86 86">
+                            <circle class="circle-bg" cx="43" cy="43" r="36"></circle>
+                            <circle class="circle-fill" cx="43" cy="43" r="36"></circle>
+                        </svg>
+                        <div class="circle-text">0%</div>
+                    </div>
+                    <div>
+                        <div style="font-weight: 700; font-size: 1.05rem;">ความคืบหน้ารวม</div>
+                        <p style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.2rem;">เรียนครบตามกำหนดจะได้รับใบรับรองสมรรถนะดิจิทัล</p>
+                    </div>
+                </div>
+
+                <div class="hero-stats-list">
+                    <div class="hero-stat-box">
+                        <span>บทเรียนที่ผ่าน</span>
+                        <strong id="statCompletedWeeks">0 / 16</strong>
+                    </div>
+                    <div class="hero-stat-box">
+                        <span>คะแนนสะสมรวม</span>
+                        <strong id="statTotalScore">0.0 / 100</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. Main Views Area -->
+    <main class="main-wrapper">
+
+        <!-- VIEW 1: Courseware 16-Week Grid -->
+        <section id="coursewareView" class="view-section active">
+            <!-- Filter Bar -->
+            <div class="filter-bar">
+                <div class="phase-chips-group">
+                    <button class="phase-chip active" data-phase="all">
+                        <i class="fas fa-layer-group"></i> สัปดาห์ทั้งหมด (1-16)
+                    </button>
+                    <button class="phase-chip" data-phase="1">
+                        <i class="fas fa-brain" style="color: #10b981;"></i> Phase 1: รากฐาน CT (1-4)
+                    </button>
+                    <button class="phase-chip" data-phase="2">
+                        <i class="fas fa-code" style="color: #3b82f6;"></i> Phase 2: โค้ดดิ้ง & แบบจำลอง (5-8)
+                    </button>
+                    <button class="phase-chip" data-phase="3">
+                        <i class="fas fa-rocket" style="color: #8b5cf6;"></i> Phase 3: โครงงานวิทย์ (9-10)
+                    </button>
+                    <button class="phase-chip" data-phase="4">
+                        <i class="fas fa-chalkboard-teacher" style="color: #f59e0b;"></i> Phase 4: จุลการสอน (11-16)
+                    </button>
+                </div>
+
+                <div class="search-box-wrap">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="lessonSearchInput" placeholder="ค้นหาบทเรียน หรือหัวข้อ...">
+                </div>
+            </div>
+
+            <!-- Weekly Cards Grid -->
+            <div class="weeks-grid" id="weeksGrid">
+                <!-- Dynamically rendered by app.js -->
+            </div>
+        </section>
+
+        <!-- VIEW 2: 3D Voxel Science Lab & RLE Simulation View -->
+        <section id="voxelLabView" class="view-section">
+            <div class="gradebook-card" style="padding: 1.25rem; height: calc(100vh - 160px); display: flex; flex-direction: column;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem; flex-wrap: wrap; gap: 0.75rem;">
+                    <div>
+                        <h2 style="font-size: 1.35rem; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem;">
+                            <i class="fas fa-cube" style="color: var(--rbru-cyan);"></i> ห้องทดลองจำลอง 3D Voxel & RLE Simulator
+                        </h2>
+                        <p style="color: var(--text-muted); font-size: 0.88rem;">
+                            สร้างภาพจากตัวเลข (Run-Length Encoding) ยกระดับสู่แบบจำลอง 3 มิติ และการจำลองฟิสิกส์เสมือนจริง
+                        </p>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <a href="simulations/voxel_lab.html" target="_blank" class="btn-ctrl" style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.5rem 0.85rem; font-size: 0.85rem;">
+                            <i class="fas fa-external-link-alt"></i> เปิดเต็มหน้าต่าง (Full Window)
+                        </a>
+                        <button class="btn-ctrl" onclick="switchMainView('courseware')" style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.5rem 0.85rem; font-size: 0.85rem;">
+                            <i class="fas fa-arrow-left"></i> กลับสู่คลังบทเรียน
+                        </button>
+                    </div>
+                </div>
+                <div style="flex: 1; border-radius: 12px; overflow: hidden; border: 1px solid var(--border-light); box-shadow: var(--shadow-sm);">
+                    <iframe src="simulations/voxel_lab.html" style="width: 100%; height: 100%; border: none;"></iframe>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 2.2: 135+ Simulators Hub View -->
+        <section id="simulatorsHubView" class="view-section">
+            <div class="gradebook-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-light); padding-bottom: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+                    <div>
+                        <h2 style="font-size: 1.5rem; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem;">
+                            <i class="fas fa-cubes" style="color: #10b981;"></i> ศูนย์รวมแบบจำลองเสมือนจริง 135+ รายการ (Interactive Simulators Hub)
+                        </h2>
+                        <p style="color: var(--text-muted); font-size: 0.92rem;">
+                            คลังแบบจำลองวิทยาศาสตร์เชิงคำนวณ HTML5 Canvas, WebGL, PBR Shaders, และ AI MediaPipe สำหรับการจัดการเรียนรู้วิทยาศาสตร์
+                        </p>
+                    </div>
+                    <div class="search-box-wrap" style="min-width: 280px;">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="simSearchInput" placeholder="ค้นหาแบบจำลอง เช่น projectile, wave, hanoi...">
+                    </div>
+                </div>
+
+                <!-- Sim Category Filter Chips -->
+                <div class="phase-chips-group" id="simChapterChips" style="margin-bottom: 1.5rem; flex-wrap: wrap;">
+                    <button class="phase-chip active" data-chapter="all"><i class="fas fa-th-large"></i> ทั้งหมด (134 ตัว)</button>
+                    <button class="phase-chip" data-chapter="chapter01"><i class="fas fa-brain"></i> บทที่ 1: CT & Unplugged</button>
+                    <button class="phase-chip" data-chapter="chapter02"><i class="fas fa-project-diagram"></i> บทที่ 2: Flowchart</button>
+                    <button class="phase-chip" data-chapter="chapter03"><i class="fab fa-python"></i> บทที่ 3: Python</button>
+                    <button class="phase-chip" data-chapter="chapter04"><i class="fas fa-redo"></i> บทที่ 4: Loops</button>
+                    <button class="phase-chip" data-chapter="chapter05"><i class="fas fa-database"></i> บทที่ 5: Data</button>
+                    <button class="phase-chip" data-chapter="chapter06"><i class="fas fa-sort-amount-down"></i> บทที่ 6: Sorting</button>
+                    <button class="phase-chip" data-chapter="chapter07"><i class="fas fa-code"></i> บทที่ 7: Functions</button>
+                    <button class="phase-chip" data-chapter="chapter08"><i class="fas fa-atom"></i> บทที่ 8: Physics</button>
+                    <button class="phase-chip" data-chapter="chapter09"><i class="fas fa-robot"></i> บทที่ 9: AI/Vision</button>
+                    <button class="phase-chip" data-chapter="chapter10"><i class="fas fa-rocket"></i> บทที่ 10: Capstone</button>
+                </div>
+
+                <div class="sims-grid" id="simsGrid">
+                    <!-- Dynamically rendered by app.js -->
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 2.3: 180 Labs & Interactive Worksheets Hub -->
+        <section id="labsHubView" class="view-section">
+            <div class="gradebook-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-light); padding-bottom: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+                    <div>
+                        <h2 style="font-size: 1.5rem; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem;">
+                            <i class="fas fa-flask" style="color: #f59e0b;"></i> คลังคู่มือปฏิบัติการ ๑๘๐ การทดลอง (180 Labs & Worksheets)
+                        </h2>
+                        <p style="color: var(--text-muted); font-size: 0.92rem;">
+                            ฐานข้อมูลใบงานปฏิบัติการวิทยาการคำนวณและปัญญาประดิษฐ์บูรณาการ พร้อมสมการทฤษฎี โค้ดไพทอน และแบบทดสอบท้ายบท
+                        </p>
+                    </div>
+                    <div class="search-box-wrap" style="min-width: 280px;">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="labSearchInput" placeholder="ค้นหาการทดลอง เช่น ดิน, คลื่น, เซนเซอร์...">
+                    </div>
+                </div>
+
+                <!-- Labs Filter Controls -->
+                <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; align-items: center;">
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <span style="font-size: 0.88rem; font-weight: 600; color: var(--text-muted);">เล่มตำรา:</span>
+                        <select id="labVolumeSelect" style="padding: 0.45rem 0.85rem; border-radius: var(--radius-md); border: 1px solid var(--border-light); background: var(--bg-surface); color: var(--text-primary); font-family: inherit; font-size: 0.88rem;">
+                            <option value="all">ทุกเล่ม (๑๘๐ การทดลอง)</option>
+                            <option value="1">เล่ม ๑: การคิดเชิงคำนวณ & อันปลั๊ก</option>
+                            <option value="2">เล่ม ๒: บล็อกโค้ดดิ้ง & ภาพ</option>
+                            <option value="3">เล่ม ๓: ไพทอนสำหรับวิทยาศาสตร์</option>
+                            <option value="4">เล่ม ๔: โครงสร้างข้อมูล & อัลกอริทึม</option>
+                            <option value="5">เล่ม ๕: AI & Machine Learning</option>
+                            <option value="6">เล่ม ๖: ฟิสิกส์คำนวณ & Spatial AR</option>
+                        </select>
+                    </div>
+
+                    <div style="display: flex; align-items: center; gap: 0.5rem;">
+                        <span style="font-size: 0.88rem; font-weight: 600; color: var(--text-muted);">ระดับบลูม (Bloom):</span>
+                        <select id="labBloomSelect" style="padding: 0.45rem 0.85rem; border-radius: var(--radius-md); border: 1px solid var(--border-light); background: var(--bg-surface); color: var(--text-primary); font-family: inherit; font-size: 0.88rem;">
+                            <option value="all">ทุกระดับ Bloom's Taxonomy</option>
+                            <option value="C1">C1: ความจำ (Remembering)</option>
+                            <option value="C2">C2: ความเข้าใจ (Understanding)</option>
+                            <option value="C3">C3: ประยุกต์ใช้ (Applying)</option>
+                            <option value="C4">C4: วิเคราะห์ (Analyzing)</option>
+                            <option value="C5">C5: ประเมินค่า (Evaluating)</option>
+                            <option value="C6">C6: สร้างสรรค์ (Creating)</option>
+                        </select>
+                    </div>
+
+                    <span id="labCountBadge" style="margin-left: auto; font-size: 0.88rem; font-weight: 700; color: var(--success); background: rgba(16, 185, 129, 0.1); padding: 0.35rem 0.75rem; border-radius: var(--radius-full);">
+                        แสดง 180 การทดลอง
+                    </span>
+                </div>
+
+                <div class="labs-grid" id="labsGrid">
+                    <!-- Dynamically rendered by app.js -->
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 2.4: E-Library & Slides View -->
+        <section id="elibraryView" class="view-section">
+            <div class="gradebook-card">
+                <div style="border-bottom: 1px solid var(--border-light); padding-bottom: 1rem; margin-bottom: 1.5rem;">
+                    <h2 style="font-size: 1.5rem; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-file-powerpoint" style="color: #ec4899;"></i> คลังสไลด์บรรยายและตำราวิชาการ (Academic E-Library)
+                    </h2>
+                    <p style="color: var(--text-muted); font-size: 0.95rem;">
+                        ดาวน์โหลดสไลด์ประกอบการสอน PowerPoint (.pptx 9 บท), ตำราหลักภาษาไทยฉบับสมบูรณ์ และโครงการตำรามาตรฐาน รองศาสตราจารย์ (รศ.)
+                    </p>
+                </div>
+
+                <!-- Showcase: Main Textbook -->
+                <div style="background: linear-gradient(135deg, rgba(2, 132, 199, 0.1), rgba(0, 240, 255, 0.05)); border: 1px solid rgba(2, 132, 199, 0.3); border-radius: var(--radius-lg); padding: 1.5rem; margin-bottom: 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1.5rem;">
+                    <div style="display: flex; gap: 1.25rem; align-items: center;">
+                        <div style="font-size: 3rem; color: #0284c7;"><i class="fas fa-book-reader"></i></div>
+                        <div>
+                            <span style="background: #0284c7; color: #fff; font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.55rem; border-radius: 4px;">ตำราหลักรายวิชา (Core Textbook)</span>
+                            <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--text-primary); margin-top: 0.3rem;">วิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์ (ฉบับภาษาไทย)</h3>
+                            <p style="font-size: 0.88rem; color: var(--text-muted); margin-top: 0.2rem;">
+                                ผู้เขียน: ผศ.ดร.ชีวะ ทัศนา | ขนาดไฟล์ 13.7 MB | ครอบคลุม 16 สัปดาห์ตาม มคอ.3
+                            </p>
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                        <a href="assets/docs/computing_science_for_science_teaching_textbook_th.pdf" target="_blank" class="btn-ctrl" style="background: #0284c7; color: #fff; border: none; padding: 0.6rem 1.2rem; font-size: 0.9rem;">
+                            <i class="fas fa-book-open"></i> เปิดอ่าน E-Book
+                        </a>
+                        <a href="assets/docs/computing_science_for_science_teaching_textbook_th.pdf" download class="btn-ctrl" style="padding: 0.6rem 1.2rem; font-size: 0.9rem;">
+                            <i class="fas fa-download"></i> ดาวน์โหลด PDF (13.7 MB)
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Section: Slides Downloads 9 Chapters -->
+                <h3 style="font-size: 1.2rem; font-weight: 700; color: var(--text-primary); margin-bottom: 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-file-powerpoint" style="color: #f59e0b;"></i> สไลด์บรรยายประจำบทเรียน (PowerPoint Slides 9 Chapters)
+                </h3>
+                <div class="elibrary-grid">
+                    <div class="slide-item-card">
+                        <div>
+                            <div class="slide-item-icon"><i class="fas fa-file-powerpoint"></i></div>
+                            <span style="font-size: 0.75rem; font-weight: 700; color: #f59e0b;">CHAPTER 1 (3.2 MB)</span>
+                            <h4 style="font-size: 1.05rem; font-weight: 700; margin: 0.3rem 0; color: var(--text-primary);">Introduction to Computing Science & CT</h4>
+                            <p style="font-size: 0.85rem; color: var(--text-muted);">บทนำสู่วิทยาการคำนวณและแนวคิดเชิงคำนวณ 4 เสาหลัก สำหรับสัปดาห์ที่ 1</p>
+                        </div>
+                        <a href="assets/slides/Computing Science for Science Teaching - Chapter 1.pptx" download class="btn-ctrl" style="margin-top: 1rem; text-align: center; justify-content: center;">
+                            <i class="fas fa-download"></i> ดาวน์โหลด .PPTX
+                        </a>
+                    </div>
+
+                    <div class="slide-item-card">
+                        <div>
+                            <div class="slide-item-icon"><i class="fas fa-file-powerpoint"></i></div>
+                            <span style="font-size: 0.75rem; font-weight: 700; color: #f59e0b;">CHAPTER 2 (2.1 MB)</span>
+                            <h4 style="font-size: 1.05rem; font-weight: 700; margin: 0.3rem 0; color: var(--text-primary);">Decomposition & Abstraction</h4>
+                            <p style="font-size: 0.85rem; color: var(--text-muted);">การแยกย่อยปัญหาและการคิดเชิงนามธรรม สำหรับสัปดาห์ที่ 2</p>
+                        </div>
+                        <a href="assets/slides/Computing Science for Science Teaching - Chapter 2.pptx" download class="btn-ctrl" style="margin-top: 1rem; text-align: center; justify-content: center;">
+                            <i class="fas fa-download"></i> ดาวน์โหลด .PPTX
+                        </a>
+                    </div>
+
+                    <div class="slide-item-card">
+                        <div>
+                            <div class="slide-item-icon"><i class="fas fa-file-powerpoint"></i></div>
+                            <span style="font-size: 0.75rem; font-weight: 700; color: #f59e0b;">CHAPTER 3 (1.7 MB)</span>
+                            <h4 style="font-size: 1.05rem; font-weight: 700; margin: 0.3rem 0; color: var(--text-primary);">Pattern Recognition & Algorithm</h4>
+                            <p style="font-size: 0.85rem; color: var(--text-muted);">การหารูปแบบและการออกแบบอัลกอริทึม สำหรับสัปดาห์ที่ 3</p>
+                        </div>
+                        <a href="assets/slides/Computing Science for Science Teaching - Chapter 3.pptx" download class="btn-ctrl" style="margin-top: 1rem; text-align: center; justify-content: center;">
+                            <i class="fas fa-download"></i> ดาวน์โหลด .PPTX
+                        </a>
+                    </div>
+
+                    <div class="slide-item-card">
+                        <div>
+                            <div class="slide-item-icon"><i class="fas fa-file-powerpoint"></i></div>
+                            <span style="font-size: 0.75rem; font-weight: 700; color: #f59e0b;">CHAPTER 4 (3.0 MB)</span>
+                            <h4 style="font-size: 1.05rem; font-weight: 700; margin: 0.3rem 0; color: var(--text-primary);">Pseudocode & Flowcharts</h4>
+                            <p style="font-size: 0.85rem; color: var(--text-muted);">การเขียนรหัสลำลองและผังงานกระบวนการทดลอง สำหรับสัปดาห์ที่ 4</p>
+                        </div>
+                        <a href="assets/slides/Computing Science for Science Teaching - Chapter 4.pptx" download class="btn-ctrl" style="margin-top: 1rem; text-align: center; justify-content: center;">
+                            <i class="fas fa-download"></i> ดาวน์โหลด .PPTX
+                        </a>
+                    </div>
+
+                    <div class="slide-item-card">
+                        <div>
+                            <div class="slide-item-icon"><i class="fas fa-file-powerpoint"></i></div>
+                            <span style="font-size: 0.75rem; font-weight: 700; color: #f59e0b;">CHAPTER 5 (1.6 MB)</span>
+                            <h4 style="font-size: 1.05rem; font-weight: 700; margin: 0.3rem 0; color: var(--text-primary);">Simple Programming with Scratch & Python</h4>
+                            <p style="font-size: 0.85rem; color: var(--text-muted);">การเขียนโปรแกรมอย่างง่าย ตัวแปร ลูป เงื่อนไข สำหรับสัปดาห์ที่ 5-6</p>
+                        </div>
+                        <a href="assets/slides/Computing Science for Science Teaching - Chapter 5.pptx" download class="btn-ctrl" style="margin-top: 1rem; text-align: center; justify-content: center;">
+                            <i class="fas fa-download"></i> ดาวน์โหลด .PPTX
+                        </a>
+                    </div>
+
+                    <div class="slide-item-card">
+                        <div>
+                            <div class="slide-item-icon"><i class="fas fa-file-powerpoint"></i></div>
+                            <span style="font-size: 0.75rem; font-weight: 700; color: #f59e0b;">CHAPTER 6 (2.0 MB)</span>
+                            <h4 style="font-size: 1.05rem; font-weight: 700; margin: 0.3rem 0; color: var(--text-primary);">Scientific Modeling & Simulation</h4>
+                            <p style="font-size: 0.85rem; color: var(--text-muted);">การสร้างแบบจำลองและการจำลองเสมือนจริง สำหรับสัปดาห์ที่ 7-10</p>
+                        </div>
+                        <a href="assets/slides/Computing Science for Science Teaching - Chapter 6: Scientific Modeling and Simulation.pptx" download class="btn-ctrl" style="margin-top: 1rem; text-align: center; justify-content: center;">
+                            <i class="fas fa-download"></i> ดาวน์โหลด .PPTX
+                        </a>
+                    </div>
+
+                    <div class="slide-item-card">
+                        <div>
+                            <div class="slide-item-icon"><i class="fas fa-file-powerpoint"></i></div>
+                            <span style="font-size: 0.75rem; font-weight: 700; color: #f59e0b;">CHAPTER 7 (647 KB)</span>
+                            <h4 style="font-size: 1.05rem; font-weight: 700; margin: 0.3rem 0; color: var(--text-primary);">Info Management & Digital Literacy</h4>
+                            <p style="font-size: 0.85rem; color: var(--text-muted);">การจัดการสารสนเทศและการรู้เท่าทันดิจิทัล สำหรับสัปดาห์ที่ 11</p>
+                        </div>
+                        <a href="assets/slides/Computing Science for Science Teaching - Chapter 7: Information Management and Digital Literacy for Science Teachers.pptx" download class="btn-ctrl" style="margin-top: 1rem; text-align: center; justify-content: center;">
+                            <i class="fas fa-download"></i> ดาวน์โหลด .PPTX
+                        </a>
+                    </div>
+
+                    <div class="slide-item-card">
+                        <div>
+                            <div class="slide-item-icon"><i class="fas fa-file-powerpoint"></i></div>
+                            <span style="font-size: 0.75rem; font-weight: 700; color: #f59e0b;">CHAPTER 8 (613 KB)</span>
+                            <h4 style="font-size: 1.05rem; font-weight: 700; margin: 0.3rem 0; color: var(--text-primary);">Ethical & Societal Implications</h4>
+                            <p style="font-size: 0.85rem; color: var(--text-muted);">จริยธรรมดิจิทัลและผลกระทบของเทคโนโลยี สำหรับสัปดาห์ที่ 12</p>
+                        </div>
+                        <a href="assets/slides/Computing Science for Science Teaching - Chapter 8: Ethical and Societal Implications of Computing in Science.pptx" download class="btn-ctrl" style="margin-top: 1rem; text-align: center; justify-content: center;">
+                            <i class="fas fa-download"></i> ดาวน์โหลด .PPTX
+                        </a>
+                    </div>
+
+                    <div class="slide-item-card">
+                        <div>
+                            <div class="slide-item-icon"><i class="fas fa-file-powerpoint"></i></div>
+                            <span style="font-size: 0.75rem; font-weight: 700; color: #f59e0b;">CHAPTER 9 (606 KB)</span>
+                            <h4 style="font-size: 1.05rem; font-weight: 700; margin: 0.3rem 0; color: var(--text-primary);">Designing Curriculum & Micro-teaching</h4>
+                            <p style="font-size: 0.85rem; color: var(--text-muted);">การออกแบบหลักสูตรและการจัดจุลการสอน สำหรับสัปดาห์ที่ 13-14</p>
+                        </div>
+                        <a href="assets/slides/Computing Science for Science Teaching - Chapter 9: Designing and Implementing Computing Science Curriculum.pptx" download class="btn-ctrl" style="margin-top: 1rem; text-align: center; justify-content: center;">
+                            <i class="fas fa-download"></i> ดาวน์โหลด .PPTX
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 3: Gradebook & Analytics View -->
+        <section id="gradebookView" class="view-section">
+            <!-- Dynamically rendered by app.js -->
+        </section>
+
+        <!-- VIEW 3: Curriculum Overview (มคอ.3) -->
+        <section id="curriculumView" class="view-section">
+            <div class="gradebook-card">
+                <div style="border-bottom: 1px solid var(--border-light); padding-bottom: 1rem; margin-bottom: 1.5rem;">
+                    <h2 style="font-size: 1.5rem; font-weight: 700; color: var(--text-primary);">
+                        <i class="fas fa-graduation-cap" style="color: var(--rbru-accent);"></i> รายละเอียดของรายวิชา (มคอ.3)
+                    </h2>
+                    <p style="color: var(--text-muted); font-size: 0.95rem;">
+                        ข้อมูลหลักสูตร คำอธิบายรายวิชา และผลลัพธ์การเรียนรู้ที่คาดหวังตามมาตรฐานคุณวุฒิระดับอุดมศึกษา
+                    </p>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem;">
+                    <div>
+                        <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.75rem;">
+                            📋 คำอธิบายรายวิชา (Course Description)
+                        </h3>
+                        <p style="color: var(--text-secondary); line-height: 1.7; margin-bottom: 1rem;">
+                            วิเคราะห์หลักการแนวคิดเชิงคำนวณเพื่อพัฒนาทักษะการคิดเชิงนามธรรม การใช้เหตุผลเชิงตรรกะในการแยกส่วนประกอบและการย่อยปัญหาผ่านกระบวนการหารูปแบบในการแก้ไขปัญหาอย่างเป็นขั้นตอนและเป็นระบบ การเขียนรหัสลำลองและผังงาน การออกแบบและการเขียนโปรแกรมอย่างง่ายที่สอดคล้องเหมาะสมกับสถานการณ์ และบริบทของสถานศึกษา ประยุกต์ใช้แนวคิดเชิงคำนวณเพื่อการจัดการเรียนรู้วิทยาศาสตร์
+                        </p>
+                        <p style="color: var(--text-muted); font-size: 0.9rem; font-style: italic; line-height: 1.6;">
+                            (Analyze the principles of computational concepts to develop abstract thinking skills and logical reasoning. Disassemble and isolate problems based on a step-by-step and systematic processes for problem solving. Use casual coding and flowcharts for simple design and programming that is consistent with the situation and context of the school. Apply computational concepts for science learning management.)
+                        </p>
+                    </div>
+
+                    <div>
+                        <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.75rem;">
+                            🎯 ผลลัพธ์การเรียนรู้ระดับรายวิชา (CLOs ตามเล่มหลักสูตรปรับปรุง 2567)
+                        </h3>
+                        <ul style="list-style: none; display: flex; flex-direction: column; gap: 0.75rem;">
+                            <li style="padding: 0.75rem 1rem; border-radius: var(--radius-md); background: var(--bg-surface-subtle); border-left: 4px solid var(--info);">
+                                <strong>CLO 1 (คิดเชิงคำนวณ & ขั้นตอนวิธี):</strong> มีทักษะการคิดเชิงคำนวณในการคิดวิเคราะห์ แก้ปัญหาอย่างเป็นขั้นตอนและเป็นระบบ ออกแบบอัลกอริทึม ผังงาน รหัสลำลอง และอธิบายระบบคอมพิวเตอร์ได้
+                            </li>
+                            <li style="padding: 0.75rem 1rem; border-radius: var(--radius-md); background: var(--bg-surface-subtle); border-left: 4px solid var(--success);">
+                                <strong>CLO 2 (สืบค้น & ประมวลผลข้อมูล):</strong> มีทักษะในการค้นหาข้อมูลสารสนเทศ ประเมิน จัดการ วิเคราะห์ สังเคราะห์ และนำเสนอข้อมูลทางวิทยาศาสตร์ด้วยโปรแกรมประยุกต์และบริการดิจิทัล
+                            </li>
+                            <li style="padding: 0.75rem 1rem; border-radius: var(--radius-md); background: var(--bg-surface-subtle); border-left: 4px solid var(--warning);">
+                                <strong>CLO 3 (โครงงาน & โค้ดดิ้งวิทยาศาสตร์):</strong> ประยุกต์วิทยาการคอมพิวเตอร์และการเขียนโปรแกรม (Scratch/Python) พัฒนาโครงงานบูรณาการวิทยาศาสตร์ และออกแบบแผนกิจกรรมการเรียนรู้สำหรับโรงเรียน
+                            </li>
+                            <li style="padding: 0.75rem 1rem; border-radius: var(--radius-md); background: var(--bg-surface-subtle); border-left: 4px solid var(--rbru-accent);">
+                                <strong>CLO 4 (ปลอดภัย & จริยธรรมดิจิทัล):</strong> ใช้เทคโนโลยีสารสนเทศและการสื่อสารอย่างปลอดภัย รู้เท่าทันสื่อ/ข่าวปลอม มีความรับผิดชอบ ปฏิบัติตามกฎหมายคอมพิวเตอร์ PDPA และจรรยาบรรณวิชาชีพครู
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div style="margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border-light); display: flex; justify-content: flex-end; gap: 1rem; flex-wrap: wrap;">
+                    <a href="มคอ3_4124941_วิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์.docx" download class="btn-ctrl" style="display: inline-flex; background: #0284c7; color: #fff; border: none;">
+                        <i class="fas fa-file-word"></i> ดาวน์โหลด มคอ.3 ฉบับสมบูรณ์ (.docx)
+                    </a>
+                    <a href="course.md" target="_blank" class="btn-ctrl" style="display: inline-flex;">
+                        <i class="fas fa-file-alt"></i> เปิดดู มคอ.3 (Markdown)
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 7: AI Assessment & Learner Analytics Hub View -->
+        <section id="aiAssessmentView" class="view-section">
+            <div class="gradebook-card">
+                <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-light); padding-bottom: 1rem; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+                    <div>
+                        <h2 style="font-size: 1.5rem; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem;">
+                            <i class="fas fa-robot" style="color: #6366f1;"></i> ศูนย์ส่งงาน & อาจารย์ (AI) ประเมินผลวิเคราะห์ผู้เรียน
+                        </h2>
+                        <p style="color: var(--text-muted); font-size: 0.92rem;">
+                            ส่งผลงานปฏิบัติการทั้ง 16 สัปดาห์ เพื่อให้อาจารย์ ดร.ชีวะ (AI Pedagogical Co-evaluator) ประเมินรูบริกส์ วิเคราะห์สมรรถนะรายบุคคล และออกใบรับรองผล
+                        </p>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                        <button class="btn-ctrl" onclick="switchAIAssessTab('submitTab')" id="btnTabSubmit" style="background: #4f46e5; color: #fff;">
+                            <i class="fas fa-paper-plane"></i> ส่งงานชิ้นใหม่
+                        </button>
+                        <button class="btn-ctrl" onclick="switchAIAssessTab('analyticsTab')" id="btnTabAnalytics">
+                            <i class="fas fa-chart-bar"></i> แดชบอร์ดวิเคราะห์ผู้เรียน
+                        </button>
+                        <button class="btn-ctrl" onclick="switchAIAssessTab('sheetsTab')" id="btnTabSheets">
+                            <i class="fas fa-table" style="color: #10b981;"></i> เชื่อมต่อ Google Sheets
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Sub-tab 1: Submission Form -->
+                <div id="aiSubTabSubmit">
+                    <form id="mainSubmissionForm" onsubmit="handleMainStudentSubmit(event)" style="display: flex; flex-direction: column; gap: 1.25rem;">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;">
+                            <div>
+                                <label style="font-size: 0.82rem; font-weight: 600; color: var(--text-primary);">รหัสนักศึกษา (Student ID): *</label>
+                                <input type="text" id="mainStuId" required placeholder="เช่น 6614401001" style="width: 100%; padding: 9px 12px; border: 1px solid var(--border-light); border-radius: 6px; font-family: inherit; font-size: 0.88rem; margin-top: 4px; background: var(--bg-surface);">
+                            </div>
+                            <div>
+                                <label style="font-size: 0.82rem; font-weight: 600; color: var(--text-primary);">ชื่อ-นามสกุล (Full Name): *</label>
+                                <input type="text" id="mainStuName" required placeholder="เช่น นายสมชาย รักวิทยาการ" style="width: 100%; padding: 9px 12px; border: 1px solid var(--border-light); border-radius: 6px; font-family: inherit; font-size: 0.88rem; margin-top: 4px; background: var(--bg-surface);">
+                            </div>
+                            <div>
+                                <label style="font-size: 0.82rem; font-weight: 600; color: var(--text-primary);">เลือกสัปดาห์ / ภาระงาน: *</label>
+                                <select id="mainStuWeek" required style="width: 100%; padding: 9px 12px; border: 1px solid var(--border-light); border-radius: 6px; font-family: inherit; font-size: 0.88rem; margin-top: 4px; background: var(--bg-surface);">
+                                    <option value="1">สัปดาห์ที่ 1: Problem-Based Learning CT Workshop (Unplugged & In Silico)</option>
+                                    <option value="2">สัปดาห์ที่ 2: การคิดเชิงนามธรรม (Abstraction) & 3D Voxel Lab</option>
+                                    <option value="3">สัปดาห์ที่ 3: การรู้จำรูปแบบสัญญาณ (Pattern Recognition & Curve Fit)</option>
+                                    <option value="4">สัปดาห์ที่ 4: การเขียนผังงานและรหัสลำลอง (Flowchart & Stepper)</option>
+                                    <option value="5">สัปดาห์ที่ 5: แบบจำลองหน่วยความจำและตัวแปร (RAM & Data Types)</option>
+                                    <option value="6">สัปดาห์ที่ 6: การวนซ้ำ For-Loop และ Range ทางวิทยาศาสตร์</option>
+                                    <option value="7">สัปดาห์ที่ 7: การตรวจหาข้อผิดพลาดและปรับปรุงโค้ด (Scientific Debugging)</option>
+                                    <option value="8">สัปดาห์ที่ 8: การไล่สายรหัสและการสอบกลางภาค (Trace Table)</option>
+                                    <option value="9">สัปดาห์ที่ 9: แบบจำลองการเคลื่อนที่แบบโพรเจกไทล์ 3D</option>
+                                    <option value="10">สัปดาห์ที่ 10: การซ้อนทับและการแทรกสอดของคลื่น 3D</option>
+                                    <option value="11">สัปดาห์ที่ 11: การออกแบบแผนการสอนบูรณาการ (Lesson Plan Studio)</option>
+                                    <option value="12">สัปดาห์ที่ 12: การจัดทำรายงานวิชาการมาตรฐาน (LaTeX Thesis)</option>
+                                    <option value="13">สัปดาห์ที่ 13: ปฏิบัติการจุลการสอนบูรณาการสื่อจำลอง (Micro-teaching 1)</option>
+                                    <option value="14">สัปดาห์ที่ 14: การทบทวนหลังปฏิบัติการสอน (AAR Synthesizer)</option>
+                                    <option value="15">สัปดาห์ที่ 15: นิทรรศการโครงงานนวัตกรรม (Innovation Showcase Gallery)</option>
+                                    <option value="16">สัปดาห์ที่ 16: การตรวจความปลอดภัยโค้ดและจริยธรรมดิจิทัล (Final Exam)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- 4 Pillars Textareas -->
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem;">
+                            <div>
+                                <label style="font-size: 0.82rem; font-weight: 700; color: #0284c7;"><i class="fas fa-puzzle-piece"></i> 1. Decomposition (การย่อยปัญหาและระบบย่อย):</label>
+                                <textarea id="mainStuDecomp" rows="3" required placeholder="ระบุการแบ่งระบบย่อย ตัวแปรต้น ตัวแปรตาม ตัวแปรควบคุม..." style="width: 100%; padding: 8px; border: 1px solid var(--border-light); border-radius: 6px; font-family: inherit; font-size: 0.85rem; margin-top: 4px; resize: vertical; background: var(--bg-surface);"></textarea>
+                            </div>
+                            <div>
+                                <label style="font-size: 0.82rem; font-weight: 700; color: #f59e0b;"><i class="fas fa-eye"></i> 2. Pattern Recognition (การหารูปแบบและแนวโน้มข้อมูล):</label>
+                                <textarea id="mainStuPattern" rows="3" required placeholder="ระบุแนวโน้ม วงรอบ หรือความสัมพันธ์ของข้อมูลที่สังเกตพบ..." style="width: 100%; padding: 8px; border: 1px solid var(--border-light); border-radius: 6px; font-family: inherit; font-size: 0.85rem; margin-top: 4px; resize: vertical; background: var(--bg-surface);"></textarea>
+                            </div>
+                            <div>
+                                <label style="font-size: 0.82rem; font-weight: 700; color: #10b981;"><i class="fas fa-cube"></i> 3. Abstraction (การคิดเชิงนามธรรมและตัดสิ่งรบกวน):</label>
+                                <textarea id="mainStuAbstr" rows="3" required placeholder="ระบุตัวแปรที่คัดกรองไว้ สมการโมเดล หรือสิ่งที่ตัดทิ้ง..." style="width: 100%; padding: 8px; border: 1px solid var(--border-light); border-radius: 6px; font-family: inherit; font-size: 0.85rem; margin-top: 4px; resize: vertical; background: var(--bg-surface);"></textarea>
+                            </div>
+                            <div>
+                                <label style="font-size: 0.82rem; font-weight: 700; color: #ef4444;"><i class="fas fa-terminal"></i> 4. Algorithm Design (ขั้นตอนวิธีและเงื่อนไข):</label>
+                                <textarea id="mainStuAlgo" rows="3" required placeholder="ลำดับขั้นตอนวิธีแก้ปัญหา เงื่อนไข IF-ELSE หรือลูปคำสั่ง..." style="width: 100%; padding: 8px; border: 1px solid var(--border-light); border-radius: 6px; font-family: inherit; font-size: 0.85rem; margin-top: 4px; resize: vertical; background: var(--bg-surface);"></textarea>
+                            </div>
+                        </div>
+
+                        <!-- Reflection & Link -->
+                        <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1rem;">
+                            <div>
+                                <label style="font-size: 0.82rem; font-weight: 600; color: var(--text-primary);"><i class="fas fa-comment-dots"></i> การสะท้อนคิด (Exit Ticket 3-2-1 Reflection):</label>
+                                <input type="text" id="mainStuReflection" placeholder="3 สิ่งที่เรียนรู้ / 2 สิ่งที่ประทับใจ / 1 คำถามที่สงสัย..." style="width: 100%; padding: 9px 12px; border: 1px solid var(--border-light); border-radius: 6px; font-family: inherit; font-size: 0.85rem; margin-top: 4px; background: var(--bg-surface);">
+                            </div>
+                            <div>
+                                <label style="font-size: 0.82rem; font-weight: 600; color: var(--text-primary);"><i class="fas fa-link"></i> แนบลิงก์ผลงาน / Google Drive:</label>
+                                <input type="url" id="mainStuLink" placeholder="https://..." style="width: 100%; padding: 9px 12px; border: 1px solid var(--border-light); border-radius: 6px; font-family: inherit; font-size: 0.85rem; margin-top: 4px; background: var(--bg-surface);">
+                            </div>
+                        </div>
+
+                        <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+                            <button type="submit" id="btnMainSubmit" style="background: linear-gradient(135deg, #4f46e5, #6366f1); color: #fff; border: none; padding: 12px 28px; border-radius: 8px; font-weight: 700; font-family: inherit; font-size: 0.95rem; cursor: pointer; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 14px rgba(99, 102, 241, 0.35);">
+                                <i class="fas fa-paper-plane"></i> ส่งงานและให้อาจารย์ (AI) ประเมินผลทันที
+                            </button>
+                            <span id="mainSubmitSpinner" style="display: none; font-size: 0.88rem; color: #6366f1;">
+                                <i class="fas fa-circle-notch fa-spin"></i> อาจารย์ (AI) กำลังประเมินรูบริกส์และวิเคราะห์พัฒนาการ...
+                            </span>
+                        </div>
+                    </form>
+
+                    <!-- Evaluation Result Output Box -->
+                    <div id="mainAiResultCard" style="display: none; margin-top: 2rem; background: var(--bg-surface); border: 2px solid #10b981; border-radius: 12px; padding: 1.75rem; box-shadow: var(--shadow-md);">
+                        <!-- Injected by app.js -->
+                    </div>
+                </div>
+
+                <!-- Sub-tab 2: Analytics Dashboard -->
+                <div id="aiSubTabAnalytics" style="display: none;">
+                    <!-- Overview Metrics -->
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+                        <div style="background: var(--bg-surface); border: 1px solid var(--border-light); border-radius: 8px; padding: 1rem; text-align: center;">
+                            <div style="font-size: 0.8rem; color: var(--text-muted);">จำนวนงานที่ส่งทั้งหมด</div>
+                            <div style="font-size: 1.6rem; font-weight: 800; color: #4f46e5;" id="anStatTotal">0 ชิ้น</div>
+                        </div>
+                        <div style="background: var(--bg-surface); border: 1px solid var(--border-light); border-radius: 8px; padding: 1rem; text-align: center;">
+                            <div style="font-size: 0.8rem; color: var(--text-muted);">คะแนนเฉลี่ยรวม</div>
+                            <div style="font-size: 1.6rem; font-weight: 800; color: #10b981;" id="anStatAvg">0.0 / 20</div>
+                        </div>
+                        <div style="background: var(--bg-surface); border: 1px solid var(--border-light); border-radius: 8px; padding: 1rem; text-align: center;">
+                            <div style="font-size: 0.8rem; color: var(--text-muted);">ระดับความเชี่ยวชาญส่วนใหญ่</div>
+                            <div style="font-size: 1.2rem; font-weight: 700; color: #0284c7; margin-top: 4px;" id="anStatMode">Proficient</div>
+                        </div>
+                    </div>
+
+                    <!-- Search Box -->
+                    <div style="display: flex; gap: 0.75rem; margin-bottom: 1rem; align-items: center;">
+                        <input type="text" id="anSearchStudentId" placeholder="พิมพ์รหัสนักศึกษาเพื่อค้นหาประวัติ..." style="flex: 1; padding: 8px 14px; border: 1px solid var(--border-light); border-radius: 6px; font-family: inherit; font-size: 0.88rem; background: var(--bg-surface);">
+                        <button class="btn-ctrl" onclick="filterSubmissionsTable()" style="background: #0284c7; color: #fff;">
+                            <i class="fas fa-search"></i> ค้นหา
+                        </button>
+                        <button class="btn-ctrl" onclick="loadSubmissionsTable(true)">
+                            <i class="fas fa-sync-alt"></i> โหลดข้อมูลใหม่
+                        </button>
+                    </div>
+
+                    <!-- Submissions Table -->
+                    <div class="table-responsive" style="border: 1px solid var(--border-light); border-radius: 8px;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>รหัสการส่ง</th>
+                                    <th>รหัสนักศึกษา</th>
+                                    <th>ชื่อ-นามสกุล</th>
+                                    <th>สัปดาห์</th>
+                                    <th>คะแนนรวม</th>
+                                    <th>ระดับสมรรถนะ</th>
+                                    <th>วันที่ส่ง</th>
+                                    <th>การกระทำ</th>
+                                </tr>
+                            </thead>
+                            <tbody id="submissionsTableBody">
+                                <tr><td colspan="8" style="text-align: center; color: var(--text-muted); padding: 20px;">กำลังโหลดข้อมูลงานที่ส่ง...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Sub-tab 3: Google Sheets Realtime Integration -->
+                <div id="aiSubTabSheets" style="display: none;">
+                    <div style="background: var(--bg-surface); border: 1px solid var(--border-light); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.75rem;">
+                            <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem;">
+                                <i class="fas fa-file-excel" style="color: #10b981;"></i> ระบบซิงก์ข้อมูลอัตโนมัติไปยัง Google Sheets (Real-time Webhook)
+                            </h3>
+                            <div id="sheetsStatusBadge" style="display: inline-flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 20px; font-size: 0.8rem; font-weight: 700; background: #fef3c7; color: #b45309;">
+                                <span style="width: 8px; height: 8px; border-radius: 50%; background: #f59e0b;"></span> รอการตั้งค่า URL
+                            </div>
+                        </div>
+
+                        <p style="font-size: 0.88rem; color: var(--text-muted); line-height: 1.6; margin-bottom: 1.25rem;">
+                            เมื่อนักศึกษาส่งงานผ่านหน้าเว็บ ระบบจะประเมินคะแนน บันทึกลง SQLite/JSON ในเครื่อง และ<strong>ส่งข้อมูลไปยัง Google Sheets ของอาจารย์ทันทีแบบเรียลไทม์</strong> อาจารย์สามารถเปิดดูและใส่เกรดในมือถือหรือ iPad ได้ทุกที่
+                        </p>
+
+                        <!-- Webhook URL Configuration Form -->
+                        <div style="display: flex; flex-direction: column; gap: 1rem; margin-bottom: 1.25rem;">
+                            <div>
+                                <label style="font-size: 0.84rem; font-weight: 600; color: var(--text-primary); display: block; margin-bottom: 4px;">
+                                    Google Apps Script Web App URL:
+                                </label>
+                                <input type="url" id="sheetsWebhookUrl" placeholder="https://script.google.com/macros/s/AKfycb.../exec" style="width: 100%; padding: 10px 14px; border: 1px solid var(--border-light); border-radius: 6px; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; background: var(--bg-card); color: var(--text-primary);">
+                            </div>
+                            <div style="display: flex; gap: 0.75rem; align-items: center; flex-wrap: wrap;">
+                                <label style="display: flex; align-items: center; gap: 6px; font-size: 0.85rem; cursor: pointer;">
+                                    <input type="checkbox" id="sheetsEnableSync" checked> เปิดใช้งานการส่งข้อมูลอัตโนมัติ (Auto-Sync)
+                                </label>
+                                <div style="flex: 1;"></div>
+                                <button class="btn-ctrl" onclick="testGoogleSheetsPing()" style="background: #0284c7; color: #fff;">
+                                    <i class="fas fa-paper-plane"></i> ทดสอบส่งข้อมูล (Test Ping)
+                                </button>
+                                <button class="btn-ctrl" onclick="saveGoogleSheetsConfig()" style="background: #10b981; color: #fff; font-weight: 700;">
+                                    <i class="fas fa-save"></i> บันทึกการตั้งค่า Webhook
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Test Response Alert -->
+                        <div id="sheetsTestResultAlert" style="display: none; padding: 10px 14px; border-radius: 6px; font-size: 0.85rem; margin-top: 1rem;"></div>
+                    </div>
+
+                    <!-- Step-by-Step Installation Guide -->
+                    <div style="border: 1px solid var(--border-light); border-radius: 12px; padding: 1.25rem; background: var(--bg-card);">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                            <h4 style="font-size: 0.95rem; font-weight: 700; color: var(--text-primary);">
+                                <i class="fas fa-graduation-cap" style="color: #6366f1;"></i> วิธีสร้าง Google Sheets Webhook ใน 1 นาที (สำหรับอาจารย์)
+                            </h4>
+                            <button class="btn-ctrl" onclick="copyAppsScriptCode()" style="font-size: 0.78rem; padding: 4px 10px;">
+                                <i class="fas fa-copy"></i> คัดลอกโค้ด Apps Script ทั้งหมด
+                            </button>
+                        </div>
+                        <ol style="font-size: 0.86rem; color: var(--text-muted); line-height: 1.7; padding-left: 1.25rem;">
+                            <li>สร้าง Google Sheets ใหม่ที่ <a href="https://sheets.new" target="_blank" style="color: #0284c7; font-weight: 600;">sheets.new</a> ตั้งชื่อว่า <code>ผลงานวิชาวิทยาการคำนวณ_2570</code></li>
+                            <li>ไปที่เมนู <strong>ส่วนขยาย (Extensions)</strong> &gt; <strong>Apps Script</strong></li>
+                            <li>ลบโค้ดเดิมออกทั้งหมด แล้วคลิกปุ่ม <strong>"คัดลอกโค้ด Apps Script"</strong> ด้านบนไปวางทับ</li>
+                            <li>กดปุ่ม <strong>ทำให้ใช้งานได้ (Deploy)</strong> &gt; <strong>การทำให้ใช้งานได้รายการใหม่ (New deployment)</strong></li>
+                            <li>เลือกประเภทเป็น <strong>เว็บแอป (Web app)</strong> โดยตั้งค่าผู้มีสิทธิ์เข้าถึงเป็น <strong>"ทุกคน (Anyone)"</strong></li>
+                            <li>คัดลอก <strong>URL เว็บแอป (Web App URL)</strong> ที่ได้ นำมาวางในช่องด้านบนแล้วกด <strong>"บันทึกการตั้งค่า"</strong></li>
+                        </ol>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- 4. Interactive Lesson Viewer Modal -->
+    <div class="lesson-modal" id="lessonModal">
+        <div class="lesson-modal-dialog">
+            <div class="lesson-modal-header">
+                <div class="lesson-title-area">
+                    <span class="lesson-modal-badge" id="lessonModalBadge">สัปดาห์ที่ 1</span>
+                    <h2 id="lessonModalTitle">ชื่อบทเรียน</h2>
+                </div>
+                
+                <div class="lesson-modal-ctrls">
+                    <button class="btn-ctrl" onclick="jumpIframeTab('outcomes')" title="ไปยังผลลัพธ์การเรียนรู้">
+                        <i class="fas fa-bullseye"></i> ผลลัพธ์
+                    </button>
+                    <button class="btn-ctrl" onclick="jumpIframeTab('content')" title="ไปยังเนื้อหาสาระสำคัญ">
+                        <i class="fas fa-align-left"></i> สาระสำคัญ
+                    </button>
+                    <button class="btn-ctrl" onclick="jumpIframeTab('activities')" title="ไปยังตารางกิจกรรม 4 คาบ">
+                        <i class="fas fa-clock"></i> กิจกรรม
+                    </button>
+                    <button class="btn-ctrl" onclick="jumpIframeTab('assessment')" title="ไปยังเกณฑ์การวัดผล">
+                        <i class="fas fa-chart-pie"></i> วัดผล
+                    </button>
+                    <button class="btn-ctrl" onclick="launchModalPretest()" title="ทำแบบทดสอบก่อนเรียน (Pre-test)" style="background: rgba(99, 102, 241, 0.15); color: #4338ca; font-weight: 600; border-color: rgba(99, 102, 241, 0.3);">
+                        <i class="fas fa-edit"></i> Pre-test
+                    </button>
+                    <button class="btn-ctrl" onclick="launchModalPosttest()" title="ทำแบบทดสอบหลังเรียน (Post-test)" style="background: rgba(16, 185, 129, 0.15); color: #047857; font-weight: 600; border-color: rgba(16, 185, 129, 0.3);">
+                        <i class="fas fa-award"></i> Post-test
+                    </button>
+                    <button class="btn-ctrl" onclick="navigateModalWeek(-1)" title="สัปดาห์ก่อนหน้า">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="btn-ctrl" onclick="navigateModalWeek(1)" title="สัปดาห์ถัดไป">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                    <a href="#" target="_blank" id="btnOpenNewTab" class="btn-ctrl" title="เปิดบทเรียนในแท็บใหม่">
+                        <i class="fas fa-external-link-alt"></i>
+                    </a>
+                    <button class="btn-ctrl btn-close" onclick="closeLessonModal()" title="ปิดหน้าต่าง">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="lesson-iframe-wrapper">
+                <iframe id="lessonIframe" class="lesson-iframe" src="about:blank"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- 5. Quiz & Assessment Engine Modal -->
+    <div class="quiz-modal" id="quizModal">
+        <div class="quiz-dialog">
+            <div class="quiz-header">
+                <div>
+                    <h3 id="quizTitle" style="font-size: 1.25rem; font-weight: 700; color: var(--text-primary);">
+                        การสอบวัดผลสัมฤทธิ์
+                    </h3>
+                </div>
+                <div class="quiz-timer-box">
+                    <i class="fas fa-stopwatch"></i>
+                    <span id="quizTimer">60:00</span>
+                </div>
+            </div>
+
+            <div class="quiz-body" id="quizBody">
+                <!-- Dynamically loaded by assessment-engine.js -->
+            </div>
+
+            <div class="quiz-footer" id="quizFooter">
+                <!-- Controls -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 6. Rubric Evaluator Modal -->
+    <div class="quiz-modal" id="rubricModal">
+        <div class="quiz-dialog" style="max-width: 950px;">
+            <div class="quiz-header">
+                <div>
+                    <h3 id="rubricModalTitle" style="font-size: 1.25rem; font-weight: 700; color: var(--text-primary);">
+                        เกณฑ์การประเมินรูบริกส์ (Rubric Assessment)
+                    </h3>
+                </div>
+                <button class="btn-ctrl btn-close" onclick="RubricEvaluator.close()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="quiz-body" id="rubricModalBody">
+                <!-- Dynamically loaded by rubric-evaluator.js -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 7. Digital Certificate Modal -->
+    <div class="quiz-modal" id="certificateModal">
+        <div class="quiz-dialog" style="max-width: 880px; background: transparent; border: none; box-shadow: none;">
+            <div id="certificateModalBody">
+                <!-- Dynamically loaded by rubric-evaluator.js -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 8. Interactive Simulator Modal -->
+    <div class="quiz-modal" id="simModal">
+        <div class="quiz-dialog" style="max-width: 1200px; height: 90vh; display: flex; flex-direction: column;">
+            <div class="quiz-header">
+                <div>
+                    <h3 id="simModalTitle" style="font-size: 1.25rem; font-weight: 700; color: var(--text-primary);">
+                        แบบจำลองเชิงโต้ตอบ
+                    </h3>
+                </div>
+                <div style="display: flex; gap: 0.5rem; align-items: center;">
+                    <a href="#" target="_blank" id="simModalOpenNewTab" class="btn-ctrl" title="เปิดในแท็บใหม่">
+                        <i class="fas fa-external-link-alt"></i> เปิดแท็บใหม่
+                    </a>
+                    <button class="btn-ctrl btn-close" onclick="closeSimModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            <div style="flex: 1; border-radius: 8px; overflow: hidden; margin-top: 0.5rem; border: 1px solid var(--border-light);">
+                <iframe id="simModalIframe" src="about:blank" style="width: 100%; height: 100%; border: none;"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- 9. Lab & Worksheet Modal -->
+    <div class="quiz-modal" id="labModal">
+        <div class="quiz-dialog" style="max-width: 900px; max-height: 90vh; overflow-y: auto;">
+            <div class="quiz-header">
+                <div>
+                    <h3 id="labModalTitle" style="font-size: 1.25rem; font-weight: 700; color: var(--text-primary);">
+                        ใบงานปฏิบัติการวิทยาการคำนวณ
+                    </h3>
+                </div>
+                <div style="display: flex; gap: 0.5rem;">
+                    <button class="btn-ctrl" onclick="printLabModal()" style="background: #10b981; color: #fff; border: none;">
+                        <i class="fas fa-print"></i> พิมพ์ใบงาน A4
+                    </button>
+                    <button class="btn-ctrl btn-close" onclick="closeLabModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="quiz-body" id="labModalBody">
+                <!-- Dynamically loaded by app.js -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 10. Auth Required Notification Modal -->
+    <div class="quiz-modal" id="authRequiredModal">
+        <div class="quiz-dialog" style="max-width: 500px; text-align: center; padding: 2.25rem 2rem;">
+            <div style="width: 64px; height: 64px; border-radius: 50%; background: rgba(99, 102, 241, 0.15); color: #6366f1; font-size: 1.8rem; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem auto;">
+                <i class="fas fa-lock"></i>
+            </div>
+            <h3 style="font-size: 1.35rem; font-weight: 700; color: var(--text-primary); margin-bottom: 0.6rem;">
+                กรุณาเข้าสู่ระบบก่อนเริ่มทำกิจกรรม
+            </h3>
+            <p style="color: var(--text-muted); font-size: 0.92rem; line-height: 1.6; margin-bottom: 1.75rem;">
+                ท่านจำเป็นต้องเข้าสู่ระบบหรือสมัครสมาชิกด้วยรหัสนักศึกษา เพื่อบันทึกเวลาเรียน ประวัติการทำแบบทดสอบ <strong>Pre-test / Post-test</strong> และประเมินสมรรถนะการคิดเชิงคำนวณ (CT Rubrics) ลงในฐานข้อมูลของท่าน
+            </p>
+            <div style="display: flex; gap: 0.75rem; justify-content: center;">
+                <button onclick="Auth.openLoginModal()" style="flex: 1; padding: 0.75rem 1.25rem; font-size: 0.95rem; font-weight: 600; border-radius: 8px; border: none; background: #4f46e5; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);">
+                    <i class="fas fa-sign-in-alt"></i> เข้าสู่ระบบ
+                </button>
+                <button onclick="Auth.openRegisterModal()" style="flex: 1; padding: 0.75rem 1.25rem; font-size: 0.95rem; font-weight: 600; border-radius: 8px; border: 1px solid #10b981; background: rgba(16, 185, 129, 0.1); color: #10b981; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                    <i class="fas fa-user-plus"></i> สมัครสมาชิก
+                </button>
+            </div>
+            <button onclick="Auth.closeAuthRequiredModal()" style="background: none; border: none; color: var(--text-muted); font-size: 0.85rem; margin-top: 1.25rem; cursor: pointer; text-decoration: underline;">
+                กลับสู่หน้าหลัก (เข้าชมแบบผู้มาเยือน)
+            </button>
+        </div>
+    </div>
+
+    <!-- 11. Student Login Modal -->
+    <div class="quiz-modal" id="loginModal">
+        <div class="quiz-dialog" style="max-width: 460px;">
+            <div class="quiz-header">
+                <div>
+                    <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-key" style="color: #6366f1;"></i> เข้าสู่ระบบผู้เรียน (Student Login)
+                    </h3>
+                </div>
+                <button class="btn-ctrl btn-close" onclick="Auth.closeLoginModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="quiz-body" style="padding: 1.5rem 1.75rem;">
+                <div id="loginErrorMsg" style="display: none; padding: 0.75rem 1rem; border-radius: 6px; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); color: #ef4444; font-size: 0.85rem; margin-bottom: 1rem;"></div>
+                
+                <form onsubmit="Auth.handleLogin(event)" style="display: flex; flex-direction: column; gap: 1rem;">
+                    <div>
+                        <label style="font-size: 0.84rem; font-weight: 600; color: var(--text-primary); display: block; margin-bottom: 4px;">
+                            รหัสนักศึกษา หรือ อีเมลมหาวิทยาลัย: *
+                        </label>
+                        <input type="text" id="loginStudentId" required placeholder="เช่น 6614401001 หรืออีเมล" style="width: 100%; padding: 10px 12px; border: 1px solid var(--border-light); border-radius: 8px; font-family: inherit; font-size: 0.92rem; background: var(--bg-surface);">
+                    </div>
+                    <div>
+                        <label style="font-size: 0.84rem; font-weight: 600; color: var(--text-primary); display: block; margin-bottom: 4px;">
+                            รหัสผ่าน: *
+                        </label>
+                        <input type="password" id="loginPassword" required placeholder="รหัสผ่านของคุณ" style="width: 100%; padding: 10px 12px; border: 1px solid var(--border-light); border-radius: 8px; font-family: inherit; font-size: 0.92rem; background: var(--bg-surface);">
+                    </div>
+
+                    <!-- Quick Demo Credentials for Fast Testing -->
+                    <div style="background: rgba(148, 163, 184, 0.08); border-radius: 8px; padding: 0.75rem; border: 1px dashed var(--border-light);">
+                        <div style="font-size: 0.75rem; font-weight: 600; color: var(--text-muted); margin-bottom: 0.4rem;">
+                            <i class="fas fa-magic"></i> คลิกเพื่อทดสอบด่วน (Quick Demo Accounts):
+                        </div>
+                        <div style="display: flex; gap: 0.35rem; flex-wrap: wrap;">
+                            <button type="button" onclick="Auth.fillDemoAccount('6614401001', '123456')" style="font-size: 0.72rem; padding: 0.25rem 0.5rem; border-radius: 4px; border: 1px solid #6366f1; background: rgba(99, 102, 241, 0.1); color: #818cf8; cursor: pointer;">
+                                จิรภัทร (วิทย์ทั่วไป)
+                            </button>
+                            <button type="button" onclick="Auth.fillDemoAccount('6614402001', '123456')" style="font-size: 0.72rem; padding: 0.25rem 0.5rem; border-radius: 4px; border: 1px solid #10b981; background: rgba(16, 185, 129, 0.1); color: #34d399; cursor: pointer;">
+                                ธีรภัทร (ฟิสิกส์)
+                            </button>
+                            <button type="button" onclick="Auth.fillDemoAccount('chewa', 'PhysiK66')" style="font-size: 0.72rem; padding: 0.25rem 0.5rem; border-radius: 4px; border: 1px solid #f59e0b; background: rgba(245, 158, 11, 0.1); color: #fbbf24; cursor: pointer;">
+                                ผศ.ดร.ชีวะ (อาจารย์)
+                            </button>
+                        </div>
+                    </div>
+
+                    <button type="submit" id="btnLoginSubmit" style="width: 100%; padding: 0.85rem; font-size: 0.95rem; font-weight: 600; border-radius: 8px; border: none; background: #4f46e5; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3); margin-top: 0.25rem;">
+                        <i class="fas fa-sign-in-alt"></i> เข้าสู่ระบบ
+                    </button>
+                </form>
+
+                <div style="text-align: center; margin-top: 1.25rem; font-size: 0.85rem; color: var(--text-muted);">
+                    ยังไม่มีบัญชีนักศึกษา? 
+                    <a href="javascript:void(0)" onclick="Auth.openRegisterModal()" style="color: #6366f1; font-weight: 600; text-decoration: none;">สมัครสมาชิกใหม่</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 12. Student Registration Modal -->
+    <div class="quiz-modal" id="registerModal">
+        <div class="quiz-dialog" style="max-width: 520px;">
+            <div class="quiz-header">
+                <div>
+                    <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fas fa-user-plus" style="color: #10b981;"></i> สมัครสมาชิกผู้เรียนใหม่ (Student Registration)
+                    </h3>
+                </div>
+                <button class="btn-ctrl btn-close" onclick="Auth.closeRegisterModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="quiz-body" style="padding: 1.5rem 1.75rem;">
+                <div id="regErrorMsg" style="display: none; padding: 0.75rem 1rem; border-radius: 6px; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3); color: #ef4444; font-size: 0.85rem; margin-bottom: 1rem;"></div>
+                
+                <form onsubmit="Auth.handleRegister(event)" style="display: flex; flex-direction: column; gap: 1rem;">
+                    <div>
+                        <label style="font-size: 0.84rem; font-weight: 600; color: var(--text-primary); display: block; margin-bottom: 4px;">
+                            รหัสนักศึกษา 10 หลัก: *
+                        </label>
+                        <input type="text" id="regStudentId" required placeholder="เช่น 6614401026" style="width: 100%; padding: 10px 12px; border: 1px solid var(--border-light); border-radius: 8px; font-family: inherit; font-size: 0.92rem; background: var(--bg-surface);">
+                    </div>
+                    <div>
+                        <label style="font-size: 0.84rem; font-weight: 600; color: var(--text-primary); display: block; margin-bottom: 4px;">
+                            ชื่อ-นามสกุล (พร้อมคำนำหน้า): *
+                        </label>
+                        <input type="text" id="regStudentName" required placeholder="เช่น นายสมชาย สุขเกษม" style="width: 100%; padding: 10px 12px; border: 1px solid var(--border-light); border-radius: 8px; font-family: inherit; font-size: 0.92rem; background: var(--bg-surface);">
+                    </div>
+                    <div>
+                        <label style="font-size: 0.84rem; font-weight: 600; color: var(--text-primary); display: block; margin-bottom: 4px;">
+                            สาขาวิชา: *
+                        </label>
+                        <select id="regDepartment" required style="width: 100%; padding: 10px 12px; border: 1px solid var(--border-light); border-radius: 8px; font-family: inherit; font-size: 0.92rem; background: var(--bg-surface);">
+                            <option value="วิทยาศาสตร์ทั่วไป (ค.บ. 4 ปี)">สาขาวิชาวิทยาศาสตร์ทั่วไป (ค.บ. 4 ปี)</option>
+                            <option value="ฟิสิกส์ (ค.บ. 4 ปี)">สาขาวิชาฟิสิกส์ (ค.บ. 4 ปี)</option>
+                            <option value="คณะวิทยาศาสตร์และเทคโนโลยี">คณะวิทยาศาสตร์และเทคโนโลยี</option>
+                            <option value="คณะครุศาสตร์">คณะครุศาสตร์</option>
+                            <option value="สาขาอื่นๆ">สาขาอื่นๆ</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="font-size: 0.84rem; font-weight: 600; color: var(--text-primary); display: block; margin-bottom: 4px;">
+                            อีเมล:
+                        </label>
+                        <input type="email" id="regEmail" placeholder="เช่น student@rbru.ac.th (ถ้าเว้นว่างจะสร้างจากรหัสนักศึกษา)" style="width: 100%; padding: 10px 12px; border: 1px solid var(--border-light); border-radius: 8px; font-family: inherit; font-size: 0.92rem; background: var(--bg-surface);">
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+                        <div>
+                            <label style="font-size: 0.84rem; font-weight: 600; color: var(--text-primary); display: block; margin-bottom: 4px;">
+                                กำหนดรหัสผ่าน: *
+                            </label>
+                            <input type="password" id="regPassword" required placeholder="อย่างน้อย 4 ตัวอักษร" style="width: 100%; padding: 10px 12px; border: 1px solid var(--border-light); border-radius: 8px; font-family: inherit; font-size: 0.92rem; background: var(--bg-surface);">
+                        </div>
+                        <div>
+                            <label style="font-size: 0.84rem; font-weight: 600; color: var(--text-primary); display: block; margin-bottom: 4px;">
+                                ยืนยันรหัสผ่าน: *
+                            </label>
+                            <input type="password" id="regPasswordConfirm" required placeholder="กรอกรหัสผ่านซ้ำอีกครั้ง" style="width: 100%; padding: 10px 12px; border: 1px solid var(--border-light); border-radius: 8px; font-family: inherit; font-size: 0.92rem; background: var(--bg-surface);">
+                        </div>
+                    </div>
+
+                    <button type="submit" id="btnRegSubmit" style="width: 100%; padding: 0.85rem; font-size: 0.95rem; font-weight: 600; border-radius: 8px; border: none; background: #10b981; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); margin-top: 0.25rem;">
+                        <i class="fas fa-user-plus"></i> ยืนยันการสมัครสมาชิก
+                    </button>
+                </form>
+
+                <div style="text-align: center; margin-top: 1.25rem; font-size: 0.85rem; color: var(--text-muted);">
+                    มีบัญชีนักศึกษาอยู่แล้ว? 
+                    <a href="javascript:void(0)" onclick="Auth.openLoginModal()" style="color: #10b981; font-weight: 600; text-decoration: none;">เข้าสู่ระบบ</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Core Scripts -->
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/app.js"></script>
+    <script src="assets/js/assessment-engine.js"></script>
+    <script src="assets/js/rubric-evaluator.js"></script>
+</body>
+</html>

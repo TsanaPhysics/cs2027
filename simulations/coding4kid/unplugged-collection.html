@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="th" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unplugged Collection | Backup Coding Games</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@300;400;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css?v=1.2">
+    <style>
+        .game-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: 3rem;
+            margin-bottom: 4rem;
+            position: relative;
+            overflow: hidden;
+        }
+        .game-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 8px;
+            height: 100%;
+            background: linear-gradient(to bottom, var(--clr-primary), var(--clr-secondary));
+        }
+        .game-meta {
+            display: flex;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        .meta-tag {
+            background: rgba(99, 102, 241, 0.1);
+            color: var(--clr-accent);
+            padding: 0.4rem 1.2rem;
+            border-radius: 99px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            border: 1px solid rgba(34, 211, 238, 0.2);
+        }
+        .setup-list {
+            list-style: none;
+            margin: 2rem 0;
+        }
+        .setup-list li {
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        .setup-list li::before {
+            content: '📦';
+            font-size: 1.2rem;
+        }
+        .rule-box {
+            background: rgba(15, 23, 42, 0.5);
+            padding: 2rem;
+            border-radius: var(--radius-md);
+            border-left: 4px solid var(--clr-accent);
+        }
+        @media print {
+            .nav, .site-header, .ai-mentor-btn, .ai-panel { display: none !important; }
+            body { background: white; color: black; }
+            .game-card { border: 2px solid #ccc; background: white; color: black; page-break-after: always; }
+            .meta-tag { border: 1px solid #000; color: black; }
+            .section__title { color: black; }
+        }
+    </style>
+</head>
+<body class="site">
+    <header class="site-header">
+        <nav class="nav glass-nav">
+            <div class="container nav__container">
+                <a href="index.html" class="nav__logo">Game<span>Design</span>4Kids</a>
+                <a href="index.html" class="btn btn--outline btn--small">← กลับหน้าหลัก</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="site-main">
+        <section class="hero-small" style="padding-top: 10rem; text-align: center;">
+            <div class="container">
+                <h1 class="hero__title">Unplugged <span>Collection</span></h1>
+                <p class="hero__lead">ชุดกิจกรรมสำรองสำหรับกรณีฉุกเฉิน (ไฟดับ/เน็ตล่ม)</p>
+                <div style="margin-top: 2rem; display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap;">
+                    <a href="unplugged-sim.html" class="btn btn--accent">🎮 ลองเล่นระบบจำลอง (Simulation)</a>
+                    <a href="unplugged-materials.html" class="btn btn--secondary">🖨️ พิมพ์สื่อการสอน (Activity Sheets)</a>
+                    <button onclick="window.print()" class="btn btn--primary">📄 พิมพ์คู่มือนี้ (Manual PDF)</button>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="container">
+                
+                <!-- Game 1 -->
+                <article class="game-card">
+                    <div class="game-meta">
+                        <span class="meta-tag">Level: All Primary</span>
+                        <span class="meta-tag">Logic: Conditionals (If-Else)</span>
+                        <span class="meta-tag">Time: 20-30 Mins</span>
+                    </div>
+                    <h2 class="card__title" style="text-align: left; font-size: 2.5rem;">01. Logic Maze: ประตูกลตรรกะ</h2>
+                    
+                    <div class="grid grid--2-col" style="gap: 2rem; margin-top: 2rem;">
+                        <div class="rule-box">
+                            <h3>📋 อุปกรณ์ที่ต้องใช้:</h3>
+                            <ul class="setup-list">
+                                <li>กระดาษสี 2 สี (เช่น แดง/เขียว)</li>
+                                <li>ปากกาเคมี และบัตรคำโจทย์</li>
+                                <li>นกหวีดสำหรับให้สัญญาณ</li>
+                            </ul>
+                        </div>
+                        <div class="guide-box">
+                            <h3>💡 แนวคิดการสอน (Teacher's Tip):</h3>
+                            <p>"นักเรียนรู้ไหมว่าคอมพิวเตอร์ฉลาดมาก แต่มันขี้สงสัย! มันจะถามคำถามเราตลอดเวลาว่า 'ถ้าเป็นแบบนี้ จะให้ฉันทำอะไร?' นั่นคือที่มาของ If-Else ครับ"</p>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 2rem;">
+                        <h3>🛠️ ขั้นตอนการดำเนินกิจกรรม (Step-by-Step):</h3>
+                        <div class="step-list" style="margin-top: 1rem;">
+                            <p><strong>ขั้นที่ 1:</strong> เตรียมทางแยกบนพื้นด้วยกระดาษสี 2 สี (เขียวคือ 'ใช่', แดงคือ 'ไม่ใช่')</p>
+                            <p><strong>ขั้นที่ 2:</strong> ให้นักเรียนเข้าแถวเรียงหนึ่งหน้าทางแยก</p>
+                            <p><strong>ขั้นที่ 3:</strong> วิทยากรประกาศเงื่อนไข (The Condition) เช่น <em>"ถ้าคุณกินข้าวเช้ามาแล้ว ให้เดินไปประตูเขียว มิฉะนั้นไปประตูแดง"</em></p>
+                            <p><strong>ขั้นที่ 4:</strong> เมื่อทุกคนผ่านด่านแรก ให้รวมตัวกันเพื่อรับเงื่อนไขถัดไปที่ซับซ้อนขึ้น (เช่น "ถ้าใส่ถุงเท้าสีขาว AND ไม่ได้ใส่แว่น")</p>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Game 2 -->
+                <article class="game-card">
+                    <div class="game-meta">
+                        <span class="meta-tag">Level: P1 - P4</span>
+                        <span class="meta-tag">Logic: Loops & Patterns</span>
+                        <span class="meta-tag">Time: 15-20 Mins</span>
+                    </div>
+                    <h2 class="card__title" style="text-align: left; font-size: 2.5rem;">02. Loop Dance: นักเต้นวนลูป</h2>
+                    
+                    <div class="grid grid--2-col" style="gap: 2rem; margin-top: 2rem;">
+                        <div class="rule-box">
+                            <h3>📋 อุปกรณ์ที่ต้องใช้:</h3>
+                            <ul class="setup-list">
+                                <li>บัตรตัวเลข (1-10)</li>
+                                <li>เพลงจังหวะสนุกๆ</li>
+                            </ul>
+                        </div>
+                        <div class="guide-box">
+                            <h3>💡 แนวคิดการสอน (Teacher's Tip):</h3>
+                            <p>"ถ้าครูสั่งให้เดิน 100 ก้าว ครูก็เหนื่อยพูด นักเรียนก็เหนื่อยฟัง เรามาใช้คำสั่ง Repeat เพื่อย่อประโยคให้สั้นลงกันดีกว่า!"</p>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 2rem;">
+                        <h3>🛠️ ขั้นตอนการดำเนินกิจกรรม (Step-by-Step):</h3>
+                        <div class="step-list" style="margin-top: 1rem;">
+                            <p><strong>ขั้นที่ 1:</strong> ตกลง "ท่าเต้นพื้นฐาน" 3 ท่า (เช่น ตบมือ, ย่ำเท้า, หมุนตัว)</p>
+                            <p><strong>ขั้นที่ 2:</strong> วิทยากรเขียนคำสั่งบนกระดาน เช่น <code>Repeat [3] {ตบมือ, หมุนตัว}</code></p>
+                            <p><strong>ขั้นที่ 3:</strong> ให้เด็กๆ ลองทำท่าตามลำดับจนจบ โดยเพื่อนๆ ในห้องช่วยกันนับรอบ</p>
+                            <p><strong>ขั้นที่ 4:</strong> เพิ่มความท้าทายด้วยการใช้ **Nested Loop** (เช่น ทำชุดท่าเต้น 2 รอบ แล้วค่อยกระโดด 5 ครั้ง)</p>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Game 3 -->
+                <article class="game-card">
+                    <div class="game-meta">
+                        <span class="meta-tag">Level: P4 - P6</span>
+                        <span class="meta-tag">Logic: Variables & Memory</span>
+                        <span class="meta-tag">Time: 25-30 Mins</span>
+                    </div>
+                    <h2 class="card__title" style="text-align: left; font-size: 2.5rem;">03. Variable Vault: คลังเก็บตัวแปร</h2>
+                    
+                    <div class="grid grid--2-col" style="gap: 2rem; margin-top: 2rem;">
+                        <div class="rule-box">
+                            <h3>📋 อุปกรณ์ที่ต้องใช้:</h3>
+                            <ul class="setup-list">
+                                <li>แก้วน้ำพลาสติก 3 ใบ</li>
+                                <li>ลูกปิงปองหรือก้อนหิน</li>
+                            </ul>
+                        </div>
+                        <div class="guide-box">
+                            <h3>💡 แนวคิดการสอน (Teacher's Tip):</h3>
+                            <p>"คอมพิวเตอร์ไม่มีสมุดจดบันทึกเหมือนเรา แต่มันมี 'แก้วน้ำอัจฉริยะ' ที่เรียกว่าตัวแปร มันจะคอยเก็บค่าเอาไว้และเปลี่ยนไปตามเหตุการณ์ในเกมครับ"</p>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 2rem;">
+                        <h3>🛠️ ขั้นตอนการดำเนินกิจกรรม (Step-by-Step):</h3>
+                        <div class="step-list" style="margin-top: 1rem;">
+                            <p><strong>ขั้นที่ 1:</strong> แบ่งเด็กเป็นกลุ่ม แต่ละกลุ่มมี "ผู้ดูแลตัวแปร" (ถือแก้ว Score และ Life)</p>
+                            <p><strong>ขั้นที่ 2:</strong> วิทยากรเล่าเนื้อเรื่องเกม เช่น <em>"ตัวละครเดินลุยโคลน ทำให้พลังชีวิต (Life) ลดลง 1!"</em></p>
+                            <p><strong>ขั้นที่ 3:</strong> ผู้ดูแลแก้วต้องรีบหยิบลูกปิงปองออกให้ถูกต้องและรวดเร็ว</p>
+                            <p><strong>ขั้นที่ 4:</strong> เมื่อจบเรื่อง วิทยากรจะมาตรวจ "ค่าของตัวแปร" ในแก้วของแต่ละกลุ่มว่าแม่นยำแค่ไหน</p>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Game 4 -->
+                <article class="game-card" id="game-monster">
+                    <div class="game-meta">
+                        <span class="meta-tag">Level: Mixed (P1-P6)</span>
+                        <span class="meta-tag">Logic: Decomposition & Algorithms</span>
+                        <span class="meta-tag">Time: 30 Mins</span>
+                    </div>
+                    <h2 class="card__title" style="text-align: left; font-size: 2.5rem; color: var(--clr-secondary);">04. Monster Architect: สถาปนิกสร้างอสูร</h2>
+                    
+                    <div class="grid grid--2-col" style="gap: 2rem; margin-top: 2rem;">
+                        <div class="rule-box" style="border-left-color: var(--clr-secondary);">
+                            <h3>📋 อุปกรณ์ที่ต้องใช้:</h3>
+                            <ul class="setup-list">
+                                <li>ภาพต้นฉบับสัตว์ประหลาด (Monster Cards)</li>
+                                <li>กระดาษวาดเขียน และดินสอ</li>
+                                <li>แผ่นใส/พลาสติกสำหรับเทียบรูป</li>
+                            </ul>
+                        </div>
+                        <div class="guide-box">
+                            <h3>💡 แนวคิดการสอน (Teacher's Tip):</h3>
+                            <p>"การเขียนโปรแกรมคือการสั่งงานที่ซับซ้อนให้กลายเป็นเรื่องง่ายๆ ถ้าเราสั่ง 'วาดสัตว์ประหลาด' คอมพิวเตอร์จะงง แต่ถ้าเราสั่ง 'วาดวงกลม 1 วง' มันจะทำได้ทันที นี่คือการย่อยปัญหาครับ"</p>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 2rem;">
+                        <h3>🛠️ ขั้นตอนการดำเนินกิจกรรม (Step-by-Step):</h3>
+                        <div class="step-list" style="margin-top: 1rem;">
+                            <p><strong>ขั้นที่ 1:</strong> แบ่งกลุ่ม 2 คน (เด็กโตเป็น Programmer, เด็กเล็กเป็น Processor)</p>
+                            <p><strong>ขั้นที่ 2:</strong> Programmer รับบัตรภาพสัตว์ประหลาด ห้ามให้ Processor เห็นเด็ดขาด!</p>
+                            <p><strong>ขั้นที่ 3:</strong> Programmer เขียนหรือพูดคำสั่งทีละข้อเพื่อให้ Processor วาดตาม</p>
+                            <p><strong>ขั้นที่ 4:</strong> เฉลยภาพเทียบกัน และทำ "Debugging" ว่าคำสั่งไหนที่ทำให้วาดผิดเพี้ยนไป</p>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Game 5 -->
+                <article class="game-card" id="game-sorting">
+                    <div class="game-meta">
+                        <span class="meta-tag">Level: All Primary</span>
+                        <span class="meta-tag">Logic: Parallel Processing & Sorting</span>
+                        <span class="meta-tag">Time: 20 Mins</span>
+                    </div>
+                    <h2 class="card__title" style="text-align: left; font-size: 2.5rem; color: var(--clr-accent);">05. Sorting Network: เครือข่ายสายฟ้าแปดทิศ</h2>
+                    
+                    <div class="grid grid--2-col" style="gap: 2rem; margin-top: 2rem;">
+                        <div class="rule-box" style="border-left-color: var(--clr-accent);">
+                            <h3>📋 อุปกรณ์ที่ต้องใช้:</h3>
+                            <ul class="setup-list">
+                                <li>เทปกาวทำเส้นทางบนพื้น</li>
+                                <li>บัตรตัวเลข 1-16 (สำหรับนักเรียนทุกคน)</li>
+                            </ul>
+                        </div>
+                        <div class="guide-box">
+                            <h3>💡 แนวคิดการสอน (Teacher's Tip):</h3>
+                            <p>"คอมพิวเตอร์ทำงานเร็วเพราะมันทำงานพร้อมกันหลายๆ จุด! กิจกรรมนี้จะแสดงให้เห็นว่าข้อมูลถูกจัดการอย่างไรในโครงข่ายที่ซับซ้อน"</p>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 2rem;">
+                        <h3>🛠️ ขั้นตอนการดำเนินกิจกรรม (Step-by-Step):</h3>
+                        <div class="step-list" style="margin-top: 1rem;">
+                            <p><strong>ขั้นที่ 1:</strong> สร้างโครงข่าย Sorting Network บนพื้น (ทางเข้า 6-8 จุด)</p>
+                            <p><strong>ขั้นที่ 2:</strong> นักเรียนแต่ละคนรับเลขสุ่ม แล้วยืนประจำจุดทางเข้า</p>
+                            <p><strong>ขั้นที่ 3:</strong> เมื่อเดินมาเจอกันที่จุดตัด (Node) ให้เปรียบเทียบเลขกัน **"น้อยไปซ้าย มากไปขวา"**</p>
+                            <p><strong>ขั้นที่ 4:</strong> เมื่อทุกคนถึงทางออก ทุกคนจะยืนเรียงลำดับจากน้อยไปมากอย่างน่าอัศจรรย์!</p>
+                        </div>
+                    </div>
+                </article>
+
+                <!-- Game 6 -->
+                <article class="game-card" id="game-binary">
+                    <div class="game-meta">
+                        <span class="meta-tag">Level: P3 - P6</span>
+                        <span class="meta-tag">Logic: Abstraction & Binary Code</span>
+                        <span class="meta-tag">Time: 25 Mins</span>
+                    </div>
+                    <h2 class="card__title" style="text-align: left; font-size: 2.5rem; color: #fff; text-shadow: 0 0 10px var(--clr-primary);">06. Binary Secret Agent: สายลับ 0 และ 1</h2>
+                    
+                    <div class="grid grid--2-col" style="gap: 2rem; margin-top: 2rem;">
+                        <div class="rule-box" style="border-left-color: var(--clr-primary);">
+                            <h3>📋 อุปกรณ์ที่ต้องใช้:</h3>
+                            <ul class="setup-list">
+                                <li>การ์ดรหัสฐานสอง (Binary Conversion Table)</li>
+                                <li>ไฟฉาย หรือ บัตรสีขาว/ดำ</li>
+                            </ul>
+                        </div>
+                        <div class="guide-box">
+                            <h3>💡 แนวคิดการสอน (Teacher's Tip):</h3>
+                            <p>"ทุกอย่างในคอมพิวเตอร์ ตั้งแต่ภาพถ่ายยันวิดีโอเกม จริงๆ แล้วประกอบด้วยเลขแค่ 2 ตัวคือ 0 และ 1 เท่านั้นครับ"</p>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 2rem;">
+                        <h3>🛠️ ขั้นตอนการดำเนินกิจกรรม (Step-by-Step):</h3>
+                        <div class="step-list" style="margin-top: 1rem;">
+                            <p><strong>ขั้นที่ 1:</strong> สอนวิธีการแทนค่าตัวเลขด้วยบิต (Bit) โดยใช้ท่าทาง (นั่ง=0, ยืน=1)</p>
+                            <p><strong>ขั้นที่ 2:</strong> แบ่งกลุ่ม 4 คน ให้แต่ละกลุ่มตั้ง "รหัสลับ" เป็นตัวเลข 1-31</p>
+                            <p><strong>ขั้นที่ 3:</strong> กลุ่มผู้ส่งต้องทำท่าทางพร้อมกัน 5 คน เพื่อแสดงรหัสฐานสอง</p>
+                            <p><strong>ขั้นที่ 4:</strong> กลุ่มผู้รับต้องรีบถอดรหัสออกมาเป็นตัวเลขให้เร็วที่สุด!</p>
+                        </div>
+                    </div>
+                </article>
+
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container text-center">
+            <p>© 2026 วิทย์ในวัง - Unplugged Survival Kit</p>
+        </div>
+    </footer>
+
+    <script src="js/main.js" defer></script>
+</body>
+</html>

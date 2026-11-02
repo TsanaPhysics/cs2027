@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ระบบตรวจวิเคราะห์ความปลอดภัยและจริยธรรมโค้ด (Code Security & Ethics Scanner)</title>
+
+  <!-- Google Fonts & FontAwesome 6 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <style>
+    :root {
+      --bg-dark: #030712;
+      --card-bg: rgba(11, 19, 43, 0.94);
+      --card-border: rgba(0, 240, 255, 0.25);
+      --cyan: #00f0ff;
+      --emerald: #10b981;
+      --amber: #f59e0b;
+      --rose: #f43f5e;
+      --indigo: #6366f1;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+    body {
+      background: var(--bg-dark);
+      color: #f8fafc;
+      font-family: 'Prompt', 'Sarabun', sans-serif;
+      height: 100vh;
+      width: 100vw;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .top-header {
+      background: var(--card-bg);
+      border-bottom: 1px solid var(--card-border);
+      padding: 12px 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+      z-index: 10;
+    }
+    .header-title h1 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Chakra Petch', sans-serif;
+    }
+    .header-title h1 i { color: var(--cyan); }
+    .header-sub { font-size: 0.8rem; color: #94a3b8; margin-top: 2px; }
+    .header-btns { display: flex; gap: 8px; }
+    .btn-h {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: #e2e8f0;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-family: inherit;
+      cursor: pointer;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .btn-h:hover {
+      background: rgba(0, 240, 255, 0.15);
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      flex: 1;
+      height: calc(100vh - 120px);
+      gap: 16px;
+      padding: 16px;
+      overflow: hidden;
+    }
+    .panel-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 16px;
+      backdrop-filter: blur(12px);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+    }
+    .section-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--cyan);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    textarea {
+      width: 100%;
+      flex: 1;
+      background: #020617;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      color: #e2e8f0;
+      padding: 14px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+      line-height: 1.7;
+      resize: none;
+      outline: none;
+    }
+
+    .btn-scan {
+      background: var(--cyan);
+      color: #030712;
+      border: none;
+      padding: 10px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+    .btn-scan:hover { filter: brightness(1.15); box-shadow: 0 0 16px var(--cyan); }
+
+    .result-box {
+      background: #020617;
+      border: 1px solid rgba(0,240,255,0.2);
+      border-radius: 8px;
+      padding: 16px;
+      flex: 1;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .vuln-item {
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 0.8rem;
+    }
+
+    .bottom-bar {
+      height: 48px;
+      background: var(--card-bg);
+      border-top: 1px solid var(--card-border);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 0 20px;
+      font-size: 0.82rem;
+    }
+    .badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      color: var(--cyan);
+    }
+  </style>
+</head>
+<body>
+  <header class="top-header">
+    <div class="header-title">
+      <h1><i class="fas fa-shield-virus"></i> ระบบตรวจวิเคราะห์ความปลอดภัยและจริยธรรมโค้ด (Code Security & Ethics Scanner)</h1>
+      <div class="header-sub">วิชา 4124941 วิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์ | ผศ.ดร.ชีวะ ทัศนา (มรภ.รำไพพรรณี)</div>
+    </div>
+    <div class="header-btns">
+      <a href="../lessons/week_16_exam.html" class="btn-h"><i class="fas fa-arrow-left"></i> กลับสู่ห้องสอบปลายภาค สัปดาห์ที่ 16</a>
+    </div>
+  </header>
+
+  <main class="main-grid">
+    <!-- Left: Source Code -->
+    <section class="panel-card">
+      <div class="section-title"><i class="fas fa-code"></i> โค้ดต้นฉบับโครงงานนักศึกษา (Python)</div>
+      <textarea id="src-code">import os
+import requests
+
+# ข้อมูลการเชื่อมต่อเซนเซอร์สภาพอากาศ
+API_KEY = "SECRET_WEATHER_API_KEY_12345"  # ช่องโหว่: Hardcoded Secret!
+DEVICE_ID = "sensor_agro_01"
+
+def upload_telemetry(temp, hum):
+    # ช่องโหว่: ไม่มีการเข้ารหัส SSL / ข้อมูลรั่วไหล
+    url = f"http://insecure-api.farm.local/data?key={API_KEY}&t={temp}&h={hum}"
+    resp = requests.get(url)
+    return resp.status_code
+
+# ช่องโหว่: ใช้ eval รันคำสั่งตรงๆ จากผู้ใช้
+user_math = "2 * 3.14159 * 10"
+result = eval(user_math)</textarea>
+      <button class="btn-scan" onclick="scanCode()"><i class="fas fa-search"></i> สแกนช่องโหว่ความปลอดภัยและจริยธรรม (Scan Audit)</button>
+    </section>
+
+    <!-- Right: Audit Findings -->
+    <section class="panel-card">
+      <div class="section-title"><i class="fas fa-clipboard-check"></i> รายงานการตรวจสอบ (Security & Privacy Audit)</div>
+      <div class="result-box" id="audit-results">
+        <div style="color: #64748b; text-align: center; margin-top: 30px;">
+          กดปุ่ม "สแกนช่องโหว่ความปลอดภัยและจริยธรรม" เพื่อเริ่มการตรวจสอบอัตโนมัติ
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="bottom-bar">
+    <div>เกณฑ์ความปลอดภัย: <span class="badge">OWASP Top 10 & PDPA กฎหมายข้อมูลส่วนบุคคล</span></div>
+    <div>ระดับความเสี่ยง: <span class="badge" id="botRisk" style="color: var(--rose);">HIGH (3 Vulnerabilities Detected)</span></div>
+    <div>คะแนนความปลอดภัย: <span class="badge" id="botScore" style="color: var(--amber);">65 / 100</span></div>
+  </footer>
+
+  <script>
+    function scanCode() {
+      const code = document.getElementById('src-code').value;
+      const res = document.getElementById('audit-results');
+
+      res.innerHTML = `
+        <div class="vuln-item" style="border-left: 3px solid var(--rose);">
+          <div style="color: var(--rose); font-weight: 700; display: flex; justify-content: space-between;">
+            <span><i class="fas fa-key"></i> 1. CWE-798: การฝังรหัสลับ Hardcoded API Key</span>
+            <span style="font-size: 0.72rem; background: rgba(244,63,94,0.2); padding: 2px 6px; border-radius: 4px;">HIGH RISK</span>
+          </div>
+          <p style="color: #cbd5e1; margin-top: 4px;">
+            พบตัวแปร <code>API_KEY</code> ในโค้ดโดยตรง เสี่ยงต่อการรั่วไหลเมื่ออัปโหลดขึ้น GitHub ควรย้ายไปเก็บใน Environment Variables (<code>os.environ.get('API_KEY')</code>)
+          </p>
+        </div>
+
+        <div class="vuln-item" style="border-left: 3px solid var(--amber);">
+          <div style="color: var(--amber); font-weight: 700; display: flex; justify-content: space-between;">
+            <span><i class="fas fa-lock-open"></i> 2. การส่งข้อมูลผ่าน HTTP ธรรมดา (Insecure Transport)</span>
+            <span style="font-size: 0.72rem; background: rgba(245,158,11,0.2); padding: 2px 6px; border-radius: 4px;">MEDIUM RISK</span>
+          </div>
+          <p style="color: #cbd5e1; margin-top: 4px;">
+            URL ปลายทางใช้โปรโตคอล <code>http://</code> ทำให้ข้อมูลเซนเซอร์และ API Key ถูกดักฟัง (Sniffing) ได้ง่าย ควรเปลี่ยนเป็น <code>https://</code>
+          </p>
+        </div>
+
+        <div class="vuln-item" style="border-left: 3px solid var(--rose);">
+          <div style="color: var(--rose); font-weight: 700; display: flex; justify-content: space-between;">
+            <span><i class="fas fa-terminal"></i> 3. CWE-95: การใช้ฟังก์ชัน eval() อันตราย (Code Injection)</span>
+            <span style="font-size: 0.72rem; background: rgba(244,63,94,0.2); padding: 2px 6px; border-radius: 4px;">CRITICAL RISK</span>
+          </div>
+          <p style="color: #cbd5e1; margin-top: 4px;">
+            การใช้คำสั่ง <code>eval()</code> อาจถูกผู้ไม่ประสงค์ดีแทรกคำสั่งลบระบบ ควรใช้โมดูล <code>ast.literal_eval()</code> หรือไลบรารีคำนวณคณิตศาสตร์เฉพาะทางแทน
+          </p>
+        </div>
+
+        <div style="background: rgba(16, 185, 129, 0.15); border: 1px solid var(--emerald); border-radius: 8px; padding: 12px; font-size: 0.78rem; color: #a7f3d0; margin-top: 4px;">
+          <i class="fas fa-user-shield"></i> <strong>จริยธรรมครูวิทยาการคำนวณ:</strong> ครูต้องปลูกฝังให้นักเรียนตระหนักถึงความปลอดภัยทางไซเบอร์และ พ.ร.บ. คุ้มครองข้อมูลส่วนบุคคล (PDPA) ทุกครั้งที่พัฒนาซอฟต์แวร์เชื่อมโยงเซนเซอร์
+        </div>
+      `;
+    }
+
+    window.onload = scanCode;
+  </script>
+</body>
+</html>

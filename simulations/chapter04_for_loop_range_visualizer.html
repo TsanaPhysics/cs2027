@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ห้องทดลอง 3D: แบบจำลองการวนซ้ำ For-Loop และ Range ทางวิทยาศาสตร์</title>
+
+  <!-- Google Fonts & FontAwesome 6 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Three.js & OrbitControls -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+  <style>
+    :root {
+      --bg-dark: #030712;
+      --card-bg: rgba(11, 19, 43, 0.94);
+      --card-border: rgba(0, 240, 255, 0.25);
+      --cyan: #00f0ff;
+      --emerald: #10b981;
+      --amber: #f59e0b;
+      --rose: #f43f5e;
+      --indigo: #6366f1;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+    body {
+      background: var(--bg-dark);
+      color: #f8fafc;
+      font-family: 'Prompt', 'Sarabun', sans-serif;
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+    }
+    #webgl-container { position: absolute; inset: 0; z-index: 1; }
+    .hud-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      pointer-events: none;
+      z-index: 10;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .hud-overlay * { pointer-events: auto; }
+
+    /* Top Bar */
+    .top-header {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.7);
+    }
+    .header-title-group h1 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Chakra Petch', sans-serif;
+    }
+    .header-title-group h1 i { color: var(--cyan); }
+    .header-subtitle { font-size: 0.8rem; color: #94a3b8; margin-top: 3px; }
+    .header-actions { display: flex; gap: 8px; }
+    .btn-header {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: #e2e8f0;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-family: inherit;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-header:hover {
+      background: rgba(0, 240, 255, 0.15);
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+
+    /* Left Control Dock */
+    .left-dock {
+      position: absolute;
+      top: 90px;
+      left: 16px;
+      width: 320px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 16px;
+      backdrop-filter: blur(14px);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-height: calc(100vh - 170px);
+      overflow-y: auto;
+    }
+    .section-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--cyan);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .code-box {
+      background: #020617;
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      padding: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      line-height: 1.6;
+      color: #94a3b8;
+    }
+
+    .slider-row {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      margin-bottom: 8px;
+    }
+    .slider-lbl {
+      font-size: 0.75rem;
+      color: #94a3b8;
+      display: flex;
+      justify-content: space-between;
+    }
+    .slider-val {
+      color: var(--cyan);
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+    }
+    input[type=range] {
+      width: 100%;
+      height: 5px;
+      background: #1e293b;
+      border-radius: 4px;
+      outline: none;
+      -webkit-appearance: none;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--cyan);
+      cursor: pointer;
+    }
+
+    .btn-exec {
+      background: var(--cyan);
+      color: #030712;
+      border: none;
+      padding: 8px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .btn-exec:hover { filter: brightness(1.15); box-shadow: 0 0 12px var(--cyan); }
+
+    /* Right Guide */
+    .right-dock {
+      position: absolute;
+      top: 90px;
+      right: 16px;
+      width: 310px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 16px;
+      backdrop-filter: blur(14px);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .guide-box {
+      background: rgba(15, 23, 42, 0.5);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 0.76rem;
+      color: #cbd5e1;
+      line-height: 1.5;
+    }
+
+    /* Bottom Telemetry */
+    .bottom-bar {
+      margin-top: auto;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.7);
+    }
+    .tel-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+    .tel-lbl {
+      font-size: 0.7rem;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+    .tel-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <div id="webgl-container"></div>
+
+  <div class="hud-overlay">
+    <!-- Header -->
+    <header class="top-header">
+      <div class="header-title-group">
+        <h1><i class="fas fa-sync-alt"></i> การวนซ้ำ For-Loop และ Range ทางวิทยาศาสตร์</h1>
+        <div class="header-subtitle">วิชา 4124941 วิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์ | ผศ.ดร.ชีวะ ทัศนา (มรภ.รำไพพรรณี)</div>
+      </div>
+      <div class="header-actions">
+        <button class="btn-header" onclick="resetSim()"><i class="fas fa-rotate-left"></i> รีเซ็ต</button>
+        <a href="../lessons/week_06.html" class="btn-header"><i class="fas fa-arrow-left"></i> กลับสู่บทเรียน สัปดาห์ที่ 6</a>
+      </div>
+    </header>
+
+    <!-- Left Controls -->
+    <div class="left-dock">
+      <div class="section-title"><i class="fas fa-code"></i> คำสั่ง Python For-Loop & Range</div>
+      <div class="code-box" id="code-snippet">
+        <div><span style="color: #64748b;"># ตัวสะสมผลรวมข้อมูล:</span></div>
+        <div><span style="color: #f43f5e;">total</span> = <span style="color: var(--cyan);">0</span></div>
+        <div id="loop-line" style="color: #fff;"><span style="color: #3b82f6;">for</span> i <span style="color: #3b82f6;">in</span> range(<span style="color: var(--emerald);" id="codeStart">0</span>, <span style="color: var(--amber);" id="codeStop">10</span>, <span style="color: var(--cyan);" id="codeStep">1</span>):</div>
+        <div style="padding-left: 14px;"><span style="color: #f43f5e;">total</span> += data[i]</div>
+      </div>
+
+      <div class="section-title" style="margin-top: 10px;"><i class="fas fa-sliders-h"></i> ปรับพารามิเตอร์ Range()</div>
+      <div class="slider-row">
+        <div class="slider-lbl"><span>จุดเริ่มต้น (Start):</span> <span class="slider-val" id="valStart">0</span></div>
+        <input type="range" id="sliderStart" min="0" max="5" value="0" oninput="updateRangeParams()">
+      </div>
+      <div class="slider-row">
+        <div class="slider-lbl"><span>จุดสิ้นสุด (Stop):</span> <span class="slider-val" id="valStop">10</span></div>
+        <input type="range" id="sliderStop" min="2" max="12" value="10" oninput="updateRangeParams()">
+      </div>
+      <div class="slider-row">
+        <div class="slider-lbl"><span>ขนาดก้าว (Step):</span> <span class="slider-val" id="valStep">1</span></div>
+        <input type="range" id="sliderStep" min="1" max="3" value="1" oninput="updateRangeParams()">
+      </div>
+
+      <div style="display: flex; gap: 8px;">
+        <button class="btn-exec" style="flex: 1;" onclick="stepLoop()"><i class="fas fa-step-forward"></i> ทีละก้าว</button>
+        <button class="btn-exec" style="flex: 1; background: var(--emerald);" onclick="runLoopAuto()"><i class="fas fa-play"></i> เล่นวนซ้ำ</button>
+      </div>
+    </div>
+
+    <!-- Right Guide -->
+    <div class="right-dock">
+      <div class="section-title"><i class="fas fa-microscope"></i> การประยุกต์ในการสอนวิทยาศาสตร์</div>
+      <div class="guide-box">
+        <strong style="color: var(--cyan);">การประมวลผลข้อมูลอนุกรมเวลา (Time Series):</strong><br>
+        ข้อมูลฟิสิกส์ เช่น การบันทึกตำแหน่งของลูกตุ้มทุกๆ 0.01 วินาที หรืออุณหภูมิเซนเซอร์ ถูกเก็บเป็น Array คอมพิวเตอร์ต้องใช้ <code>for-loop</code> ในการคำนวณอัตราเร็วเฉลี่ย
+      </div>
+      <div class="guide-box">
+        <strong style="color: var(--amber);">Range(start, stop, step):</strong><br>
+        ข้อควรระวัง: ในภาษา Python ค่า <code>stop</code> จะ <strong>ไม่ถูกนับรวม</strong> เช่น <code>range(0, 10)</code> จะวนลูปถึงแค่เลข 9 เท่านั้น!
+      </div>
+    </div>
+
+    <!-- Bottom Telemetry -->
+    <div class="bottom-bar">
+      <div class="tel-item">
+        <span class="tel-lbl">ดัชนีปัจจุบัน (Current Index i)</span>
+        <span class="tel-val" id="telIdx" style="color: var(--cyan);">-</span>
+      </div>
+      <div class="tel-item">
+        <span class="tel-lbl">รอบการวนซ้ำ (Iteration Count)</span>
+        <span class="tel-val" id="telIter">0 รอบ</span>
+      </div>
+      <div class="tel-item">
+        <span class="tel-lbl">ผลรวมสะสม (Accumulated Sum)</span>
+        <span class="tel-val" id="telSum" style="color: var(--emerald);">0</span>
+      </div>
+      <div class="tel-item">
+        <span class="tel-lbl">ความซับซ้อนเชิงเวลา (Time Complexity)</span>
+        <span class="tel-val" style="color: #a855f7;">O(N) Linear</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let scene, camera, renderer, controls;
+    let barMeshes = [];
+    let pointerMesh;
+    const TOTAL_DATA = 12;
+    const sampleData = [15, 28, 34, 45, 52, 68, 74, 82, 91, 105, 118, 126];
+
+    let startVal = 0;
+    let stopVal = 10;
+    let stepVal = 1;
+    let curIdx = 0;
+    let iterCount = 0;
+    let accumSum = 0;
+    let autoTimer = null;
+
+    function init() {
+      const container = document.getElementById('webgl-container');
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x030712);
+
+      camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+      camera.position.set(0, 6, 12);
+
+      renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      container.appendChild(renderer.domElement);
+
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
+
+      scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+      const dLight = new THREE.DirectionalLight(0x00f0ff, 1.2);
+      dLight.position.set(5, 10, 7);
+      scene.add(dLight);
+
+      const grid = new THREE.GridHelper(18, 18, 0x00f0ff, 0x1e293b);
+      grid.position.y = -1;
+      scene.add(grid);
+
+      buildDataBars();
+      buildPointer();
+
+      window.addEventListener('resize', onWindowResize);
+      animate();
+    }
+
+    function buildDataBars() {
+      for (let i = 0; i < TOTAL_DATA; i++) {
+        const val = sampleData[i];
+        const h = (val / 130) * 4;
+        const geom = new THREE.BoxGeometry(0.8, h, 0.8);
+        const mat = new THREE.MeshStandardMaterial({
+          color: 0x1e293b,
+          metalness: 0.5,
+          roughness: 0.3
+        });
+        const mesh = new THREE.Mesh(geom, mat);
+        mesh.position.set((i - (TOTAL_DATA / 2)) * 1.2, h / 2 - 1, 0);
+        scene.add(mesh);
+        barMeshes.push({ mesh: mesh, baseHeight: h, val: val });
+      }
+    }
+
+    function buildPointer() {
+      const geom = new THREE.ConeGeometry(0.35, 0.8, 16);
+      geom.rotateX(Math.PI);
+      const mat = new THREE.MeshBasicMaterial({ color: 0x00f0ff });
+      pointerMesh = new THREE.Mesh(geom, mat);
+      pointerMesh.position.set(-6, 3.5, 0);
+      scene.add(pointerMesh);
+    }
+
+    function updateRangeParams() {
+      startVal = parseInt(document.getElementById('sliderStart').value);
+      stopVal = parseInt(document.getElementById('sliderStop').value);
+      stepVal = parseInt(document.getElementById('sliderStep').value);
+
+      document.getElementById('valStart').innerText = startVal;
+      document.getElementById('valStop').innerText = stopVal;
+      document.getElementById('valStep').innerText = stepVal;
+
+      document.getElementById('codeStart').innerText = startVal;
+      document.getElementById('codeStop').innerText = stopVal;
+      document.getElementById('codeStep').innerText = stepVal;
+
+      resetSim();
+    }
+
+    function resetSim() {
+      if (autoTimer) clearInterval(autoTimer);
+      curIdx = startVal;
+      iterCount = 0;
+      accumSum = 0;
+
+      barMeshes.forEach(b => {
+        b.mesh.material.color.setHex(0x1e293b);
+        b.mesh.material.emissive = new THREE.Color(0x000000);
+      });
+
+      document.getElementById('telIdx').innerText = '-';
+      document.getElementById('telIter').innerText = '0 รอบ';
+      document.getElementById('telSum').innerText = '0';
+      pointerMesh.visible = false;
+    }
+
+    function stepLoop() {
+      if (curIdx >= stopVal) {
+        if (autoTimer) clearInterval(autoTimer);
+        document.getElementById('telIdx').innerText = 'COMPLETED';
+        return;
+      }
+
+      pointerMesh.visible = true;
+      const x = (curIdx - (TOTAL_DATA / 2)) * 1.2;
+      pointerMesh.position.x = x;
+
+      const bar = barMeshes[curIdx];
+      bar.mesh.material.color.setHex(0x00f0ff);
+      bar.mesh.material.emissive = new THREE.Color(0x00f0ff).multiplyScalar(0.4);
+
+      accumSum += bar.val;
+      iterCount++;
+
+      document.getElementById('telIdx').innerText = `i = ${curIdx} (val: ${bar.val})`;
+      document.getElementById('telIter').innerText = `${iterCount} รอบ`;
+      document.getElementById('telSum').innerText = accumSum;
+
+      curIdx += stepVal;
+    }
+
+    function runLoopAuto() {
+      resetSim();
+      autoTimer = setInterval(() => {
+        if (curIdx < stopVal) {
+          stepLoop();
+        } else {
+          clearInterval(autoTimer);
+        }
+      }, 700);
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+      if (pointerMesh.visible) {
+        pointerMesh.position.y = 3.5 + Math.sin(Date.now() * 0.006) * 0.15;
+      }
+      controls.update();
+      renderer.render(scene, camera);
+    }
+
+    function onWindowResize() {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    window.onload = init;
+  </script>
+</body>
+</html>

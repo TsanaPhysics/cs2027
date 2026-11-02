@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="th" data-theme="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ห้องปฏิบัติการโค้ดดิ้ง Python เชิงวิทยาศาสตร์เสมือนจริง (In-Browser Python Live Sandbox) | วิชา 4124941</title>
+  
+  <!-- Google Fonts & FontAwesome 6 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Skulpt Python 3 in-browser interpreter -->
+  <script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/skulpt@1.2.0/dist/skulpt-stdlib.js"></script>
+
+  <style>
+    :root {
+      --bg-dark: #090d16;
+      --bg-panel: rgba(15, 23, 42, 0.95);
+      --bg-card: rgba(30, 41, 59, 0.7);
+      --border: rgba(148, 163, 184, 0.2);
+      --border-accent: rgba(0, 240, 255, 0.4);
+      --cyan: #00f0ff;
+      --cyan-glow: rgba(0, 240, 255, 0.25);
+      --emerald: #10b981;
+      --emerald-glow: rgba(16, 185, 129, 0.25);
+      --amber: #f59e0b;
+      --rose: #f43f5e;
+      --indigo: #6366f1;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg-dark);
+      color: var(--text-main);
+      font-family: 'Prompt', 'Sarabun', sans-serif;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* Top HUD Navigation */
+    .hud-header {
+      background: rgba(11, 19, 43, 0.96);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-accent);
+      padding: 0.75rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 100;
+    }
+
+    .brand-group {
+      display: flex;
+      align-items: center;
+      gap: 0.85rem;
+    }
+
+    .brand-icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #0284c7, var(--cyan));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      color: #fff;
+      box-shadow: 0 0 15px var(--cyan-glow);
+    }
+
+    .brand-text h1 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--cyan);
+      font-family: 'Chakra Petch', sans-serif;
+      letter-spacing: 0.5px;
+    }
+
+    .brand-text p {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .header-actions {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .preset-select {
+      background: rgba(15, 23, 42, 0.9);
+      color: var(--cyan);
+      border: 1px solid var(--border-accent);
+      border-radius: 8px;
+      padding: 0.45rem 0.9rem;
+      font-size: 0.85rem;
+      font-family: 'Prompt', sans-serif;
+      cursor: pointer;
+      outline: none;
+    }
+
+    .btn-run {
+      background: linear-gradient(135deg, #059669, var(--emerald));
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 0.45rem 1.25rem;
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 0 16px var(--emerald-glow);
+      transition: all 0.2s ease;
+    }
+
+    .btn-run:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 0 22px rgba(16, 185, 129, 0.45);
+    }
+
+    .btn-clear {
+      background: rgba(30, 41, 59, 0.8);
+      color: var(--text-muted);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 0.45rem 0.85rem;
+      font-size: 0.85rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .btn-clear:hover {
+      color: #fff;
+      border-color: var(--text-muted);
+    }
+
+    /* Main Workspace Grid */
+    .workspace-grid {
+      flex: 1;
+      display: grid;
+      grid-template-columns: 1.15fr 0.85fr;
+      gap: 1px;
+      background: rgba(255, 255, 255, 0.05);
+      overflow: hidden;
+    }
+
+    /* Left Pane: Code Editor */
+    .editor-pane {
+      background: var(--bg-dark);
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid var(--border);
+    }
+
+    .pane-toolbar {
+      background: rgba(15, 23, 42, 0.9);
+      padding: 0.5rem 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.82rem;
+      color: var(--text-muted);
+    }
+
+    .pane-toolbar span {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-weight: 600;
+      color: var(--cyan);
+    }
+
+    .code-editor-wrapper {
+      flex: 1;
+      position: relative;
+      display: flex;
+      overflow: hidden;
+    }
+
+    .line-numbers {
+      width: 45px;
+      background: rgba(11, 18, 32, 0.95);
+      color: #475569;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.88rem;
+      line-height: 1.6;
+      padding: 1rem 0.4rem;
+      text-align: right;
+      user-select: none;
+      border-right: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .code-textarea {
+      flex: 1;
+      background: transparent;
+      color: #e2e8f0;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.88rem;
+      line-height: 1.6;
+      padding: 1rem;
+      border: none;
+      resize: none;
+      outline: none;
+      white-space: pre;
+      overflow-wrap: normal;
+      overflow-x: auto;
+      tab-size: 4;
+    }
+
+    /* Right Pane: Split Terminal & Memory Model */
+    .output-pane {
+      background: #080d1a;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .console-section {
+      flex: 1.2;
+      display: flex;
+      flex-direction: column;
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+    }
+
+    .terminal-output {
+      flex: 1;
+      padding: 1rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      line-height: 1.6;
+      overflow-y: auto;
+      color: #38bdf8;
+      background: rgba(3, 7, 18, 0.7);
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+
+    .terminal-output .error {
+      color: #f87171;
+    }
+
+    .terminal-output .success {
+      color: #34d399;
+    }
+
+    /* Memory Model / Variable State Table */
+    .memory-section {
+      flex: 0.8;
+      display: flex;
+      flex-direction: column;
+      background: rgba(15, 23, 42, 0.85);
+      overflow: hidden;
+    }
+
+    .var-table-wrap {
+      flex: 1;
+      padding: 0.75rem 1rem;
+      overflow-y: auto;
+    }
+
+    .var-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.82rem;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .var-table th {
+      text-align: left;
+      padding: 0.45rem 0.6rem;
+      background: rgba(30, 41, 59, 0.6);
+      color: var(--cyan);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .var-table td {
+      padding: 0.45rem 0.6rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      color: #cbd5e1;
+    }
+
+    .badge-type {
+      display: inline-block;
+      padding: 0.15rem 0.45rem;
+      border-radius: 4px;
+      font-size: 0.72rem;
+      font-weight: 600;
+    }
+    .badge-int { background: rgba(56, 189, 248, 0.2); color: #38bdf8; }
+    .badge-float { background: rgba(52, 211, 153, 0.2); color: #34d399; }
+    .badge-str { background: rgba(251, 191, 36, 0.2); color: #fbbf24; }
+    .badge-list { background: rgba(192, 132, 252, 0.2); color: #c084fc; }
+
+    /* Footer Status Bar */
+    .status-bar {
+      background: #0b132b;
+      border-top: 1px solid var(--border);
+      padding: 0.4rem 1.25rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+
+    .status-item {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top HUD Header -->
+  <header class="hud-header">
+    <div class="brand-group">
+      <div class="brand-icon"><i class="fab fa-python"></i></div>
+      <div class="brand-text">
+        <h1>PYTHON 3 SCIENCE LIVE SANDBOX</h1>
+        <p>วิชา 4124941 วิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์ | ผศ.ดร.ชีวะ ทัศนา (มรภ.รำไพพรรณี)</p>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <select id="presetSelect" class="preset-select" onchange="loadPreset(this.value)">
+        <option value="physics_ek">⚡ ตัวอย่าง 1 (ฟิสิกส์): พลังงานจลน์ Ek = 1/2 m v²</option>
+        <option value="chem_ph">🧪 ตัวอย่าง 2 (เคมี): การคำนวณค่า pH และการจำแนกกรด-เบส</option>
+        <option value="bio_growth">🌱 ตัวอย่าง 3 (ชีววิทยา): อัตราการเติบโตของพืช (Loop & List)</option>
+        <option value="free_fall">🍎 ตัวอย่าง 4 (ฟิสิกส์): การตกอิสระ v = u + gt</option>
+        <option value="blank">📝 กระดาษว่าง (เริ่มเขียนโปรแกรมเอง)</option>
+      </select>
+      <button class="btn-clear" onclick="clearOutput()"><i class="fas fa-trash-alt"></i> ล้างคอนโซล</button>
+      <button class="btn-run" onclick="runPythonCode()"><i class="fas fa-play"></i> รันโปรแกรม (Ctrl+Enter)</button>
+    </div>
+  </header>
+
+  <!-- Main Workspace -->
+  <main class="workspace-grid">
+    <!-- Code Editor Column -->
+    <div class="editor-pane">
+      <div class="pane-toolbar">
+        <span><i class="fas fa-code"></i> science_experiment.py</span>
+        <span style="color: var(--text-muted); font-size: 0.75rem;">Skulpt Python 3.10 In-Browser Runtime (Zero-Latency)</span>
+      </div>
+      <div class="code-editor-wrapper">
+        <div class="line-numbers" id="lineNumbers">1<br>2<br>3<br>4<br>5</div>
+        <textarea id="codeEditor" class="code-textarea" spellcheck="false" placeholder="# เขียนโค้ด Python ที่นี่..."></textarea>
+      </div>
+    </div>
+
+    <!-- Output & Variable Inspector Column -->
+    <div class="output-pane">
+      <!-- Terminal Output Console -->
+      <div class="console-section">
+        <div class="pane-toolbar">
+          <span style="color: var(--emerald);"><i class="fas fa-terminal"></i> ผลลัพธ์การรันโปรแกรม (Standard Output)</span>
+          <span id="execTimer" style="color: var(--text-muted);">0.00 ms</span>
+        </div>
+        <div class="terminal-output" id="terminalOutput">💡 กดปุ่ม [รันโปรแกรม] หรือกด Ctrl + Enter เพื่อเริ่มประมวลผลโค้ด...</div>
+      </div>
+
+      <!-- Variable State Table / Memory Inspector -->
+      <div class="memory-section">
+        <div class="pane-toolbar">
+          <span style="color: var(--cyan);"><i class="fas fa-microchip"></i> แบบจำลองตัวแปรในหน่วยความจำ (Variable State Inspector)</span>
+          <span style="font-size: 0.75rem; color: var(--text-muted);">อัปเดตแบบเรียลไทม์</span>
+        </div>
+        <div class="var-table-wrap">
+          <table class="var-table">
+            <thead>
+              <tr>
+                <th>ชื่อตัวแปร (Variable)</th>
+                <th>ชนิดข้อมูล (Type)</th>
+                <th>ค่าปัจจุบัน (Value)</th>
+              </tr>
+            </thead>
+            <tbody id="varTableBody">
+              <tr>
+                <td colspan="3" style="text-align: center; color: var(--text-muted); padding: 1rem;">ยังไม่มีตัวแปรที่ถูกประกาศในหน่วยความจำ</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- Status Bar -->
+  <footer class="status-bar">
+    <div class="status-item">
+      <i class="fas fa-circle" style="color: var(--emerald); font-size: 0.6rem;"></i>
+      <span>สถานะ: รันไทม์พร้อมทำงานบนเบราว์เซอร์ 100% (Client-Side WASM/JS)</span>
+    </div>
+    <div class="status-item">
+      <i class="fas fa-keyboard"></i>
+      <span>คีย์ลัด: Ctrl+Enter (รัน) | Tab (เว้นวรรค 4 เคาะ)</span>
+    </div>
+    <div class="status-item">
+      <i class="fas fa-shield-alt" style="color: var(--cyan);"></i>
+      <span>OBE CLO 1 & CLO 3 Science Coding Practice</span>
+    </div>
+  </footer>
+
+  <!-- Scripts: Skulpt Execution Engine & Presets -->
+  <script>
+    // 1. Web Audio Synthesizer
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function playBeep(freq = 440, type = 'sine', duration = 0.1) {
+      try {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.12, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch(e) {}
+    }
+
+    // 2. Science Presets Code Bank
+    const presets = {
+      physics_ek: `# ==========================================
+# แล็บคำนวณพลังงานจลน์ (Kinetic Energy)
+# สูตร: Ek = 0.5 * m * (v ** 2)
+# ==========================================
+
+mass = 1200.0       # มวลรถยนต์ (kg)
+velocity = 25.0     # อัตราเร็ว (m/s)
+
+# คำนวณพลังงานจลน์
+ek = 0.5 * mass * (velocity ** 2)
+ek_kj = ek / 1000.0 # แปลงเป็นกิโลจูล (kJ)
+
+print(f"--- รายงานผลการคำนวณทางฟิสิกส์ ---")
+print(f"มวลวัตถุ (m)       : {mass} kg")
+print(f"อัตราเร็ว (v)      : {velocity} m/s")
+print(f"พลังงานจลน์ (Ek)   : {ek:.2f} จูล (J)")
+print(f"พลังงานจลน์ (Ek)   : {ek_kj:.2f} กิโลจูล (kJ)")
+
+if ek_kj > 300:
+    print("ข้อสังเกต: วัตถุมีพลังงานจลน์สูงมาก ต้องคำนึงถึงระยะเบรกที่ปลอดภัย")
+`,
+      chem_ph: `# ==========================================
+# แล็บจำแนกกรด-เบส และวิเคราะห์ค่า pH
+# ==========================================
+
+samples = {
+    "น้ำมะนาว": 2.2,
+    "น้ำส้มสายชู": 2.8,
+    "กาแฟดำ": 5.0,
+    "น้ำบริสุทธิ์": 7.0,
+    "สบู่ล้างมือ": 9.5,
+    "น้ำยาล้างห้องน้ำ": 13.0
+}
+
+print("=== ตารางวิเคราะห์คุณสมบัติความเป็นกรด-เบส ===")
+for name, ph in samples.items():
+    if ph < 7.0:
+        category = "กรด (Acidic)"
+    elif ph == 7.0:
+        category = "เป็นกลาง (Neutral)"
+    else:
+        category = "เบส (Basic/Alkaline)"
+    print(f"ตัวอย่าง: {name:<15} | pH = {ph:>4.1f} | คุณสมบัติ: {category}")
+`,
+      bio_growth: `# ==========================================
+# แล็บบันทึกอัตราการเจริญเติบโตของพืช (สัปดาห์ที่ 1 - 5)
+# ==========================================
+
+heights_cm = [1.2, 2.5, 4.8, 8.1, 12.4] # ความสูงรายสัปดาห์
+
+print("สัปดาห์\\tความสูง (cm)\\tอัตราการเติบโต (cm/สัปดาห์)")
+print("-" * 50)
+
+total_growth = 0
+for i in range(len(heights_cm)):
+    if i == 0:
+        growth_rate = heights_cm[i]
+    else:
+        growth_rate = heights_cm[i] - heights_cm[i-1]
+    
+    total_growth += growth_rate
+    print(f"สัปดาห์ที่ {i+1}\\t{heights_cm[i]:.2f} cm\\t+{growth_rate:.2f} cm")
+
+avg_growth = total_growth / len(heights_cm)
+print("-" * 50)
+print(f"อัตราการเติบโตเฉลี่ย: {avg_growth:.2f} cm/สัปดาห์")
+`,
+      free_fall: `# ==========================================
+# แล็บคำนวณการตกอิสระภายใต้แรงโน้มถ่วง
+# สูตร: v = u + gt และ s = ut + 0.5 * g * (t ** 2)
+# ==========================================
+
+g = 9.81        # ความเร่งโน้มถ่วงของโลก (m/s²)
+u = 0.0         # ปล่อยจากหยุดนิ่ง (m/s)
+
+times = [0.5, 1.0, 1.5, 2.0, 2.5, 3.0]
+
+print("เวลา (t, s)\\tระยะทางตก (s, m)\\tอัตราเร็ว (v, m/s)")
+print("=" * 55)
+
+for t in times:
+    distance = u * t + 0.5 * g * (t ** 2)
+    velocity = u + g * t
+    print(f"{t:>4.1f} s\\t\\t{distance:>8.2f} m\\t\\t{velocity:>8.2f} m/s")
+`,
+      blank: `# เขียนโค้ด Python ที่นี่
+print("สวัสดีครับ ยินดีต้อนรับสู่วิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์!")
+`
+    };
+
+    const editor = document.getElementById('codeEditor');
+    const lineNumbers = document.getElementById('lineNumbers');
+    const terminal = document.getElementById('terminalOutput');
+    const varBody = document.getElementById('varTableBody');
+    const timerElem = document.getElementById('execTimer');
+
+    // Sync line numbers
+    function updateLineNumbers() {
+      const lines = editor.value.split('\n').length;
+      let lineHtml = '';
+      for (let i = 1; i <= Math.max(lines, 1); i++) {
+        lineHtml += i + '<br>';
+      }
+      lineNumbers.innerHTML = lineHtml;
+    }
+
+    editor.addEventListener('input', updateLineNumbers);
+    editor.addEventListener('keydown', function(e) {
+      if (e.key === 'Tab') {
+        e.preventDefault();
+        const start = this.selectionStart;
+        const end = this.selectionEnd;
+        this.value = this.value.substring(0, start) + '    ' + this.value.substring(end);
+        this.selectionStart = this.selectionEnd = start + 4;
+        updateLineNumbers();
+      }
+      if (e.ctrlKey && e.key === 'Enter') {
+        e.preventDefault();
+        runPythonCode();
+      }
+    });
+
+    function loadPreset(key) {
+      if (presets[key]) {
+        editor.value = presets[key];
+        updateLineNumbers();
+        playBeep(660, 'sine', 0.08);
+      }
+    }
+
+    function clearOutput() {
+      terminal.innerHTML = '<span style=\"color: #64748b;\">[คอนโซลถูกล้างเรียบร้อยแล้ว]</span>\\n';
+      playBeep(330, 'triangle', 0.08);
+    }
+
+    // 3. Skulpt Python Engine Runner
+    function outf(text) {
+      terminal.innerHTML += text;
+      terminal.scrollTop = terminal.scrollHeight;
+    }
+
+    function builtinRead(x) {
+      if (Sk.builtinFiles === undefined || Sk.builtinFiles["files"][x] === undefined)
+        throw "File not found: '" + x + "'";
+      return Sk.builtinFiles["files"][x];
+    }
+
+    function inspectVariables(globals) {
+      varBody.innerHTML = '';
+      let count = 0;
+      
+      const ignored = ['__name__', '__doc__', '__package__'];
+      for (let key in globals) {
+        if (ignored.includes(key)) continue;
+        const valObj = globals[key];
+        let valStr = '';
+        let typeStr = typeof valObj;
+
+        try {
+          valStr = Sk.ffi.remFormat(valObj);
+          if (valObj.tp$name) {
+            typeStr = valObj.tp$name;
+          }
+        } catch (e) {
+          valStr = String(valObj);
+        }
+
+        let badgeClass = 'badge-int';
+        if (typeStr === 'float') badgeClass = 'badge-float';
+        else if (typeStr === 'str') badgeClass = 'badge-str';
+        else if (typeStr === 'list' || typeStr === 'dict') badgeClass = 'badge-list';
+
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td style="color: var(--cyan); font-weight: 600;">${key}</td>
+          <td><span class="badge-type ${badgeClass}">${typeStr}</span></td>
+          <td style="color: #e2e8f0;">${valStr}</td>
+        `;
+        varBody.appendChild(row);
+        count++;
+      }
+
+      if (count === 0) {
+        varBody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: var(--text-muted); padding: 1rem;">ไม่มีตัวแปรสาธารณะที่ถูกบันทึก</td></tr>';
+      }
+    }
+
+    function runPythonCode() {
+      const code = editor.value;
+      terminal.innerHTML = '';
+      playBeep(880, 'sine', 0.08);
+      const startTime = performance.now();
+
+      Sk.pre = "output";
+      Sk.configure({
+        output: outf,
+        read: builtinRead,
+        __future__: Sk.python3
+      });
+
+      const myPromise = Sk.misceval.asyncToPromise(function() {
+        return Sk.importMainWithBody("<stdin>", false, code, true);
+      });
+
+      myPromise.then(function(mod) {
+        const elapsed = (performance.now() - startTime).toFixed(2);
+        timerElem.innerText = elapsed + ' ms';
+        terminal.innerHTML += `\\n<span class="success">✔ รันโค้ดสำเร็จเรียบร้อย (${elapsed} ms)</span>\\n`;
+        playBeep(1046.5, 'sine', 0.12);
+        
+        // Inspect variables in module namespace
+        if (mod && mod.$d) {
+          inspectVariables(mod.$d);
+        }
+      }, function(err) {
+        const elapsed = (performance.now() - startTime).toFixed(2);
+        timerElem.innerText = elapsed + ' ms';
+        terminal.innerHTML += `<span class="error">❌ ข้อผิดพลาด (Error):\\n${err.toString()}</span>\\n`;
+        playBeep(220, 'sawtooth', 0.2);
+      });
+    }
+
+    // Initialize Default Preset
+    window.addEventListener('DOMContentLoaded', () => {
+      loadPreset('physics_ek');
+    });
+  </script>
+</body>
+</html>
+

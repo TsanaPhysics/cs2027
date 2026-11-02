@@ -1,0 +1,1391 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แผนการสอนสัปดาห์ที่ 7 - การทดสอบและตรวจหาข้อผิดพลาดของโปรแกรม (Debugging) และแบบจำลองวิทย์</title>
+    <!-- ฟอนต์ Sarabun และ Inter จาก Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- MathJax 3 for Scientific Notation & Equations -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [["$", "$"], ["\\(", "\\)"]],
+                displayMath: [["$$", "$$"], ["\\[", "\\]"]],
+                processEscapes: true,
+                processEnvironments: true
+            },
+            options: {
+                skipHtmlTags: ["script", "noscript", "style", "textarea", "pre", "code"]
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --primary: #0f172a;
+            --primary-light: #1e293b;
+            --accent: #2563eb;
+            --accent-hover: #1d4ed8;
+            --secondary: #0891b2;
+            --success: #059669;
+            --warning: #d97706;
+            --danger: #dc2626;
+            --purple: #7c3aed;
+            --bug-red: #ef4444;
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --border-focus: #94a3b8;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.08), 0 2px 4px -2px rgba(0,0,0,0.05);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.05);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Sarabun', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.8;
+            font-size: 16px;
+        }
+
+        .container {
+            max-width: 1140px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        .nav-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 1.25rem;
+            padding: 0.5rem 1rem;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.25s ease;
+        }
+
+        .nav-back:hover {
+            color: var(--accent-hover);
+            transform: translateX(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0369a1 100%);
+            color: #ffffff;
+            padding: 3rem 2.5rem;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            top: -40%;
+            right: -10%;
+            width: 480px;
+            height: 480px;
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.25) 0%, rgba(255, 255, 255, 0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .header-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(8px);
+            padding: 0.35rem 0.85rem;
+            border-radius: 9999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            line-height: 1.3;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.02em;
+        }
+
+        .header .subtitle {
+            font-size: 1.15rem;
+            opacity: 0.92;
+            font-weight: 400;
+            max-width: 880px;
+        }
+
+        .header .course-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 1.25rem 1.5rem;
+            border-radius: 12px;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .header .course-info span {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.92rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .tab-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 0.85rem 1.4rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            transition: all 0.25s ease;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .tab-btn:hover {
+            background: #f1f5f9;
+            color: var(--accent);
+            border-color: #cbd5e1;
+        }
+
+        .tab-btn.active {
+            background: var(--accent);
+            color: #ffffff;
+            border-color: var(--accent);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+
+        .content-section {
+            display: none;
+            animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--bg-card);
+            border-radius: 14px;
+            padding: 2.25rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+        }
+
+        .card-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding-bottom: 0.85rem;
+            border-bottom: 2px solid #f1f5f9;
+        }
+
+        .card-title i {
+            color: var(--accent);
+        }
+
+        .highlight-box {
+            background-color: #eff6ff;
+            border-left: 4px solid var(--accent);
+            padding: 1.25rem 1.5rem;
+            border-radius: 0 10px 10px 0;
+            margin: 1.5rem 0;
+            font-size: 0.98rem;
+        }
+
+        .highlight-box.warning {
+            background-color: #fffbeb;
+            border-left-color: var(--warning);
+        }
+
+        .highlight-box.success {
+            background-color: #ecfdf5;
+            border-left-color: var(--success);
+        }
+
+        .highlight-box.danger {
+            background-color: #fef2f2;
+            border-left-color: var(--danger);
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .feature-box {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.25s ease;
+        }
+
+        .feature-box:hover {
+            border-color: var(--accent);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .feature-box h4 {
+            font-size: 1.1rem;
+            color: var(--primary);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .session-block {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 1.75rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border);
+            border-left: 5px solid var(--secondary);
+        }
+
+        .session-block h4 {
+            color: var(--primary);
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .time-badge {
+            background: #e0f2fe;
+            color: #0369a1;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+        }
+
+        th, td {
+            padding: 0.9rem 1.1rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+
+        th {
+            background-color: #f1f5f9;
+            font-weight: 700;
+            color: var(--primary);
+            border-top: 1px solid var(--border);
+        }
+
+        tr:hover td {
+            background-color: #f8fafc;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.65rem;
+            border-radius: 6px;
+            font-size: 0.82rem;
+            font-weight: 600;
+        }
+
+        .badge-blue { background: #dbeafe; color: #1e40af; }
+        .badge-green { background: #dcfce7; color: #166534; }
+        .badge-purple { background: #f3e8ff; color: #6b21a8; }
+        .badge-amber { background: #fef3c7; color: #92400e; }
+        .badge-red { background: #fee2e2; color: #991b1b; }
+
+        pre {
+            background: #0f172a;
+            color: #f8fafc;
+            padding: 1.25rem 1.5rem;
+            border-radius: 10px;
+            overflow-x: auto;
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            font-size: 0.92rem;
+            line-height: 1.6;
+            margin: 1rem 0;
+            border: 1px solid #1e293b;
+        }
+
+        code {
+            font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+            background-color: #f1f5f9;
+            color: #b91c1c;
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        pre code {
+            background-color: transparent;
+            color: inherit;
+            padding: 0;
+        }
+
+        .svg-container {
+            width: 100%;
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.75rem 0;
+            box-shadow: var(--shadow-sm);
+            text-align: center;
+        }
+
+        .svg-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.75rem;
+            text-align: center;
+        }
+
+        .svg-caption {
+            font-size: 0.88rem;
+            color: var(--text-muted);
+            margin-top: 0.75rem;
+            text-align: center;
+            font-style: italic;
+        }
+
+        .quiz-card {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.75rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .quiz-question {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .quiz-options {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 1rem;
+        }
+
+        .quiz-option {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .quiz-option:hover {
+            background: #f1f5f9;
+            border-color: #cbd5e1;
+        }
+
+        .quiz-explanation {
+            background: #ecfdf5;
+            border-left: 4px solid var(--success);
+            padding: 1rem 1.25rem;
+            border-radius: 0 8px 8px 0;
+            margin-top: 1rem;
+            font-size: 0.95rem;
+            display: none;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2.5rem 0;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border);
+            margin-top: 3rem;
+        }
+
+        @media (max-width: 768px) {
+            .header { padding: 2rem 1.5rem; }
+            .header h1 { font-size: 1.6rem; }
+            .card { padding: 1.5rem; }
+            .tabs { gap: 0.35rem; }
+            .tab-btn { padding: 0.65rem 1rem; font-size: 0.88rem; }
+            .grid-2 { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <a href="../index.html" class="nav-back">
+        <i class="fas fa-arrow-left"></i> กลับสู่หน้าหลักรายวิชา
+    </a>
+
+    <header class="header">
+        <div class="header-badge"><i class="fas fa-bug"></i> Quality Assurance & Simulation Modeling</div>
+        <h1>📚 แผนการสอนสัปดาห์ที่ 7</h1>
+        <p class="subtitle">การทดสอบและตรวจหาข้อผิดพลาดของโปรแกรม (Debugging) และแบบจำลองวิทย์</p>
+        <div class="course-info">
+            <span><i class="fas fa-book"></i> <strong>รหัสวิชา:</strong> 4124941</span>
+            <span><i class="fas fa-graduation-cap"></i> <strong>วิชา:</strong> วิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์</span>
+            <span><i class="fas fa-chalkboard-teacher"></i> <strong>ผู้สอน:</strong> ผศ.ดร.ชีวะ ทัศนา</span>
+            <span><i class="fas fa-university"></i> <strong>สังกัด:</strong> คณะวิทยาศาสตร์และเทคโนโลยี</span>
+            <span><i class="fas fa-clock"></i> <strong>เวลา:</strong> 4 ชม. (บรรยาย 2 + ปฏิบัติ 2)</span>
+        </div>
+    </header>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="showTab('tab1', this)"><i class="fas fa-bullseye"></i> ผลลัพธ์การเรียนรู้ (WLOs)</button>
+        <button class="tab-btn" onclick="showTab('tab2', this)"><i class="fas fa-project-diagram"></i> สาระสำคัญ & สื่อทัศนศิลป์</button>
+        <button class="tab-btn" onclick="showTab('tab3', this)"><i class="fas fa-chalkboard-user"></i> กิจกรรมการเรียนรู้ (5E)</button>
+        <button class="tab-btn" onclick="showTab('tab4', this)"><i class="fas fa-clipboard-check"></i> การวัดและประเมินผล</button>
+        <button class="tab-btn" onclick="showTab('tab5', this)"><i class="fas fa-brain"></i> ข้อสอบวัดสมรรถนะ (HOTS)</button>
+        <button class="tab-btn" onclick="showTab('tab6', this)"><i class="fas fa-book-bookmark"></i> เอกสารอ้างอิง (APA 7th)</button>
+    </div>
+
+    <!-- ==========================================
+         TAB 1: ผลลัพธ์การเรียนรู้ (WLOs)
+         ========================================== -->
+    <div id="tab1" class="content-section active">
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-bullseye"></i> ผลลัพธ์การเรียนรู้ระดับสัปดาห์ (Weekly Learning Outcomes: WLOs)</h2>
+            <p style="margin-bottom: 1.5rem; color: var(--text-muted);">
+                เมื่อสิ้นสุดการจัดกิจกรรมการเรียนรู้สัปดาห์ที่ 7 นักศึกษาครูวิทยาศาสตร์สามารถแสดงสมรรถนะ 4 มิติเชิงบูรณาการในการทดสอบและตรวจหาข้อผิดพลาดของแบบจำลองวิทยาศาสตร์ได้ดังนี้:
+            </p>
+
+            <div class="grid-2">
+                <div class="feature-box" style="border-top: 4px solid var(--danger);">
+                    <h4><i class="fas fa-triangle-exclamation text-danger"></i> WLO 1: ความรู้ด้านอนุกรมวิธานข้อผิดพลาด (Error Taxonomy)</h4>
+                    <p>สามารถจำแนก เปรียบเทียบ และอธิบายกลไกการเกิดข้อผิดพลาด 3 ประเภทในโปรแกรมวิทยาศาสตร์ ได้แก่ <strong>Syntax Error</strong> (ข้อผิดพลาดทางไวยากรณ์), <strong>Runtime Error / Exceptions</strong> (ข้อผิดพลาดขณะรันโปรแกรม เช่น <code>ZeroDivisionError</code>, <code>IndexError</code>, <code>ValueError</code>), และ <strong>Logic Error</strong> (ข้อผิดพลาดเชิงตรรกะและสูตรทางวิทยาศาสตร์) ได้อย่างแม่นยำ</p>
+                </div>
+
+                <div class="feature-box" style="border-top: 4px solid var(--secondary);">
+                    <h4><i class="fas fa-magnifying-glass-chart text-secondary"></i> WLO 2: วงจรการดีบักและชุดกรณีทดสอบ (Scientific Debugging & Test Cases)</h4>
+                    <p>สามารถประยุกต์ใช้วงจรการดีบักเชิงวิทยาศาสตร์ (Scientific Debugging Cycle: Hypothesize $\rightarrow$ Instrument $\rightarrow$ Observe $\rightarrow$ Refine) และออกแบบชุดกรณีทดสอบแบบครอบคลุม (Test Cases: Normal, Edge/Boundary, Invalid Cases) เพื่อตรวจสอบความเที่ยงตรงของแบบจำลองการทดลองเสมือนจริงได้อย่างเป็นระบบ</p>
+                </div>
+
+                <div class="feature-box" style="border-top: 4px solid var(--success);">
+                    <h4><i class="fas fa-shield-virus text-success"></i> WLO 3: การเขียนโปรแกรมป้องกันข้อผิดพลาด (Defensive Programming)</h4>
+                    <p>พัฒนาโปรแกรม Scratch และ Python 3.11 โดยใช้กลไกการเขียนโปรแกรมเชิงป้องกัน (Defensive Guard) ด้วยคำสั่ง <code>try...except</code>, <code>assert</code>, Type Hints และการตรวจจับขอบเขตของตัวแปรก่อนคำนวณ เพื่อให้แบบจำลองทางวิทยาศาสตร์มีความเสถียร ไม่ขัดข้อง (Crash) เมื่อเผชิญกับข้อมูลนำเข้าที่ผิดปกติ</p>
+                </div>
+
+                <div class="feature-box" style="border-top: 4px solid var(--purple);">
+                    <h4><i class="fas fa-seedling text-purple"></i> WLO 4: การสอนเชิงสร้างสรรค์และการส่งเสริม Growth Mindset (Pedagogy & Mindset)</h4>
+                    <p>สามารถออกแบบแผนการจัดการเรียนรู้วิทยาศาสตร์ที่เปลี่ยน "ความผิดพลาด (Bugs)" ให้กลายเป็น "โอกาสในการเรียนรู้ (Productive Failure / Growth Mindset)" พร้อมทั้งฝึกทักษะการตรวจสอบความสมเหตุสมผลของผลลัพธ์ทางวิทยาศาสตร์แก่นักเรียนตามแนวคิดระเบียบวิธีทางวิทยาศาสตร์</p>
+                </div>
+            </div>
+
+            <div class="highlight-box success">
+                <strong><i class="fas fa-link"></i> การเชื่อมโยงผลลัพธ์การเรียนรู้ระดับหลักสูตร (CLO Alignment):</strong>
+                สอดรับกับ <strong>CLO2:</strong> สามารถออกแบบและเขียนโปรแกรมคอมพิวเตอร์อย่างง่ายเพื่อจำลองแบบทางวิทยาศาสตร์ และ <strong>CLO3:</strong> ตระหนักถึงความสำคัญ จริยธรรม และความรับผิดชอบในการใช้เทคโนโลยีคำนวณเพื่อการสอน โดยเฉพาะการส่งมอบแบบจำลองที่มีความถูกต้องทางวิชาการและปลอดภัยต่อการเรียนรู้
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         TAB 2: สาระสำคัญ & สื่อทัศนศิลป์
+         ========================================== -->
+    <div id="tab2" class="content-section">
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-project-diagram"></i> สาระสำคัญเชิงวิชาการ & สื่อทัศนศิลป์ (No Text-Wall Visual Architecture)</h2>
+            <p style="margin-bottom: 1.5rem; color: var(--text-muted);">
+                ในวงการวิทยาการคำนวณ <strong>การตรวจหาและแก้ไขข้อผิดพลาด (Debugging)</strong> มิใช่เพียงการแก้โค้ดให้รันผ่าน แต่เป็นกระบวนการสืบเสาะทางวิทยาศาสตร์ (Scientific Inquiry) เพื่อยืนยันว่า <em>"แบบจำลองคอมพิวเตอร์สามารถสะท้อนความจริงทางธรรมชาติได้อย่างถูกต้องและเที่ยงตรง"</em>
+            </p>
+
+            <!-- หัวข้อที่ 1: อนุกรมวิธานของข้อผิดพลาด -->
+            <h3 style="color: var(--primary); margin: 1.75rem 0 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fas fa-bug text-danger"></i> 1. อนุกรมวิธานข้อผิดพลาดในโปรแกรมวิทยาศาสตร์ (Taxonomy of Scientific Programming Errors)
+            </h3>
+            <p>
+                ข้อผิดพลาดในโปรแกรมจำลองวิทยาศาสตร์จำแนกออกเป็น 3 ระดับ ซึ่งมีระดับความร้ายแรงและเทคนิคในการตรวจหาที่แตกต่างกันอย่างสิ้นเชิง:
+            </p>
+
+            <!-- INFOGRAPHIC 7.1 SVG -->
+            <div class="svg-container">
+                <div class="svg-title"><i class="fas fa-sitemap"></i> ภาพผังที่ 7.1: อนุกรมวิธานข้อผิดพลาดในโปรแกรมจำลองวิทยาศาสตร์ (Taxonomy of Scientific Programming Errors)</div>
+                <svg viewBox="0 0 960 460" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="gradSyntax" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#3b82f6" />
+                            <stop offset="100%" stop-color="#1d4ed8" />
+                        </linearGradient>
+                        <linearGradient id="gradRuntime" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#f59e0b" />
+                            <stop offset="100%" stop-color="#b45309" />
+                        </linearGradient>
+                        <linearGradient id="gradLogic" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#ef4444" />
+                            <stop offset="100%" stop-color="#b91c1c" />
+                        </linearGradient>
+                        <filter id="shadowCard" x="-5%" y="-5%" width="110%" height="115%" filterUnits="userSpaceOnUse">
+                            <feDropShadow dx="2" dy="4" stdDeviation="4" flood-opacity="0.12"/>
+                        </filter>
+                    </defs>
+
+                    <!-- Background Base -->
+                    <rect x="20" y="20" width="920" height="420" rx="16" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5" />
+
+                    <!-- Header Banner -->
+                    <rect x="20" y="20" width="920" height="50" rx="16" fill="#0f172a" />
+                    <text x="480" y="52" fill="#ffffff" font-family="'Sarabun', sans-serif" font-size="18" font-weight="700" text-anchor="middle">3 เสาหลักแห่งข้อผิดพลาดในแบบจำลองวิทยาศาสตร์ (Error Spectrum)</text>
+
+                    <!-- Column 1: Syntax Error -->
+                    <g transform="translate(45, 90)" filter="url(#shadowCard)">
+                        <rect x="0" y="0" width="270" height="330" rx="12" fill="#ffffff" stroke="#93c5fd" stroke-width="1.5" />
+                        <rect x="0" y="0" width="270" height="45" rx="12" fill="url(#gradSyntax)" />
+                        <text x="135" y="28" fill="#ffffff" font-family="'Sarabun', sans-serif" font-size="15" font-weight="700" text-anchor="middle">1. Syntax Error (ไวยากรณ์)</text>
+                        
+                        <text x="20" y="75" fill="#1e40af" font-family="'Sarabun', sans-serif" font-size="13" font-weight="700">📍 ช่วงที่เกิด:</text>
+                        <text x="20" y="95" fill="#334155" font-family="'Sarabun', sans-serif" font-size="12">ก่อนรันโปรแกรม (Compile / Parse Time)</text>
+                        
+                        <text x="20" y="125" fill="#1e40af" font-family="'Sarabun', sans-serif" font-size="13" font-weight="700">⚠️ อาการที่ปรากฏ:</text>
+                        <text x="20" y="145" fill="#334155" font-family="'Sarabun', sans-serif" font-size="12">โปรแกรมปฏิเสธการรัน แจ้งบรรทัดที่ผิด</text>
+
+                        <!-- Code Example Box -->
+                        <rect x="15" y="165" width="240" height="75" rx="6" fill="#eff6ff" stroke="#bfdbfe" />
+                        <text x="25" y="185" fill="#b91c1c" font-family="'Consolas', monospace" font-size="11"># ลืมเครื่องหมายโคลอน (:)</text>
+                        <text x="25" y="205" fill="#1e293b" font-family="'Consolas', monospace" font-size="11">if temperature &gt; 100</text>
+                        <text x="25" y="225" fill="#047857" font-family="'Consolas', monospace" font-size="11">    state = "Steam"</text>
+
+                        <rect x="20" y="260" width="230" height="50" rx="6" fill="#f1f5f9" />
+                        <text x="135" y="280" fill="#475569" font-family="'Sarabun', sans-serif" font-size="11" font-weight="600" text-anchor="middle">ระดับความยากในการหา: ง่ายมาก ⭐</text>
+                        <text x="135" y="298" fill="#059669" font-family="'Sarabun', sans-serif" font-size="11" text-anchor="middle">✓ Python แจ้งบรรทัดและชี้ตำแหน่งชัด</text>
+                    </g>
+
+                    <!-- Column 2: Runtime Error -->
+                    <g transform="translate(345, 90)" filter="url(#shadowCard)">
+                        <rect x="0" y="0" width="270" height="330" rx="12" fill="#ffffff" stroke="#fcd34d" stroke-width="1.5" />
+                        <rect x="0" y="0" width="270" height="45" rx="12" fill="url(#gradRuntime)" />
+                        <text x="135" y="28" fill="#ffffff" font-family="'Sarabun', sans-serif" font-size="15" font-weight="700" text-anchor="middle">2. Runtime Error (ขณะรัน)</text>
+
+                        <text x="20" y="75" fill="#b45309" font-family="'Sarabun', sans-serif" font-size="13" font-weight="700">📍 ช่วงที่เกิด:</text>
+                        <text x="20" y="95" fill="#334155" font-family="'Sarabun', sans-serif" font-size="12">ขณะโปรแกรมกำลังประมวลผล (Run Time)</text>
+
+                        <text x="20" y="125" fill="#b45309" font-family="'Sarabun', sans-serif" font-size="13" font-weight="700">⚠️ อาการที่ปรากฏ:</text>
+                        <text x="20" y="145" fill="#334155" font-family="'Sarabun', sans-serif" font-size="12">โปรแกรมหยุดทำงานกะทันหัน (Crash / Throw)</text>
+
+                        <!-- Code Example Box -->
+                        <rect x="15" y="165" width="240" height="75" rx="6" fill="#fffbeb" stroke="#fde68a" />
+                        <text x="25" y="185" fill="#b91c1c" font-family="'Consolas', monospace" font-size="11"># หารด้วยศูนย์ / ข้อมูลผิดประเภท</text>
+                        <text x="25" y="205" fill="#1e293b" font-family="'Consolas', monospace" font-size="11">velocity = distance / time</text>
+                        <text x="25" y="225" fill="#dc2626" font-family="'Consolas', monospace" font-size="11"># Crash ถ้า time = 0 !</text>
+
+                        <rect x="20" y="260" width="230" height="50" rx="6" fill="#f1f5f9" />
+                        <text x="135" y="280" fill="#475569" font-family="'Sarabun', sans-serif" font-size="11" font-weight="600" text-anchor="middle">ระดับความยากในการหา: ปานกลาง ⭐⭐</text>
+                        <text x="135" y="298" fill="#d97706" font-family="'Sarabun', sans-serif" font-size="11" text-anchor="middle">✓ ต้องใช้ Defensive Guard (try/except)</text>
+                    </g>
+
+                    <!-- Column 3: Logic Error -->
+                    <g transform="translate(645, 90)" filter="url(#shadowCard)">
+                        <rect x="0" y="0" width="270" height="330" rx="12" fill="#ffffff" stroke="#fca5a5" stroke-width="2" />
+                        <rect x="0" y="0" width="270" height="45" rx="12" fill="url(#gradLogic)" />
+                        <text x="135" y="28" fill="#ffffff" font-family="'Sarabun', sans-serif" font-size="15" font-weight="700" text-anchor="middle">3. Logic Error (ตรรกะ/สูตรวิทย์)</text>
+
+                        <text x="20" y="75" fill="#b91c1c" font-family="'Sarabun', sans-serif" font-size="13" font-weight="700">📍 ช่วงที่เกิด:</text>
+                        <text x="20" y="95" fill="#334155" font-family="'Sarabun', sans-serif" font-size="12">ผลลัพธ์หลังโปรแกรมทำงานเสร็จสิ้น</text>
+
+                        <text x="20" y="125" fill="#b91c1c" font-family="'Sarabun', sans-serif" font-size="13" font-weight="700">⚠️ อาการที่ปรากฏ:</text>
+                        <text x="20" y="145" fill="#334155" font-family="'Sarabun', sans-serif" font-size="12">รันผ่านฉลุย ไม่แจ้ง Error แต่ผลลัพธ์ผิดธรรมชาติ!</text>
+
+                        <!-- Code Example Box -->
+                        <rect x="15" y="165" width="240" height="75" rx="6" fill="#fef2f2" stroke="#fecaca" />
+                        <text x="25" y="185" fill="#b91c1c" font-family="'Consolas', monospace" font-size="11"># ใช้สูตรพลังงานจลน์ผิด (ขาด 1/2)</text>
+                        <text x="25" y="205" fill="#1e293b" font-family="'Consolas', monospace" font-size="11">kinetic_e = mass * (v ** 2)</text>
+                        <text x="25" y="225" fill="#dc2626" font-family="'Consolas', monospace" font-size="11"># ผลลัพธ์พลังงานสูงกว่าจริง 2 เท่า!</text>
+
+                        <rect x="20" y="260" width="230" height="50" rx="6" fill="#fef2f2" stroke="#dc2626" stroke-width="1" />
+                        <text x="135" y="280" fill="#991b1b" font-family="'Sarabun', sans-serif" font-size="11" font-weight="700" text-anchor="middle">ระดับความยากในการหา: อันตรายสูงสุด ⭐⭐⭐</text>
+                        <text x="135" y="298" fill="#991b1b" font-family="'Sarabun', sans-serif" font-size="11" text-anchor="middle">⚠️ ต้องใช้ Test Cases & Validation ตรวจสอบ</text>
+                    </g>
+                </svg>
+                <div class="svg-caption">แสดงการเปรียบเทียบสเปกตรัมข้อผิดพลาด 3 ประเภทในโปรแกรมวิทยาศาสตร์ โดย Logic Error เป็นข้อผิดพลาดที่ร้ายแรงและตรวจพบได้ยากที่สุด</div>
+            </div>
+
+            <!-- หัวข้อที่ 2: วงจรการดีบักเชิงวิทยาศาสตร์ -->
+            <h3 style="color: var(--primary); margin: 2rem 0 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fas fa-arrows-spin text-secondary"></i> 2. วงจรการดีบักเชิงวิทยาศาสตร์ (Scientific Debugging Cycle: Hypothesize-Test Workflow)
+            </h3>
+            <p>
+                การดีบักที่ทรงประสิทธิภาพมิใช่การ "สุ่มแก้โค้ดไปเรื่อยๆ (Trial and Error)" แต่นักศึกษาครูวิทยาศาสตร์ต้องใช้ <strong>วงจรการดีบักเชิงวิทยาศาสตร์</strong> ซึ่งมีกระบวนการเหมือนกับ <strong>ระเบียบวิธีทางวิทยาศาสตร์ (Scientific Method)</strong> ทุกประการ โดยเปลี่ยนจากการศึกษาสิ่งแวดล้อมธรรมชาติมาเป็นการศึกษาพฤติกรรมของซอฟต์แวร์
+            </p>
+
+            <!-- INFOGRAPHIC 7.2 SVG -->
+            <div class="svg-container">
+                <div class="svg-title"><i class="fas fa-arrows-rotate"></i> ภาพผังที่ 7.2: วงจรการดีบักเชิงวิทยาศาสตร์เปรียบเทียบกับระเบียบวิธีทางวิทยาศาสตร์ (Scientific Debugging Cycle)</div>
+                <svg viewBox="0 0 960 420" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="gradCycle" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#0891b2" />
+                            <stop offset="100%" stop-color="#0e7490" />
+                        </linearGradient>
+                    </defs>
+
+                    <!-- Background Base -->
+                    <rect x="20" y="20" width="920" height="380" rx="16" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5" />
+
+                    <!-- Step 1: Observe (Top Left) -->
+                    <g transform="translate(60, 50)">
+                        <rect x="0" y="0" width="380" height="130" rx="12" fill="#eff6ff" stroke="#3b82f6" stroke-width="2" />
+                        <rect x="0" y="0" width="380" height="36" rx="12" fill="#3b82f6" />
+                        <text x="190" y="24" fill="#ffffff" font-family="'Sarabun', sans-serif" font-size="14" font-weight="700" text-anchor="middle">ขั้นที่ 1: สังเกตอาการและทำซ้ำบั๊ก (Observe & Reproduce)</text>
+                        <text x="20" y="65" fill="#1e3a8a" font-family="'Sarabun', sans-serif" font-size="12">• ระเบียบวิธีวิทย์: สังเกตปรากฏการณ์ธรรมชาติที่ผิดปกติ</text>
+                        <text x="20" y="90" fill="#1e3a8a" font-family="'Sarabun', sans-serif" font-size="12">• การดีบักโค้ด: บันทึกว่าอาการพังเกิดขึ้นเมื่อป้อนอินพุตใด</text>
+                        <text x="20" y="115" fill="#047857" font-family="'Sarabun', sans-serif" font-size="12">✓ สร้างชุดข้อมูลจำลองที่สามารถทำให้เกิดบั๊กซ้ำได้ 100%</text>
+                    </g>
+
+                    <!-- Arrow 1 to 2 -->
+                    <line x1="440" y1="115" x2="520" y2="115" stroke="#3b82f6" stroke-width="3" />
+                    <polygon points="520,110 532,115 520,120" fill="#3b82f6" />
+
+                    <!-- Step 2: Hypothesize (Top Right) -->
+                    <g transform="translate(520, 50)">
+                        <rect x="0" y="0" width="380" height="130" rx="12" fill="#fffbeb" stroke="#f59e0b" stroke-width="2" />
+                        <rect x="0" y="0" width="380" height="36" rx="12" fill="#f59e0b" />
+                        <text x="190" y="24" fill="#ffffff" font-family="'Sarabun', sans-serif" font-size="14" font-weight="700" text-anchor="middle">ขั้นที่ 2: ตั้งสมมติฐานจุดบกพร่อง (Formulate Hypothesis)</text>
+                        <text x="20" y="65" fill="#b45309" font-family="'Sarabun', sans-serif" font-size="12">• ระเบียบวิธีวิทย์: ตั้งสมมติฐานว่าปัจจัยใดเป็นสาเหตุ</text>
+                        <text x="20" y="90" fill="#b45309" font-family="'Sarabun', sans-serif" font-size="12">• การดีบักโค้ด: คาดการณ์ว่าฟังก์ชันหรือตัวแปรใดให้ค่าผิด</text>
+                        <text x="20" y="115" fill="#b45309" font-family="'Sarabun', sans-serif" font-size="12">✓ Rubber Duck: อธิบายโค้ดทีละบรรทัดให้เป็ดยาง/เพื่อนฟัง</text>
+                    </g>
+
+                    <!-- Arrow 2 to 3 -->
+                    <line x1="710" y1="180" x2="710" y2="230" stroke="#f59e0b" stroke-width="3" />
+                    <polygon points="705,230 710,242 715,230" fill="#f59e0b" />
+
+                    <!-- Step 3: Instrument & Test (Bottom Right) -->
+                    <g transform="translate(520, 230)">
+                        <rect x="0" y="0" width="380" height="130" rx="12" fill="#fef2f2" stroke="#ef4444" stroke-width="2" />
+                        <rect x="0" y="0" width="380" height="36" rx="12" fill="#ef4444" />
+                        <text x="190" y="24" fill="#ffffff" font-family="'Sarabun', sans-serif" font-size="14" font-weight="700" text-anchor="middle">ขั้นที่ 3: ติดตั้งเครื่องมือทดสอบ (Instrument & Probe)</text>
+                        <text x="20" y="65" fill="#991b1b" font-family="'Sarabun', sans-serif" font-size="12">• ระเบียบวิธีวิทย์: ใช้เซนเซอร์วัดค่าในห้องแล็บเพื่อเก็บข้อมูล</text>
+                        <text x="20" y="90" fill="#991b1b" font-family="'Sarabun', sans-serif" font-size="12">• การดีบักโค้ด: ใส่ <code>print(f"DEBUG: v={v}")</code> หรือ Breakpoint</text>
+                        <text x="20" y="115" fill="#991b1b" font-family="'Sarabun', sans-serif" font-size="12">✓ ตรวจสอบสถานะของตัวแปรก่อนและหลังคำนวณสูตร</text>
+                    </g>
+
+                    <!-- Arrow 3 to 4 -->
+                    <line x1="520" y1="295" x2="440" y2="295" stroke="#ef4444" stroke-width="3" />
+                    <polygon points="440,290 428,295 440,300" fill="#ef4444" />
+
+                    <!-- Step 4: Refine & Validate (Bottom Left) -->
+                    <g transform="translate(60, 230)">
+                        <rect x="0" y="0" width="380" height="130" rx="12" fill="#ecfdf5" stroke="#10b981" stroke-width="2" />
+                        <rect x="0" y="0" width="380" height="36" rx="12" fill="#10b981" />
+                        <text x="190" y="24" fill="#ffffff" font-family="'Sarabun', sans-serif" font-size="14" font-weight="700" text-anchor="middle">ขั้นที่ 4: แก้ไขโค้ดและทดสอบซ้ำ (Refine & Validate)</text>
+                        <text x="20" y="65" fill="#065f46" font-family="'Sarabun', sans-serif" font-size="12">• ระเบียบวิธีวิทย์: สรุปผลและเผยแพร่ทฤษฎีที่ตรวจสอบแล้ว</text>
+                        <text x="20" y="90" fill="#065f46" font-family="'Sarabun', sans-serif" font-size="12">• การดีบักโค้ด: แก้ไขสูตร ใส่ Defensive Guard ดักจับ Error</text>
+                        <text x="20" y="115" fill="#065f46" font-family="'Sarabun', sans-serif" font-size="12">✓ Regression Test: รันชุดทดสอบเดิมทั้งหมดเพื่อยืนยันว่าไม่กระทบส่วนอื่น</text>
+                    </g>
+
+                    <!-- Arrow 4 loop back to 1 (If bug remains) -->
+                    <line x1="60" y1="295" x2="35" y2="295" stroke="#10b981" stroke-width="2" stroke-dasharray="4" />
+                    <line x1="35" y1="295" x2="35" y2="115" stroke="#10b981" stroke-width="2" stroke-dasharray="4" />
+                    <line x1="35" y1="115" x2="55" y2="115" stroke="#10b981" stroke-width="2" stroke-dasharray="4" />
+                    <polygon points="55,110 65,115 55,120" fill="#10b981" />
+                </svg>
+                <div class="svg-caption">แสดงขั้นตอนวงจรการดีบักเชิงวิทยาศาสตร์ 4 ขั้นตอนที่เทียบเคียงกับระเบียบวิธีทางวิทยาศาสตร์อย่างเป็นรูปธรรม</div>
+            </div>
+
+            <!-- หัวข้อที่ 3: การออกแบบชุดกรณีทดสอบ -->
+            <h3 style="color: var(--primary); margin: 2rem 0 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fas fa-list-check text-success"></i> 3. การออกแบบชุดกรณีทดสอบและการตรวจสอบความถูกต้องของแบบจำลอง (Test Cases & Model Validation Pipeline)
+            </h3>
+            <p>
+                ในห้องเรียนวิทยาศาสตร์ แบบจำลองที่ดีจะต้องไม่พังเมื่อนักเรียนป้อนข้อมูลสุดโต่ง เราจึงต้องสอนให้นักศึกษาครูออกแบบ <strong>ชุดกรณีทดสอบ 3 มิติ (3-Tier Test Suite)</strong>:
+            </p>
+
+            <!-- INFOGRAPHIC 7.3 SVG -->
+            <div class="svg-container">
+                <div class="svg-title"><i class="fas fa-filter-circle-dollar"></i> ภาพผังที่ 7.3: ท่อทดสอบและยืนยันความถูกต้องของแบบจำลองวิทยาศาสตร์ (Model Verification & Validation Pipeline)</div>
+                <svg viewBox="0 0 960 400" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="gradPipeline" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#1e293b" />
+                            <stop offset="100%" stop-color="#0f172a" />
+                        </linearGradient>
+                    </defs>
+
+                    <!-- Background Base -->
+                    <rect x="20" y="20" width="920" height="360" rx="14" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5" />
+
+                    <!-- Test Inputs Column -->
+                    <g transform="translate(50, 50)">
+                        <rect x="0" y="0" width="220" height="290" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" />
+                        <rect x="0" y="0" width="220" height="40" rx="10" fill="#475569" />
+                        <text x="110" y="25" fill="#ffffff" font-family="'Sarabun', sans-serif" font-size="13" font-weight="700" text-anchor="middle">ชุดกรณีทดสอบ (Test Suites)</text>
+
+                        <!-- Box 1: Normal -->
+                        <rect x="15" y="55" width="190" height="65" rx="6" fill="#ecfdf5" stroke="#10b981" />
+                        <text x="25" y="75" fill="#065f46" font-family="'Sarabun', sans-serif" font-size="12" font-weight="700">1. Normal Case (ค่าปกติ)</text>
+                        <text x="25" y="95" fill="#047857" font-family="'Consolas', monospace" font-size="11">m = 2.0 kg, v = 10.0 m/s</text>
+                        <text x="25" y="110" fill="#64748b" font-family="'Sarabun', sans-serif" font-size="10">คาดหวัง: Ek = 100.0 J</text>
+
+                        <!-- Box 2: Boundary -->
+                        <rect x="15" y="130" width="190" height="65" rx="6" fill="#fffbeb" stroke="#f59e0b" />
+                        <text x="25" y="150" fill="#b45309" font-family="'Sarabun', sans-serif" font-size="12" font-weight="700">2. Boundary Case (ขอบเขต)</text>
+                        <text x="25" y="170" fill="#b45309" font-family="'Consolas', monospace" font-size="11">v = 0.0 m/s (วัตถุนิ่ง)</text>
+                        <text x="25" y="185" fill="#64748b" font-family="'Sarabun', sans-serif" font-size="10">คาดหวัง: Ek = 0.0 J</text>
+
+                        <!-- Box 3: Invalid -->
+                        <rect x="15" y="205" width="190" height="70" rx="6" fill="#fef2f2" stroke="#ef4444" />
+                        <text x="25" y="225" fill="#991b1b" font-family="'Sarabun', sans-serif" font-size="12" font-weight="700">3. Invalid/Extreme (ผิดธรรมชาติ)</text>
+                        <text x="25" y="245" fill="#991b1b" font-family="'Consolas', monospace" font-size="11">m = -5.0 kg (มวลติดลบ!)</text>
+                        <text x="25" y="260" fill="#dc2626" font-family="'Sarabun', sans-serif" font-size="10">คาดหวัง: ยก ValueError เตือน</text>
+                    </g>
+
+                    <!-- Arrow to Core Model -->
+                    <line x1="270" y1="195" x2="330" y2="195" stroke="#2563eb" stroke-width="4" />
+                    <polygon points="330,188 345,195 330,202" fill="#2563eb" />
+
+                    <!-- Core Scientific Model Engine -->
+                    <g transform="translate(350, 50)">
+                        <rect x="0" y="0" width="280" height="290" rx="12" fill="url(#gradPipeline)" stroke="#334155" stroke-width="2" />
+                        
+                        <rect x="15" y="15" width="250" height="35" rx="6" fill="#1e293b" />
+                        <text x="140" y="38" fill="#38bdf8" font-family="'Consolas', monospace" font-size="12" font-weight="700" text-anchor="middle">def calculate_kinetic_energy(m, v):</text>
+
+                        <rect x="15" y="60" width="250" height="65" rx="6" fill="#1e1b4b" stroke="#6366f1" />
+                        <text x="25" y="80" fill="#a5b4fc" font-family="'Consolas', monospace" font-size="11"># Defensive Assertion Guard</text>
+                        <text x="25" y="98" fill="#f87171" font-family="'Consolas', monospace" font-size="11">if m &lt; 0: raise ValueError</text>
+                        <text x="25" y="115" fill="#f87171" font-family="'Consolas', monospace" font-size="11">if v &gt; 3e8: raise ValueError # c</text>
+
+                        <rect x="15" y="135" width="250" height="65" rx="6" fill="#0f2942" stroke="#38bdf8" />
+                        <text x="25" y="155" fill="#7dd3fc" font-family="'Consolas', monospace" font-size="11"># Physics Equation Engine</text>
+                        <text x="25" y="175" fill="#34d399" font-family="'Consolas', monospace" font-size="11">ek = 0.5 * m * (v ** 2)</text>
+                        <text x="25" y="190" fill="#94a3b8" font-family="'Consolas', monospace" font-size="10"># จัดลำดับเครื่องหมายถูกต้อง</text>
+
+                        <rect x="15" y="210" width="250" height="65" rx="6" fill="#064e3b" stroke="#10b981" />
+                        <text x="25" y="230" fill="#6ee7b7" font-family="'Consolas', monospace" font-size="11"># Return Output &amp; Log</text>
+                        <text x="25" y="250" fill="#6ee7b7" font-family="'Consolas', monospace" font-size="11">return round(ek, 2)</text>
+                    </g>
+
+                    <!-- Arrow to Validation Engine -->
+                    <line x1="630" y1="195" x2="690" y2="195" stroke="#10b981" stroke-width="4" />
+                    <polygon points="690,188 705,195 690,202" fill="#10b981" />
+
+                    <!-- Verification & Validation Column -->
+                    <g transform="translate(710, 50)">
+                        <rect x="0" y="0" width="200" height="290" rx="10" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5" />
+                        <rect x="0" y="0" width="200" height="40" rx="10" fill="#059669" />
+                        <text x="100" y="25" fill="#ffffff" font-family="'Sarabun', sans-serif" font-size="13" font-weight="700" text-anchor="middle">ผลการประเมิน (V &amp; V)</text>
+
+                        <g transform="translate(15, 60)">
+                            <circle cx="15" cy="15" r="12" fill="#dcfce7" />
+                            <text x="15" y="20" fill="#166534" font-family="'Sarabun', sans-serif" font-size="12" font-weight="700" text-anchor="middle">✓</text>
+                            <text x="35" y="14" fill="#1e293b" font-family="'Sarabun', sans-serif" font-size="11" font-weight="700">Verification Pass</text>
+                            <text x="35" y="28" fill="#64748b" font-family="'Sarabun', sans-serif" font-size="10">คำนวณสูตรแม่นยำ 100%</text>
+                        </g>
+
+                        <g transform="translate(15, 120)">
+                            <circle cx="15" cy="15" r="12" fill="#dcfce7" />
+                            <text x="15" y="20" fill="#166534" font-family="'Sarabun', sans-serif" font-size="12" font-weight="700">✓</text>
+                            <text x="35" y="14" fill="#1e293b" font-family="'Sarabun', sans-serif" font-size="11" font-weight="700">Validation Pass</text>
+                            <text x="35" y="28" fill="#64748b" font-family="'Sarabun', sans-serif" font-size="10">สอดคล้องกับแล็บจริง</text>
+                        </g>
+
+                        <g transform="translate(15, 180)">
+                            <circle cx="15" cy="15" r="12" fill="#dcfce7" />
+                            <text x="15" y="20" fill="#166534" font-family="'Sarabun', sans-serif" font-size="12" font-weight="700">✓</text>
+                            <text x="35" y="14" fill="#1e293b" font-family="'Sarabun', sans-serif" font-size="11" font-weight="700">Defensive Shield</text>
+                            <text x="35" y="28" fill="#64748b" font-family="'Sarabun', sans-serif" font-size="10">ดักจับค่ามวลลบได้</text>
+                        </g>
+
+                        <rect x="15" y="240" width="170" height="35" rx="6" fill="#ecfdf5" stroke="#10b981" />
+                        <text x="100" y="262" fill="#065f46" font-family="'Sarabun', sans-serif" font-size="11" font-weight="700" text-anchor="middle">🏆 พร้อมใช้สอนในชั้นเรียน</text>
+                    </g>
+                </svg>
+                <div class="svg-caption">แสดงกระบวนการทดสอบยืนยันความถูกต้องของแบบจำลอง (Verification & Validation: V&V) ผ่านชุดกรณีทดสอบ 3 มิติ</div>
+            </div>
+
+            <!-- ตารางเปรียบเทียบประเภทข้อผิดพลาด -->
+            <h3 style="color: var(--primary); margin: 2rem 0 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fas fa-table text-accent"></i> ตารางที่ 7.1: เมทริกซ์วิเคราะห์ข้อผิดพลาดในโปรแกรมวิทยาศาสตร์ สาเหตุ และแนวทางป้องกันเชิงรุก
+            </h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 18%;">ประเภทข้อผิดพลาด</th>
+                        <th style="width: 25%;">ตัวอย่างในวิชาฟิสิกส์/เคมี/ชีวะ</th>
+                        <th style="width: 27%;">สาเหตุเชิงคอมพิวเตอร์</th>
+                        <th style="width: 30%;">แนวทางป้องกันและดีบักเชิงรุก</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong><span class="badge badge-blue">Syntax Error</span></strong></td>
+                        <td>
+                            พิมพ์สูตรแก๊สอุดมคติผิด:<br>
+                            <code>P * V = n * R * T</code><br>
+                            (ใช้ <code>=</code> กำหนดค่าในฝั่งซ้ายของตัวแปรคณิตศาสตร์)
+                        </td>
+                        <td>
+                            ตัวแปลภาษา (Parser) ไม่สามารถแปลงโค้ดเป็น Abstract Syntax Tree ได้ เนื่องจากละเมิดกฎไวยากรณ์ภาษา
+                        </td>
+                        <td>
+                            ใช้ IDE ที่มีระบบ Linter / Syntax Highlighting (เช่น Thonny, VS Code) ช่วยตรวจจับแบบเรียลไทม์
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong><span class="badge badge-amber">Runtime Error</span></strong></td>
+                        <td>
+                            คำนวณความดันในกระบอกสูบตามกฎของบอยล์ ($P_2 = \frac{P_1V_1}{V_2}$) เมื่อผู้ใช้ป้อนปริมาตร $V_2 = 0$
+                        </td>
+                        <td>
+                            เกิด <code>ZeroDivisionError</code> หรือ <code>IndexError</code> เมื่อพยายามดึงข้อมูลเกินดัชนีของอาร์เรย์
+                        </td>
+                        <td>
+                            ครอบด้วยโครงสร้าง <code>try...except</code> และเขียนเงื่อนไขตรวจสอบ (Pre-condition Guard) ก่อนคำนวณ
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><strong><span class="badge badge-red">Logic Error</span></strong></td>
+                        <td>
+                            คำนวณระยะทางตกอิสระ $s = ut + \frac{1}{2}gt^2$ แต่เขียนโค้ดเป็น <code>s = u * t + 1/2 * g * t</code> (ลืมยกกำลังสอง)
+                        </td>
+                        <td>
+                            ลำดับความสำคัญของเครื่องหมาย (Operator Precedence) ผิด หรือแปลความหมายของสมการคณิตศาสตร์คลาดเคลื่อน
+                        </td>
+                        <td>
+                            ใส่การพิมพ์ค่าตัวแปร (Print Debugging), เทคนิค Rubber Duck, และเขียน Unit Testing ด้วยคำสั่ง <code>assert</code>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- โค้ดตัวแบบจำลอง Python 3.11 ที่รันได้จริง 100% -->
+            <h3 style="color: var(--primary); margin: 2rem 0 1rem; display: flex; align-items: center; gap: 0.5rem;">
+                <i class="fab fa-python text-accent"></i> โค้ดตัวแบบจำลอง Python 3.11: ระบบแบบจำลองฟิสิกส์พร้อมกลไกดีบักและการทดสอบอัตโนมัติ (Automated Testing)
+            </h3>
+            <p>
+                ตัวอย่างโค้ดโปรแกรมคำนวณพลังงานกลและจำลองการเคลื่อนที่แนวราบ พร้อมระบบ Defensive Guard และ Test Suite ตรวจสอบความถูกต้องทางฟิสิกส์:
+            </p>
+            <pre><code># ==============================================================================
+# โปรแกรม: Physics Simulation Engine with Automated Verification & Debugging
+# รายวิชา: 4124941 วิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์ | ผศ.ดร.ชีวะ ทัศนา
+# ==============================================================================
+from typing import Dict, Union
+
+def calculate_kinetic_energy(mass: float, velocity: float) -> float:
+    """
+    คำนวณพลังงานจลน์ (Kinetic Energy: Ek = 0.5 * m * v^2)
+    พร้อมกลไก Defensive Programming ตรวจจับข้อผิดพลาดทางฟิสิกส์
+    """
+    # 1. Defensive Guard: มวลต้องเป็นจำนวนจริงบวก
+    if mass &lt; 0:
+        raise ValueError(f"ข้อผิดพลาดทางฟิสิกส์: มวลไม่สามารถติดลบได้ (mass={mass} kg)")
+    
+    # 2. Defensive Guard: อัตราเร็วต้องไม่เกินความเร็วแสง (c = 3x10^8 m/s)
+    SPEED_OF_LIGHT = 3.0e8
+    if abs(velocity) &gt; SPEED_OF_LIGHT:
+        raise ValueError(f"ข้อผิดพลาดทางฟิสิกส์: ความเร็วต้องไม่เกินความเร็วแสง (v={velocity} m/s)")
+        
+    # 3. คำนวณตามกฎทางฟิสิกส์ (ระวัง Operator Precedence)
+    ek = 0.5 * mass * (velocity ** 2)
+    return round(ek, 4)
+
+def run_simulation_tests():
+    """
+    ฟังก์ชัน Automated Test Suite ตรวจสอบแบบจำลองทางฟิสิกส์
+    ครอบคลุม Normal Cases, Boundary Cases และ Error Handling
+    """
+    print("=" * 60)
+    print("🚀 เริ่มต้นการทดสอบแบบจำลองทางวิทยาศาสตร์ (Running Automated Tests)")
+    print("=" * 60)
+    
+    # กรณีทดสอบที่ 1: Normal Case (ค่าปกติ)
+    # วัตถุมวล 2 kg เคลื่อนที่ด้วยความเร็ว 3 m/s -> Ek = 0.5 * 2 * 9 = 9.0 J
+    test1 = calculate_kinetic_energy(2.0, 3.0)
+    assert test1 == 9.0, f"Test 1 ล้มเหลว! ได้ค่า {test1} แทนที่จะเป็น 9.0"
+    print("✓ Test 1 Passed: ค่าปกติ (Normal Case: m=2, v=3 -> Ek=9.0 J)")
+    
+    # กรณีทดสอบที่ 2: Boundary Case (ขอบเขตวัตถุหยุดนิ่ง)
+    # วัตถุหยุดนิ่ง v = 0 -> Ek ต้องเป็น 0 เสมอ
+    test2 = calculate_kinetic_energy(50.0, 0.0)
+    assert test2 == 0.0, f"Test 2 ล้มเหลว! วัตถุหยุดนิ่งแต่ได้ค่า {test2}"
+    print("✓ Test 2 Passed: ขอบเขตวัตถุนิ่ง (Boundary Case: v=0 -> Ek=0.0 J)")
+    
+    # กรณีทดสอบที่ 3: Defensive Case (ตรวจจับมวลติดลบ)
+    try:
+        calculate_kinetic_energy(-10.0, 5.0)
+        print("❌ Test 3 Failed: โปรแกรมไม่ดักจับมวลติดลบ!")
+    except ValueError as e:
+        print(f"✓ Test 3 Passed: ตรวจจับข้อผิดพลาดมวลติดลบสำเร็จ ({e})")
+        
+    # กรณีทดสอบที่ 4: Boundary Case (ความเร็วติดลบ: ถอยหลัง พลังงานจลน์ต้องเป็นบวก)
+    test4 = calculate_kinetic_energy(4.0, -5.0)
+    assert test4 == 50.0, f"Test 4 ล้มเหลว! ได้ค่า {test4} แทนที่จะเป็น 50.0"
+    print("✓ Test 4 Passed: ความเร็วทิศลบ (Negative Velocity: v=-5 -> Ek=50.0 J)")
+    
+    print("-" * 60)
+    print("🎉 ผลการตรวจประเมิน: แบบจำลองผ่านการทดสอบ 100% พร้อมใช้งานในชั้นเรียน")
+
+if __name__ == "__main__":
+    run_simulation_tests()</code></pre>
+        </div>
+    
+        <!-- ปฏิบัติการจำลองเสมือนจริงประจำสัปดาห์ (Interactive Science Simulator & 180 Labs) -->
+        <div class="card" id="sim-section" style="border: 2px solid #0284c7; box-shadow: 0 8px 24px rgba(2, 132, 199, 0.12); margin-top: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.75rem;">
+                <h2 class="card-title" style="margin-bottom: 0; color: #0284c7;">
+                    <i class="fas fa-cube"></i> ปฏิบัติการจำลองเสมือนจริง: 7.0 เครื่องมือประเมินความซับซ้อนของโค้ด (Clean Code Visualizer AR) — AR MediaPipe Lab • RBRU MOOC
+                </h2>
+                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                    <a href="../simulations/chapter07_refactoring_visualizer.html" target="_blank" class="nav-back" style="margin-bottom: 0; padding: 0.45rem 0.9rem; font-size: 0.85rem; background: #0284c7; color: #fff;">
+                        <i class="fas fa-external-link-alt"></i> เปิดแบบจำลองเต็มหน้าจอ
+                    </a>
+                    <a href="../assets/slides/Computing Science for Science Teaching - Chapter 6: Scientific Modeling and Simulation.pptx" download class="nav-back" style="margin-bottom: 0; padding: 0.45rem 0.9rem; font-size: 0.85rem; background: #f59e0b; color: #fff;"><i class="fas fa-file-powerpoint"></i> ดาวน์โหลดสไลด์ (.pptx)</a>
+                </div>
+            </div>
+
+            <p style="font-size: 0.95rem; color: #334155; margin-bottom: 1rem;">
+                <strong>แบบจำลองเชิงโต้ตอบสำหรับห้องเรียนวิทยาศาสตร์:</strong> ให้นักศึกษาทดลองปรับค่าพารามิเตอร์ สังเกตการณ์เปลี่ยนแปลง และวิเคราะห์ข้อมูลตามกระบวนการคิดเชิงคำนวณ (Computational Thinking):
+            </p>
+
+            <div style="margin: 1rem 0; border-radius: 12px; overflow: hidden; border: 1px solid #cbd5e1; height: 600px; box-shadow: var(--shadow-md);">
+                <iframe src="../simulations/chapter07_refactoring_visualizer.html" style="width: 100%; height: 100%; border: none;"></iframe>
+            </div>
+
+            <div style="margin: 0.85rem 0; display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;"><span style="font-size: 0.85rem; font-weight: 600; color: #64748b;"><i class="fas fa-cubes"></i> แบบจำลองเสริมในบท:</span> <a href="../simulations/chapter03_python_live_sandbox.html" target="_blank" style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.35rem 0.75rem; background: #ecfdf5; color: #059669; border-radius: 6px; font-size: 0.82rem; font-weight: 700; text-decoration: none; border: 1px solid #a7f3d0;"><i class="fab fa-python"></i> ⚡ เปิดห้องทดลอง Python 3 Live Sandbox (Skulpt Runtime)</a> <a href="../simulations/chapter07_clean_code_visualizer.html" target="_blank" style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.35rem 0.75rem; background: #e0f2fe; color: #0284c7; border-radius: 6px; font-size: 0.82rem; font-weight: 600; text-decoration: none; border: 1px solid #bae6fd;"><i class="fas fa-play-circle"></i> 7.0 เครื่องมือประเมินความซับซ้อนของโค้ด (Clean Code Visualizer AR)</a> <a href="../simulations/chapter08_3d_spring_oscillator.html" target="_blank" style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.35rem 0.75rem; background: #e0f2fe; color: #0284c7; border-radius: 6px; font-size: 0.82rem; font-weight: 600; text-decoration: none; border: 1px solid #bae6fd;"><i class="fas fa-play-circle"></i> 8.4 สปริงฮาร์มอนิกและออสซิลโลสโคป 3 มิติ (3D Spring Oscillator AR)</a></div>
+
+            <!-- คลังใบงานปฏิบัติการที่สอดคล้องจาก 180 Labs Manual -->
+            <div style="margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid #e2e8f0;">
+                <h3 style="font-size: 1.05rem; font-weight: 700; color: #0f172a; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-flask" style="color: #10b981;"></i> ใบงานปฏิบัติการที่สอดคล้อง (จากคู่มือปฏิบัติการ ๑๘๐ การทดลอง):
+                </h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem;">
+                    
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.1rem; border-left: 4px solid #10b981; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem; flex-wrap: wrap; gap: 0.25rem;">
+                    <span style="background: #10b981; color: #fff; font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.55rem; border-radius: 4px;">LAB 2.3.1</span>
+                    <span style="font-size: 0.78rem; color: #64748b;"><i class="far fa-clock"></i> 45 นาที | C3 (ประยุกต์ใช้)</span>
+                </div>
+                <h4 style="font-size: 0.98rem; font-weight: 700; color: #0f172a; margin-bottom: 0.2rem;">การพิสูจน์มโนทัศน์พื้นฐาน เงื่อนไขและการตัดสินใจตรรกะ</h4>
+                <p style="font-size: 0.82rem; color: #64748b; font-style: italic; margin-bottom: 0.5rem;">Foundational Verification: Conditionals & Logic Gates</p>
+                <div style="background: #ffffff; border: 1px dashed #cbd5e1; border-radius: 6px; padding: 0.45rem 0.75rem; font-size: 0.85rem; margin-bottom: 0.5rem; overflow-x: auto;"><strong>สมการทฤษฎี:</strong> $$\text{ตัวแปรสถานะแกนกลาง}: \mathcal{S}_{2.3.1} = f(\mathbf{x}, \mathbf{p}) \quad \text{โดยที่ } \mathbf{x} \in \mathbb{R}^n$$</div>
+                <div style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.25rem;"><i class="fas fa-question-circle" style="color: #3b82f6;"></i> คำถามท้ายการทดลอง:</div>
+                <ul style="font-size: 0.82rem; color: #475569; margin-bottom: 0; padding-left: 1.25rem; line-height: 1.5;">
+                    <li style="margin-bottom: 0.25rem;">จงอธิบายความสอดคล้องระหว่างค่าที่วัดได้กับทฤษฎีใน เงื่อนไขและการตัดสินใจตรรกะ</li><li style="margin-bottom: 0.25rem;">หากปรับเปลี่ยนสภาวะแวดล้อม ตัวแปรควบคุมใดส่งผลต่อความไว (Sensitivity) ของระบบมากที่สุด?</li>
+                </ul>
+            </div>
+        
+
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.1rem; border-left: 4px solid #10b981; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem; flex-wrap: wrap; gap: 0.25rem;">
+                    <span style="background: #10b981; color: #fff; font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.55rem; border-radius: 4px;">LAB 2.3.2</span>
+                    <span style="font-size: 0.78rem; color: #64748b;"><i class="far fa-clock"></i> 60 นาที | C4 (วิเคราะห์)</span>
+                </div>
+                <h4 style="font-size: 0.98rem; font-weight: 700; color: #0f172a; margin-bottom: 0.2rem;">การวิเคราะห์สมรรถนะและขั้นตอนวิธี เงื่อนไขและการตัดสินใจตรรกะ</h4>
+                <p style="font-size: 0.82rem; color: #64748b; font-style: italic; margin-bottom: 0.5rem;">Performance & Algorithmic Analysis: Conditionals & Logic Gates</p>
+                <div style="background: #ffffff; border: 1px dashed #cbd5e1; border-radius: 6px; padding: 0.45rem 0.75rem; font-size: 0.85rem; margin-bottom: 0.5rem; overflow-x: auto;"><strong>สมการทฤษฎี:</strong> $$\text{ประสิทธิภาพเชิงเวลาและความคลาดเคลื่อน}: \varepsilon = \frac{|y_{\text{measured}} - y_{\text{model}}|}{y_{\text{model}}} \times 100\%$$</div>
+                <div style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.25rem;"><i class="fas fa-question-circle" style="color: #3b82f6;"></i> คำถามท้ายการทดลอง:</div>
+                <ul style="font-size: 0.82rem; color: #475569; margin-bottom: 0; padding-left: 1.25rem; line-height: 1.5;">
+                    <li style="margin-bottom: 0.25rem;">อัตราการเพิ่มขึ้นของเวลาประมวลผลสอดคล้องกับความซับซ้อน Big-O ระดับใด?</li><li style="margin-bottom: 0.25rem;">เสนอแนะแนวทางการปรับปรุงขั้นตอนวิธีเพื่อลดการใช้หน่วยความจำลงอย่างน้อย 30%</li>
+                </ul>
+            </div>
+        
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ==========================================
+         TAB 3: กิจกรรมการเรียนรู้เชิงรุก (5E)
+         ========================================== -->
+    <div id="tab3" class="content-section">
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-chalkboard-user"></i> แผนการจัดกิจกรรมการเรียนรู้เชิงรุก (Active Learning: 5E Instructional Model)</h2>
+            <p style="margin-bottom: 1.5rem; color: var(--text-muted);">
+                บูรณาการกระบวนการสืบเสาะหาความรู้ 5 ขั้น (5E) ควบคู่กับปฏิบัติการคลินิกผ่าตัดโค้ด (Science Code Doctor Workshop) รวมเวลา 4 ชั่วโมง (240 นาที):
+            </p>
+
+            <!-- ภาคบรรยาย 2 ชม. -->
+            <div class="session-block">
+                <h4>
+                    <span><i class="fas fa-book-open text-primary"></i> ภาคบรรยาย: อนุกรมวิธานข้อผิดพลาดและจิตวิทยาการดีบักเชิงบวก</span>
+                    <span class="time-badge">ชั่วโมงที่ 1 - 2 (120 นาที)</span>
+                </h4>
+                
+                <ul style="padding-left: 1.25rem; line-height: 1.9;">
+                    <li>
+                        <strong>ขั้นที่ 1: การสร้างความสนใจ (Engagement - 25 นาที): "โศกนาฏกรรมทางวิทยาศาสตร์จากบั๊กบรรทัดเดียว"</strong>
+                        <ul style="margin-top: 0.25rem;">
+                            <li>ผู้สอนเปิดคลิปวิดีโอประวัติศาสตร์เหตุการณ์ <em>ยานสำรวจดาวอังคาร Mars Climate Orbiter มูลค่ากว่า 327 ล้านดอลลาร์สหรัฐพุ่งชนดาวอังคารสูญสลายไปในปี 1999</em> เนื่องจากความผิดพลาดในการแปลงหน่วยปอนด์-วินาที เป็นนิวตัน-วินาที ในซอฟต์แวร์</li>
+                            <li>เปิดประเด็นคำถาม: <em>"เหตุใดโปรแกรมของ NASA ที่เขียนโดยวิศวกรชั้นนำจึงเกิดข้อผิดพลาดรุนแรงได้? และเราจะสร้างวัฒนธรรมการตรวจสอบแบบจำลองในชั้นเรียนวิทยาศาสตร์อย่างไร?"</em></li>
+                            <li>ชี้ให้เห็นว่าบั๊กเป็นเรื่องธรรมดา และความสามารถในการค้นหาบั๊ก (Debugging Literacy) คือทักษะสำคัญสูงสุดของนักวิทยาการคำนวณ</li>
+                        </ul>
+                    </li>
+                    <li style="margin-top: 0.75rem;">
+                        <strong>ขั้นที่ 2: การสำรวจและค้นหา (Exploration - 45 นาที): "Live Bug Spotting & Rubber Duck Method"</strong>
+                        <ul style="margin-top: 0.25rem;">
+                            <li>แจกโค้ด Scratch และ Python สั้นๆ 3 ตัวอย่างที่มีบั๊กแฝง (Syntax 1 ข้อ, Runtime 1 ข้อ, Logic 1 ข้อ)</li>
+                            <li>ให้นักศึกษาจับคู่และแจก <strong>"เป็ดยางดีบัก (Rubber Duck)"</strong> ประจำโต๊ะ ให้นักศึกษาผลัดกันอธิบายการทำงานของโค้ดทีละบรรทัดให้เป็ดยางและเพื่อนฟัง</li>
+                            <li>สังเกตจุดที่เสียงเริ่มติดขัด เพื่อชี้พิกัดของข้อผิดพลาดเชิงตรรกะในแบบจำลอง</li>
+                        </ul>
+                    </li>
+                    <li style="margin-top: 0.75rem;">
+                        <strong>ขั้นที่ 3: การอธิบายและลงข้อสรุป (Explanation - 50 นาที): "สถาปัตยกรรมการทดสอบ V&V และการเขียนโค้ดป้องกัน"</strong>
+                        <ul style="margin-top: 0.25rem;">
+                            <li>ผู้สอนสรุปหลักการ <strong>Verification (แบบจำลองถูกสร้างขึ้นตามสมการคณิตศาสตร์หรือไม่)</strong> เทียบกับ <strong>Validation (แบบจำลองสอดคล้องกับพฤติกรรมจริงในธรรมชาติหรือไม่)</strong></li>
+                            <li>สอนเทคนิคการใช้คำสั่ง <code>assert</code> เพื่อตรวจสอบผลลัพธ์อัตโนมัติ และการใช้บล็อก <code>try...except Exception as e:</code> ในการดักจับ Runtime Errors</li>
+                            <li>สรุปแผนผังวงจรการดีบักเชิงวิทยาศาสตร์ 4 ขั้นตอนร่วมกับผู้เรียน</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <!-- ภาคปฏิบัติ 2 ชม. -->
+            <div class="session-block" style="border-left-color: var(--accent);">
+                <h4>
+                    <span><i class="fas fa-stethoscope text-accent"></i> ภาคปฏิบัติ: ปฏิบัติการคลินิกผ่าตัดโค้ดวิทยาศาสตร์ (Science Code Doctor Workshop)</span>
+                    <span class="time-badge">ชั่วโมงที่ 3 - 4 (120 นาที)</span>
+                </h4>
+                
+                <ul style="padding-left: 1.25rem; line-height: 1.9;">
+                    <li>
+                        <strong>ขั้นที่ 4: การขยายความรู้ (Elaboration / Workshop - 80 นาที): "Science Code Doctor Challenge"</strong>
+                        <ul style="margin-top: 0.25rem;">
+                            <li>แบ่งนักศึกษาออกเป็นทีมละ 3-4 คน รับบทเป็น "แพทย์ผู้เชี่ยวชาญการตรวจรักษาโค้ด"</li>
+                            <li>แจกแฟ้มประวัติคนไข้ 4 เคส (Buggy Simulation Projects):
+                                <ul>
+                                    <li><strong>เคสที่ 1 (คนไข้ฟิสิกส์):</strong> โปรแกรมจำลองการเคลื่อนที่วิถีโค้ง (Projectile Motion) ที่ลูกบอลตกลงใต้พื้นดินไม่หยุด เนื่องจากขาดเงื่อนไข Floor Collision</li>
+                                    <li><strong>เคสที่ 2 (คนไข้เคมี):</strong> แบบจำลองการเจือจางกรด-เบส ที่คำนวณค่า pH ได้ -1.5 เนื่องจากไม่ได้จำกัดขอบเขตของลอการิทึม</li>
+                                    <li><strong>เคสที่ 3 (คนไข้ชีววิทยา):</strong> แบบจำลองสายใยอาหาร (Food Web) ที่ประชากรสัตว์กินพืชกลายเป็นอนันต์ใน 3 วินาที เพราะลืมใส่ตัวแปรความจุสิ่งแวดล้อม</li>
+                                    <li><strong>เคสที่ 4 (คนไข้ดาราศาสตร์):</strong> แบบจำลองกฎแรงโน้มถ่วงสากลของนิวตัน ($F = G\frac{m_1m_2}{r^2}$) ที่ Crash ทันทีเมื่อดาวเคราะห์สองดวงชนกัน ($r=0$)</li>
+                                </ul>
+                            </li>
+                            <li>ทุกกลุ่มต้องเขียน <em>ใบสั่งยาและบันทึกการรักษา (Medical Chart)</em> ระบุ: ชนิดของบั๊ก, บรรทัดที่เกิด, โค้ดที่แก้ไขแล้ว, และชุด Test Case พิสูจน์ความหายขาด</li>
+                        </ul>
+                    </li>
+                    <li style="margin-top: 0.75rem;">
+                        <strong>ขั้นที่ 5: การประเมินผลและการสะท้อนคิด (Evaluation & Reflection - 40 นาที): "Growth Mindset Showcase & Midterm Readiness"</strong>
+                        <ul style="margin-top: 0.25rem;">
+                            <li>ตัวแทนกลุ่มนำเสนอเคสที่ตนเองรักษาสำเร็จ และแบ่งปันจุดที่เพื่อนในห้องอาจมองข้าม</li>
+                            <li>อาจารย์บรรยายสรุปกระตุ้น <strong>Growth Mindset:</strong> <em>"ไม่มีโปรแกรมเมอร์คนใดในโลกที่เขียนโค้ดครั้งแรกแล้วไม่มีบั๊ก บั๊กไม่ใช่ความล้มเหลว แต่เป็นสารตั้งต้นของความเข้าใจอย่างลึกซึ้ง"</em></li>
+                            <li>ชี้แจง Checklist ทบทวนความรู้สำหรับ <strong>การสอบกลางภาคในสัปดาห์ที่ 8</strong></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         TAB 4: การวัดและประเมินผล (Rubrics)
+         ========================================== -->
+    <div id="tab4" class="content-section">
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-clipboard-check"></i> เกณฑ์การวัดและประเมินผลตามสภาพจริง (Authentic Assessment Rubrics)</h2>
+            <p style="margin-bottom: 1.5rem; color: var(--text-muted);">
+                เกณฑ์รูบริกส์จำแนก 4 ระดับคุณภาพ สอดคล้องกับมาตรฐาน WLOs ทั้ง 4 มิติ สำหรับการประเมินทักษะการดีบักและการสร้างแบบจำลองวิทยาศาสตร์:
+            </p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 20%;">เกณฑ์การประเมิน</th>
+                        <th style="width: 20%;">ดีมาก (4 คะแนน)</th>
+                        <th style="width: 20%;">ดี (3 คะแนน)</th>
+                        <th style="width: 20%;">พอใช้ (2 คะแนน)</th>
+                        <th style="width: 20%;">ปรับปรุง (1 คะแนน)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>1. การจำแนกและระบุสาเหตุข้อผิดพลาด (Error Diagnostics)</strong></td>
+                        <td>สามารถจำแนกระหว่าง Syntax, Runtime และ Logic Error ได้อย่างแม่นยำ 100% อธิบายกลไกที่คอมไพเลอร์ขัดข้องได้อย่างชัดเจน</td>
+                        <td>จำแนกประเภทข้อผิดพลาดได้ถูกต้องส่วนใหญ่ อธิบายสาเหตุของบั๊กในบริบทวิทยาศาสตร์ได้</td>
+                        <td>จำแนกประเภทข้อผิดพลาดได้บางส่วน แต่ยังสับสนระหว่าง Runtime Error และ Logic Error</td>
+                        <td>ไม่สามารถระบุได้ว่าข้อผิดพลาดที่เกิดขึ้นเกิดจากสาเหตุใด ไม่เข้าใจประเภทของ Error</td>
+                    </tr>
+                    <tr>
+                        <td><strong>2. กลยุทธ์การดีบักเชิงวิทยาศาสตร์ (Debugging Strategies)</strong></td>
+                        <td>ปฏิบัติตาม Scientific Debugging Cycle อย่างเคร่งครัด ใช้ Print Debugging, Assertions, และ Rubber Duck ได้อย่างเชี่ยวชาญ</td>
+                        <td>ใช้วิธีการตรวจสอบตัวแปรเป็นระยะและแก้ไขโค้ดได้อย่างมีแบบแผน ไม่สุ่มแก้</td>
+                        <td>พยายามแก้โค้ดแบบสุ่มบางครั้ง (Trial & Error) แต่สามารถแก้ไขจุดผิดพลาดหลักได้ในที่สุด</td>
+                        <td>สุ่มแก้ไขโค้ดโดยไม่มีหลักการ ทำให้เกิดข้อผิดพลาดใหม่ซ้ำซ้อน</td>
+                    </tr>
+                    <tr>
+                        <td><strong>3. การออกแบบชุดกรณีทดสอบ (Test Case Design)</strong></td>
+                        <td>ออกแบบ Test Cases ครบทั้ง 3 มิติ (Normal, Boundary, Invalid) และเขียนโค้ดตรวจสอบอัตโนมัติ (Automated Testing) ได้สมบูรณ์</td>
+                        <td>ออกแบบ Test Cases ครอบคลุมทั้งกรณีปกติและกรณีขอบเขต แต่ยังขาดกรณีข้อมูลผิดปกติ (Invalid)</td>
+                        <td>ทดสอบเฉพาะกรณีข้อมูลปกติเพียงอย่างเดียว ไม่ได้ทดสอบกรณีขอบเขต (Boundary)</td>
+                        <td>ไม่มีการออกแบบชุดทดสอบ รันโปรแกรมครั้งเดียวแล้วด่วนสรุปว่าใช้งานได้</td>
+                    </tr>
+                    <tr>
+                        <td><strong>4. การส่งเสริม Growth Mindset ทางการศึกษา (Pedagogy & Mindset)</strong></td>
+                        <td>ออกแบบกิจกรรมการเรียนรู้ที่ส่งเสริมให้นักเรียนมองเห็นคุณค่าของข้อผิดพลาด สร้างบรรยากาศที่เปิดกว้างและมีเจตคติที่ดีต่อการเขียนโค้ด</td>
+                        <td>สามารถอธิบายแนวทางการให้คำแนะนำแก่นักเรียนเมื่อนักเรียนพบข้อผิดพลาดในโค้ดได้ดี</td>
+                        <td>เข้าใจความสำคัญของ Growth Mindset แต่ยังขาดเทคนิคเชิงปฏิบัติในการนำไปใช้ในห้องเรียน</td>
+                        <td>มองว่าข้อผิดพลาดเป็นความล้มเหลว ขาดความอดทนในการตรวจสอบและแก้ไขโปรแกรม</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="highlight-box">
+                <strong><i class="fas fa-info-circle"></i> เกณฑ์การตัดสินระดับคุณภาพ:</strong>
+                คะแนนรวม 14 - 16 คะแนน = <em>ระดับดีเยี่ยม (Excellent)</em> | 
+                11 - 13 คะแนน = <em>ระดับดี (Good)</em> | 
+                8 - 10 คะแนน = <em>ระดับพอใช้ (Fair)</em> | 
+                ต่ำกว่า 8 คะแนน = <em>ต้องได้รับการสอนเสริม (Needs Remediation)</em>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         TAB 5: ข้อสอบวัดสมรรถนะ (HOTS)
+         ========================================== -->
+    <div id="tab5" class="content-section">
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-brain"></i> ข้อสอบวัดสมรรถนะขั้นสูงเชิงการคิดคำนวณ (HOTS Assessment Bank)</h2>
+            <p style="margin-bottom: 1.5rem; color: var(--text-muted);">
+                แบบทดสอบวัดทักษะการคิดขั้นสูง (Higher-Order Thinking Skills: HOTS) ด้านการวิเคราะห์ข้อผิดพลาดเชิงตรรกะ (Analyzing) และการประเมินความถูกต้องของแบบจำลองวิทยาศาสตร์ (Evaluating) ตามแนวทาง สสวท.:
+            </p>
+
+            <!-- ข้อสอบข้อที่ 1 -->
+            <div class="quiz-card">
+                <div class="quiz-question">
+                    <strong>ข้อที่ 1 (ระดับการวิเคราะห์ - Analyzing):</strong><br>
+                    นักเรียนเขียนโปรแกรม Scratch เพื่อจำลองการปล่อยลูกเหล็กทรงกลมให้ตกลงมาตามแนวดิ่งภายใต้แรงโน้มถ่วงของโลก ($g = 9.8\text{ m/s}^2$) โดยกำหนดสคริปต์การเคลื่อนที่ดังนี้:
+                    <pre style="margin: 0.5rem 0;"><code>เมื่อคลิกธงเขียว
+ตั้งค่า [velocity v] เป็น [0]
+ตั้งค่า [y_pos v] เป็น [150]
+วนซ้ำตลอด [
+    เปลี่ยน [velocity v] ด้วย (-9.8)
+    เปลี่ยน y ด้วย (velocity)
+    ถ้า &lt;(y_pos) &lt; (-140)&gt; แล้ว [
+        ตั้งค่า [velocity v] เป็น [0]
+    ]
+]</code></pre>
+                    เมื่อกดรันโปรแกรม พบว่า <em>"ลูกเหล็กตกลงมาชนพื้นแล้ว แต่กลับจมทะลุพื้นเวทีหายไปด้านล่างอย่างต่อเนื่อง"</em> ข้อใดวิเคราะห์สาเหตุของ <strong>Logic Error</strong> นี้ได้อย่างถูกต้องตามหลักการทำงานของคอมพิวเตอร์?
+                </div>
+
+                <ul class="quiz-options">
+                    <li class="quiz-option" onclick="toggleExplanation('exp1', false, this)">
+                        <span><strong>ก.</strong> เกิดจากค่าแรงโน้มถ่วง $g = -9.8$ เป็นค่าทศนิยมที่โปรแกรม Scratch ไม่รองรับ ต้องปัดเป็นจำนวนเต็ม $-10$</span>
+                    </li>
+                    <li class="quiz-option" onclick="toggleExplanation('exp1', true, this)">
+                        <span><strong>ข.</strong> บล็อกเงื่อนไขตรวจสอบค่าตัวแปร <code>y_pos</code> แต่คำสั่งเคลื่อนที่จริงกลับใช้ <code>เปลี่ยน y ด้วย (velocity)</code> โดยไม่ได้อัปเดตค่าของตัวแปร <code>y_pos</code> ให้ตรงกับตำแหน่ง <code>y position</code> ของตัวละครจริง ทำให้เงื่อนไข <code>y_pos &lt; -140</code> เป็นเท็จตลอดกาล</span>
+                    </li>
+                    <li class="quiz-option" onclick="toggleExplanation('exp1', false, this)">
+                        <span><strong>ค.</strong> เกิด <code>Infinite Loop</code> ที่ทำให้หน่วยความจำเต็ม จึงหยุดการเรนเดอร์ภาพกราฟิกบนหน้าจอ</span>
+                    </li>
+                    <li class="quiz-option" onclick="toggleExplanation('exp1', false, this)">
+                        <span><strong>ง.</strong> ในโปรแกรม Scratch ไม่สามารถตั้งค่าความเร็วติดลบได้ ค่าความเร็วจะกลายเป็นศูนย์โดยอัตโนมัติ</span>
+                    </li>
+                </ul>
+
+                <div id="exp1" class="quiz-explanation">
+                    <strong><i class="fas fa-check-circle"></i> เฉลยข้อ ข. ถูกต้อง!</strong><br>
+                    <strong>การวิเคราะห์เชิงลึก (Root Cause Analysis):</strong> นี่คือข้อผิดพลาดคลาสสิกที่พบบ่อยมากในหมู่นักเรียน:
+                    <ul style="margin: 0.25rem 0 0.5rem 1.25rem;">
+                        <li>ตัวแปร <code>y_pos</code> ถูกตั้งค่าเริ่มต้นไว้ที่ 150 แต่ภายในลูป <code>forever</code> กลับมีแต่คำสั่ง <code>เปลี่ยน y ด้วย (velocity)</code> ซึ่งสั่งย้ายพิกัดแกน Y ของสไปรต์จริงบนหน้าจอ แต่ <strong>ไม่มีคำสั่งอัปเดตตัวแปร <code>ตั้งค่า y_pos เป็น (y position)</code> เลย!</strong></li>
+                        <li>ส่งผลให้ตัวแปร <code>y_pos</code> ยังคงมีค่าคงที่เท่ากับ <code>150</code> เสมอ ไม่ว่าจะผ่านไปกี่วินาที</li>
+                        <li>เมื่อตรวจสอบเงื่อนไข <code>ถ้า &lt;(y_pos) &lt; (-140)&gt;</code> จึงได้ผลลัพธ์เป็น <strong>เท็จ (False: 150 ไม่น้อยกว่า -140)</strong> ทุกรอบการทำงาน คำสั่งรีเซ็ตความเร็วจึงไม่มีวันทำงาน ส่งผลให้ตัวละครตกลงไปเรื่อยๆ จนทะลุจอ</li>
+                    </ul>
+                    <strong>แนวทางแก้ไข:</strong> ต้องเปลี่ยนเงื่อนไขเป็น <code>ถ้า &lt;(y position) &lt; (-140)&gt;</code> หรือใส่บล็อก <code>ตั้งค่า y_pos เป็น (y position)</code> ในลูป
+                </div>
+            </div>
+
+            <!-- ข้อสอบข้อที่ 2 -->
+            <div class="quiz-card">
+                <div class="quiz-question">
+                    <strong>ข้อที่ 2 (ระดับการประเมินค่า - Evaluating):</strong><br>
+                    ในการสร้างแบบจำลองกฎของบอยล์ (Boyle's Law: $P_1V_1 = P_2V_2$ ที่อุณหภูมิคงที่) ครูให้นักเรียนเขียนฟังก์ชัน Python เพื่อหาความดันสุดท้าย $P_2 = \frac{P_1V_1}{V_2}$ นักเรียนส่งโค้ดต่อไปนี้มาตรวจ:
+                    <pre style="margin: 0.5rem 0;"><code>def calculate_final_pressure(p1, v1, v2):
+    try:
+        p2 = (p1 * v1) / v2
+        return p2
+    except ZeroDivisionError:
+        return 0.0</code></pre>
+                    ในฐานะครูวิทยาศาสตร์ที่ประเมินความถูกต้องทางวิชาการและแนวคิดวิทยาการคำนวณ ข้อใดประเมินฟังก์ชันนี้ได้อย่างถูกต้องและสมบูรณ์ที่สุด?
+                </div>
+
+                <ul class="quiz-options">
+                    <li class="quiz-option" onclick="toggleExplanation('exp2', false, this)">
+                        <span><strong>ก.</strong> ฟังก์ชันนี้สมบูรณ์แบบแล้ว เพราะมีการใช้ <code>try...except</code> ป้องกันโปรแกรม Crash เมื่อ $V_2 = 0$</span>
+                    </li>
+                    <li class="quiz-option" onclick="toggleExplanation('exp2', false, this)">
+                        <span><strong>ข.</strong> ฟังก์ชันนี้มีข้อผิดพลาดร้ายแรงทางไวยากรณ์ (Syntax Error) เนื่องจากคำสั่ง <code>return</code> ในบล็อก <code>except</code> จะทำให้โปรแกรมหยุดทำงาน</span>
+                    </li>
+                    <li class="quiz-option" onclick="toggleExplanation('exp2', true, this)">
+                        <span><strong>ค.</strong> การส่งคืนค่า <code>0.0</code> เมื่อ $V_2 = 0$ ขัดแย้งกับหลักการทางฟิสิกส์อย่างรุนแรง เพราะเมื่อปริมาตรเข้าใกล้ศูนย์ ความดันต้องพุ่งเข้าสู่อนันต์ ($P \rightarrow \infty$) การคืนค่า 0.0 จะทำให้นักเรียนเข้าใจผิดว่าเมื่อบีบแก๊สจนหมดปริมาตรความดันจะหายไป ควรระงับและแจ้งเตือนข้อผิดพลาด (Raise Exception) หรือคืนค่าเตือนทางวิทยาศาสตร์</span>
+                    </li>
+                    <li class="quiz-option" onclick="toggleExplanation('exp2', false, this)">
+                        <span><strong>ง.</strong> ฟังก์ชันควรส่งคืนค่าติดลบ <code>-1.0</code> เพื่อบ่งบอกว่าเกิดข้อผิดพลาดในการคำนวณ</span>
+                    </li>
+                </ul>
+
+                <div id="exp2" class="quiz-explanation">
+                    <strong><i class="fas fa-check-circle"></i> เฉลยข้อ ค. ถูกต้อง!</strong><br>
+                    <strong>การประเมินค่าเชิงบูรณาการวิทยาศาสตร์และวิทยาการคำนวณ:</strong>
+                    <ul style="margin: 0.25rem 0 0.5rem 1.25rem;">
+                        <li>ในมุมมองคอมพิวเตอร์ โปรแกรมนี้อาจดูเหมือนปลอดภัยเพราะไม่เกิด Crash (ไม่พ่น Exception ออกมา)</li>
+                        <li>แต่ในมุมมอง <strong>ความถูกต้องของมโนทัศน์ทางวิทยาศาสตร์ (Scientific Conception)</strong> การคืนค่า <code>0.0</code> ถือเป็น <strong>Dangerous Fallacy</strong> เพราะตามกฎของบอยล์ $\lim_{V \to 0} \frac{k}{V} = \infty$ ความดันของแก๊สจะสูงเป็นอนันต์ ไม่ใช่กลายเป็นศูนย์</li>
+                        <li>การดักจับข้อผิดพลาดแล้วแอบคืนค่า 0.0 เงียบๆ (Silent Error) จะสร้างความเข้าใจผิด (Misconception) ให้นักเรียนในชั้นเรียนวิทยาศาสตร์</li>
+                    </ul>
+                    <strong>แนวทางที่ถูกต้องตามหลักวิศวกรรมซอฟต์แวร์การศึกษา:</strong> ควรตรวจสอบ <code>if v2 &lt;= 0: raise ValueError("ปริมาตรของแก๊สต้องมากกว่าศูนย์เสมอตามกฎธรรมชาติ")</code> เพื่อให้นักเรียนตระหนักว่าสภาวะดังกล่าวเป็นไปไม่ได้ในความเป็นจริง
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==========================================
+         TAB 6: เอกสารอ้างอิง (APA 7th)
+         ========================================== -->
+    <div id="tab6" class="content-section">
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-book-bookmark"></i> เอกสารอ้างอิงทางวิชาการ (Academic References - APA 7th Edition)</h2>
+            <p style="margin-bottom: 1.5rem; color: var(--text-muted);">
+                เอกสารและงานวิจัยระดับนานาชาติและระดับชาติที่นำมาสังเคราะห์และใช้ออกแบบแผนการสอนสัปดาห์ที่ 7:
+            </p>
+
+            <ul style="list-style: none; padding-left: 0; line-height: 2;">
+                <li style="margin-bottom: 1.25rem; padding-left: 1.75rem; text-indent: -1.75rem;">
+                    <i class="fas fa-file-lines text-accent" style="margin-right: 0.5rem;"></i>
+                    Dong, W., Li, Y., Sun, L., & Lu, X. (2023). Developing pre-service teachers' computational thinking: A systematic literature review. <em>International Journal of Technology and Design Education</em>, 34(3), 1105–1132. 
+                    <a href="https://doi.org/10.1007/s10798-023-09811-3" target="_blank" style="color: var(--accent); text-decoration: underline;">https://doi.org/10.1007/s10798-023-09811-3</a>
+                </li>
+
+                <li style="margin-bottom: 1.25rem; padding-left: 1.75rem; text-indent: -1.75rem;">
+                    <i class="fas fa-file-lines text-accent" style="margin-right: 0.5rem;"></i>
+                    Khamdun, Fakhriyah, F., Masfuah, S., & Roysa, M. (2026). Scientific virtual laboratory-based project to improve computational thinking of pre-service teachers. <em>Multidisciplinary Reviews</em>, 9(1), e2026392. 
+                    <a href="https://doi.org/10.31893/multirev.2026392" target="_blank" style="color: var(--accent); text-decoration: underline;">https://doi.org/10.31893/multirev.2026392</a>
+                </li>
+
+                <li style="margin-bottom: 1.25rem; padding-left: 1.75rem; text-indent: -1.75rem;">
+                    <i class="fas fa-file-lines text-accent" style="margin-right: 0.5rem;"></i>
+                    Kim, C., Yuan, J., Vasconcelos, L., Shin, M., & Hill, R. B. (2018). Debugging during block-based programming. <em>Instructional Science</em>, 46(5), 767–787. 
+                    <a href="https://doi.org/10.1007/s11251-018-9453-5" target="_blank" style="color: var(--accent); text-decoration: underline;">https://doi.org/10.1007/s11251-018-9453-5</a>
+                </li>
+
+                <li style="margin-bottom: 1.25rem; padding-left: 1.75rem; text-indent: -1.75rem;">
+                    <i class="fas fa-file-lines text-accent" style="margin-right: 0.5rem;"></i>
+                    Schrøder, V., Aalbergsjø, S. G., Ebbesen, K., & Bøe, M. V. (2026). Practising and teaching computational thinking and debugging – a cross-disciplinary study on pre-service teachers’ reflections in Norway and Denmark. <em>European Journal of Teacher Education</em>, 49(1), 1–22. 
+                    <a href="https://doi.org/10.1080/02619768.2026.2685759" target="_blank" style="color: var(--accent); text-decoration: underline;">https://doi.org/10.1080/02619768.2026.2685759</a>
+                </li>
+
+                <li style="margin-bottom: 1.25rem; padding-left: 1.75rem; text-indent: -1.75rem;">
+                    <i class="fas fa-file-lines text-accent" style="margin-right: 0.5rem;"></i>
+                    Yun, M.-J., & Crippen, K. J. (2024). Computational thinking integration into pre-service science teacher education: A systematic review. <em>Journal of Science Teacher Education</em>, 35(8), 903–928. 
+                    <a href="https://doi.org/10.1080/1046560x.2024.2390758" target="_blank" style="color: var(--accent); text-decoration: underline;">https://doi.org/10.1080/1046560x.2024.2390758</a>
+                </li>
+
+                <li style="margin-bottom: 1.25rem; padding-left: 1.75rem; text-indent: -1.75rem;">
+                    <i class="fas fa-book text-accent" style="margin-right: 0.5rem;"></i>
+                    สถาบันส่งเสริมการสอนวิทยาศาสตร์และเทคโนโลยี. (2561). <em>คู่มือการใช้หลักสูตรรายวิชาพื้นฐานวิทยาศาสตร์ สาระเทคโนโลยี (วิทยาการคำนวณ) ตามมาตรฐานการเรียนรู้และตัวชี้วัด กลุ่มสาระการเรียนรู้วิทยาศาสตร์ (ฉบับปรับปรุง พ.ศ. 2560)</em>. โรงพิมพ์แห่งจุฬาลงกรณ์มหาวิทยาลัย.
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p>© 2026 รายวิชา 4124941 วิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์ | <strong>ผู้ช่วยศาสตราจารย์ ดร.ชีวะ ทัศนา</strong></p>
+        <p>คณะวิทยาศาสตร์และเทคโนโลยี มหาวิทยาลัยราชภัฏรำไพพรรณี</p>
+    </footer>
+</div>
+
+<script>
+    function showTab(tabId, btnElement) {
+        document.querySelectorAll('.content-section').forEach(function(section) {
+            section.classList.remove('active');
+        });
+        document.querySelectorAll('.tab-btn').forEach(function(btn) {
+            btn.classList.remove('active');
+        });
+        document.getElementById(tabId).classList.add('active');
+        btnElement.classList.add('active');
+        window.scrollTo({ top: 120, behavior: 'smooth' });
+    }
+
+    function toggleExplanation(expId, isCorrect, element) {
+        var expBox = document.getElementById(expId);
+        if (expBox) {
+            expBox.style.display = 'block';
+        }
+        var parentUl = element.parentElement;
+        var options = parentUl.querySelectorAll('.quiz-option');
+        options.forEach(function(opt) {
+            opt.style.borderColor = '#e2e8f0';
+            opt.style.backgroundColor = '#f8fafc';
+        });
+        if (isCorrect) {
+            element.style.borderColor = '#10b981';
+            element.style.backgroundColor = '#ecfdf5';
+        } else {
+            element.style.borderColor = '#ef4444';
+            element.style.backgroundColor = '#fef2f2';
+        }
+    }
+</script>
+
+</body>
+</html>

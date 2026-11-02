@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spatial AR – ปุ่มลอย 3D เหนือมือ</title>
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- MediaPipe -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils@0.3/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils@0.3/drawing_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4/hands.js" crossorigin="anonymous"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&display=swap');
+
+        body {
+            font-family: 'Orbitron', 'Sarabun', sans-serif;
+            background: #05080f;
+            color: #fff;
+            overflow: hidden;
+            height: 100vh;
+            user-select: none;
+        }
+
+        #container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(ellipse at center, #0a0a1a, #05080f);
+            overflow: hidden;
+        }
+
+        video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            opacity: 0.3;
+            filter: blur(2px) brightness(0.5);
+        }
+        #mediapipe-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+        }
+        #three-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* ===== HUD ===== */
+        #hud {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 10;
+            background: rgba(0, 10, 30, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 200, 255, 0.2);
+            border-radius: 12px;
+            padding: 14px 20px;
+            min-width: 200px;
+            font-family: 'Orbitron', monospace;
+            box-shadow: 0 0 40px rgba(0, 100, 255, 0.1);
+        }
+        #hud .title { font-size: 0.7rem; color: #00ccff; font-weight: 700; border-bottom: 1px solid rgba(0,200,255,0.2); padding-bottom: 6px; margin-bottom: 6px; letter-spacing: 3px; }
+        #hud .line { font-size: 0.6rem; color: rgba(100, 200, 255, 0.7); display: flex; justify-content: space-between; padding: 2px 0; }
+        #hud .line .val { color: #00ffcc; font-weight: 600; }
+
+        /* ===== Status Bar ===== */
+        #status-bar {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            background: rgba(0, 10, 30, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 200, 255, 0.15);
+            border-radius: 40px;
+            padding: 10px 28px;
+            font-family: 'Orbitron', monospace;
+            font-size: 0.7rem;
+            color: rgba(0, 255, 200, 0.8);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 8px; }
+        .dot.green { background: #00ff88; box-shadow: 0 0 20px #00ff88; }
+        .dot.yellow { background: #ffcc00; box-shadow: 0 0 20px #ffcc00; }
+        .dot.purple { background: #aa66ff; box-shadow: 0 0 20px #aa66ff; animation: pulse 0.8s infinite alternate; }
+        @keyframes pulse { 0% { transform: scale(1); } 100% { transform: scale(1.3); } }
+
+        /* ===== Title Overlay ===== */
+        #title-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 20;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            pointer-events: none;
+            background: rgba(0,0,0,0.1);
+        }
+        #title-overlay.show { display: flex; animation: fadeInTitle 1.8s cubic-bezier(0.2,0.9,0.3,1.2) forwards; }
+        @keyframes fadeInTitle { 0% { opacity:0; transform: scale(0.7); } 100% { opacity:1; transform: scale(1); } }
+        #title-overlay .main {
+            font-size: 4.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #00ddff, #aa88ff, #ff66aa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 80px rgba(170,102,255,0.3);
+            letter-spacing: 6px;
+            text-align: center;
+            padding: 0 20px;
+        }
+        #title-overlay .sub { font-size: 2.2rem; color: #ffd700; text-shadow: 0 0 40px rgba(255,215,0,0.3); margin-top: 10px; letter-spacing: 8px; }
+        #title-overlay .theme { font-size: 1.1rem; color: rgba(255,255,255,0.4); margin-top: 16px; letter-spacing: 4px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 16px; }
+
+        @media (max-width: 900px) {
+            #title-overlay .main { font-size: 2.5rem; }
+            #title-overlay .sub { font-size: 1.4rem; }
+            #hud { font-size: 0.5rem; padding: 8px 12px; min-width: 140px; top: 12px; left: 12px; }
+            #status-bar { font-size: 0.55rem; padding: 6px 14px; gap: 10px; bottom: 15px; }
+        }
+        @media (max-width: 500px) {
+            #title-overlay .main { font-size: 1.6rem; }
+            #title-overlay .sub { font-size: 1rem; }
+            #hud { display: none; }
+            #status-bar { font-size: 0.45rem; padding: 4px 10px; }
+        }
+    </style>
+</head>
+<body>
+<div id="container">
+    <video id="video" autoplay playsinline></video>
+    <canvas id="mediapipe-canvas"></canvas>
+    <canvas id="three-canvas"></canvas>
+
+    <!-- HUD -->
+    <div id="hud">
+        <div class="title">⟡ SPATIAL AR</div>
+        <div class="line"><span>HAND</span><span class="val" id="handStatus">—</span></div>
+        <div class="line"><span>DEPTH (Z)</span><span class="val" id="depthStatus">—</span></div>
+        <div class="line"><span>BUTTON</span><span class="val" id="buttonStatus">⏸ IDLE</span></div>
+    </div>
+
+    <!-- Status Bar -->
+    <div id="status-bar">
+        <span><span class="dot green" id="statusDot"></span><span id="statusText">ระบบพร้อม</span></span>
+        <span>|</span>
+        <span>👆 <span id="fingerStatus">รอมือ</span></span>
+        <span>|</span>
+        <span>🎯 <span id="actionStatus">รอการกด</span></span>
+    </div>
+
+    <!-- Title Overlay -->
+    <div id="title-overlay">
+        <div class="main">🚀 SCIENCE WEEK 2026</div>
+        <div class="sub">SPATIAL AR GENESIS</div>
+        <div class="theme">✦ INTELLIGENCE SCIENCE FOR A SUSTAINABLE FUTURE ✦</div>
+    </div>
+</div>
+
+<script>
+    (function() {
+        // ========================================================================
+        // DOM REFS
+        // ========================================================================
+        const video = document.getElementById('video');
+        const mpCanvas = document.getElementById('mediapipe-canvas');
+        const mpCtx = mpCanvas.getContext('2d');
+        const threeCanvas = document.getElementById('three-canvas');
+        const titleOverlay = document.getElementById('title-overlay');
+        const statusText = document.getElementById('statusText');
+        const statusDot = document.getElementById('statusDot');
+        const fingerStatus = document.getElementById('fingerStatus');
+        const actionStatus = document.getElementById('actionStatus');
+        const handStatus = document.getElementById('handStatus');
+        const depthStatus = document.getElementById('depthStatus');
+        const buttonStatusHUD = document.getElementById('buttonStatus');
+
+        // ========================================================================
+        // STATE
+        // ========================================================================
+        let isCeremonyActive = false;
+        let isIdle = true;
+        let leftHand = null;
+        let rightHand = null;
+        let isPinch = false;
+        let pinchCooldown = false;
+
+        // ========================================================================
+        // AUDIO
+        // ========================================================================
+        let audioCtx = null;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            return audioCtx;
+        }
+
+        function playCeremonySound() {
+            const ctx = initAudio();
+            const now = ctx.currentTime;
+
+            // Sci-Fi sweep
+            const osc1 = ctx.createOscillator();
+            const gain1 = ctx.createGain();
+            osc1.type = 'sawtooth';
+            osc1.frequency.setValueAtTime(80, now);
+            osc1.frequency.exponentialRampToValueAtTime(400, now + 1.2);
+            gain1.gain.setValueAtTime(0.01, now);
+            gain1.gain.linearRampToValueAtTime(0.3, now + 0.6);
+            gain1.gain.exponentialRampToValueAtTime(0.01, now + 1.8);
+            osc1.connect(gain1);
+            gain1.connect(ctx.destination);
+            osc1.start(now);
+            osc1.stop(now + 2.0);
+
+            // High ping
+            const osc2 = ctx.createOscillator();
+            const gain2 = ctx.createGain();
+            osc2.type = 'sine';
+            osc2.frequency.setValueAtTime(1200, now + 0.2);
+            osc2.frequency.exponentialRampToValueAtTime(800, now + 0.6);
+            gain2.gain.setValueAtTime(0.01, now + 0.2);
+            gain2.gain.linearRampToValueAtTime(0.15, now + 0.4);
+            gain2.gain.exponentialRampToValueAtTime(0.01, now + 0.8);
+            osc2.connect(gain2);
+            gain2.connect(ctx.destination);
+            osc2.start(now + 0.2);
+            osc2.stop(now + 1.0);
+
+            // Impact
+            const osc3 = ctx.createOscillator();
+            const gain3 = ctx.createGain();
+            osc3.type = 'square';
+            osc3.frequency.setValueAtTime(60, now + 1.2);
+            osc3.frequency.exponentialRampToValueAtTime(30, now + 1.8);
+            gain3.gain.setValueAtTime(0.01, now + 1.2);
+            gain3.gain.linearRampToValueAtTime(0.4, now + 1.5);
+            gain3.gain.exponentialRampToValueAtTime(0.01, now + 2.2);
+            osc3.connect(gain3);
+            gain3.connect(ctx.destination);
+            osc3.start(now + 1.2);
+            osc3.stop(now + 2.4);
+        }
+
+        // ========================================================================
+        // THREE.JS – 3D SCENE
+        // ========================================================================
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x05080f);
+
+        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.01, 100);
+        camera.position.set(0, 0, 1.5);
+        camera.lookAt(0, 0, 0);
+
+        const renderer = new THREE.WebGLRenderer({
+            canvas: threeCanvas,
+            alpha: false,
+            antialias: true
+        });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.shadowMap.enabled = false;
+
+        // ========================================================================
+        // 1. BACKGROUND STARS
+        // ========================================================================
+        const starCount = 800;
+        const starGeo = new THREE.BufferGeometry();
+        const starPos = new Float32Array(starCount * 3);
+        for (let i = 0; i < starCount; i++) {
+            starPos[i*3] = (Math.random() - 0.5) * 8;
+            starPos[i*3+1] = (Math.random() - 0.5) * 6;
+            starPos[i*3+2] = (Math.random() - 0.5) * 4 - 2;
+        }
+        starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+        const starMat = new THREE.PointsMaterial({
+            color: 0x4466aa,
+            size: 0.008,
+            transparent: true,
+            opacity: 0.6,
+            blending: THREE.AdditiveBlending
+        });
+        const stars = new THREE.Points(starGeo, starMat);
+        scene.add(stars);
+
+        // ========================================================================
+        // 2. THE FLOATING 3D BUTTON (follows hand)
+        // ========================================================================
+        const buttonGroup = new THREE.Group();
+        scene.add(buttonGroup);
+
+        // Glow ring (outer)
+        const glowMat = new THREE.MeshBasicMaterial({
+            color: 0x00ddff,
+            transparent: true,
+            opacity: 0.15,
+            blending: THREE.AdditiveBlending,
+            side: THREE.DoubleSide
+        });
+        const glowRing = new THREE.Mesh(
+            new THREE.RingGeometry(0.12, 0.18, 32),
+            glowMat
+        );
+        glowRing.rotation.x = -Math.PI / 2;
+        buttonGroup.add(glowRing);
+
+        // Main button disc
+        const discMat = new THREE.MeshBasicMaterial({
+            color: 0x0088cc,
+            transparent: true,
+            opacity: 0.85,
+            side: THREE.DoubleSide
+        });
+        const disc = new THREE.Mesh(
+            new THREE.CircleGeometry(0.12, 32),
+            discMat
+        );
+        disc.rotation.x = -Math.PI / 2;
+        buttonGroup.add(disc);
+
+        // Inner glow ring
+        const innerGlow = new THREE.MeshBasicMaterial({
+            color: 0x00ffcc,
+            transparent: true,
+            opacity: 0.4,
+            blending: THREE.AdditiveBlending,
+            side: THREE.DoubleSide
+        });
+        const innerRing = new THREE.Mesh(
+            new THREE.RingGeometry(0.04, 0.08, 32),
+            innerGlow
+        );
+        innerRing.rotation.x = -Math.PI / 2;
+        buttonGroup.add(innerRing);
+
+        // Icon (play symbol)
+        const iconMat = new THREE.MeshBasicMaterial({
+            color: 0xffffff,
+            transparent: true,
+            opacity: 0.9
+        });
+        // Triangle (play symbol) using a simple shape
+        const shape = new THREE.Shape();
+        shape.moveTo(0, -0.04);
+        shape.lineTo(0.06, 0);
+        shape.lineTo(0, 0.04);
+        shape.closePath();
+        const iconGeo = new THREE.ShapeGeometry(shape);
+        const icon = new THREE.Mesh(iconGeo, iconMat);
+        icon.position.set(0, 0, 0.001);
+        buttonGroup.add(icon);
+
+        // Small pulse ring (animated)
+        const pulseMat = new THREE.MeshBasicMaterial({
+            color: 0x00ff88,
+            transparent: true,
+            opacity: 0.2,
+            blending: THREE.AdditiveBlending,
+            side: THREE.DoubleSide
+        });
+        const pulseRing = new THREE.Mesh(
+            new THREE.RingGeometry(0.15, 0.20, 32),
+            pulseMat
+        );
+        pulseRing.rotation.x = -Math.PI / 2;
+        buttonGroup.add(pulseRing);
+
+        // Hover text (3D text using sprites)
+        function createLabel(text, color, yOffset) {
+            const canvas = document.createElement('canvas');
+            const ctx2d = canvas.getContext('2d');
+            canvas.width = 512;
+            canvas.height = 128;
+            ctx2d.fillStyle = 'rgba(0,0,0,0)';
+            ctx2d.fillRect(0, 0, canvas.width, canvas.height);
+            ctx2d.textAlign = 'center';
+            ctx2d.textBaseline = 'middle';
+            ctx2d.font = 'bold 48px Orbitron, Sarabun';
+            ctx2d.shadowColor = 'rgba(0,0,0,0.8)';
+            ctx2d.shadowBlur = 10;
+            ctx2d.fillStyle = color;
+            ctx2d.fillText(text, canvas.width/2, canvas.height/2);
+
+            const texture = new THREE.CanvasTexture(canvas);
+            texture.needsUpdate = true;
+            const mat = new THREE.SpriteMaterial({
+                map: texture,
+                transparent: true,
+                depthWrite: false,
+                opacity: 0.8
+            });
+            const sprite = new THREE.Sprite(mat);
+            sprite.scale.set(0.3, 0.075, 1);
+            sprite.position.y = yOffset || 0.12;
+            return sprite;
+        }
+
+        const label = createLabel('► OPEN', '#ffffff', 0.12);
+        buttonGroup.add(label);
+
+        const subLabel = createLabel('PINCH TO ACTIVATE', 'rgba(0,255,200,0.5)', 0.18);
+        subLabel.scale.set(0.25, 0.05, 1);
+        buttonGroup.add(subLabel);
+
+        // Initially hidden
+        buttonGroup.visible = false;
+
+        // ========================================================================
+        // 3. FIREWORKS (for ceremony)
+        // ========================================================================
+        function createFirework(x, y, z) {
+            const count = 200;
+            const colors = [0x00ddff, 0xaa88ff, 0xff66aa, 0xffd700, 0x00ff88];
+            const geo = new THREE.BufferGeometry();
+            const positions = new Float32Array(count * 3);
+            const colorArray = new Float32Array(count * 3);
+            const particles = [];
+
+            for (let i = 0; i < count; i++) {
+                const r = 0.1 + Math.random() * 1.8;
+                const theta = Math.random() * Math.PI * 2;
+                const phi = Math.acos(2 * Math.random() - 1);
+                positions[i*3] = x + r * Math.sin(phi) * Math.cos(theta);
+                positions[i*3+1] = y + r * Math.cos(phi);
+                positions[i*3+2] = z + r * Math.sin(phi) * Math.sin(theta);
+                const col = new THREE.Color(colors[Math.floor(Math.random() * colors.length)]);
+                colorArray[i*3] = col.r;
+                colorArray[i*3+1] = col.g;
+                colorArray[i*3+2] = col.b;
+                particles.push({
+                    vx: (Math.random() - 0.5) * 2.5,
+                    vy: (Math.random() - 0.5) * 2.5 + 1.5,
+                    vz: (Math.random() - 0.5) * 2.5,
+                    life: 1,
+                    decay: 0.005 + Math.random() * 0.02
+                });
+            }
+            geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geo.setAttribute('color', new THREE.BufferAttribute(colorArray, 3));
+
+            const mat = new THREE.PointsMaterial({
+                size: 0.05,
+                vertexColors: true,
+                transparent: true,
+                opacity: 1,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false
+            });
+            const points = new THREE.Points(geo, mat);
+            scene.add(points);
+
+            let frame = 0;
+            const maxFrames = 130;
+            const animId = setInterval(() => {
+                frame++;
+                const pos = points.geometry.attributes.position.array;
+                let allDead = true;
+                for (let i = 0; i < count; i++) {
+                    particles[i].life -= particles[i].decay;
+                    if (particles[i].life > 0) {
+                        allDead = false;
+                        pos[i*3] += particles[i].vx * 0.035;
+                        pos[i*3+1] += particles[i].vy * 0.035 - 0.025;
+                        pos[i*3+2] += particles[i].vz * 0.035;
+                        particles[i].vy -= 0.035;
+                    } else {
+                        pos[i*3] = 0;
+                        pos[i*3+1] = -10;
+                        pos[i*3+2] = 0;
+                    }
+                }
+                points.geometry.attributes.position.needsUpdate = true;
+                mat.opacity = Math.max(0, 1 - frame / maxFrames);
+                if (allDead || frame > maxFrames) {
+                    clearInterval(animId);
+                    scene.remove(points);
+                    points.geometry.dispose();
+                    mat.dispose();
+                }
+            }, 16);
+        }
+
+        // ========================================================================
+        // START CEREMONY
+        // ========================================================================
+        function startCeremony() {
+            if (isCeremonyActive) return;
+            isCeremonyActive = true;
+            isIdle = false;
+
+            statusText.textContent = '🎉 กำลังเปิดงาน...';
+            statusDot.className = 'dot purple';
+            buttonStatusHUD.textContent = '🔶 ACTIVE';
+            actionStatus.textContent = '⏳ กำลังเปิด...';
+
+            // Sound
+            playCeremonySound();
+
+            // Hide button
+            buttonGroup.visible = false;
+
+            // Fireworks
+            createFirework(0, 0.5, 0);
+            setTimeout(() => createFirework(-0.8, 0.3, 0.8), 400);
+            setTimeout(() => createFirework(0.8, 0.4, -0.6), 800);
+            setTimeout(() => createFirework(0.4, 0.7, -0.9), 1200);
+
+            // Title
+            titleOverlay.classList.add('show');
+
+            // Reset
+            setTimeout(() => {
+                titleOverlay.classList.remove('show');
+                isCeremonyActive = false;
+                isIdle = true;
+                statusText.textContent = 'ระบบพร้อม';
+                statusDot.className = 'dot green';
+                buttonStatusHUD.textContent = '⏸ IDLE';
+                actionStatus.textContent = 'รอการกด';
+                buttonGroup.visible = false;
+            }, 6000);
+        }
+
+        // ========================================================================
+        // UPDATE SPATIAL BUTTON (maps MediaPipe to Three.js 3D)
+        // ========================================================================
+        function updateSpatialButton(handLandmarks) {
+            if (!handLandmarks || handLandmarks.length === 0 || isCeremonyActive) {
+                buttonGroup.visible = false;
+                return;
+            }
+
+            // Use wrist (landmark 0) as the anchor
+            const wrist = handLandmarks[0];
+            // Or use palm center (average of 5,9,13,17) for smoother tracking
+            const palm = handLandmarks[9]; // middle finger MCP
+
+            // MediaPipe coordinates: x, y normalized [0,1], z is depth (0 at camera)
+            // Map to Three.js: x: [-1,1], y: [1,-1] (flipped), z: depth mapped
+            const x = (wrist.x - 0.5) * 2.2; // scaled to fit
+            const y = -(wrist.y - 0.5) * 1.8;
+            const z = wrist.z * 2.0 + 0.5; // depth: closer = smaller z
+
+            // Update button position
+            buttonGroup.position.set(x, y, z);
+
+            // Scale based on depth (closer = bigger, farther = smaller)
+            const scale = 0.8 + (1 - Math.min(z, 1.5)) * 0.8;
+            buttonGroup.scale.set(scale, scale, scale);
+
+            // Rotate to always face camera (billboard)
+            buttonGroup.lookAt(camera.position);
+
+            // Pulse animation
+            const pulse = 1 + 0.03 * Math.sin(Date.now() / 400);
+            pulseRing.scale.set(pulse, pulse, pulse);
+            pulseRing.material.opacity = 0.15 + 0.08 * Math.sin(Date.now() / 300);
+
+            // Update HUD
+            handStatus.textContent = '✓';
+            depthStatus.textContent = z.toFixed(3);
+
+            // Show button
+            buttonGroup.visible = true;
+
+            // Detect pinch with the OTHER hand (if available)
+            // We'll check if there are two hands: left hand holds button, right hand pinches
+            // Or we can use the same hand's thumb and index
+            // For simplicity, we'll check pinch on the same hand
+            const thumbTip = handLandmarks[4];
+            const indexTip = handLandmarks[8];
+            if (thumbTip && indexTip) {
+                const dx = thumbTip.x - indexTip.x;
+                const dy = thumbTip.y - indexTip.y;
+                const dz = thumbTip.z - indexTip.z;
+                const dist = Math.sqrt(dx*dx + dy*dy + dz*dz);
+                const isPinchNow = dist < 0.05; // threshold for pinch
+
+                // Check if index finger is near the button (in 3D space)
+                // Map index finger to 3D space
+                const ix = (indexTip.x - 0.5) * 2.2;
+                const iy = -(indexTip.y - 0.5) * 1.8;
+                const iz = indexTip.z * 2.0 + 0.5;
+                const dxb = ix - x;
+                const dyb = iy - y;
+                const dzb = iz - z;
+                const distToButton = Math.sqrt(dxb*dxb + dyb*dyb + dzb*dzb);
+
+                const isNearButton = distToButton < 0.25;
+
+                if (isNearButton) {
+                    actionStatus.textContent = '🟡 เหนือปุ่ม';
+                    buttonStatusHUD.textContent = '🟡 HOVER';
+                    // Change button color when hovering
+                    disc.material.color.setHex(0x00ddff);
+                    glowRing.material.color.setHex(0x00ffcc);
+                    label.material.opacity = 1;
+
+                    if (isPinchNow && !pinchCooldown) {
+                        pinchCooldown = true;
+                        actionStatus.textContent = '✅ คลิก!';
+                        buttonStatusHUD.textContent = '✅ CLICK!';
+                        statusText.textContent = '🔴 ตรวจจับการกด!';
+                        startCeremony();
+                        setTimeout(() => { pinchCooldown = false; }, 1000);
+                    }
+                } else {
+                    actionStatus.textContent = 'รอการกด';
+                    buttonStatusHUD.textContent = '⏸ IDLE';
+                    disc.material.color.setHex(0x0088cc);
+                    glowRing.material.color.setHex(0x00ddff);
+                    label.material.opacity = 0.8;
+                }
+
+                fingerStatus.textContent = isPinchNow ? '👆 หยิบ' : '🖐️ ชี้นิ้ว';
+            }
+        }
+
+        // ========================================================================
+        // MEDIAPIPE HANDS
+        // ========================================================================
+        const hands = new Hands({
+            locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4/${file}`
+        });
+        hands.setOptions({
+            maxNumHands: 2,
+            modelComplexity: 1,
+            minDetectionConfidence: 0.5,
+            minTrackingConfidence: 0.5
+        });
+
+        hands.onResults((results) => {
+            const w = mpCanvas.width;
+            const h = mpCanvas.height;
+            mpCtx.clearRect(0, 0, w, h);
+
+            if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
+                // Track first hand for spatial button
+                const primaryHand = results.multiHandLandmarks[0];
+                const handedness = results.multiHandedness?.[0]?.label || 'Unknown';
+
+                // Update spatial button
+                if (isIdle) {
+                    updateSpatialButton(primaryHand);
+                }
+
+                // Draw hands on canvas (with depth visualization)
+                results.multiHandLandmarks.forEach((landmarks, idx) => {
+                    const label = results.multiHandedness?.[idx]?.label || '?';
+                    const pts = landmarks.map(lm => ({
+                        x: lm.x * w,
+                        y: lm.y * h,
+                        z: lm.z
+                    }));
+
+                    // Color based on depth
+                    const avgZ = landmarks.reduce((s, lm) => s + lm.z, 0) / landmarks.length;
+                    const hue = 0.55 + avgZ * 0.3;
+
+                    // Draw connections
+                    const connections = [
+                        [0,1],[1,2],[2,3],[3,4],[0,5],[5,6],[6,7],[7,8],
+                        [0,9],[9,10],[10,11],[11,12],[0,13],[13,14],[14,15],[15,16],
+                        [0,17],[17,18],[18,19],[19,20],[5,9],[9,13],[13,17]
+                    ];
+                    mpCtx.strokeStyle = `hsl(${hue * 360}, 70%, 60%)`;
+                    mpCtx.lineWidth = 1.5;
+                    for (let conn of connections) {
+                        const [i, j] = conn;
+                        if (i < pts.length && j < pts.length) {
+                            mpCtx.beginPath();
+                            mpCtx.moveTo(pts[i].x, pts[i].y);
+                            mpCtx.lineTo(pts[j].x, pts[j].y);
+                            mpCtx.stroke();
+                        }
+                    }
+
+                    // Draw landmarks with depth color
+                    pts.forEach((p, i) => {
+                        const size = i === 8 ? 7 : 4;
+                        const brightness = 0.3 + (1 - p.z) * 0.7;
+                        mpCtx.beginPath();
+                        mpCtx.arc(p.x, p.y, size, 0, 2 * Math.PI);
+                        mpCtx.fillStyle = `hsl(${hue * 360}, 80%, ${brightness * 70}%)`;
+                        mpCtx.shadowColor = 'rgba(0,200,255,0.3)';
+                        mpCtx.shadowBlur = 10;
+                        mpCtx.fill();
+                        mpCtx.shadowBlur = 0;
+                        // Show depth value on thumb/index
+                        if (i === 4 || i === 8) {
+                            mpCtx.fillStyle = 'rgba(255,255,255,0.4)';
+                            mpCtx.font = '8px monospace';
+                            mpCtx.fillText(p.z.toFixed(2), p.x + 10, p.y - 6);
+                        }
+                    });
+
+                    // Label hand
+                    if (pts.length > 0) {
+                        const wrist = pts[0];
+                        mpCtx.fillStyle = `hsl(${hue * 360}, 80%, 70%)`;
+                        mpCtx.font = '10px Orbitron, monospace';
+                        mpCtx.shadowColor = 'rgba(0,0,0,0.8)';
+                        mpCtx.shadowBlur = 4;
+                        const handLabel = idx === 0 ? '🖐️ หลัก' : '✋ รอง';
+                        mpCtx.fillText(`${handLabel} (Z:${avgZ.toFixed(2)})`, wrist.x - 20, wrist.y - 30);
+                        mpCtx.shadowBlur = 0;
+                    }
+                });
+
+                statusText.textContent = 'ตรวจจับมือ';
+                statusDot.className = 'dot green';
+            } else {
+                buttonGroup.visible = false;
+                handStatus.textContent = '✗';
+                depthStatus.textContent = '—';
+                fingerStatus.textContent = '⏳ รอมือ';
+                actionStatus.textContent = 'รอการกด';
+                statusText.textContent = 'รอตรวจจับ...';
+                statusDot.className = 'dot yellow';
+            }
+        });
+
+        // ========================================================================
+        // CAMERA
+        // ========================================================================
+        const cameraHelper = new Camera(video, {
+            onFrame: async () => {
+                await hands.send({ image: video });
+            },
+            width: 640,
+            height: 480
+        });
+        cameraHelper.start().then(() => {
+            statusText.textContent = 'กล้องพร้อม';
+            statusDot.className = 'dot green';
+        }).catch(err => {
+            statusText.textContent = '❌ ' + err.message;
+            statusDot.className = 'dot red';
+        });
+
+        // ========================================================================
+        // RESIZE
+        // ========================================================================
+        function resizeAll() {
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+            mpCanvas.width = w;
+            mpCanvas.height = h;
+            threeCanvas.width = w;
+            threeCanvas.height = h;
+            renderer.setSize(w, h);
+            camera.aspect = w / h;
+            camera.updateProjectionMatrix();
+        }
+        window.addEventListener('resize', resizeAll);
+
+        // ========================================================================
+        // ANIMATION
+        // ========================================================================
+        function animate() {
+            stars.rotation.y += 0.001;
+
+            // Animate button glow if visible
+            if (buttonGroup.visible) {
+                const time = Date.now() / 1000;
+                disc.material.opacity = 0.7 + 0.15 * Math.sin(time * 2);
+                glowRing.material.opacity = 0.1 + 0.08 * Math.sin(time * 1.5 + 1);
+                innerRing.material.opacity = 0.3 + 0.15 * Math.sin(time * 2.5);
+                label.position.y = 0.12 + 0.01 * Math.sin(time * 1.2);
+            }
+
+            renderer.render(scene, camera);
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        // ========================================================================
+        // EVENT LISTENERS
+        // ========================================================================
+        document.addEventListener('click', () => initAudio(), { once: true });
+
+        // Keyboard shortcut: 'S' for spatial click (testing)
+        document.addEventListener('keydown', (e) => {
+            if ((e.key === 's' || e.key === 'S') && isIdle && !isCeremonyActive) {
+                startCeremony();
+            }
+        });
+
+        // Double-click to simulate click
+        document.getElementById('container').addEventListener('dblclick', () => {
+            if (isIdle && !isCeremonyActive) startCeremony();
+        });
+
+        setTimeout(resizeAll, 500);
+        setInterval(resizeAll, 3000);
+    })();
+</script>
+</body>
+</html>

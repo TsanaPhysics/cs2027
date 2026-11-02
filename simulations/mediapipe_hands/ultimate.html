@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ULTIMATE INTELLIGENCE GENESIS – งานสัปดาห์วิทยาศาสตร์ 2569</title>
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- MediaPipe -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils@0.3/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils@0.3/drawing_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4/hands.js" crossorigin="anonymous"></script>
+    <style>
+        /* ========== GLOBAL ========== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&display=swap');
+
+        body {
+            font-family: 'Orbitron', 'Sarabun', sans-serif;
+            background: #05080f;
+            color: #fff;
+            overflow: hidden;
+            height: 100vh;
+            user-select: none;
+        }
+
+        #container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background: #05080f;
+            overflow: hidden;
+        }
+
+        video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            opacity: 0.35;
+            filter: blur(3px) brightness(0.5);
+            transform: scaleX(1);
+            transition: transform 0.5s ease;
+        }
+        #mediapipe-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+        }
+        #three-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* ========== HUD ========== */
+        #hud {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 10;
+            background: rgba(0, 10, 30, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 200, 255, 0.2);
+            border-radius: 12px;
+            padding: 14px 20px;
+            min-width: 220px;
+            font-family: 'Orbitron', monospace;
+            box-shadow: 0 0 40px rgba(0, 100, 255, 0.1);
+        }
+        #hud .title { font-size: 0.85rem; color: #00ccff; font-weight: 700; border-bottom: 1px solid rgba(0,200,255,0.2); padding-bottom: 6px; margin-bottom: 6px; letter-spacing: 3px; }
+        #hud .line { font-size: 0.7rem; color: rgba(100, 200, 255, 0.7); display: flex; justify-content: space-between; padding: 3px 0; }
+        #hud .line .val { color: #00ffcc; font-weight: 600; }
+        .blink { animation: blinkHUD 1.2s infinite; }
+        @keyframes blinkHUD { 0%,100%{opacity:1;} 50%{opacity:0.2;} }
+
+        /* ========== STATUS BAR ========== */
+        #status-bar {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            background: rgba(0, 10, 30, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 200, 255, 0.15);
+            border-radius: 40px;
+            padding: 10px 28px;
+            font-family: 'Orbitron', monospace;
+            font-size: 0.8rem;
+            color: rgba(0, 255, 200, 0.8);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 8px; }
+        .dot.green { background: #00ff88; box-shadow: 0 0 20px #00ff88; }
+        .dot.yellow { background: #ffcc00; box-shadow: 0 0 20px #ffcc00; }
+        .dot.red { background: #ff0044; box-shadow: 0 0 20px #ff0044; animation: blink 0.6s infinite; }
+
+        /* ========== TITLE OVERLAY (Ultimate) ========== */
+        #title-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 20;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            pointer-events: none;
+            background: rgba(0,0,0,0.2);
+        }
+        #title-overlay.show { display: flex; animation: fadeInTitle 2s cubic-bezier(0.2, 0.9, 0.3, 1.2) forwards; }
+        #title-overlay .main { font-size: 4.5rem; color: #00ddff; text-shadow: 0 0 60px rgba(0,220,255,0.6); letter-spacing: 6px; font-weight: 900; text-align: center; }
+        #title-overlay .sub { font-size: 2.5rem; color: #ffd700; text-shadow: 0 0 30px rgba(255,215,0,0.4); margin-top: 10px; letter-spacing: 8px; }
+        #title-overlay .theme { font-size: 1.2rem; color: rgba(255,255,255,0.5); margin-top: 16px; letter-spacing: 4px; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 16px; }
+        @keyframes fadeInTitle { 0% { opacity:0; transform: scale(0.7); } 100% { opacity:1; transform: scale(1); } }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 900px) {
+            #title-overlay .main { font-size: 2.8rem; }
+            #title-overlay .sub { font-size: 1.5rem; }
+            #hud { font-size: 0.6rem; padding: 10px 14px; min-width: 140px; top: 12px; left: 12px; }
+            #status-bar { font-size: 0.6rem; padding: 6px 16px; gap: 10px; bottom: 15px; }
+        }
+        @media (max-width: 500px) {
+            #title-overlay .main { font-size: 1.8rem; }
+            #title-overlay .sub { font-size: 1rem; }
+            #hud { display: none; }
+        }
+    </style>
+</head>
+<body>
+<div id="container">
+    <video id="video" autoplay playsinline></video>
+    <canvas id="mediapipe-canvas"></canvas>
+    <canvas id="three-canvas"></canvas>
+
+    <!-- HUD -->
+    <div id="hud">
+        <div class="title">⟡ SYS.ULTIMATE</div>
+        <div class="line"><span>AI INDEX</span><span class="val" id="sustainabilityIndex">—</span></div>
+        <div class="line"><span>ENERGY</span><span class="val" id="energyLevel">—</span></div>
+        <div class="line"><span>STATUS</span><span class="val blink" id="sysStatus">🟢 READY</span></div>
+    </div>
+
+    <!-- Status Bar -->
+    <div id="status-bar">
+        <span><span class="dot green" id="statusDot"></span><span id="statusText">ระบบพร้อม</span></span>
+        <span>|</span>
+        <span>👆 <span id="fingerStatus">รอมือ</span></span>
+        <span>|</span>
+        <span>🎯 <span id="buttonStatus">รอเปิดงาน</span></span>
+    </div>
+
+    <!-- Title Overlay -->
+    <div id="title-overlay">
+        <div class="main">🚀 SCIENCE WEEK 2026</div>
+        <div class="sub">INTELLIGENCE GENESIS</div>
+        <div class="theme">✦ INTELLIGENCE SCIENCE FOR A SUSTAINABLE FUTURE ✦</div>
+    </div>
+</div>
+
+<script>
+    (function() {
+        // ========================================================================
+        // DOM REFS
+        // ========================================================================
+        const video = document.getElementById('video');
+        const mpCanvas = document.getElementById('mediapipe-canvas');
+        const mpCtx = mpCanvas.getContext('2d');
+        const threeCanvas = document.getElementById('three-canvas');
+        const titleOverlay = document.getElementById('title-overlay');
+        const statusText = document.getElementById('statusText');
+        const statusDot = document.getElementById('statusDot');
+        const fingerStatus = document.getElementById('fingerStatus');
+        const buttonStatus = document.getElementById('buttonStatus');
+        const sustainabilityIndex = document.getElementById('sustainabilityIndex');
+        const energyLevel = document.getElementById('energyLevel');
+        const sysStatus = document.getElementById('sysStatus');
+
+        // ========================================================================
+        // STATE
+        // ========================================================================
+        let isCeremonyActive = false;
+        let isIdle = true;
+        let handLandmarks = null;
+        let frameCount = 0;
+
+        // Physics for pendulum (Digital Twin)
+        let pendulum = {
+            theta: 0.4,
+            omega: 0.0,
+            L: 1.0,
+            g: 9.8,
+            time: 0,
+            history: []
+        };
+
+        // Sustainability AI
+        let sustainabilityScore = 0;
+        let energyConsumption = 0;
+
+        // ========================================================================
+        // AUDIO
+        // ========================================================================
+        let audioCtx = null;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            return audioCtx;
+        }
+
+        function playSciFiSound() {
+            const ctx = initAudio();
+            const now = ctx.currentTime;
+
+            // Deep bass sweep
+            const osc1 = ctx.createOscillator();
+            const gain1 = ctx.createGain();
+            osc1.type = 'sawtooth';
+            osc1.frequency.setValueAtTime(60, now);
+            osc1.frequency.exponentialRampToValueAtTime(250, now + 1.2);
+            gain1.gain.setValueAtTime(0.01, now);
+            gain1.gain.linearRampToValueAtTime(0.3, now + 0.6);
+            gain1.gain.exponentialRampToValueAtTime(0.01, now + 1.8);
+            osc1.connect(gain1);
+            gain1.connect(ctx.destination);
+            osc1.start(now);
+            osc1.stop(now + 2.0);
+
+            // High sweep
+            const osc2 = ctx.createOscillator();
+            const gain2 = ctx.createGain();
+            osc2.type = 'sine';
+            osc2.frequency.setValueAtTime(500, now);
+            osc2.frequency.exponentialRampToValueAtTime(1500, now + 1.5);
+            gain2.gain.setValueAtTime(0.01, now);
+            gain2.gain.linearRampToValueAtTime(0.15, now + 0.8);
+            gain2.gain.exponentialRampToValueAtTime(0.01, now + 2.0);
+            osc2.connect(gain2);
+            gain2.connect(ctx.destination);
+            osc2.start(now);
+            osc2.stop(now + 2.2);
+
+            // Impact
+            const osc3 = ctx.createOscillator();
+            const gain3 = ctx.createGain();
+            osc3.type = 'square';
+            osc3.frequency.setValueAtTime(50, now + 1.0);
+            osc3.frequency.exponentialRampToValueAtTime(25, now + 1.8);
+            gain3.gain.setValueAtTime(0.01, now + 1.0);
+            gain3.gain.linearRampToValueAtTime(0.5, now + 1.3);
+            gain3.gain.exponentialRampToValueAtTime(0.01, now + 2.4);
+            osc3.connect(gain3);
+            gain3.connect(ctx.destination);
+            osc3.start(now + 1.0);
+            osc3.stop(now + 2.6);
+        }
+
+        // ========================================================================
+        // THREE.JS – SCENE SETUP
+        // ========================================================================
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x05080f);
+
+        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
+        camera.position.set(0, 0, 6);
+        camera.lookAt(0, 0, 0);
+
+        const renderer = new THREE.WebGLRenderer({
+            canvas: threeCanvas,
+            alpha: false,
+            antialias: true
+        });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        renderer.shadowMap.enabled = false;
+
+        // ========================================================================
+        // 1. BACKGROUND STARS (Particle System)
+        // ========================================================================
+        const starCount = 1200;
+        const starGeo = new THREE.BufferGeometry();
+        const starPos = new Float32Array(starCount * 3);
+        const starSizes = new Float32Array(starCount);
+        for (let i = 0; i < starCount; i++) {
+            starPos[i*3] = (Math.random() - 0.5) * 30;
+            starPos[i*3+1] = (Math.random() - 0.5) * 20;
+            starPos[i*3+2] = (Math.random() - 0.5) * 20 - 10;
+            starSizes[i] = 0.02 + Math.random() * 0.06;
+        }
+        starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+        starGeo.setAttribute('size', new THREE.BufferAttribute(starSizes, 1));
+
+        const starMat = new THREE.PointsMaterial({
+            color: 0x88aaff,
+            size: 0.05,
+            transparent: true,
+            opacity: 0.8,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false
+        });
+        const stars = new THREE.Points(starGeo, starMat);
+        scene.add(stars);
+
+        // ========================================================================
+        // 2. BLACK HOLE (Particle System with spiral)
+        // ========================================================================
+        const bhParticleCount = 800;
+        const bhGeo = new THREE.BufferGeometry();
+        const bhPos = new Float32Array(bhParticleCount * 3);
+        const bhColors = new Float32Array(bhParticleCount * 3);
+        const bhSizes = new Float32Array(bhParticleCount);
+        const bhData = [];
+
+        for (let i = 0; i < bhParticleCount; i++) {
+            const radius = 0.1 + Math.random() * 2.5;
+            const angle = Math.random() * Math.PI * 2;
+            const height = (Math.random() - 0.5) * 0.5;
+            bhPos[i*3] = radius * Math.cos(angle);
+            bhPos[i*3+1] = height;
+            bhPos[i*3+2] = radius * Math.sin(angle);
+            const col = new THREE.Color().setHSL(0.6 + Math.random()*0.2, 0.9, 0.3 + Math.random()*0.5);
+            bhColors[i*3] = col.r;
+            bhColors[i*3+1] = col.g;
+            bhColors[i*3+2] = col.b;
+            bhSizes[i] = 0.02 + Math.random() * 0.06;
+            bhData.push({
+                radius: radius,
+                angle: angle,
+                speed: 0.005 + Math.random() * 0.02,
+                height: height,
+                drift: (Math.random() - 0.5) * 0.002
+            });
+        }
+        bhGeo.setAttribute('position', new THREE.BufferAttribute(bhPos, 3));
+        bhGeo.setAttribute('color', new THREE.BufferAttribute(bhColors, 3));
+        bhGeo.setAttribute('size', new THREE.BufferAttribute(bhSizes, 1));
+
+        const bhMat = new THREE.PointsMaterial({
+            size: 0.06,
+            vertexColors: true,
+            transparent: true,
+            opacity: 0.9,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false
+        });
+        const blackHole = new THREE.Points(bhGeo, bhMat);
+        blackHole.visible = false;
+        scene.add(blackHole);
+
+        // Glow core of black hole
+        const coreGeo = new THREE.SphereGeometry(0.3, 16, 16);
+        const coreMat = new THREE.MeshBasicMaterial({
+            color: 0x0044ff,
+            transparent: true,
+            opacity: 0.4,
+            blending: THREE.AdditiveBlending
+        });
+        const core = new THREE.Mesh(coreGeo, coreMat);
+        core.visible = false;
+        scene.add(core);
+
+        // ========================================================================
+        // 3. SOLAR SYSTEM (Sun + Planets)
+        // ========================================================================
+        const solarGroup = new THREE.Group();
+        solarGroup.visible = false;
+        scene.add(solarGroup);
+
+        // Sun
+        const sunGeo = new THREE.SphereGeometry(0.6, 24, 24);
+        const sunMat = new THREE.MeshBasicMaterial({
+            color: 0xffaa00,
+            transparent: true,
+            opacity: 0.9
+        });
+        const sun = new THREE.Mesh(sunGeo, sunMat);
+        solarGroup.add(sun);
+
+        // Glow
+        const glowGeo = new THREE.SphereGeometry(0.8, 24, 24);
+        const glowMat = new THREE.MeshBasicMaterial({
+            color: 0xff8800,
+            transparent: true,
+            opacity: 0.15,
+            blending: THREE.AdditiveBlending
+        });
+        const glow = new THREE.Mesh(glowGeo, glowMat);
+        solarGroup.add(glow);
+
+        // Planets (with orbits)
+        const planetData = [
+            { radius: 1.2, size: 0.08, color: 0x44aaff, speed: 0.8 },
+            { radius: 1.8, size: 0.1, color: 0xffaa44, speed: 0.5 },
+            { radius: 2.5, size: 0.13, color: 0xff6644, speed: 0.35 },
+            { radius: 3.3, size: 0.09, color: 0x88ddff, speed: 0.25 },
+            { radius: 4.2, size: 0.12, color: 0xccaa88, speed: 0.18 }
+        ];
+        const planets = [];
+        planetData.forEach((p, idx) => {
+            const orbit = new THREE.Object3D();
+            const mesh = new THREE.Mesh(
+                new THREE.SphereGeometry(p.size, 16, 16),
+                new THREE.MeshBasicMaterial({ color: p.color })
+            );
+            mesh.position.x = p.radius;
+            orbit.add(mesh);
+            solarGroup.add(orbit);
+            planets.push({ orbit, mesh, speed: p.speed, radius: p.radius });
+        });
+
+        // ========================================================================
+        // 4. DIGITAL TWIN PENDULUM
+        // ========================================================================
+        const pendulumGroup = new THREE.Group();
+        pendulumGroup.visible = false;
+        scene.add(pendulumGroup);
+
+        // Rope
+        const ropeMat = new THREE.LineBasicMaterial({ color: 0x00ccff, transparent: true, opacity: 0.8 });
+        const ropeGeo = new THREE.BufferGeometry();
+        const ropePositions = new Float32Array([0,0,0, 0,-1,0]);
+        ropeGeo.setAttribute('position', new THREE.BufferAttribute(ropePositions, 3));
+        const rope = new THREE.Line(ropeGeo, ropeMat);
+        pendulumGroup.add(rope);
+
+        // Bob
+        const bobMat = new THREE.MeshPhongMaterial({
+            color: 0x00ddff,
+            emissive: 0x004466,
+            shininess: 30
+        });
+        const bob = new THREE.Mesh(new THREE.SphereGeometry(0.2, 24, 24), bobMat);
+        bob.position.set(0, -1, 0);
+        pendulumGroup.add(bob);
+
+        // Pivot glow
+        const pivotMat = new THREE.MeshBasicMaterial({ color: 0x00ffcc });
+        const pivot = new THREE.Mesh(new THREE.SphereGeometry(0.06, 12, 12), pivotMat);
+        pivot.position.set(0,0,0);
+        pendulumGroup.add(pivot);
+
+        // Light
+        const light = new THREE.DirectionalLight(0x88aaff, 0.5);
+        light.position.set(2, 3, 4);
+        scene.add(light);
+        const ambient = new THREE.AmbientLight(0x224466);
+        scene.add(ambient);
+
+        // ========================================================================
+        // UPDATE FUNCTIONS
+        // ========================================================================
+
+        // Update Black Hole particles (spiral)
+        function updateBlackHole(time) {
+            const pos = blackHole.geometry.attributes.position.array;
+            for (let i = 0; i < bhParticleCount; i++) {
+                const data = bhData[i];
+                data.angle += data.speed;
+                data.radius -= 0.001; // shrink inward
+                if (data.radius < 0.05) {
+                    data.radius = 2.0 + Math.random() * 0.5;
+                    data.angle = Math.random() * Math.PI * 2;
+                }
+                pos[i*3] = data.radius * Math.cos(data.angle);
+                pos[i*3+1] = data.height + Math.sin(time * 0.5 + i) * 0.1;
+                pos[i*3+2] = data.radius * Math.sin(data.angle);
+            }
+            blackHole.geometry.attributes.position.needsUpdate = true;
+        }
+
+        // Update Solar System
+        function updateSolarSystem(time) {
+            planets.forEach((p, idx) => {
+                p.orbit.rotation.y = time * p.speed * 0.3;
+            });
+            // Sun pulse
+            const pulse = 1 + 0.05 * Math.sin(time * 1.5);
+            sun.scale.set(pulse, pulse, pulse);
+        }
+
+        // Update Pendulum (Digital Twin)
+        function updatePendulum(deltaTime) {
+            const g = 9.8;
+            const L = 1.0;
+            const alpha = -(g / L) * Math.sin(pendulum.theta);
+            pendulum.omega += alpha * deltaTime;
+            pendulum.theta += pendulum.omega * deltaTime;
+            pendulum.omega *= 0.9995; // damping
+
+            // Clamp
+            if (pendulum.theta > Math.PI/2) pendulum.theta = Math.PI/2;
+            if (pendulum.theta < -Math.PI/2) pendulum.theta = -Math.PI/2;
+
+            const x = L * Math.sin(pendulum.theta);
+            const y = -L * Math.cos(pendulum.theta);
+            bob.position.set(x, y, 0);
+            // Update rope
+            const pos = rope.geometry.attributes.position.array;
+            pos[0] = 0; pos[1] = 0; pos[2] = 0;
+            pos[3] = x; pos[4] = y; pos[5] = 0;
+            rope.geometry.attributes.position.needsUpdate = true;
+
+            // Store history for AI
+            pendulum.history.push(pendulum.theta);
+            if (pendulum.history.length > 120) pendulum.history.shift();
+
+            // AI: calculate sustainability from frequency (inverse of period)
+            if (pendulum.history.length > 60) {
+                // Count zero-crossings
+                let crossings = 0;
+                for (let i = 1; i < pendulum.history.length; i++) {
+                    if (pendulum.history[i] * pendulum.history[i-1] < 0) crossings++;
+                }
+                const freq = crossings / (pendulum.history.length * 0.016); // approx Hz
+                // Sustainability: higher frequency = more energy consumption -> lower score
+                // We map freq (0-3 Hz) to index 0-100
+                const raw = Math.min(freq / 3.0, 1);
+                sustainabilityScore = Math.round((1 - raw) * 100);
+                energyConsumption = Math.round(raw * 100);
+                // Update HUD
+                sustainabilityIndex.textContent = sustainabilityScore;
+                energyLevel.textContent = energyConsumption + '%';
+            }
+        }
+
+        // ========================================================================
+        // CEREMONY SEQUENCE
+        // ========================================================================
+        function startCeremony() {
+            if (isCeremonyActive) return;
+            isCeremonyActive = true;
+            isIdle = false;
+            statusText.textContent = '🎉 กำลังเปิดงาน...';
+            statusDot.className = 'dot yellow';
+            sysStatus.textContent = '🔶 ACTIVE';
+
+            // Sound
+            playSciFiSound();
+
+            // Step 1: Show Black Hole (with delay)
+            blackHole.visible = true;
+            core.visible = true;
+            // Hide others
+            solarGroup.visible = false;
+            pendulumGroup.visible = false;
+
+            // Step 2: After 2.5s -> Explosion (we'll simulate by showing many particles and transition)
+            setTimeout(() => {
+                // Create explosion particles (using existing black hole particles?)
+                // For simplicity, we'll just hide black hole and show solar system + pendulum
+                blackHole.visible = false;
+                core.visible = false;
+                solarGroup.visible = true;
+                pendulumGroup.visible = true;
+                // Show title
+                titleOverlay.classList.add('show');
+                // Start pendulum physics
+                pendulum.theta = 0.5;
+                pendulum.omega = 0.0;
+                // Also add extra fireworks
+                createFirework(0, 1, 0);
+                setTimeout(() => createFirework(-1.5, 0.5, 1.5), 400);
+                setTimeout(() => createFirework(1.5, 0.8, -1.2), 800);
+            }, 2500);
+
+            // Step 3: After 6s, show final message and reset status
+            setTimeout(() => {
+                titleOverlay.classList.remove('show');
+                statusText.textContent = '✅ เปิดงานสำเร็จ!';
+                statusDot.className = 'dot green';
+                sysStatus.textContent = '🟢 ONLINE';
+                isCeremonyActive = false;
+            }, 7000);
+        }
+
+        // Firework helper (simple)
+        function createFirework(x, y, z) {
+            const count = 200;
+            const colors = [0x00ddff, 0xffd700, 0xff0066, 0x00ff88];
+            const geo = new THREE.BufferGeometry();
+            const positions = new Float32Array(count * 3);
+            const colorArray = new Float32Array(count * 3);
+            const particles = [];
+
+            for (let i = 0; i < count; i++) {
+                const r = 0.1 + Math.random() * 1.5;
+                const theta = Math.random() * Math.PI * 2;
+                const phi = Math.acos(2 * Math.random() - 1);
+                positions[i*3] = x + r * Math.sin(phi) * Math.cos(theta);
+                positions[i*3+1] = y + r * Math.cos(phi);
+                positions[i*3+2] = z + r * Math.sin(phi) * Math.sin(theta);
+                const col = new THREE.Color(colors[Math.floor(Math.random() * colors.length)]);
+                colorArray[i*3] = col.r;
+                colorArray[i*3+1] = col.g;
+                colorArray[i*3+2] = col.b;
+                particles.push({
+                    vx: (Math.random() - 0.5) * 2,
+                    vy: (Math.random() - 0.5) * 2 + 1,
+                    vz: (Math.random() - 0.5) * 2,
+                    life: 1,
+                    decay: 0.005 + Math.random() * 0.02
+                });
+            }
+            geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geo.setAttribute('color', new THREE.BufferAttribute(colorArray, 3));
+
+            const mat = new THREE.PointsMaterial({
+                size: 0.05,
+                vertexColors: true,
+                transparent: true,
+                opacity: 1,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false
+            });
+            const points = new THREE.Points(geo, mat);
+            scene.add(points);
+
+            let frame = 0;
+            const maxFrames = 120;
+            const animId = setInterval(() => {
+                frame++;
+                const pos = points.geometry.attributes.position.array;
+                let allDead = true;
+                for (let i = 0; i < count; i++) {
+                    particles[i].life -= particles[i].decay;
+                    if (particles[i].life > 0) {
+                        allDead = false;
+                        pos[i*3] += particles[i].vx * 0.03;
+                        pos[i*3+1] += particles[i].vy * 0.03 - 0.02;
+                        pos[i*3+2] += particles[i].vz * 0.03;
+                        particles[i].vy -= 0.03;
+                    } else {
+                        pos[i*3] = 0;
+                        pos[i*3+1] = -10;
+                        pos[i*3+2] = 0;
+                    }
+                }
+                points.geometry.attributes.position.needsUpdate = true;
+                mat.opacity = Math.max(0, 1 - frame / maxFrames);
+                if (allDead || frame > maxFrames) {
+                    clearInterval(animId);
+                    scene.remove(points);
+                    points.geometry.dispose();
+                    mat.dispose();
+                }
+            }, 16);
+        }
+
+        // ========================================================================
+        // MEDIAPIPE HANDS
+        // ========================================================================
+        const hands = new Hands({
+            locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4/${file}`
+        });
+        hands.setOptions({
+            maxNumHands: 1,
+            modelComplexity: 1,
+            minDetectionConfidence: 0.5,
+            minTrackingConfidence: 0.5
+        });
+
+        hands.onResults((results) => {
+            const w = mpCanvas.width;
+            const h = mpCanvas.height;
+            mpCtx.clearRect(0, 0, w, h);
+
+            // Draw Cyber Button (only in idle mode)
+            if (isIdle) drawCyberButton(w, h);
+
+            if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
+                const landmarks = results.multiHandLandmarks[0];
+                handLandmarks = landmarks;
+                const pts = landmarks.map(lm => ({ x: lm.x * w, y: lm.y * h }));
+
+                // Draw hand (simplified)
+                const connections = [
+                    [0,1],[1,2],[2,3],[3,4],[0,5],[5,6],[6,7],[7,8],
+                    [0,9],[9,10],[10,11],[11,12],[0,13],[13,14],[14,15],[15,16],
+                    [0,17],[17,18],[18,19],[19,20],[5,9],[9,13],[13,17]
+                ];
+                mpCtx.strokeStyle = 'rgba(0, 255, 200, 0.5)';
+                mpCtx.lineWidth = 2;
+                for (let conn of connections) {
+                    const [i, j] = conn;
+                    if (i < pts.length && j < pts.length) {
+                        mpCtx.beginPath();
+                        mpCtx.moveTo(pts[i].x, pts[i].y);
+                        mpCtx.lineTo(pts[j].x, pts[j].y);
+                        mpCtx.stroke();
+                    }
+                }
+                pts.forEach((p, i) => {
+                    mpCtx.beginPath();
+                    mpCtx.arc(p.x, p.y, i===8?7:4, 0, 2*Math.PI);
+                    mpCtx.fillStyle = i===8 ? '#00ffcc' : '#00ccff';
+                    mpCtx.shadowColor = 'rgba(0,255,200,0.5)';
+                    mpCtx.shadowBlur = 15;
+                    mpCtx.fill();
+                    mpCtx.shadowBlur = 0;
+                });
+
+                // Detect pinch to click
+                if (isIdle) {
+                    const indexTip = pts[8];
+                    const thumbTip = pts[4];
+                    if (indexTip && thumbTip) {
+                        const cx = w/2;
+                        const cy = h/2 + 20;
+                        const radius = Math.min(w,h) * 0.08;
+                        const dist = Math.hypot(indexTip.x - thumbTip.x, indexTip.y - thumbTip.y);
+                        const isPinch = dist < 30;
+                        const isOver = Math.hypot(indexTip.x - cx, indexTip.y - cy) < radius;
+                        if (isOver && isPinch) {
+                            buttonStatus.textContent = '✅ เปิด!';
+                            fingerStatus.textContent = '👆 คลิก!';
+                            startCeremony();
+                        } else if (isOver) {
+                            buttonStatus.textContent = '🟡 แตะปุ่ม';
+                            fingerStatus.textContent = '✋ เหนือปุ่ม';
+                        } else {
+                            buttonStatus.textContent = 'รอเปิดงาน';
+                            fingerStatus.textContent = '🖐️ ชี้นิ้ว';
+                        }
+                    }
+                } else {
+                    fingerStatus.textContent = '⏳ กำลังเปิดงาน...';
+                    buttonStatus.textContent = '⏳';
+                }
+                statusText.textContent = 'ตรวจจับมือ';
+                statusDot.className = 'dot green';
+            } else {
+                handLandmarks = null;
+                fingerStatus.textContent = '⏳ รอมือ';
+                if (isIdle) buttonStatus.textContent = 'รอเปิดงาน';
+                statusText.textContent = 'รอตรวจจับ...';
+                statusDot.className = 'dot yellow';
+            }
+        });
+
+        // ========================================================================
+        // DRAW CYBER BUTTON (only in idle mode)
+        // ========================================================================
+        function drawCyberButton(w, h) {
+            const cx = w/2;
+            const cy = h/2 + 20;
+            const radius = Math.min(w,h) * 0.08;
+
+            // Glow
+            const grad = mpCtx.createRadialGradient(cx, cy, radius*0.3, cx, cy, radius*1.6);
+            grad.addColorStop(0, 'rgba(0, 200, 255, 0.06)');
+            grad.addColorStop(1, 'rgba(0, 200, 255, 0)');
+            mpCtx.beginPath();
+            mpCtx.arc(cx, cy, radius*1.6, 0, 2*Math.PI);
+            mpCtx.fillStyle = grad;
+            mpCtx.fill();
+
+            // Pulsing ring
+            const pulse = 1 + 0.03 * Math.sin(Date.now()/600);
+            mpCtx.beginPath();
+            mpCtx.arc(cx, cy, radius * pulse, 0, 2*Math.PI);
+            mpCtx.strokeStyle = 'rgba(0, 200, 255, 0.15)';
+            mpCtx.lineWidth = 2;
+            mpCtx.setLineDash([6,6]);
+            mpCtx.stroke();
+            mpCtx.setLineDash([]);
+
+            // Main button
+            const grad2 = mpCtx.createRadialGradient(cx-10, cy-10, 5, cx, cy, radius);
+            grad2.addColorStop(0, '#00ddff');
+            grad2.addColorStop(0.5, '#0088cc');
+            grad2.addColorStop(1, '#004466');
+            mpCtx.shadowColor = 'rgba(0, 200, 255, 0.5)';
+            mpCtx.shadowBlur = 30;
+            mpCtx.beginPath();
+            mpCtx.arc(cx, cy, radius, 0, 2*Math.PI);
+            mpCtx.fillStyle = grad2;
+            mpCtx.fill();
+            mpCtx.shadowBlur = 0;
+            mpCtx.strokeStyle = 'rgba(0, 255, 200, 0.6)';
+            mpCtx.lineWidth = 2;
+            mpCtx.stroke();
+
+            mpCtx.fillStyle = '#fff';
+            mpCtx.font = `bold ${radius*0.4}px Orbitron, Sarabun`;
+            mpCtx.textAlign = 'center';
+            mpCtx.textBaseline = 'middle';
+            mpCtx.shadowColor = 'rgba(0,0,0,0.8)';
+            mpCtx.shadowBlur = 8;
+            mpCtx.fillText('▶ OPEN', cx, cy-2);
+            mpCtx.shadowBlur = 0;
+
+            mpCtx.fillStyle = 'rgba(0,255,200,0.4)';
+            mpCtx.font = `${radius*0.15}px Orbitron, Sarabun`;
+            mpCtx.fillText('⌘ PINCH TO ACTIVATE', cx, cy + radius + 24);
+        }
+
+        // ========================================================================
+        // CAMERA
+        // ========================================================================
+        const cameraHelper = new Camera(video, {
+            onFrame: async () => {
+                await hands.send({ image: video });
+            },
+            width: 640,
+            height: 480
+        });
+        cameraHelper.start().then(() => {
+            statusText.textContent = 'กล้องพร้อม';
+            statusDot.className = 'dot green';
+        }).catch(err => {
+            statusText.textContent = '❌ ' + err.message;
+            statusDot.className = 'dot red';
+        });
+
+        // ========================================================================
+        // RESIZE
+        // ========================================================================
+        function resizeAll() {
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+            mpCanvas.width = w;
+            mpCanvas.height = h;
+            threeCanvas.width = w;
+            threeCanvas.height = h;
+            renderer.setSize(w, h);
+            camera.aspect = w / h;
+            camera.updateProjectionMatrix();
+        }
+        window.addEventListener('resize', resizeAll);
+
+        // ========================================================================
+        // ANIMATION LOOP
+        // ========================================================================
+        let lastTime = 0;
+        let elapsed = 0;
+
+        function animate(time) {
+            const delta = Math.min((time - lastTime) / 1000, 0.05);
+            lastTime = time;
+            elapsed += delta;
+
+            // Update Black Hole (if visible)
+            if (blackHole.visible) {
+                updateBlackHole(elapsed);
+                core.material.opacity = 0.3 + 0.2 * Math.sin(elapsed * 3);
+            }
+
+            // Update Solar System (if visible)
+            if (solarGroup.visible) {
+                updateSolarSystem(elapsed);
+            }
+
+            // Update Pendulum (if visible)
+            if (pendulumGroup.visible) {
+                updatePendulum(delta);
+            }
+
+            // Rotate stars slowly
+            stars.rotation.y += delta * 0.005;
+
+            renderer.render(scene, camera);
+            requestAnimationFrame(animate);
+        }
+        animate(0);
+
+        // ========================================================================
+        // EVENT LISTENERS
+        // ========================================================================
+        document.addEventListener('click', () => initAudio(), { once: true });
+
+        // Keyboard shortcut: press 'O' to open (for demo)
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'o' || e.key === 'O') {
+                if (isIdle && !isCeremonyActive) startCeremony();
+            }
+        });
+
+        // Mouse click on container (for testing)
+        document.getElementById('container').addEventListener('dblclick', () => {
+            if (isIdle && !isCeremonyActive) startCeremony();
+        });
+
+        setTimeout(resizeAll, 500);
+        setInterval(resizeAll, 3000);
+    })();
+</script>
+</body>
+</html>

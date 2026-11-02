@@ -1,0 +1,424 @@
+{
+  "course_info": {
+    "code": "4124941",
+    "title_th": "วิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์",
+    "title_en": "Computational Science for Teaching Science",
+    "credits": "3(2-2-5)",
+    "hours_breakdown": {
+      "lecture": 30,
+      "lab": 30,
+      "self_study": 75
+    },
+    "faculty": "คณะวิทยาศาสตร์และเทคโนโลยี",
+    "department": "ภาควิชาฟิสิกส์และวิทยาศาสตร์ทั่วไป",
+    "institution": "มหาวิทยาลัยราชภัฏรำไพพรรณี",
+    "instructor": "ผู้ช่วยศาสตราจารย์ ดร.ชีวะ ทัศนา",
+    "degree": "ครุศาสตรบัณฑิต สาขาวิชาวิทยาศาสตร์ทั่วไป (หลักสูตรปรับปรุง พ.ศ. 2567)",
+    "semester": "ภาคการศึกษาที่ 2"
+  },
+  "grading_weights": [
+    {
+      "id": "participation",
+      "title": "การมีส่วนร่วมในชั้นเรียนและใบงานย่อย",
+      "weight": 10,
+      "type": "formative"
+    },
+    {
+      "id": "midterm",
+      "title": "การสอบกลางภาค (Midterm Examination)",
+      "weight": 20,
+      "type": "summative"
+    },
+    {
+      "id": "lab_code",
+      "title": "งานปฏิบัติการเขียนโปรแกรมและการแก้ปัญหา (Lab)",
+      "weight": 20,
+      "type": "practical"
+    },
+    {
+      "id": "lesson_plan_micro",
+      "title": "การออกแบบแผนการจัดการเรียนรู้ & จุลการสอน (Micro-teaching)",
+      "weight": 20,
+      "type": "pedagogy"
+    },
+    {
+      "id": "final_project",
+      "title": "โครงงานปลายภาค (Final Project & Presentation)",
+      "weight": 20,
+      "type": "project"
+    },
+    {
+      "id": "final_exam",
+      "title": "การสอบปลายภาค (Final Examination)",
+      "weight": 10,
+      "type": "summative"
+    }
+  ],
+  "clos": [
+    {
+      "id": "CLO1",
+      "domain": "การคิดเชิงคำนวณและขั้นตอนวิธี (Computational Thinking & Algorithms)",
+      "desc": "มีทักษะการคิดเชิงคำนวณในการคิดวิเคราะห์ แก้ปัญหาอย่างเป็นขั้นตอนและเป็นระบบ ออกแบบอัลกอริทึม ผังงาน รหัสลำลอง และอธิบายหลักการทำงานของระบบคอมพิวเตอร์และเทคโนโลยีการสื่อสาร"
+    },
+    {
+      "id": "CLO2",
+      "domain": "การสืบค้นและประมวลผลข้อมูลสารสนเทศ (Data Information & Analytics)",
+      "desc": "มีทักษะในการค้นหาข้อมูลสารสนเทศ ประเมิน จัดการ วิเคราะห์ สังเคราะห์ และนำสารสนเทศไปใช้ในการแก้ปัญหา ประมวลผลและนำเสนอข้อมูลทางวิทยาศาสตร์ด้วยโปรแกรมประยุกต์และบริการดิจิทัล"
+    },
+    {
+      "id": "CLO3",
+      "domain": "โครงงานบูรณาการและการเขียนโปรแกรมวิทยาศาสตร์ (Integrated Projects & Science Coding)",
+      "desc": "ประยุกต์ความรู้ด้านวิทยาการคอมพิวเตอร์ สื่อดิจิทัล และการเขียนโปรแกรม (Scratch/Python) ในการแก้ปัญหาจริง พัฒนาโครงงานบูรณาการวิทยาศาสตร์ และออกแบบแผนกิจกรรมการเรียนรู้สำหรับสถานศึกษา"
+    },
+    {
+      "id": "CLO4",
+      "domain": "จริยธรรม กฎหมาย และความปลอดภัยไซเบอร์ (Ethics, Law & Cybersecurity)",
+      "desc": "ใช้เทคโนโลยีสารสนเทศและการสื่อสารอย่างปลอดภัย รู้เท่าทันสื่อและข่าวปลอม มีความรับผิดชอบ ปฏิบัติตามกฎหมายคอมพิวเตอร์ PDPA ลิขสิทธิ์ และจรรยาบรรณวิชาชีพครู"
+    }
+  ],
+  "phases": [
+    {
+      "id": 1,
+      "name": "Phase 1: รากฐานแนวคิดเชิงคำนวณ",
+      "en_name": "Computational Thinking Foundations",
+      "weeks_range": "สัปดาห์ที่ 1 - 4",
+      "desc": "ปูพื้นฐานแนวคิดเชิงคำนวณ 4 เสาหลัก การเขียนผังงาน และรหัสลำลองในบริบทวิทยาศาสตร์",
+      "badge_color": "#10b981"
+    },
+    {
+      "id": 2,
+      "name": "Phase 2: ทักษะการเขียนโปรแกรมและการจำลองแบบ",
+      "en_name": "Programming & Scientific Simulation",
+      "weeks_range": "สัปดาห์ที่ 5 - 8",
+      "desc": "ฝึกเขียนโค้ด Scratch และ Python สำหรับวิทยาศาสตร์ การสร้างฟังก์ชัน และการสอบกลางภาค",
+      "badge_color": "#3b82f6"
+    },
+    {
+      "id": 3,
+      "name": "Phase 3: โครงงานวิทยาการคำนวณประยุกต์",
+      "en_name": "Science Project Development",
+      "weeks_range": "สัปดาห์ที่ 9 - 10",
+      "desc": "พัฒนาโครงงานสื่อจำลองทางวิทยาศาสตร์ (Simulation) และทดสอบต้นแบบเชิงประจักษ์",
+      "badge_color": "#8b5cf6"
+    },
+    {
+      "id": 4,
+      "name": "Phase 4: นวัตกรรมการจัดการเรียนรู้และจุลการสอน",
+      "en_name": "Pedagogical Integration & Micro-teaching",
+      "weeks_range": "สัปดาห์ที่ 11 - 16",
+      "desc": "ออกแบบแผนการสอน จัดทำสื่อ ปฏิบัติการจุลการสอน (Micro-teaching) และสอบปลายภาค",
+      "badge_color": "#f59e0b"
+    }
+  ],
+  "weeks": [
+    {
+      "week": 1,
+      "phase": 1,
+      "title": "ปฐมนิเทศรายวิชา / บทนำสู่วิทยาการคำนวณและแนวคิดเชิงคำนวณ",
+      "subtitle": "บทนำ & แนวคิดเชิงคำนวณ 4 ด้าน",
+      "file": "lessons/week_01.html",
+      "icon": "fas fa-compass",
+      "is_exam": false,
+      "hours": "4 ชั่วโมง (บรรยาย 2 ชม. + ปฏิบัติ 2 ชม.)",
+      "simulation_url": "simulations/chapter01_decomposition_tree.html",
+      "extra_simulations": [
+        "simulations/chapter01_ipst_ct_games.html",
+        "simulations/chapter01_river_crossing.html",
+        "simulations/chapter01_unplugged_grid.html"
+      ],
+      "slide_url": "assets/slides/Computing Science for Science Teaching - Chapter 1.pptx",
+      "lab_codes": [
+        "1.1.1",
+        "1.1.2"
+      ]
+    },
+    {
+      "week": 2,
+      "phase": 1,
+      "title": "การคิดเชิงนามธรรม (Abstraction) และการแยกส่วนประกอบของปัญหา (Decomposition)",
+      "subtitle": "Decomposition & Abstraction: การสร้างภาพจากตัวเลข สู่ 3D Voxel Lab",
+      "file": "lessons/week_02.html",
+      "simulation_url": "simulations/chapter01_abstraction_sandbox.html",
+      "icon": "fas fa-cube",
+      "is_exam": false,
+      "hours": "4 ชั่วโมง (บรรยาย 2 ชม. + ปฏิบัติ 2 ชม.)",
+      "extra_simulations": [
+        "simulations/voxel_lab.html",
+        "simulations/chapter01_abstraction_point_mass.html"
+      ],
+      "slide_url": "assets/slides/Computing Science for Science Teaching - Chapter 2.pptx",
+      "lab_codes": [
+        "1.1.3",
+        "1.1.4"
+      ]
+    },
+    {
+      "week": 3,
+      "phase": 1,
+      "title": "การหารูปแบบ (Pattern Recognition) และการออกแบบขั้นตอนวิธี (Algorithm Design)",
+      "subtitle": "Pattern Recognition & Algorithm ทางวิทยาศาสตร์",
+      "file": "lessons/week_03.html",
+      "icon": "fas fa-project-diagram",
+      "is_exam": false,
+      "hours": "4 ชั่วโมง (บรรยาย 2 ชม. + ปฏิบัติ 2 ชม.)",
+      "simulation_url": "simulations/chapter01_pattern_recognition.html",
+      "extra_simulations": [
+        "simulations/chapter01_pattern_explorer.html",
+        "simulations/chapter01_robot_grid_navigator.html"
+      ],
+      "slide_url": "assets/slides/Computing Science for Science Teaching - Chapter 3.pptx",
+      "lab_codes": [
+        "1.2.1",
+        "1.2.2"
+      ]
+    },
+    {
+      "week": 4,
+      "phase": 1,
+      "title": "การเขียนรหัสลำลอง (Pseudocode) และผังงาน (Flowchart)",
+      "subtitle": "Pseudocode & Flowchart กระบวนการทดลอง",
+      "file": "lessons/week_04.html",
+      "icon": "fas fa-sitemap",
+      "is_exam": false,
+      "hours": "4 ชั่วโมง (บรรยาย 2 ชม. + ปฏิบัติ 2 ชม.)",
+      "simulation_url": "simulations/chapter02_flowchart_builder.html",
+      "extra_simulations": [
+        "simulations/chapter02_pseudocode_ast.html",
+        "simulations/chapter02_trace_table_runner.html"
+      ],
+      "slide_url": "assets/slides/Computing Science for Science Teaching - Chapter 4.pptx",
+      "lab_codes": [
+        "1.3.1",
+        "1.3.2"
+      ]
+    },
+    {
+      "week": 5,
+      "phase": 2,
+      "title": "การเขียนโปรแกรมอย่างง่าย 1 (ตัวแปร ข้อมูล และเงื่อนไข) ด้วย Scratch/Python",
+      "subtitle": "ตัวแปร ชนิดข้อมูล และเงื่อนไข If-Else",
+      "file": "lessons/week_05.html",
+      "icon": "fas fa-code",
+      "is_exam": false,
+      "hours": "4 ชั่วโมง (บรรยาย 2 ชม. + ปฏิบัติ 2 ชม.)",
+      "simulation_url": "simulations/chapter03_memory_model.html",
+      "extra_simulations": [
+        "simulations/chapter03_inbrowser_python_sandbox.html",
+        "simulations/chapter04_automated_decision_system.html"
+      ],
+      "slide_url": "assets/slides/Computing Science for Science Teaching - Chapter 5.pptx",
+      "lab_codes": [
+        "2.1.1",
+        "2.1.2"
+      ]
+    },
+    {
+      "week": 6,
+      "phase": 2,
+      "title": "การเขียนโปรแกรมอย่างง่าย 2 (การวนซ้ำ ฟังก์ชัน และการประมวลผลข้อมูล)",
+      "subtitle": "การวนซ้ำ ฟังก์ชัน และประมวลผลข้อมูลวิทย์",
+      "file": "lessons/week_06.html",
+      "icon": "fas fa-redo",
+      "is_exam": false,
+      "hours": "4 ชั่วโมง (บรรยาย 2 ชม. + ปฏิบัติ 2 ชม.)",
+      "simulation_url": "simulations/chapter04_for_loop_range_visualizer.html",
+      "extra_simulations": [
+        "simulations/chapter07_legb_scope_simulator.html",
+        "simulations/chapter08_matplotlib_2d_plotter.html"
+      ],
+      "slide_url": "assets/slides/Computing Science for Science Teaching - Chapter 5.pptx",
+      "lab_codes": [
+        "2.2.1",
+        "2.2.2"
+      ]
+    },
+    {
+      "week": 7,
+      "phase": 2,
+      "title": "การทดสอบและตรวจหาข้อผิดพลาดของโปรแกรม (Debugging) และแบบจำลองวิทย์",
+      "subtitle": "Debugging & Science Simulation Basics",
+      "file": "lessons/week_07.html",
+      "icon": "fas fa-bug",
+      "is_exam": false,
+      "hours": "4 ชั่วโมง (บรรยาย 2 ชม. + ปฏิบัติ 2 ชม.)",
+      "simulation_url": "simulations/chapter07_refactoring_visualizer.html",
+      "extra_simulations": [
+        "simulations/chapter07_clean_code_visualizer.html",
+        "simulations/chapter08_3d_spring_oscillator.html"
+      ],
+      "slide_url": "assets/slides/Computing Science for Science Teaching - Chapter 6: Scientific Modeling and Simulation.pptx",
+      "lab_codes": [
+        "2.3.1",
+        "2.3.2"
+      ]
+    },
+    {
+      "week": 8,
+      "phase": 2,
+      "title": "การสอบกลางภาค (Midterm Examination)",
+      "subtitle": "สอบกลางภาคประมวลความรู้สัปดาห์ที่ 1-7 (20%)",
+      "file": "lessons/week_08.html",
+      "icon": "fas fa-file-signature",
+      "is_exam": true,
+      "hours": "2 ชั่วโมง (การสอบข้อเขียน/ออนไลน์)",
+      "simulation_url": "simulations/chapter02_trace_table_runner.html",
+      "extra_simulations": [],
+      "slide_url": "",
+      "lab_codes": [
+        "2.3.3"
+      ]
+    },
+    {
+      "week": 9,
+      "phase": 3,
+      "title": "การประยุกต์ใช้วิทยาการคำนวณเพื่อแก้ปัญหาวิทยาศาสตร์ (Project Pitch)",
+      "subtitle": "Project Pitch & Consultation โปรแกรมจำลองวิทย์",
+      "file": "lessons/week_09.html",
+      "icon": "fas fa-lightbulb",
+      "is_exam": false,
+      "hours": "4 ชั่วโมง (บรรยาย 2 ชม. + ปฏิบัติ 2 ชม.)",
+      "simulation_url": "simulations/chapter08_3d_projectile_cannon.html",
+      "extra_simulations": [
+        "simulations/chapter10_project_roadmap.html",
+        "simulations/chapter04_greenhouse_climate_controller.html"
+      ],
+      "slide_url": "assets/slides/Computing Science for Science Teaching - Chapter 6: Scientific Modeling and Simulation.pptx",
+      "lab_codes": [
+        "3.1.1",
+        "3.1.2"
+      ]
+    },
+    {
+      "week": 10,
+      "phase": 3,
+      "title": "การนำเสนอความก้าวหน้าโครงงาน (Progress Presentation) และทดสอบต้นแบบ",
+      "subtitle": "Progress Presentation & Prototype Testing",
+      "file": "lessons/week_10.html",
+      "icon": "fas fa-tasks",
+      "is_exam": false,
+      "hours": "4 ชั่วโมง (บรรยาย 2 ชม. + ปฏิบัติ 2 ชม.)",
+      "simulation_url": "simulations/chapter08_wave_superposition.html",
+      "extra_simulations": [
+        "simulations/chapter09_mediapipe_vision.html",
+        "simulations/chapter09_edge_convolution.html"
+      ],
+      "slide_url": "assets/slides/Computing Science for Science Teaching - Chapter 6: Scientific Modeling and Simulation.pptx",
+      "lab_codes": [
+        "3.2.1",
+        "3.2.2"
+      ]
+    },
+    {
+      "week": 11,
+      "phase": 4,
+      "title": "การออกแบบกิจกรรมการเรียนรู้วิทยาศาสตร์ด้วยแนวคิดเชิงคำนวณ (Lesson Plan)",
+      "subtitle": "Lesson Plan Design บูรณาการวิทยาการคำนวณ",
+      "file": "lessons/week_11.html",
+      "icon": "fas fa-chalkboard-teacher",
+      "is_exam": false,
+      "hours": "4 ชั่วโมง (บรรยาย 2 ชม. + ปฏิบัติ 2 ชม.)",
+      "simulation_url": "simulations/chapter10_project_roadmap_generator.html",
+      "extra_simulations": [
+        "simulations/chapter07_csv_json_parser.html"
+      ],
+      "slide_url": "assets/slides/Computing Science for Science Teaching - Chapter 7: Information Management and Digital Literacy for Science Teachers.pptx",
+      "lab_codes": [
+        "4.1.1",
+        "4.1.2"
+      ]
+    },
+    {
+      "week": 12,
+      "phase": 4,
+      "title": "การพัฒนาสื่อการเรียนรู้ (Learning Materials) และการซักซ้อมจุลการสอน",
+      "subtitle": "Materials Development & Micro-teaching Rehearsal",
+      "file": "lessons/week_12.html",
+      "icon": "fas fa-tools",
+      "is_exam": false,
+      "hours": "4 ชั่วโมง (บรรยาย 2 ชม. + ปฏิบัติ 2 ชม.)",
+      "simulation_url": "simulations/chapter10_thesis_formatter.html",
+      "extra_simulations": [
+        "simulations/chapter08_matplotlib_2d_plotter.html"
+      ],
+      "slide_url": "assets/slides/Computing Science for Science Teaching - Chapter 8: Ethical and Societal Implications of Computing in Science.pptx",
+      "lab_codes": [
+        "4.2.1",
+        "4.2.2"
+      ]
+    },
+    {
+      "week": 13,
+      "phase": 4,
+      "title": "การจุลการสอน (Micro-teaching) ครั้งที่ 1: การบูรณาการโปรแกรมจำลอง",
+      "subtitle": "Micro-teaching Round 1 สอนจริงในห้องเรียนจำลอง",
+      "file": "lessons/week_13.html",
+      "icon": "fas fa-user-graduate",
+      "is_exam": false,
+      "hours": "4 ชั่วโมง (บรรยาย 2 ชม. + ปฏิบัติ 2 ชม.)",
+      "simulation_url": "simulations/chapter08_3d_projectile_cannon.html",
+      "extra_simulations": [
+        "simulations/chapter04_greenhouse_climate_controller.html",
+        "simulations/chapter07_heat_vs_temp_calorimeter.html"
+      ],
+      "slide_url": "assets/slides/Computing Science for Science Teaching - Chapter 9: Designing and Implementing Computing Science Curriculum.pptx",
+      "lab_codes": [
+        "4.3.1",
+        "4.3.2"
+      ]
+    },
+    {
+      "week": 14,
+      "phase": 4,
+      "title": "การจุลการสอน (Micro-teaching) ครั้งที่ 2 และการทบทวนผลการปฏิบัติ (AAR)",
+      "subtitle": "Micro-teaching Round 2 & After Action Review",
+      "file": "lessons/week_14.html",
+      "icon": "fas fa-comments",
+      "is_exam": false,
+      "hours": "4 ชั่วโมง (บรรยาย 2 ชม. + ปฏิบัติ 2 ชม.)",
+      "simulation_url": "simulations/chapter10_capstone_synthesizer.html",
+      "extra_simulations": [
+        "simulations/chapter07_refactoring_visualizer.html"
+      ],
+      "slide_url": "assets/slides/Computing Science for Science Teaching - Chapter 9: Designing and Implementing Computing Science Curriculum.pptx",
+      "lab_codes": [
+        "4.4.1",
+        "4.4.2"
+      ]
+    },
+    {
+      "week": 15,
+      "phase": 4,
+      "title": "การนำเสนอโครงงานปลายภาค (Final Project Presentation) และสรุปบทเรียน",
+      "subtitle": "Final Project Presentation & Exhibition",
+      "file": "lessons/week_15.html",
+      "icon": "fas fa-trophy",
+      "is_exam": false,
+      "hours": "4 ชั่วโมง (บรรยาย 2 ชม. + ปฏิบัติ 2 ชม.)",
+      "simulation_url": "simulations/chapter10_innovation_gallery.html",
+      "extra_simulations": [
+        "simulations/chapter10_poster_pitch_exam.html"
+      ],
+      "slide_url": "",
+      "lab_codes": [
+        "5.1.1",
+        "5.1.2"
+      ]
+    },
+    {
+      "week": 16,
+      "phase": 4,
+      "title": "การสอบปลายภาค (Final Examination) และการประเมินผลสัมฤทธิ์รวบยอด",
+      "subtitle": "สอบปลายภาคประมวลผลลัพธ์การเรียนรู้ (10%)",
+      "file": "lessons/week_16_exam.html",
+      "icon": "fas fa-graduation-cap",
+      "is_exam": true,
+      "hours": "2 ชั่วโมง (การสอบข้อเขียน/ออนไลน์)",
+      "simulation_url": "simulations/chapter10_code_security_scanner.html",
+      "extra_simulations": [],
+      "slide_url": "",
+      "lab_codes": [
+        "6.1.1"
+      ]
+    }
+  ]
+}

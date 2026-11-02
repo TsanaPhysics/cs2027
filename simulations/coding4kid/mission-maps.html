@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="th" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <title>Mission Maps & Simulator | แผนผังภารกิจและระบบจำลอง</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        :root {
+            --clr-sim-bg: #1e293b;
+            --clr-robot: #00e6ff;
+        }
+
+        .map-grid { 
+            display: grid; grid-template-columns: repeat(5, 60px); 
+            grid-template-rows: repeat(5, 60px); gap: 5px; 
+            background: #f1f5f9; padding: 10px; border-radius: 10px;
+            margin: 20px 0; width: fit-content; border: 2px solid #cbd5e1;
+            position: relative;
+        }
+        .cell { 
+            background: white; border-radius: 4px; display: flex; 
+            align-items: center; justify-content: center; font-size: 28px;
+            transition: all 0.3s;
+        }
+        .cell--rock { background: #cbd5e1; }
+        .cell--treasure { background: #fffbeb; border: 2px solid #fcd34d; }
+        .cell--start { border: 2px dashed #6366f1; color: #6366f1; font-weight: 800; font-size: 14px; }
+        
+        .robot {
+            position: absolute;
+            width: 60px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 35px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 10;
+            pointer-events: none;
+        }
+        .robot.dir-0 { transform: rotate(0deg); }
+        .robot.dir-1 { transform: rotate(90deg); }
+        .robot.dir-2 { transform: rotate(180deg); }
+        .robot.dir-3 { transform: rotate(270deg); }
+
+        .mission-page { 
+            background: white; padding: 2rem; border-radius: 30px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05); margin-bottom: 3rem;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            align-items: start;
+        }
+
+        @media print {
+            .no-print { display: none !important; }
+            .mission-page { display: block !important; box-shadow: none; border: 1px solid #eee; page-break-after: always; }
+            .sim-panel { display: none !important; }
+            .map-grid { margin: 20px auto !important; }
+        }
+
+        .sim-panel {
+            background: #f8fafc;
+            padding: 1.5rem;
+            border-radius: 20px;
+            border: 1px solid #e2e8f0;
+        }
+        .sim-controls { display: flex; gap: 0.5rem; margin-bottom: 1rem; flex-wrap: wrap; }
+        .btn-cmd { 
+            width: 60px; height: 60px; border-radius: 12px; border: 2px solid #e2e8f0; 
+            background: white; box-shadow: 0 4px 0 #cbd5e1;
+            font-weight: 800; cursor: pointer; font-size: 1.5rem;
+            display: flex; align-items: center; justify-content: center;
+            transition: all 0.1s;
+            position: relative;
+        }
+        .btn-cmd:active { transform: translateY(4px); box-shadow: none; }
+        .btn-cmd:hover { background: #f1f5f9; }
+        .btn-cmd:disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(1); }
+        
+        .cmd-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: var(--clr-primary);
+            color: white;
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 10px;
+            font-weight: 800;
+        }
+
+        .command-log {
+            background: #e2e8f0;
+            padding: 15px;
+            border-radius: 15px;
+            min-height: 80px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            border: 2px inset rgba(0,0,0,0.05);
+        }
+        .cmd-chip {
+            background: white;
+            width: 45px;
+            height: 55px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+            border: 1px solid #cbd5e1;
+            transition: all 0.2s;
+            position: relative;
+        }
+        .cmd-chip span { font-size: 0.6rem; font-weight: 800; margin-top: -2px; }
+        .cmd-chip--special { border: 2px solid var(--clr-primary); background: #f0f9ff; }
+        .cmd-chip.active { 
+            background: var(--clr-robot); 
+            border-color: #00e6ff;
+            transform: scale(1.1) translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 230, 255, 0.4);
+            z-index: 20;
+        }
+
+        .status-msg {
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: 600;
+            margin-top: 10px;
+            display: none;
+            text-align: center;
+        }
+        .status--success { background: #dcfce7; color: #166534; display: block; }
+        .status--fail { background: #fee2e2; color: #991b1b; display: block; }
+    </style>
+</head>
+<body class="site">
+    <nav class="nav glass-nav no-print">
+        <div class="container nav__container">
+            <a href="index.html" class="nav__logo">Game<span>Design</span>4Kids</a>
+            <div class="nav__actions">
+                <button onclick="downloadMaps()" class="btn btn--small btn--primary">📄 ดาวน์โหลด PDF (เฉพาะแผนผัง)</button>
+                <a href="human-robot.html" class="btn btn--small btn--outline">กลับ</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container" style="margin-top: 6rem;">
+        <header class="section__header text-center">
+            <h1 class="section__title">🗺️ Mission Maps & Live Simulator</h1>
+            <p class="hero__lead">ทดสอบอัลกอริทึมของคุณในระบบจำลอง ก่อนไปพิชิตภารกิจในสนามจริง!</p>
+        </header>
+
+        <!-- Dynamic Missions -->
+        <div id="missions-container"></div>
+    </main>
+
+    <script>
+        const missions = [
+            { 
+                id: 1, 
+                title: "ภารกิจที่ 1: ก้าวแรกสู่ปราสาท", 
+                desc: "เป้าหมาย: ฝึกเดินหน้าและเลี้ยวเบื้องต้น",
+                start: {x:0, y:4, dir:0}, 
+                treasure: {x:4, y:0}, 
+                rocks: [] 
+            },
+            { 
+                id: 2, 
+                title: "ภารกิจที่ 2: หลบสิ่งกีดขวาง", 
+                desc: "เป้าหมาย: ฝึกการมองเส้นทางและหลบหลีก",
+                start: {x:0, y:4, dir:0}, 
+                treasure: {x:4, y:4}, 
+                rocks: [{x:2, y:4}] 
+            },
+            { 
+                id: 3, 
+                title: "ภารกิจที่ 3: เส้นทางวงกต (The Maze)", 
+                desc: "เป้าหมาย: ฝึกการใช้ Algorithm ที่ซับซ้อนขึ้น",
+                start: {x:0, y:4, dir:0}, 
+                treasure: {x:2, y:2}, 
+                rocks: [{x:1, y:2}, {x:2, y:3}] 
+            },
+            { 
+                id: 4, 
+                title: "ภารกิจที่ 4: ปรมาจารย์โค้ดดิ้ง", 
+                desc: "เป้าหมาย: ใช้บัตรคำสั่งให้คุ้มค่าที่สุด",
+                start: {x:0, y:4, dir:0}, 
+                treasure: {x:4, y:0}, 
+                rocks: [{x:1, y:0}, {x:1, y:1}, {x:1, y:2}, {x:3, y:2}, {x:3, y:3}, {x:3, y:4}] 
+            }
+        ];
+
+        const state = {}; // Stores robot state for each mission
+
+        function renderMissions() {
+            const container = document.getElementById('missions-container');
+            missions.forEach(m => {
+                const page = document.createElement('div');
+                page.className = 'mission-page';
+                page.id = `mission-${m.id}`;
+                
+                page.innerHTML = `
+                    <div class="map-section">
+                        <div class="mission-header">
+                            <h2>${m.title}</h2>
+                            <p>${m.desc}</p>
+                        </div>
+                        <div id="grid-${m.id}" class="map-grid">
+                            <div id="robot-${m.id}" class="robot">🤖</div>
+                        </div>
+                        <div class="tips-card no-print">
+                            <strong>📦 ตำแหน่งเริ่มต้น:</strong> (${m.start.x}, ${m.start.y}) หน้าไปทางทิศเหนือ
+                        </div>
+                    </div>
+                    
+                    <div class="sim-panel no-print">
+                        <h3>🛠️ Robot Console</h3>
+                        <div class="command-log" id="log-${m.id}"></div>
+                        
+                        <div class="sim-controls">
+                            <button class="btn-cmd" onclick="addCmd(${m.id}, 'F')" title="Forward">⬆️</button>
+                            <button class="btn-cmd" onclick="addCmd(${m.id}, 'L')" title="Turn Left">↩️</button>
+                            <button class="btn-cmd" onclick="addCmd(${m.id}, 'R')" title="Turn Right">↪️</button>
+                            <button class="btn-cmd" id="btn-rep-${m.id}" onclick="addCmd(${m.id}, 'REP')" title="Repeat 2x">🔁 <span class="cmd-badge" id="badge-rep-${m.id}">2</span></button>
+                            <button class="btn-cmd" id="btn-jmp-${m.id}" onclick="addCmd(${m.id}, 'JMP')" title="Jump Over">🦘 <span class="cmd-badge" id="badge-jmp-${m.id}">2</span></button>
+                            <button class="btn-cmd" onclick="clearCmd(${m.id})" style="color: #ef4444;" title="Clear">🗑️</button>
+                        </div>
+                        
+                        <div style="display: flex; gap: 10px;">
+                            <button class="btn btn--primary btn--small" onclick="runSim(${m.id})">▶️ Run Code</button>
+                            <button class="btn btn--outline btn--small" onclick="resetSim(${m.id})">🔄 Reset</button>
+                        </div>
+                        
+                        <div id="status-${m.id}" class="status-msg"></div>
+                    </div>
+                `;
+                
+                container.appendChild(page);
+                drawGrid(m);
+                resetSim(m.id);
+            });
+        }
+
+        function drawGrid(m) {
+            const grid = document.getElementById(`grid-${m.id}`);
+            for(let y=0; y<5; y++) {
+                for(let x=0; x<5; x++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'cell';
+                    if(x === m.start.x && y === m.start.y) {
+                        cell.classList.add('cell--start');
+                        cell.innerHTML = 'START';
+                    }
+                    if(x === m.treasure.x && y === m.treasure.y) {
+                        cell.classList.add('cell--treasure');
+                        cell.innerHTML = '💎';
+                    }
+                    if(m.rocks.some(r => r.x === x && r.y === y)) {
+                        cell.classList.add('cell--rock');
+                        cell.innerHTML = '🪨';
+                    }
+                    grid.appendChild(cell);
+                }
+            }
+        }
+
+        function addCmd(id, cmd) {
+            if(!state[id].commands) state[id].commands = [];
+            
+            // Check limits for special blocks
+            if(cmd === 'REP' && state[id].repLeft <= 0) return;
+            if(cmd === 'JMP' && state[id].jmpLeft <= 0) return;
+            
+            state[id].commands.push(cmd);
+            if(cmd === 'REP') state[id].repLeft--;
+            if(cmd === 'JMP') state[id].jmpLeft--;
+            
+            updateLog(id);
+            updateBadges(id);
+        }
+
+        function clearCmd(id) {
+            const m = missions.find(x => x.id === id);
+            state[id].commands = [];
+            state[id].repLeft = 2;
+            state[id].jmpLeft = 2;
+            updateLog(id);
+            updateBadges(id);
+            resetSim(id);
+        }
+
+        function updateBadges(id) {
+            document.getElementById(`badge-rep-${id}`).innerText = state[id].repLeft;
+            document.getElementById(`badge-jmp-${id}`).innerText = state[id].jmpLeft;
+            document.getElementById(`btn-rep-${id}`).disabled = state[id].repLeft <= 0;
+            document.getElementById(`btn-jmp-${id}`).disabled = state[id].jmpLeft <= 0;
+        }
+
+        function updateLog(id) {
+            const log = document.getElementById(`log-${id}`);
+            const symbolMap = { 'F': '⬆️', 'L': '↩️', 'R': '↪️', 'REP': '🔁', 'JMP': '🦘' };
+            const labelMap = { 'F': '', 'L': '', 'R': '', 'REP': 'x2', 'JMP': 'Skip' };
+            
+            log.innerHTML = state[id].commands.map((c, i) => {
+                const isSpecial = c === 'REP' || c === 'JMP';
+                return `<div class="cmd-chip ${isSpecial ? 'cmd-chip--special' : ''}" id="cmd-${id}-${i}">
+                            ${symbolMap[c]}
+                            <span>${labelMap[c]}</span>
+                        </div>`;
+            }).join('');
+        }
+
+        function resetSim(id) {
+            const m = missions.find(x => x.id === id);
+            state[id] = {
+                x: m.start.x,
+                y: m.start.y,
+                dir: m.start.dir,
+                commands: state[id]?.commands || [],
+                repLeft: state[id]?.repLeft ?? 2,
+                jmpLeft: state[id]?.jmpLeft ?? 2,
+                running: false
+            };
+            updateRobotUI(id);
+            const status = document.getElementById(`status-${id}`);
+            status.className = 'status-msg';
+            status.innerText = '';
+        }
+
+        function updateRobotUI(id) {
+            const robot = document.getElementById(`robot-${id}`);
+            robot.style.left = `${state[id].x * 65 + 10}px`;
+            robot.style.top = `${state[id].y * 65 + 10}px`;
+            robot.className = `robot dir-${state[id].dir}`;
+        }
+
+        async function runSim(id) {
+            if(state[id].running) return;
+            state[id].running = true;
+            
+            // Re-init position but keep commands
+            const m = missions.find(x => x.id === id);
+            state[id].x = m.start.x;
+            state[id].y = m.start.y;
+            state[id].dir = m.start.dir;
+            updateRobotUI(id);
+            
+            const cmds = state[id].commands;
+            
+            for(let i=0; i<cmds.length; i++) {
+                const chip = document.getElementById(`cmd-${id}-${i}`);
+                chip.classList.add('active');
+                
+                if(cmds[i] === 'REP') {
+                    // Repeat next command
+                    const nextCmd = cmds[i+1];
+                    if(nextCmd) {
+                        for(let r=0; r<2; r++) {
+                            await executeCmd(id, nextCmd, m);
+                            if(checkCollision(id, m)) { state[id].running = false; return; }
+                            await new Promise(r => setTimeout(r, 400));
+                        }
+                        i++; // Skip the next command as it was handled
+                    }
+                } else if(cmds[i] === 'JMP') {
+                    await executeJump(id, m);
+                } else {
+                    await executeCmd(id, cmds[i], m);
+                }
+                
+                if(checkCollision(id, m)) { state[id].running = false; return; }
+                
+                await new Promise(r => setTimeout(r, 600));
+                chip.classList.remove('active');
+            }
+            
+            checkFinalStatus(id, m);
+            state[id].running = false;
+        }
+
+        function executeCmd(id, cmd, m) {
+            if(cmd === 'F') {
+                if(state[id].dir === 0) state[id].y--;
+                else if(state[id].dir === 1) state[id].x++;
+                else if(state[id].dir === 2) state[id].y++;
+                else if(state[id].dir === 3) state[id].x--;
+            } else if(cmd === 'L') {
+                state[id].dir = (state[id].dir + 3) % 4;
+            } else if(cmd === 'R') {
+                state[id].dir = (state[id].dir + 1) % 4;
+            }
+            updateRobotUI(id);
+        }
+
+        function executeJump(id, m) {
+            // Move 2 cells
+            if(state[id].dir === 0) state[id].y -= 2;
+            else if(state[id].dir === 1) state[id].x += 2;
+            else if(state[id].dir === 2) state[id].y += 2;
+            else if(state[id].dir === 3) state[id].x -= 2;
+            updateRobotUI(id);
+        }
+
+        function checkCollision(id, m) {
+            const s = state[id];
+            const status = document.getElementById(`status-${id}`);
+            
+            // Out of bounds
+            if(s.x < 0 || s.x > 4 || s.y < 0 || s.y > 4) {
+                status.innerText = "ตกสนาม! 😱";
+                status.className = "status-msg status--fail";
+                return true;
+            }
+            
+            // Hit Rock
+            if(m.rocks.some(r => r.x === s.x && r.y === s.y)) {
+                status.innerText = "ชนหิน! 🪨";
+                status.className = "status-msg status--fail";
+                return true;
+            }
+            
+            // Hit Treasure
+            if(s.x === m.treasure.x && s.y === m.treasure.y) {
+                status.innerText = "สำเร็จ! ได้สมบัติแล้ว 💎✨";
+                status.className = "status-msg status--success";
+                return true;
+            }
+            
+            return false;
+        }
+
+        function checkFinalStatus(id, m) {
+            const s = state[id];
+            const status = document.getElementById(`status-${id}`);
+            if(s.x !== m.treasure.x || s.y !== m.treasure.y) {
+                status.innerText = "ยังไม่ถึงสมบัติ... ลองใหม่นะ! 🤔";
+                status.className = "status-msg status--fail";
+            }
+        }
+
+        function downloadMaps() {
+            const element = document.getElementById('missions-container');
+            const opt = {
+                margin:       10,
+                filename:     'Mission_Maps_Manual.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2 },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+            html2pdf().set(opt).from(element).save();
+        }
+
+        renderMissions();
+    </script>
+</body>
+</html>

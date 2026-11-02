@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="th" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    
+    <title>Coding for Kids | วิทย์ในวัง - Game Design Workshop</title>
+    <meta name="description" content="กิจกรรมอบรมเชิงปฏิบัติการ Game Design สำหรับนักเรียนประถมศึกษา 1-6 โครงการวิทย์ในวัง">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@300;400;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css?v=1.1">
+</head>
+<body class="site">
+    <header class="site-header">
+        <nav class="nav">
+            <div class="nav__container">
+                <a href="index.html" class="nav__logo">Game<span>Design</span>4Kids</a>
+                <ul class="nav__list" style="list-style: none; padding: 0; margin: 0; display: flex; gap: 2rem;">
+                    <li class="nav__item">
+                        <a href="#" class="nav__link">Physical Coding ▾</a>
+                        <div class="nav__dropdown">
+                            <ul class="nav__dropdown-list" style="list-style: none; padding: 0;">
+                                <li><a href="human-robot.html" class="nav__dropdown-link">👣 Human Robot</a></li>
+                                <li><a href="unplugged-collection.html" class="nav__dropdown-link">🃏 Unplugged Library</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="nav__item">
+                        <a href="#" class="nav__link">Digital Logic ▾</a>
+                        <div class="nav__dropdown">
+                            <ul class="nav__dropdown-list" style="list-style: none; padding: 0;">
+                                <li><a href="unplugged-sim.html" class="nav__dropdown-link">🤖 Logic Simulation</a></li>
+                                <li><a href="code-library.html" class="nav__dropdown-link">📂 คลังโค้ดนักเรียน</a></li>
+                                <li><a href="curriculum-hub.html" class="nav__dropdown-link">🎓 Curriculum Hub</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+                <div class="nav__actions">
+                    <button class="btn btn--small btn--primary">Get Started</button>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main class="site-main">
+        <section class="hero" id="home" style="padding-top: 160px; height: auto; min-height: 90vh;">
+            <div class="container">
+                <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 4rem; align-items: center;">
+                    <div class="hero__content" style="text-align: left;">
+                        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 1rem;">
+                            <span style="background: var(--clr-primary); color: var(--clr-bg-dark); padding: 4px 12px; border-radius: 99px; font-weight: 800; font-size: 0.8rem;">โครงการ</span>
+                            <span style="color: var(--clr-primary); font-weight: 800; letter-spacing: 2px; text-transform: uppercase; font-size: 1.1rem;">วิทย์ในวัง</span>
+                        </div>
+                        <h1 class="hero__title" style="margin-top: 0.5rem; text-align: left;">
+                            <span style="color: var(--clr-accent); -webkit-text-fill-color: var(--clr-accent);">FUTURE</span> OF GAME DESIGN
+                        </h1>
+                        <p class="hero__lead" style="margin-left: 0; text-align: left; font-size: 1.4rem; color: #fff; font-weight: 600;">นักสร้างเกมรุ่นเยาว์</p>
+                        <p class="hero__lead" style="margin-left: 0; text-align: left; font-size: 1.1rem; margin-top: -1rem;">ปลุกพลังความคิดสร้างสรรค์ในโลกดิจิทัล เปลี่ยนจากผู้เล่นเป็น "ผู้สร้าง" สำหรับนักสำรวจรุ่นเยาว์</p>
+                        <div class="hero__cta" style="display: flex; gap: 1.5rem; justify-content: flex-start;">
+                            <a href="code-library.html" class="btn btn--primary btn--large">🚀 คลังโค้ดนักเรียน</a>
+                            <a href="curriculum-hub.html" class="btn btn--outline btn--large">🎓 ดูหลักสูตร</a>
+                        </div>
+                        <div style="margin-top: 3rem; display: flex; gap: 2rem;">
+                            <div style="border-left: 2px solid var(--clr-primary); padding-left: 1.5rem;">
+                                <div style="font-size: 1.5rem; font-weight: 800; color: white;">P.1 - P.6</div>
+                                <div style="color: var(--clr-text-muted); font-size: 0.8rem;">GRADE LEVELS</div>
+                            </div>
+                            <div style="border-left: 2px solid var(--clr-primary); padding-left: 1.5rem;">
+                                <div style="font-size: 1.5rem; font-weight: 800; color: white;">100%</div>
+                                <div style="color: var(--clr-text-muted); font-size: 0.8rem;">PRACTICAL BASED</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="hero__visual" style="position: relative;">
+                        <div style="position: absolute; width: 100%; height: 100%; background: radial-gradient(circle, rgba(0, 230, 255, 0.2) 0%, transparent 70%); filter: blur(40px); z-index: -1;"></div>
+                        <img src="brain/6e7e7542-d447-458d-839b-849e4229588f/futuristic_coding_hero_1778827557820.png" alt="Futuristic Robot" style="width: 100%; border-radius: 40px; box-shadow: 0 30px 60px rgba(0,0,0,0.5); animation: float 6s ease-in-out infinite;">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="about" class="section">
+            <div class="container">
+                <h2 class="section__title" data-i18n="section_skills">ทักษะและการพัฒนา</h2>
+                <div class="feature-grid">
+                    <article class="card glass">
+                        <div class="card__icon">🎮</div>
+                        <h3 class="card__title" data-i18n="card_mech_title">กลไกเกม</h3>
+                        <p class="card__text" data-i18n="card_mech_text">เข้าใจลอจิก การเคลื่อนที่ และการโต้ตอบของวัตถุ</p>
+                    </article>
+                    <article class="card glass">
+                        <div class="card__icon">🕹️</div>
+                        <h3 class="card__title" data-i18n="card_level_title">การออกแบบด่าน</h3>
+                        <p class="card__text" data-i18n="card_level_text">สร้างความท้าทายและสภาพแวดล้อมที่น่าตื่นเต้น</p>
+                    </article>
+                    <article class="card glass">
+                        <div class="card__icon">💎</div>
+                        <h3 class="card__title" data-i18n="card_logic_title">ตรรกะคอมพิวเตอร์</h3>
+                        <p class="card__text" data-i18n="card_logic_text">ใช้งานตัวแปรและเงื่อนไขต่างๆ อย่างมีประสิทธิภาพ</p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section id="mechanics" class="section bg-dark-alt">
+            <div class="container">
+                <h2 class="section__title" data-i18n="section_pillars">4 เสาหลักของการสร้างเกม</h2>
+                <div class="mechanics-grid">
+                    <div class="mech-card glass">
+                        <h4 class="mech-card__title" data-i18n="pillar_controls">01. การควบคุม</h4>
+                        <p class="mech-card__text" data-i18n="pillar_controls_text">การเคลื่อนที่ของตัวละครและระบบรับค่าจากผู้ใช้</p>
+                    </div>
+                    <div class="mech-card glass">
+                        <h4 class="mech-card__title" data-i18n="pillar_collisions">02. การชนกัน</h4>
+                        <p class="mech-card__text" data-i18n="pillar_collisions_text">การตรวจจับการโต้ตอบระหว่างวัตถุในเกม</p>
+                    </div>
+                    <div class="mech-card glass">
+                        <h4 class="mech-card__title" data-i18n="pillar_ui">03. UI และตัวแปร</h4>
+                        <p class="mech-card__text" data-i18n="pillar_ui_text">การจัดการคะแนน พลังชีวิต และตัวจับเวลา</p>
+                    </div>
+                    <div class="mech-card glass">
+                        <h4 class="mech-card__title" data-i18n="pillar_states">04. สถานะเกม</h4>
+                        <p class="mech-card__text" data-i18n="pillar_states_text">การกำหนดเงื่อนไขการชนะและแพ้</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="templates" class="section">
+            <div class="container">
+                <h2 class="section__title" data-i18n="section_recipes">สูตรลับการเขียนโค้ด</h2>
+                <div class="recipe-grid">
+                    <div class="recipe-card glass">
+                        <header class="recipe-card__header">
+                            <span class="recipe-card__tag">P1 - P3</span>
+                            <h3 class="recipe-card__title">Royal Catch Game</h3>
+                        </header>
+                        <p class="recipe-card__desc" data-i18n="recipe_catch_desc">กลไกการตกของวัตถุพร้อมระบบนับคะแนน</p>
+                        <figure class="recipe-card__figure">
+                         <figure class="recipe-card__figure">
+                              <img src="assets/img/scratch_template_catch.png" alt="Catch Game Template" loading="lazy">
+                         </figure>
+                        </figure>
+                        <a href="recipes.html#catch" class="btn btn--outline btn--small" data-i18n="recipe_view_details">ดูรายละเอียดลอจิก</a>
+                    </div>
+                    <div class="recipe-card glass">
+                        <header class="recipe-card__header">
+                            <span class="recipe-card__tag">P4 - P6</span>
+                            <h3 class="recipe-card__title">Palace Explorer</h3>
+                        </header>
+                        <p class="recipe-card__desc" data-i18n="recipe_explorer_desc">เกมตะลุยด่านขั้นสูงพร้อมระบบแรงโน้มถ่วงและการกระโดด</p>
+                        <figure class="recipe-card__figure">
+                             <img src="assets/img/scratch_template_platformer.png" alt="Platformer Template" loading="lazy">
+                        </figure>
+                        <a href="recipes.html#platformer" class="btn btn--outline btn--small" data-i18n="recipe_view_details">ดูรายละเอียดลอจิก</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="schedule" class="section bg-alt">
+            <div class="container">
+                <h2 class="section__title" data-i18n="section_timeline">กำหนดการกิจกรรม</h2>
+                <div class="timeline">
+                    <div class="timeline__item">
+                        <span class="timeline__time">09:00</span>
+                        <div class="timeline__content">
+                            <h3 data-i18n="time_0900_title">เปิดประตูสู่โลกโค้ด</h3>
+                            <p data-i18n="time_0900_desc">กิจกรรม Human Robot (ตรรกะแบบ Unplugged)</p>
+                        </div>
+                    </div>
+                    <div class="timeline__item">
+                        <span class="timeline__time">10:45</span>
+                        <div class="timeline__content">
+                            <h3 data-i18n="time_1045_title">พื้นฐานกลไกเกม</h3>
+                            <p data-i18n="time_1045_desc">เรียนรู้ตัวแปร ลูป และการควบคุม</p>
+                        </div>
+                    </div>
+                    <div class="timeline__item timeline__item--highlight">
+                        <span class="timeline__time">13:00</span>
+                        <div class="timeline__content">
+                            <h3 data-i18n="time_1300_title">โปรเจกต์หลัก</h3>
+                            <p data-i18n="time_1300_desc">ออกแบบด่านและสร้างเกม Palace Quest</p>
+                        </div>
+                    </div>
+                    <div class="timeline__item">
+                        <span class="timeline__time">15:45</span>
+                        <div class="timeline__content">
+                            <h3 data-i18n="time_1545_title">นำเสนอผลงาน</h3>
+                            <p data-i18n="time_1545_desc">พิธีมอบประกาศนียบัตร</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container text-center">
+            <p class="footer__copyright" data-i18n="footer_copy">© 2026 วิทย์ในวัง - กิจกรรมอบรมการสร้างเกมระดับสากลสำหรับเด็ก</p>
+        </div>
+    </footer>
+
+    <!-- AI Mentor Interface -->
+    <div id="ai-mentor-trigger" class="ai-mentor-btn" title="คุยกับพี่เลี้ยง AI">
+        <span>🤖</span>
+        <div class="ai-mentor-btn__badge"></div>
+    </div>
+
+    <div id="ai-mentor-panel" class="ai-panel">
+        <header class="ai-panel__header">
+            <div class="ai-panel__avatar">🤖</div>
+            <div class="ai-panel__title-group">
+                <h3>Coding Mentor</h3>
+                <select id="model-select" class="ai-select ai-select--header">
+                    <option value="loading">กำลังโหลดโมเดล...</option>
+                </select>
+            </div>
+        </header>
+        
+        <div class="ai-skill-toolbar">
+            <select id="skill-select" class="ai-select">
+                <option value="scratch-buddy">🤖 พี่เลี้ยง Scratch</option>
+                <option value="scratch-auditor">🔍 ตรวจโค้ด Scratch</option>
+                <option value="lesson-plan">📚 ออกแบบแผนการสอน</option>
+                <option value="curriculum-synthesis">📊 สังเคราะห์หลักสูตร</option>
+            </select>
+        </div>
+
+        <div id="ai-chat-body" class="ai-chat-body">
+            <div class="message message--ai">
+                สวัสดีจ้า! พี่เป็นผู้ช่วยสอนเขียนโปรแกรม มีอะไรให้พี่ช่วยอธิบายไหม? เช่น "บล็อก Move ทำงานยังไง" หรือ "ช่วยออกแบบเกมให้หน่อย"
+            </div>
+        </div>
+        <div class="ai-input-area">
+            <input type="text" id="ai-input" class="ai-input" placeholder="พิมพ์คำถามที่นี่..." autocomplete="off">
+            <button id="ai-send" class="btn btn--primary btn--small">ส่ง</button>
+        </div>
+    </div>
+
+    <script type="module" src="js/ai-mentor.js"></script>
+    <script src="js/main.js" defer></script>
+</body>
+</html>

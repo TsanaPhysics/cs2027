@@ -1,0 +1,322 @@
+{
+    "6614401001": {
+        "student_id": "6614401001",
+        "student_name": "จิรภัทร ชัยมงคล",
+        "email": "jirapat.c@rbru.ac.th",
+        "department": "วิทยาศาสตร์ทั่วไป (ค.บ. 4 ปี)",
+        "role": "student",
+        "avatar_color": "#f59e0b",
+        "password_hash": "$2y$10$z1wZbnm4FQGCeEAm9OV01.68TMGFlQ2j\/fTzlDYXZ2D9.Y.XwaR2u",
+        "created_at": "2026-11-02 09:21:30"
+    },
+    "6614401002": {
+        "student_id": "6614401002",
+        "student_name": "ธนพร สุขเกษม",
+        "email": "thanaporn.s@rbru.ac.th",
+        "department": "วิทยาศาสตร์ทั่วไป (ค.บ. 4 ปี)",
+        "role": "student",
+        "avatar_color": "#6366f1",
+        "password_hash": "$2y$10$z1wZbnm4FQGCeEAm9OV01.68TMGFlQ2j\/fTzlDYXZ2D9.Y.XwaR2u",
+        "created_at": "2026-11-02 09:21:30"
+    },
+    "6614401003": {
+        "student_id": "6614401003",
+        "student_name": "ณัฐวุฒิ วิจิตรกุล",
+        "email": "nattawut.w@rbru.ac.th",
+        "department": "วิทยาศาสตร์ทั่วไป (ค.บ. 4 ปี)",
+        "role": "student",
+        "avatar_color": "#10b981",
+        "password_hash": "$2y$10$z1wZbnm4FQGCeEAm9OV01.68TMGFlQ2j\/fTzlDYXZ2D9.Y.XwaR2u",
+        "created_at": "2026-11-02 09:21:30"
+    },
+    "6614401004": {
+        "student_id": "6614401004",
+        "student_name": "ศิริพร บุญยืน",
+        "email": "siriporn.b@rbru.ac.th",
+        "department": "วิทยาศาสตร์ทั่วไป (ค.บ. 4 ปี)",
+        "role": "student",
+        "avatar_color": "#f59e0b",
+        "password_hash": "$2y$10$z1wZbnm4FQGCeEAm9OV01.68TMGFlQ2j\/fTzlDYXZ2D9.Y.XwaR2u",
+        "created_at": "2026-11-02 09:21:30"
+    },
+    "6614401005": {
+        "student_id": "6614401005",
+        "student_name": "กานต์ดา มณีรัตน์",
+        "email": "kanda.m@rbru.ac.th",
+        "department": "วิทยาศาสตร์ทั่วไป (ค.บ. 4 ปี)",
+        "role": "student",
+        "avatar_color": "#6366f1",
+        "password_hash": "$2y$10$z1wZbnm4FQGCeEAm9OV01.68TMGFlQ2j\/fTzlDYXZ2D9.Y.XwaR2u",
+        "created_at": "2026-11-02 09:21:30"
+    },
+    "6614401006": {
+        "student_id": "6614401006",
+        "student_name": "พงศกร พัฒนผล",
+        "email": "pongsakorn.p@rbru.ac.th",
+        "department": "วิทยาศาสตร์ทั่วไป (ค.บ. 4 ปี)",
+        "role": "student",
+        "avatar_color": "#10b981",
+        "password_hash": "$2y$10$z1wZbnm4FQGCeEAm9OV01.68TMGFlQ2j\/fTzlDYXZ2D9.Y.XwaR2u",
+        "created_at": "2026-11-02 09:21:30"
+    },
+    "6614401007": {
+        "student_id": "6614401007",
+        "student_name": "วริศรา รุ่งเรือง",
+        "email": "warisara.r@rbru.ac.th",
+        "department": "วิทยาศาสตร์ทั่วไป (ค.บ. 4 ปี)",
+        "role": "student",
+        "avatar_color": "#14b8a6",
+        "password_hash": "$2y$10$z1wZbnm4FQGCeEAm9OV01.68TMGFlQ2j\/fTzlDYXZ2D9.Y.XwaR2u",
+        "created_at": "2026-11-02 09:21:30"
+    },
+    "6614401008": {
+        "student_id": "6614401008",
+        "student_name": "ชลธิชา ศรีสุข",
+        "email": "cholticha.s@rbru.ac.th",
+        "department": "วิทยาศาสตร์ทั่วไป (ค.บ. 4 ปี)",
+        "role": "student",
+        "avatar_color": "#6366f1",
+        "password_hash": "$2y$10$z1wZbnm4FQGCeEAm9OV01.68TMGFlQ2j\/fTzlDYXZ2D9.Y.XwaR2u",
+        "created_at": "2026-11-02 09:21:30"
+    },
+    "6614401009": {
+        "student_id": "6614401009",
+        "student_name": "ธนกฤต มงคลกุล",
+        "email": "thanakrit.m@rbru.ac.th",
+        "department": "วิทยาศาสตร์ทั่วไป (ค.บ. 4 ปี)",
+        "role": "student",
+        "avatar_color": "#8b5cf6",
+        "password_hash": "$2y$10$z1wZbnm4FQGCeEAm9OV01.68TMGFlQ2j\/fTzlDYXZ2D9.Y.XwaR2u",
+        "created_at": "2026-11-02 09:21:30"
+    },
+    "6614401010": {
+        "student_id": "6614401010",
+        "student_name": "ปวีณา สายทอง",
+        "email": "paweena.s@rbru.ac.th",
+        "department": "วิทยาศาสตร์ทั่วไป (ค.บ. 4 ปี)",
+        "role": "student",
+        "avatar_color": "#14b8a6",
+        "password_hash": "$2y$10$z1wZbnm4FQGCeEAm9OV01.68TMGFlQ2j\/fTzlDYXZ2D9.Y.XwaR2u",
+        "created_at": "2026-11-02 09:21:30"
+    },
+    "6614401011": {
+        "student_id": "6614401011",
+        "student_name": "อัครเดช สุวรรณโชติ",
+        "email": "akkaradech.s@rbru.ac.th",
+        "department": "วิทยาศาสตร์ทั่วไป (ค.บ. 4 ปี)",
+        "role": "student",
+        "avatar_color": "#f59e0b",
+        "password_hash": "$2y$10$z1wZbnm4FQGCeEAm9OV01.68TMGFlQ2j\/fTzlDYXZ2D9.Y.XwaR2u",
+        "created_at": "2026-11-02 09:21:30"
+    },
+    "6614401012": {
+        "student_id": "6614401012",
+        "student_name": "ภัทรวดี ทรัพย์มณี",
+        "email": "pattarawadee.s@rbru.ac.th",
+        "department": "วิทยาศาสตร์ทั่วไป (ค.บ. 4 ปี)",
+        "role": "student",
+        "avatar_color": "#10b981",
+        "password_hash": "$2y$10$z1wZbnm4FQGCeEAm9OV01.68TMGFlQ2j\/fTzlDYXZ2D9.Y.XwaR2u",
+        "created_at": "2026-11-02 09:21:30"
+    },
+    "6614401013": {
+        "student_id": "6614401013",
+        "student_name": "กิตติพงษ์ ยิ้มแย้ม",
+        "email": "kittipong.y@rbru.ac.th",
+        "department": "วิทยาศาสตร์ทั่วไป (ค.บ. 4 ปี)",
+        "role": "student",
+        "avatar_color": "#8b5cf6",
+        "password_hash": "$2y$10$z1wZbnm4FQGCeEAm9OV01.68TMGFlQ2j\/fTzlDYXZ2D9.Y.XwaR2u",
+        "created_at": "2026-11-02 09:21:30"
+    },
+    "6614401014": {
+        "student_id": "6614401014",
+        "student_name": "นันทพร ชูจิตต์",
+        "email": "nantaporn.c@rbru.ac.th",
+        "department": "วิทยาศาสตร์ทั่วไป (ค.บ. 4 ปี)",
+        "role": "student",
+        "avatar_color": "#8b5cf6",
+        "password_hash": "$2y$10$z1wZbnm4FQGCeEAm9OV01.68TMGFlQ2j\/fTzlDYXZ2D9.Y.XwaR2u",
+        "created_at": "2026-11-02 09:21:30"
+    },
+    "6614401015": {
+        "student_id": "6614401015",
+        "student_name": "พีรพล แก้วประเสริฐ",
+        "email": "peerapol.k@rbru.ac.th",
+        "department": "วิทยาศาสตร์ทั่วไป (ค.บ. 4 ปี)",
+        "role": "student",
+        "avatar_color": "#8b5cf6",
+        "password_hash": "$2y$10$z1wZbnm4FQGCeEAm9OV01.68TMGFlQ2j\/fTzlDYXZ2D9.Y.XwaR2u",
+        "created_at": "2026-11-02 09:21:30"
+    },
+    "6614401016": {
+        "student_id": "6614401016",
+        "student_name": "สุทธิดา เจริญรัตน์",
+        "email": "sutthida.c@rbru.ac.th",
+        "department": "วิทยาศาสตร์ทั่วไป (ค.บ. 4 ปี)",
+        "role": "student",
+        "avatar_color": "#0284c7",
+        "password_hash": "$2y$10$z1wZbnm4FQGCeEAm9OV01.68TMGFlQ2j\/fTzlDYXZ2D9.Y.XwaR2u",
+        "created_at": "2026-11-02 09:21:30"
+    },
+    "6614401017": {
+        "student_id": "6614401017",
+        "student_name": "ชัยวัฒน์ สมบูรณ์",
+        "email": "chaiwat.s@rbru.ac.th",
+        "department": "วิทยาศาสตร์ทั่วไป (ค.บ. 4 ปี)",
+        "role": "student",
+        "avatar_color": "#8b5cf6",
+        "password_hash": "$2y$10$z1wZbnm4FQGCeEAm9OV01.68TMGFlQ2j\/fTzlDYXZ2D9.Y.XwaR2u",
+        "created_at": "2026-11-02 09:21:30"
+    },
+    "6614401018": {
+        "student_id": "6614401018",
+        "student_name": "อรทัย พรมหมราช",
+        "email": "orathai.p@rbru.ac.th",
+        "department": "วิทยาศาสตร์ทั่วไป (ค.บ. 4 ปี)",
+        "role": "student",
+        "avatar_color": "#6366f1",
+        "password_hash": "$2y$10$z1wZbnm4FQGCeEAm9OV01.68TMGFlQ2j\/fTzlDYXZ2D9.Y.XwaR2u",
+        "created_at": "2026-11-02 09:21:30"
+    },
+    "6614401019": {
+        "student_id": "6614401019",
+        "student_name": "เอกภาพ ทวีโชค",
+        "email": "ekkapap.t@rbru.ac.th",
+        "department": "วิทยาศาสตร์ทั่วไป (ค.บ. 4 ปี)",
+        "role": "student",
+        "avatar_color": "#10b981",
+        "password_hash": "$2y$10$z1wZbnm4FQGCeEAm9OV01.68TMGFlQ2j\/fTzlDYXZ2D9.Y.XwaR2u",
+        "created_at": "2026-11-02 09:21:30"
+    },
+    "6614401020": {
+        "student_id": "6614401020",
+        "student_name": "เบญจมาศ จันทร์หอม",
+        "email": "benjamas.j@rbru.ac.th",
+        "department": "วิทยาศาสตร์ทั่วไป (ค.บ. 4 ปี)",
+        "role": "student",
+        "avatar_color": "#6366f1",
+        "password_hash": "$2y$10$z1wZbnm4FQGCeEAm9OV01.68TMGFlQ2j\/fTzlDYXZ2D9.Y.XwaR2u",
+        "created_at": "2026-11-02 09:21:30"
+    },
+    "6614401021": {
+        "student_id": "6614401021",
+        "student_name": "วรเมธ คงเจริญ",
+        "email": "worameth.k@rbru.ac.th",
+        "department": "วิทยาศาสตร์ทั่วไป (ค.บ. 4 ปี)",
+        "role": "student",
+        "avatar_color": "#14b8a6",
+        "password_hash": "$2y$10$z1wZbnm4FQGCeEAm9OV01.68TMGFlQ2j\/fTzlDYXZ2D9.Y.XwaR2u",
+        "created_at": "2026-11-02 09:21:30"
+    },
+    "6614401022": {
+        "student_id": "6614401022",
+        "student_name": "ศศิธร บุญทวี",
+        "email": "sasithorn.b@rbru.ac.th",
+        "department": "วิทยาศาสตร์ทั่วไป (ค.บ. 4 ปี)",
+        "role": "student",
+        "avatar_color": "#6366f1",
+        "password_hash": "$2y$10$z1wZbnm4FQGCeEAm9OV01.68TMGFlQ2j\/fTzlDYXZ2D9.Y.XwaR2u",
+        "created_at": "2026-11-02 09:21:30"
+    },
+    "6614401023": {
+        "student_id": "6614401023",
+        "student_name": "ดนัย นาวิกุล",
+        "email": "danai.n@rbru.ac.th",
+        "department": "วิทยาศาสตร์ทั่วไป (ค.บ. 4 ปี)",
+        "role": "student",
+        "avatar_color": "#ec4899",
+        "password_hash": "$2y$10$z1wZbnm4FQGCeEAm9OV01.68TMGFlQ2j\/fTzlDYXZ2D9.Y.XwaR2u",
+        "created_at": "2026-11-02 09:21:30"
+    },
+    "6614401024": {
+        "student_id": "6614401024",
+        "student_name": "พิมพ์ลภัส เกียรติชัย",
+        "email": "pimlapas.k@rbru.ac.th",
+        "department": "วิทยาศาสตร์ทั่วไป (ค.บ. 4 ปี)",
+        "role": "student",
+        "avatar_color": "#f59e0b",
+        "password_hash": "$2y$10$z1wZbnm4FQGCeEAm9OV01.68TMGFlQ2j\/fTzlDYXZ2D9.Y.XwaR2u",
+        "created_at": "2026-11-02 09:21:30"
+    },
+    "6614401025": {
+        "student_id": "6614401025",
+        "student_name": "อนุสรณ์ พันธุ์ดี",
+        "email": "anusorn.p@rbru.ac.th",
+        "department": "วิทยาศาสตร์ทั่วไป (ค.บ. 4 ปี)",
+        "role": "student",
+        "avatar_color": "#0284c7",
+        "password_hash": "$2y$10$z1wZbnm4FQGCeEAm9OV01.68TMGFlQ2j\/fTzlDYXZ2D9.Y.XwaR2u",
+        "created_at": "2026-11-02 09:21:30"
+    },
+    "6614402001": {
+        "student_id": "6614402001",
+        "student_name": "ภาคภูมิ กลศาสตร์ดี",
+        "email": "pakpoom.k@rbru.ac.th",
+        "department": "ฟิสิกส์ (ค.บ. 4 ปี)",
+        "role": "student",
+        "avatar_color": "#0284c7",
+        "password_hash": "$2y$10$z1wZbnm4FQGCeEAm9OV01.68TMGFlQ2j\/fTzlDYXZ2D9.Y.XwaR2u",
+        "created_at": "2026-11-02 09:21:30"
+    },
+    "6614402002": {
+        "student_id": "6614402002",
+        "student_name": "ทิพวรรณ ควอนตัมศิลป์",
+        "email": "tippawan.q@rbru.ac.th",
+        "department": "ฟิสิกส์ (ค.บ. 4 ปี)",
+        "role": "student",
+        "avatar_color": "#06b6d4",
+        "password_hash": "$2y$10$z1wZbnm4FQGCeEAm9OV01.68TMGFlQ2j\/fTzlDYXZ2D9.Y.XwaR2u",
+        "created_at": "2026-11-02 09:21:30"
+    },
+    "6614402003": {
+        "student_id": "6614402003",
+        "student_name": "กฤษฎา คลื่นแม่เหล็ก",
+        "email": "kritsada.w@rbru.ac.th",
+        "department": "ฟิสิกส์ (ค.บ. 4 ปี)",
+        "role": "student",
+        "avatar_color": "#0284c7",
+        "password_hash": "$2y$10$z1wZbnm4FQGCeEAm9OV01.68TMGFlQ2j\/fTzlDYXZ2D9.Y.XwaR2u",
+        "created_at": "2026-11-02 09:21:30"
+    },
+    "6614402004": {
+        "student_id": "6614402004",
+        "student_name": "อภิสิทธิ์ นิวตรอนพานิช",
+        "email": "apisit.n@rbru.ac.th",
+        "department": "ฟิสิกส์ (ค.บ. 4 ปี)",
+        "role": "student",
+        "avatar_color": "#6366f1",
+        "password_hash": "$2y$10$z1wZbnm4FQGCeEAm9OV01.68TMGFlQ2j\/fTzlDYXZ2D9.Y.XwaR2u",
+        "created_at": "2026-11-02 09:21:30"
+    },
+    "6614402005": {
+        "student_id": "6614402005",
+        "student_name": "วรรณวิสาข์ แสงเลเซอร์",
+        "email": "wanwisah.l@rbru.ac.th",
+        "department": "ฟิสิกส์ (ค.บ. 4 ปี)",
+        "role": "student",
+        "avatar_color": "#ec4899",
+        "password_hash": "$2y$10$z1wZbnm4FQGCeEAm9OV01.68TMGFlQ2j\/fTzlDYXZ2D9.Y.XwaR2u",
+        "created_at": "2026-11-02 09:21:30"
+    },
+    "chewa": {
+        "student_id": "chewa",
+        "student_name": "ผศ.ดร.ชีวะ ทัศนา",
+        "email": "chewa.t@rbru.ac.th",
+        "department": "อาจารย์ผู้สอนประจำรายวิชา (Instructor & Admin)",
+        "role": "instructor",
+        "avatar_color": "#6366f1",
+        "password_hash": "$2y$10$LnI4CtD5jBVOfHnADGdYT.RxMGZdnCW9anB7Xe2AeNx\/S\/0OtcQ06",
+        "created_at": "2026-11-02 11:07:54"
+    },
+    "6614401026": {
+        "student_id": "6614401026",
+        "student_name": "นายวีรศักดิ์ สดใส",
+        "email": "6614401026@rbru.ac.th",
+        "department": "วิทยาศาสตร์ทั่วไป (ค.บ. 4 ปี)",
+        "role": "student",
+        "avatar_color": "#d97706",
+        "password_hash": "$2y$10$HammhTTqvq3VyDsjG4fuB.G5YjXJiPwGAkqE45KXcZF4KPV79.mja",
+        "created_at": "2026-11-02 11:13:34"
+    }
+}

@@ -1,0 +1,2305 @@
+<!DOCTYPE html>
+<html lang="th" class="scroll-smooth" x-data="{ mobileMenu: false, darkMode: false }" :class="{ 'dark': darkMode }">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>4124941 วิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์ | RBRU Smart Science Learning Hub</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&family=Kanit:wght@300;400;500;600;700&family=Outfit:wght@400;600;700;800&family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS (CDN) -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            200: '#bae6fd',
+                            500: '#0284c7',
+                            600: '#0369a1',
+                            700: '#075985',
+                            800: '#0c4a6e',
+                            900: '#082f49',
+                        },
+                        cyber: '#00f0ff',
+                        darkBg: '#090d16',
+                        darkCard: '#111827',
+                        darkSurface: '#1f2937'
+                    },
+                    fontFamily: {
+                        sans: ['Prompt', 'Sarabun', 'sans-serif'],
+                        heading: ['Kanit', 'sans-serif'],
+                        tech: ['Chakra Petch', 'sans-serif'],
+                        mono: ['JetBrains Mono', 'monospace'],
+                        brand: ['Outfit', 'sans-serif']
+                    },
+                    animation: {
+                        'float': 'floating 4s ease-in-out infinite',
+                        'pulse-glow': 'pulseGlow 2.5s infinite',
+                        'spin-slow': 'spin 12s linear infinite',
+                        'bounce-slow': 'bounceSlow 3s infinite ease-in-out',
+                    },
+                    keyframes: {
+                        floating: {
+                            '0%, 100%': { transform: 'translateY(0px)' },
+                            '50%': { transform: 'translateY(-12px)' },
+                        },
+                        pulseGlow: {
+                            '0%, 100%': { opacity: '0.4', transform: 'scale(1)' },
+                            '50%': { opacity: '0.8', transform: 'scale(1.05)' },
+                        },
+                        bounceSlow: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-8px)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Font Awesome 6.5.1 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Alpine.js 3.x -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- MathJax 3 for Scientific LaTeX Formulas & Equations -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']],
+                processEscapes: true,
+                processEnvironments: true
+            },
+            options: {
+                skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <!-- Component System Stylesheet -->
+    <link rel="stylesheet" href="assets/css/main.css">
+
+    <!-- Three.js (for AR/3D Simulation Canvas) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <!-- Google MediaPipe Hands & Camera Utils for Real-time Spatial Hand Tracking -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils@0.3/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils@0.3/drawing_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4/hands.js" crossorigin="anonymous"></script>
+
+    <!-- Custom Micro-Styles -->
+    <style>
+        [x-cloak] { display: none !important; }
+        
+        .hero-mesh {
+            background-image: radial-gradient(at 0% 0%, rgba(56, 189, 248, 0.15) 0px, transparent 50%),
+                              radial-gradient(at 100% 0%, rgba(129, 140, 248, 0.18) 0px, transparent 50%),
+                              radial-gradient(at 50% 100%, rgba(236, 72, 153, 0.12) 0px, transparent 50%);
+        }
+        
+        .dark .hero-mesh {
+            background-image: radial-gradient(at 0% 0%, rgba(0, 240, 255, 0.12) 0px, transparent 50%),
+                              radial-gradient(at 100% 0%, rgba(99, 102, 241, 0.15) 0px, transparent 50%),
+                              radial-gradient(at 50% 100%, rgba(16, 185, 129, 0.08) 0px, transparent 50%);
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+        }
+
+        .dark .glass-card {
+            background: rgba(17, 24, 39, 0.85);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        /* Modal Overlay Custom */
+        .modal-active {
+            opacity: 1 !important;
+            visibility: visible !important;
+            pointer-events: auto !important;
+        }
+
+        /* Ticker Animations */
+        @keyframes marquee {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-150%); }
+        }
+        .anim-marquee {
+            display: inline-block;
+            white-space: nowrap;
+            animation: marquee 24s linear infinite;
+        }
+        .anim-marquee:hover {
+            animation-play-state: paused;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-darkBg text-slate-800 dark:text-slate-100 font-sans transition-colors duration-300 antialiased selection:bg-brand-500 selection:text-white min-h-screen flex flex-col justify-between">
+
+    <!-- ======================================================================= -->
+    <!-- 1. TOP NAVBAR: 5 MAIN MENUS + USER AUTH BADGE (ADMIN IS IN FOOTER)     -->
+    <!-- ======================================================================= -->
+    <nav class="fixed top-0 left-0 right-0 z-50 bg-white/90 dark:bg-darkBg/90 backdrop-blur-md border-b border-slate-200/80 dark:border-slate-800/80 transition-all duration-300 shadow-sm" id="mainNavbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-20">
+                
+                <!-- Logo & Brand Header -->
+                <a href="#home" class="flex items-center gap-3.5 group">
+                    <div class="relative w-12 h-12 flex-shrink-0">
+                        <div class="absolute inset-0 bg-gradient-to-r from-blue-600 via-cyan-400 to-indigo-600 rounded-2xl blur-md opacity-30 group-hover:opacity-70 transition duration-500"></div>
+                        <div class="relative w-full h-full rounded-2xl bg-gradient-to-tr from-brand-600 via-blue-500 to-cyan-400 p-0.5 shadow-lg group-hover:scale-105 transition-transform duration-300">
+                            <div class="w-full h-full bg-slate-900 rounded-[14px] flex items-center justify-center text-cyan-400 font-brand font-extrabold text-xl tracking-wider">
+                                CS
+                            </div>
+                        </div>
+                        <div class="absolute -top-1 -right-1 w-3 h-3 bg-emerald-400 rounded-full border-2 border-white dark:border-darkBg animate-ping"></div>
+                        <div class="absolute -top-1 -right-1 w-3 h-3 bg-emerald-400 rounded-full border-2 border-white dark:border-darkBg"></div>
+                    </div>
+                    <div class="flex flex-col">
+                        <span class="font-brand font-extrabold text-xl tracking-tight bg-clip-text text-transparent bg-gradient-to-r from-brand-600 via-cyan-500 to-indigo-600 dark:from-cyan-400 dark:to-indigo-400">
+                            4124941 CS2027
+                        </span>
+                        <span class="text-[11px] font-heading font-medium text-slate-500 dark:text-slate-400 group-hover:text-brand-600 dark:group-hover:text-cyan-400 transition">
+                            วิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์ • มรภ.รำไพพรรณี
+                        </span>
+                    </div>
+                </a>
+
+                <!-- DESKTOP MENU: EXACTLY 5 MAIN NAVIGATION ITEMS -->
+                <div class="hidden lg:flex items-center space-x-1 font-heading text-sm font-medium">
+                    <!-- Menu 1: หน้าแรก -->
+                    <a href="#home" class="px-3.5 py-2 rounded-xl text-slate-700 dark:text-slate-200 hover:text-brand-600 dark:hover:text-cyan-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition flex items-center gap-2">
+                        <i class="fa-solid fa-house text-brand-500"></i>
+                        <span>หน้าแรก</span>
+                    </a>
+
+                    <!-- Menu 2: คลังบทเรียน 16 สัปดาห์ -->
+                    <a href="#courseware" class="px-3.5 py-2 rounded-xl text-slate-700 dark:text-slate-200 hover:text-brand-600 dark:hover:text-cyan-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition flex items-center gap-2">
+                        <i class="fa-solid fa-book-open text-blue-500"></i>
+                        <span>บทเรียน 16 สัปดาห์</span>
+                    </a>
+
+                    <!-- Menu 3: ห้องทดลองเสมือนจริง AR 3D -->
+                    <a href="#ar-lab" class="px-3.5 py-2 rounded-xl text-slate-700 dark:text-slate-200 hover:text-brand-600 dark:hover:text-cyan-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition flex items-center gap-2 relative">
+                        <i class="fa-solid fa-vr-cardboard text-cyan-500"></i>
+                        <span>AR & 3D Lab</span>
+                        <span class="px-1.5 py-0.5 text-[10px] font-bold rounded-full bg-cyan-100 dark:bg-cyan-950 text-cyan-600 dark:text-cyan-300 border border-cyan-300 dark:border-cyan-800 animate-pulse">ใหม่</span>
+                    </a>
+
+                    <!-- Menu 4: แบบทดสอบวัดผล Pre/Post -->
+                    <a href="#assessments" class="px-3.5 py-2 rounded-xl text-slate-700 dark:text-slate-200 hover:text-brand-600 dark:hover:text-cyan-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition flex items-center gap-2">
+                        <i class="fa-solid fa-clipboard-check text-emerald-500"></i>
+                        <span>แบบทดสอบวัดผล</span>
+                    </a>
+
+                    <!-- Menu 5: คลังสื่อ & 180 Labs -->
+                    <a href="#labs-library" class="px-3.5 py-2 rounded-xl text-slate-700 dark:text-slate-200 hover:text-brand-600 dark:hover:text-cyan-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition flex items-center gap-2">
+                        <i class="fa-solid fa-flask text-amber-500"></i>
+                        <span>180 Labs & ตำรา</span>
+                    </a>
+                </div>
+
+                <!-- Right Action Bar: Student Auth Badge & Dark Mode Toggle -->
+                <div class="hidden sm:flex items-center gap-3">
+                    <!-- Dynamic Auth Manager Mount Container -->
+                    <div id="userAuthSection" class="flex items-center gap-2">
+                        <!-- Loaded dynamically by assets/js/auth.js -->
+                    </div>
+
+                    <!-- Dark Mode Toggle -->
+                    <button @click="darkMode = !darkMode" 
+                            class="w-10 h-10 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 hover:text-amber-500 dark:hover:text-amber-400 flex items-center justify-center transition border border-slate-200 dark:border-slate-700 shadow-sm" 
+                            title="สลับโหมดสว่าง/มืด">
+                        <i class="fa-solid fa-moon text-sm" x-show="!darkMode"></i>
+                        <i class="fa-solid fa-sun text-sm text-amber-400" x-show="darkMode" x-cloak></i>
+                    </button>
+                </div>
+
+                <!-- Mobile Hamburger Button -->
+                <div class="flex items-center gap-2 lg:hidden">
+                    <button @click="darkMode = !darkMode" class="p-2 rounded-lg text-slate-600 dark:text-slate-300">
+                        <i class="fa-solid fa-moon" x-show="!darkMode"></i>
+                        <i class="fa-solid fa-sun text-amber-400" x-show="darkMode" x-cloak></i>
+                    </button>
+                    <button @click="mobileMenu = !mobileMenu" class="p-2 rounded-xl bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-200 hover:text-brand-600 focus:outline-none">
+                        <i class="fa-solid fa-bars text-xl" x-show="!mobileMenu"></i>
+                        <i class="fa-solid fa-xmark text-xl" x-show="mobileMenu" x-cloak></i>
+                    </button>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Mobile Drawer Menu -->
+        <div x-show="mobileMenu" x-transition.origin.top.duration.250ms x-cloak class="lg:hidden bg-white/95 dark:bg-darkCard/95 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800 px-4 pt-3 pb-6 space-y-2 font-heading shadow-xl">
+            <a href="#home" @click="mobileMenu = false" class="block px-4 py-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 font-medium text-slate-700 dark:text-slate-200">
+                <i class="fa-solid fa-house mr-2 text-brand-500"></i> หน้าแรก
+            </a>
+            <a href="#courseware" @click="mobileMenu = false" class="block px-4 py-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 font-medium text-slate-700 dark:text-slate-200">
+                <i class="fa-solid fa-book-open mr-2 text-blue-500"></i> บทเรียน 16 สัปดาห์
+            </a>
+            <a href="#ar-lab" @click="mobileMenu = false" class="block px-4 py-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 font-medium text-slate-700 dark:text-slate-200">
+                <i class="fa-solid fa-vr-cardboard mr-2 text-cyan-500"></i> AR & 3D Lab
+            </a>
+            <a href="#assessments" @click="mobileMenu = false" class="block px-4 py-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 font-medium text-slate-700 dark:text-slate-200">
+                <i class="fa-solid fa-clipboard-check mr-2 text-emerald-500"></i> แบบทดสอบวัดผล
+            </a>
+            <a href="#labs-library" @click="mobileMenu = false" class="block px-4 py-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 font-medium text-slate-700 dark:text-slate-200">
+                <i class="fa-solid fa-flask mr-2 text-amber-500"></i> 180 Labs & ตำรา
+            </a>
+            
+            <div class="pt-3 border-t border-slate-200 dark:border-slate-800">
+                <div class="mobile-auth-container p-2 flex flex-col gap-2">
+                    <button onclick="Auth.openLoginModal()" class="w-full py-2.5 px-4 rounded-xl bg-brand-500 text-white font-semibold text-sm shadow-md flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-right-to-bracket"></i> เข้าสู่ระบบผู้เรียน
+                    </button>
+                    <button onclick="Auth.openRegisterModal()" class="w-full py-2.5 px-4 rounded-xl border border-emerald-500 text-emerald-600 dark:text-emerald-400 font-semibold text-sm flex items-center justify-center gap-2">
+                        <i class="fa-solid fa-user-plus"></i> สมัครสมาชิกใหม่
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Body -->
+    <main class="flex-grow pt-20">
+
+        <!-- ======================================================================= -->
+        <!-- 2. HERO SECTION: BLUEPRINT INSPIRED BY scicenter.rbru.ac.th/python4student -->
+        <!-- ======================================================================= -->
+        <header id="home" class="relative pt-12 pb-24 overflow-hidden hero-mesh">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <!-- Dynamic Ticker Bar (Top Announcement) -->
+                <div class="mb-8 flex justify-center sm:justify-start">
+                    <div class="inline-flex items-center gap-3 py-2 px-5 rounded-2xl bg-white/80 dark:bg-darkCard/80 backdrop-blur-md border-l-4 border-brand-500 shadow-md max-w-full overflow-hidden text-sm font-heading">
+                        <span class="flex h-2.5 w-2.5 relative">
+                            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
+                            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-brand-500"></span>
+                        </span>
+                        <div class="overflow-hidden whitespace-nowrap">
+                            <div class="anim-marquee text-slate-700 dark:text-slate-300 font-medium">
+                                🏛️ คณะวิทยาศาสตร์และเทคโนโลยี ร่วมกับ คณะครุศาสตร์ มหาวิทยาลัยราชภัฏรำไพพรรณี • หลักสูตร ค.บ. วิทยาศาสตร์ทั่วไป (4 ปี) • วิทยาการคำนวณ 4 เสาหลัก (Decomposition, Pattern, Abstraction, Algorithm) • Virtual AR 3D Lab Simulation
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                    
+                    <!-- Left: Hero Graphics & Interactive 3D Hologram Badge -->
+                    <div class="lg:col-span-5 relative order-last lg:order-first">
+                        <div class="relative mx-auto max-w-md lg:max-w-none">
+                            <!-- Outer Atmospheric Glow -->
+                            <div class="absolute -inset-4 bg-gradient-to-tr from-cyan-500 via-blue-600 to-indigo-600 rounded-3xl opacity-25 blur-3xl animate-pulse-glow"></div>
+                            
+                            <!-- Glassmorphism Container with Floating Poster -->
+                            <div class="relative rounded-3xl glass-card p-4 shadow-2xl border border-white/50 dark:border-slate-800 overflow-hidden transform hover:-rotate-1 transition-transform duration-500">
+                                <img src="assets/images/cover_front_Physics_of_Orchards.png" 
+                                     alt="Smart Science & AI Lab" 
+                                     class="w-full h-auto rounded-2xl object-cover shadow-inner max-h-[460px]"
+                                     onerror="this.src='https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80'">
+
+                                <!-- Floating Holographic Pill -->
+                                <div class="absolute bottom-6 left-6 right-6 p-4 rounded-2xl bg-slate-900/85 backdrop-blur-md border border-cyan-500/40 text-white shadow-xl flex items-center justify-between">
+                                    <div class="flex items-center gap-3">
+                                        <div class="w-10 h-10 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold text-lg border border-cyan-400/30">
+                                            <i class="fa-solid fa-cube"></i>
+                                        </div>
+                                        <div>
+                                            <div class="text-xs text-cyan-300 font-tech uppercase tracking-wider">Spatial 3D Engine</div>
+                                            <div class="font-heading font-semibold text-sm">MediaPipe Hands AR</div>
+                                        </div>
+                                    </div>
+                                    <span class="px-2.5 py-1 text-xs font-bold rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/40">
+                                        60 FPS Zero-GC
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Headline, Course Identity & Action Buttons -->
+                    <div class="lg:col-span-7 space-y-6">
+                        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-100 dark:bg-blue-950/60 border border-blue-200 dark:border-blue-800 text-blue-700 dark:text-cyan-300 text-xs font-heading font-semibold">
+                            <i class="fa-solid fa-graduation-cap"></i> รายวิชา 4124941 • 3(2-2-5) หน่วยกิต
+                        </div>
+
+                        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-heading font-extrabold tracking-tight text-slate-900 dark:text-white leading-tight">
+                            วิทยาการคำนวณสำหรับ<br>
+                            <span class="bg-clip-text text-transparent bg-gradient-to-r from-brand-600 via-cyan-500 to-indigo-600 dark:from-cyan-400 dark:via-blue-400 dark:to-indigo-300">
+                                การสอนวิทยาศาสตร์
+                            </span>
+                        </h1>
+
+                        <p class="text-base sm:text-lg text-slate-600 dark:text-slate-300 font-sans leading-relaxed">
+                            ระบบนิเวศการเรียนรู้ดิจิทัลแบบไฮบริด (Hybrid OBE Learning Platform) ผสานแนวคิด <strong>Computational Thinking</strong> 4 เสาหลัก, ห้องทดลองจำลอง 3D Virtual Lab, สื่อ Augmented Reality (AR) และเครื่องมือ AI Pedagogical Copilot เพื่อเตรียมนิสิต-นักศึกษาครูวิทยาศาสตร์สู่ครูยุคดิจิทัล
+                        </p>
+
+                        <!-- Highlights Badge Grid -->
+                        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
+                            <div class="p-3.5 rounded-2xl glass-card border border-slate-200 dark:border-slate-800 text-center">
+                                <div class="text-2xl font-tech font-bold text-brand-600 dark:text-cyan-400">16</div>
+                                <div class="text-xs text-slate-500 font-heading">สัปดาห์การเรียนรู้</div>
+                            </div>
+                            <div class="p-3.5 rounded-2xl glass-card border border-slate-200 dark:border-slate-800 text-center">
+                                <div class="text-2xl font-tech font-bold text-emerald-600 dark:text-emerald-400">30</div>
+                                <div class="text-xs text-slate-500 font-heading">ชุด Pre/Post Test</div>
+                            </div>
+                            <div class="p-3.5 rounded-2xl glass-card border border-slate-200 dark:border-slate-800 text-center">
+                                <div class="text-2xl font-tech font-bold text-indigo-600 dark:text-indigo-400">137+</div>
+                                <div class="text-xs text-slate-500 font-heading">แบบจำลอง 3D AR</div>
+                            </div>
+                            <div class="p-3.5 rounded-2xl glass-card border border-slate-200 dark:border-slate-800 text-center">
+                                <div class="text-2xl font-tech font-bold text-amber-600 dark:text-amber-400">180</div>
+                                <div class="text-xs text-slate-500 font-heading">ปฏิบัติการ & ใบงาน</div>
+                            </div>
+                        </div>
+
+                        <!-- Main CTAs -->
+                        <div class="flex flex-wrap items-center gap-4 pt-4">
+                            <a href="#courseware" class="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-brand-600 to-blue-600 hover:from-brand-500 hover:to-blue-500 text-white font-heading font-semibold shadow-lg shadow-brand-500/25 transition transform hover:-translate-y-0.5 flex items-center gap-2">
+                                <i class="fa-solid fa-play"></i>
+                                <span>เข้าสู่บทเรียนสัปดาห์ที่ 1</span>
+                            </a>
+                            <a href="#ar-lab" class="px-6 py-3.5 rounded-2xl bg-white dark:bg-darkCard hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-300 dark:border-slate-700 font-heading font-semibold text-slate-800 dark:text-slate-100 shadow-sm transition flex items-center gap-2">
+                                <i class="fa-solid fa-cube text-cyan-500"></i>
+                                <span>เปิดห้องทดลอง AR 3D Lab</span>
+                            </a>
+                            <a href="มคอ3_4124941_วิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์.docx" download class="p-3.5 rounded-2xl border border-slate-200 dark:border-slate-800 text-slate-600 dark:text-slate-300 hover:text-brand-600 dark:hover:text-cyan-400 transition" title="ดาวน์โหลด มคอ.3 (.docx)">
+                                <i class="fa-solid fa-file-word text-lg text-blue-600"></i>
+                            </a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </header>
+
+        <!-- ======================================================================= -->
+        <!-- 3. SECTION: AR SIMULATION BUILDER HUB (/ar-simulation-builder)         -->
+        <!-- ======================================================================= -->
+        <section id="ar-lab" class="py-20 bg-slate-900 text-white relative overflow-hidden">
+            <!-- Background Ambient Glow -->
+            <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+            <div class="absolute bottom-10 right-10 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                
+                <!-- Section Header -->
+                <div class="text-center max-w-3xl mx-auto mb-14">
+                    <span class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cyan-500/15 border border-cyan-500/30 text-cyan-300 text-xs font-tech tracking-wider uppercase mb-3">
+                        <i class="fa-solid fa-microchip"></i> /ar-simulation-builder Architecture
+                    </span>
+                    <h2 class="text-3xl sm:text-4xl font-heading font-extrabold tracking-tight">
+                        ห้องทดลองจำลองวิทยาศาสตร์ <span class="text-cyan-400">AR & 3D Virtual Lab</span>
+                    </h2>
+                    <p class="text-slate-400 font-sans text-sm sm:text-base mt-3">
+                        สถาปัตยกรรม Three.js PBR Shaders, สัญญาณเสียง Acoustic Synth ด้วย Web Audio API และระบบตรวจจับมือ MediaPipe Hand Tracking มาตรฐาน 60 FPS
+                    </p>
+                </div>
+
+                <!-- Simulation Interactive Showcase Wrapper -->
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                    
+                    <!-- Left: Real-time 3D Simulation Viewport with UI Overlay -->
+                    <div class="lg:col-span-8 bg-slate-950 rounded-3xl border border-slate-800 shadow-2xl overflow-hidden relative min-h-[480px] flex flex-col justify-between">
+                        
+                        <!-- Top HUD Bar inside Viewport -->
+                        <div class="p-4 sm:p-6 flex flex-wrap justify-between items-center gap-4 bg-gradient-to-b from-slate-950/90 to-transparent z-20">
+                            <div class="flex items-center gap-3">
+                                <span class="flex h-3 w-3 relative">
+                                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                                    <span class="relative inline-flex rounded-full h-3 w-3 bg-emerald-500"></span>
+                                </span>
+                                <div>
+                                    <div class="font-tech text-cyan-400 font-bold text-sm tracking-wide">3D PHYSICS KINEMATICS ENGINE</div>
+                                    <div class="text-[11px] text-slate-400 font-mono">PBR Brushed Aluminum & Laser Optics</div>
+                                </div>
+                            </div>
+
+                            <!-- Eye-Level Height Controls (Skill Standard: Vertical Elevation) -->
+                            <div class="flex items-center gap-1.5 bg-slate-900/80 backdrop-blur p-1 rounded-xl border border-slate-700/60 text-xs">
+                                <span class="px-2 text-slate-400 font-mono">Elevate:</span>
+                                <button onclick="adjustLabElev(0.1)" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-cyan-500 hover:text-slate-950 transition font-bold" title="เลื่อนอุปกรณ์ขึ้น">
+                                    ⬆ ขึ้น
+                                </button>
+                                <button onclick="adjustLabElev(-0.1)" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-cyan-500 hover:text-slate-950 transition font-bold" title="เลื่อนอุปกรณ์ลง">
+                                    ⬇ ลง
+                                </button>
+                                <button onclick="toggleAudioSynth()" id="btnAudioSynth" class="px-2.5 py-1 rounded-lg bg-cyan-500/20 text-cyan-300 hover:bg-cyan-500 hover:text-slate-950 transition font-bold" title="เปิด/ปิดเสียงสังเคราะห์">
+                                    <i class="fa-solid fa-volume-high"></i> เสียง
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Real-time Three.js WebGL Canvas Canvas Host -->
+                        <div id="threejsHost" class="w-full h-80 relative flex items-center justify-center cursor-grab active:cursor-grabbing">
+                            <!-- Canvas is appended here by script -->
+                        </div>
+
+                        <!-- Bottom Multi-Channel Live Canvas Oscilloscope ($v-t$, $s-t$) -->
+                        <div class="p-4 bg-slate-950/90 border-t border-slate-800/80 z-20 flex flex-col sm:flex-row items-center justify-between gap-4">
+                            <div class="flex-1 w-full">
+                                <div class="flex justify-between items-center text-xs font-mono text-slate-400 mb-1">
+                                    <span><i class="fa-solid fa-wave-square text-cyan-400"></i> Phase & Kinematics Scope (v-t Tracker)</span>
+                                    <span id="scopeTelemetry" class="text-cyan-300">θ = 45.0° | v₀ = 20.0 m/s</span>
+                                </div>
+                                <canvas id="liveOscilloscope" class="w-full h-14 bg-slate-900/90 rounded-xl border border-slate-800"></canvas>
+                            </div>
+                            <div class="flex gap-2">
+                                <button onclick="Auth.requireAuth(() => openSimulatorModal('simulations/chapter03_python_live_sandbox.html', 'Python 3 Live Sandbox'))" class="px-4 py-2.5 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-heading font-bold text-xs flex items-center gap-1.5 transition">
+                                    <i class="fa-solid fa-terminal"></i> Live Python
+                                </button>
+                                <button onclick="Auth.requireAuth(() => openSimulatorModal('simulations/chapter08_projectile_motion.html', 'Projectile 3D AR Simulator'))" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-white font-heading font-semibold text-xs flex items-center gap-1.5 transition">
+                                    <i class="fa-solid fa-expand"></i> เต็มจอ
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right: Hand Tracking Camera Feed & Preset Catalog -->
+                    <div class="lg:col-span-4 space-y-4">
+                        
+                        <!-- Real-time MediaPipe 21-Joint Tracker Box -->
+                        <div class="bg-slate-950 p-4 rounded-3xl border border-slate-800 relative overflow-hidden shadow-xl">
+                            <div class="flex justify-between items-center mb-2 text-xs font-tech text-slate-300">
+                                <span><i class="fa-solid fa-hand text-cyan-400 mr-1.5"></i> 21-JOINT HAND TRACKER</span>
+                                <span id="mediapipeBadge" class="px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-400 text-[10px] font-bold">READY</span>
+                            </div>
+                            <div class="h-44 bg-slate-900 rounded-2xl border border-cyan-500/30 relative flex items-center justify-center overflow-hidden">
+                                <!-- Real Webcam Video & Canvas Overlay -->
+                                <video id="mpVideo" class="hidden absolute inset-0 w-full h-full object-cover -scale-x-100" playsinline></video>
+                                <canvas id="mpCanvas" class="hidden absolute inset-0 w-full h-full object-cover -scale-x-100 z-10"></canvas>
+
+                                <!-- Standby Skeleton Vector Animation -->
+                                <svg id="mpSkeletonSvg" class="w-full h-full p-4" viewBox="0 0 200 150">
+                                    <!-- Palm & Joint Bones -->
+                                    <line x1="100" y1="130" x2="100" y2="85" stroke="#00f0ff" stroke-width="2" stroke-dasharray="2,2"/>
+                                    <line x1="100" y1="85" x2="65" y2="55" stroke="#00f0ff" stroke-width="2"/>
+                                    <line x1="100" y1="85" x2="90" y2="40" stroke="#00f0ff" stroke-width="2"/>
+                                    <line x1="100" y1="85" x2="115" y2="42" stroke="#00f0ff" stroke-width="2"/>
+                                    <line x1="100" y1="85" x2="135" y2="60" stroke="#00f0ff" stroke-width="2"/>
+                                    <!-- Joint Nodes -->
+                                    <circle cx="100" cy="130" r="4" fill="#38bdf8"/>
+                                    <circle cx="100" cy="85" r="4" fill="#00f0ff"/>
+                                    <circle cx="65" cy="55" r="3.5" fill="#facc15"/>
+                                    <circle cx="90" cy="40" r="3.5" fill="#facc15"/>
+                                    <circle cx="115" cy="42" r="3.5" fill="#facc15"/>
+                                    <circle cx="135" cy="60" r="3.5" fill="#facc15"/>
+                                </svg>
+                                <div class="absolute bottom-2 left-3 text-[10px] font-mono text-cyan-300 bg-black/60 px-2 py-0.5 rounded z-20">
+                                    Tilt Angle: <span id="handTiltText">+12.4°</span>
+                                </div>
+                            </div>
+
+                            <!-- Webcam Toggle Button -->
+                            <button type="button" id="btnToggleMediaPipe" onclick="toggleMediaPipeWebcam()" class="w-full mt-2.5 py-2 px-3 rounded-xl bg-gradient-to-r from-cyan-500 to-teal-500 hover:from-cyan-600 hover:to-teal-600 text-slate-950 font-bold text-xs flex items-center justify-center gap-1.5 shadow-md shadow-cyan-500/20 transition active:scale-95 font-heading">
+                                <i class="fa-solid fa-camera"></i> <span id="btnMediaPipeText">เปิดกล้องตรวจจับมือจริง (MediaPipe Webcam)</span>
+                            </button>
+                            <p class="text-[11px] text-slate-400 mt-2 font-sans">
+                                💡 ใช้มือหรือเมาส์ควบคุม: เอียงฝ่ามือเพื่อปรับมุมยิงโพรเจกไทล์ หรือคลิกลากหมุนโมเดล 3D ได้ 360°
+                            </p>
+                        </div>
+
+                        <!-- 4 Quick Launch Simulators -->
+                        <div class="space-y-2.5 font-heading">
+                            <!-- Mission Maps (Coding4Kids) -->
+                            <div onclick="openSimulatorModal('simulations/coding4kid/mission-maps.html', 'Mission Maps & Algorithm Simulator (Coding4Kids)')" 
+                                 class="p-3 rounded-2xl bg-slate-800/80 hover:bg-slate-800 border border-slate-700/80 hover:border-cyan-500/50 cursor-pointer transition flex items-center justify-between group">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">
+                                        <i class="fa-solid fa-robot"></i>
+                                    </div>
+                                    <div>
+                                        <div class="text-sm font-semibold text-white group-hover:text-emerald-400 transition">Mission Maps ภารกิจหุ่นยนต์</div>
+                                        <div class="text-[11px] text-slate-400">Coding4Kids • แผนที่ 5x5/6x6/8x8 & อัลกอริทึม</div>
+                                    </div>
+                                </div>
+                                <i class="fa-solid fa-play text-xs text-slate-500 group-hover:text-emerald-400 transition"></i>
+                            </div>
+
+                            <!-- AR MediaPipe 2-Hand Sensor -->
+                            <div onclick="openSimulatorModal('simulations/mediapipe_hands/hand_detect.html', 'AR MediaPipe 2-Hand Gesture Sensor Lab')" 
+                                 class="p-3 rounded-2xl bg-slate-800/80 hover:bg-slate-800 border border-slate-700/80 hover:border-cyan-500/50 cursor-pointer transition flex items-center justify-between group">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-9 h-9 rounded-xl bg-cyan-500/20 text-cyan-400 flex items-center justify-center font-bold">
+                                        <i class="fa-solid fa-hand"></i>
+                                    </div>
+                                    <div>
+                                        <div class="text-sm font-semibold text-white group-hover:text-cyan-400 transition">AR 2-Hand Sensor Lab</div>
+                                        <div class="text-[11px] text-slate-400">MediaPipe Hands • ตรวจจับมือ 2 ข้าง 21 จุด</div>
+                                    </div>
+                                </div>
+                                <i class="fa-solid fa-play text-xs text-slate-500 group-hover:text-cyan-400 transition"></i>
+                            </div>
+
+                            <!-- AR MediaPipe SHM Pendulum -->
+                            <div onclick="openSimulatorModal('simulations/mediapipe_hands/shm.html', 'AR MediaPipe 3D Pendulum Physics Lab')" 
+                                 class="p-3 rounded-2xl bg-slate-800/80 hover:bg-slate-800 border border-slate-700/80 hover:border-cyan-500/50 cursor-pointer transition flex items-center justify-between group">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-9 h-9 rounded-xl bg-indigo-500/20 text-indigo-400 flex items-center justify-center font-bold">
+                                        <i class="fa-solid fa-stopwatch-20"></i>
+                                    </div>
+                                    <div>
+                                        <div class="text-sm font-semibold text-white group-hover:text-indigo-400 transition">AR 3D Pendulum Physics</div>
+                                        <div class="text-[11px] text-slate-400">Three.js + MediaPipe • ลูกตุ้ม SHM คุมด้วยมือ</div>
+                                    </div>
+                                </div>
+                                <i class="fa-solid fa-play text-xs text-slate-500 group-hover:text-indigo-400 transition"></i>
+                            </div>
+
+                            <!-- AR MediaPipe Friction Incline Plane -->
+                            <div onclick="openSimulatorModal('simulations/mediapipe_hands/lab_incline.html', 'AR MediaPipe Friction Incline Plane Kinematics')" 
+                                 class="p-3 rounded-2xl bg-slate-800/80 hover:bg-slate-800 border border-slate-700/80 hover:border-cyan-500/50 cursor-pointer transition flex items-center justify-between group">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold">
+                                        <i class="fa-solid fa-ruler-combined"></i>
+                                    </div>
+                                    <div>
+                                        <div class="text-sm font-semibold text-white group-hover:text-amber-400 transition">AR Friction Incline Plane</div>
+                                        <div class="text-[11px] text-slate-400">MediaPipe • ปรับมุมระนาบเอียงด้วยฝ่ามือ</div>
+                                    </div>
+                                </div>
+                                <i class="fa-solid fa-play text-xs text-slate-500 group-hover:text-amber-400 transition"></i>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- ======================================================================= -->
+                <!-- AR & MEDIAPIPE SPATIAL SIMULATORS SHOWCASE HUB (12+ SIMULATORS)         -->
+                <!-- ======================================================================= -->
+                <div x-data="{ arTab: 'all' }" class="mt-14 pt-10 border-t border-slate-800/80">
+                    
+                    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+                        <div>
+                            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyan-500/10 border border-cyan-500/30 text-cyan-400 text-xs font-tech font-bold uppercase tracking-wider mb-2">
+                                <i class="fa-solid fa-vr-cardboard"></i> Spatial Computing & MediaPipe Ecosystem
+                            </div>
+                            <h3 class="text-xl sm:text-2xl font-bold font-heading text-white">
+                                คลังแบบจำลอง AR MediaPipe &amp; Spatial Simulators
+                            </h3>
+                            <p class="text-xs sm:text-sm text-slate-400 mt-1 font-sans">
+                                รวมระบบตรวจจับมือ MediaPipe Hands, แบบจำลองภารกิจหุ่นยนต์ Mission Maps (Coding4Kids), และห้องทดลองฟิสิกส์ 3 มิติเพื่อการเรียนรู้วิทยาศาสตร์เชิงลึก
+                            </p>
+                        </div>
+
+                        <!-- Filter Tabs -->
+                        <div class="flex flex-wrap gap-1.5 p-1.5 rounded-2xl bg-slate-900 border border-slate-800 text-xs font-heading shrink-0">
+                            <button @click="arTab = 'all'" :class="arTab === 'all' ? 'bg-cyan-500 text-slate-950 font-bold shadow-md' : 'text-slate-400 hover:text-white'" class="px-3 py-1.5 rounded-xl transition">
+                                🌟 ทั้งหมด
+                            </button>
+                            <button @click="arTab = 'mediapipe'" :class="arTab === 'mediapipe' ? 'bg-cyan-500 text-slate-950 font-bold shadow-md' : 'text-slate-400 hover:text-white'" class="px-3 py-1.5 rounded-xl transition">
+                                🤖 MediaPipe Hands
+                            </button>
+                            <button @click="arTab = 'coding4kid'" :class="arTab === 'coding4kid' ? 'bg-cyan-500 text-slate-950 font-bold shadow-md' : 'text-slate-400 hover:text-white'" class="px-3 py-1.5 rounded-xl transition">
+                                🗺️ Coding4Kids
+                            </button>
+                            <button @click="arTab = 'physics'" :class="arTab === 'physics' ? 'bg-cyan-500 text-slate-950 font-bold shadow-md' : 'text-slate-400 hover:text-white'" class="px-3 py-1.5 rounded-xl transition">
+                                🔬 Physics &amp; Space AR
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Simulator Cards Grid -->
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-5">
+                        
+                        <!-- Card 1: Mission Maps (Coding4Kids) -->
+                        <div x-show="arTab === 'all' || arTab === 'coding4kid'" x-transition class="p-5 rounded-3xl bg-slate-900/90 border border-slate-800 hover:border-emerald-500/50 transition-all flex flex-col justify-between group shadow-xl">
+                            <div>
+                                <div class="flex justify-between items-start mb-3">
+                                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 text-slate-950 flex items-center justify-center text-xl shadow-lg shadow-emerald-500/20 group-hover:scale-110 transition duration-300">
+                                        <i class="fa-solid fa-map-location-dot"></i>
+                                    </div>
+                                    <span class="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-bold font-mono">Mission Map</span>
+                                </div>
+                                <h4 class="font-heading font-bold text-base text-white group-hover:text-emerald-400 transition">Mission Maps &amp; Simulator</h4>
+                                <div class="text-[11px] text-emerald-400/80 font-mono mb-2">Coding4Kids • แผนที่ภารกิจหุ่นยนต์ 5x5/6x6/8x8</div>
+                                <p class="text-xs text-slate-400 font-sans leading-relaxed line-clamp-3 mb-4">
+                                    จำลองการเคลื่อนที่ของหุ่นยนต์บนตารางกริด ฝึกเขียนคำสั่งอัลกอริทึม เลี้ยวซ้าย ขวา เดินหน้า ลูป และเก็บสมบัติแก้ปัญหา
+                                </p>
+                            </div>
+                            <div class="flex gap-2 pt-3 border-t border-slate-800/80">
+                                <button onclick="openSimulatorModal('simulations/coding4kid/mission-maps.html', 'Mission Maps & Algorithm Simulator (Coding4Kids)')" class="flex-1 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-heading font-bold text-xs flex items-center justify-center gap-1.5 transition active:scale-95">
+                                    <i class="fa-solid fa-play text-[10px]"></i> เปิดเล่นจำลอง
+                                </button>
+                                <a href="simulations/coding4kid/mission-maps.html" target="_blank" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition" title="เปิดแท็บใหม่">
+                                    <i class="fa-solid fa-external-link-alt text-xs"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Card 2: AR MediaPipe 2-Hand Sensor -->
+                        <div x-show="arTab === 'all' || arTab === 'mediapipe'" x-transition class="p-5 rounded-3xl bg-slate-900/90 border border-slate-800 hover:border-cyan-500/50 transition-all flex flex-col justify-between group shadow-xl">
+                            <div>
+                                <div class="flex justify-between items-start mb-3">
+                                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-cyan-500 to-blue-500 text-slate-950 flex items-center justify-center text-xl shadow-lg shadow-cyan-500/20 group-hover:scale-110 transition duration-300">
+                                        <i class="fa-solid fa-hand-holding-hand"></i>
+                                    </div>
+                                    <span class="px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 text-[10px] font-bold font-mono">2-Hand Detect</span>
+                                </div>
+                                <h4 class="font-heading font-bold text-base text-white group-hover:text-cyan-400 transition">AR 2-Hand Gesture Sensor</h4>
+                                <div class="text-[11px] text-cyan-400/80 font-mono mb-2">MediaPipe Hands • ตรวจจับมือ 2 ข้าง 21 จุด</div>
+                                <p class="text-xs text-slate-400 font-sans leading-relaxed line-clamp-3 mb-4">
+                                    ระบบตรวจจับโครงสร้างมือซ้ายและขวา 21 Landmarks ผ่านกล้องเว็บแคมแบบเรียลไทม์ พร้อมติดตามพิกัด X-Y-Z สามมิติ
+                                </p>
+                            </div>
+                            <div class="flex gap-2 pt-3 border-t border-slate-800/80">
+                                <button onclick="openSimulatorModal('simulations/mediapipe_hands/hand_detect.html', 'AR MediaPipe 2-Hand Gesture Sensor Lab')" class="flex-1 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-heading font-bold text-xs flex items-center justify-center gap-1.5 transition active:scale-95">
+                                    <i class="fa-solid fa-play text-[10px]"></i> เปิดเล่นจำลอง
+                                </button>
+                                <a href="simulations/mediapipe_hands/hand_detect.html" target="_blank" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition" title="เปิดแท็บใหม่">
+                                    <i class="fa-solid fa-external-link-alt text-xs"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Card 3: AR MediaPipe 3D Pendulum (SHM) -->
+                        <div x-show="arTab === 'all' || arTab === 'mediapipe' || arTab === 'physics'" x-transition class="p-5 rounded-3xl bg-slate-900/90 border border-slate-800 hover:border-indigo-500/50 transition-all flex flex-col justify-between group shadow-xl">
+                            <div>
+                                <div class="flex justify-between items-start mb-3">
+                                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-indigo-500 to-purple-500 text-white flex items-center justify-center text-xl shadow-lg shadow-indigo-500/20 group-hover:scale-110 transition duration-300">
+                                        <i class="fa-solid fa-stopwatch-20"></i>
+                                    </div>
+                                    <span class="px-2.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 text-[10px] font-bold font-mono">Three.js + MP</span>
+                                </div>
+                                <h4 class="font-heading font-bold text-base text-white group-hover:text-indigo-400 transition">AR 3D Pendulum Physics</h4>
+                                <div class="text-[11px] text-indigo-400/80 font-mono mb-2">SciWeek • ลูกตุ้ม SHM คุมด้วยมือ</div>
+                                <p class="text-xs text-slate-400 font-sans leading-relaxed line-clamp-3 mb-4">
+                                    ปฏิบัติการฟิสิกส์การแกว่งฮาร์มอนิกอย่างง่าย Three.js ปรับความยาวเชือกและมุมเริ่มต้นผ่านการเคลื่อนไหวของฝ่ามือสด
+                                </p>
+                            </div>
+                            <div class="flex gap-2 pt-3 border-t border-slate-800/80">
+                                <button onclick="openSimulatorModal('simulations/mediapipe_hands/shm.html', 'AR MediaPipe 3D Pendulum Physics Lab')" class="flex-1 py-2 rounded-xl bg-indigo-500 hover:bg-indigo-400 text-white font-heading font-bold text-xs flex items-center justify-center gap-1.5 transition active:scale-95">
+                                    <i class="fa-solid fa-play text-[10px]"></i> เปิดเล่นจำลอง
+                                </button>
+                                <a href="simulations/mediapipe_hands/shm.html" target="_blank" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition" title="เปิดแท็บใหม่">
+                                    <i class="fa-solid fa-external-link-alt text-xs"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Card 4: AR MediaPipe Friction Incline Plane -->
+                        <div x-show="arTab === 'all' || arTab === 'mediapipe' || arTab === 'physics'" x-transition class="p-5 rounded-3xl bg-slate-900/90 border border-slate-800 hover:border-amber-500/50 transition-all flex flex-col justify-between group shadow-xl">
+                            <div>
+                                <div class="flex justify-between items-start mb-3">
+                                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-500 to-orange-500 text-slate-950 flex items-center justify-center text-xl shadow-lg shadow-amber-500/20 group-hover:scale-110 transition duration-300">
+                                        <i class="fa-solid fa-ruler-combined"></i>
+                                    </div>
+                                    <span class="px-2.5 py-0.5 rounded-full bg-amber-500/20 text-amber-300 text-[10px] font-bold font-mono">Friction μ</span>
+                                </div>
+                                <h4 class="font-heading font-bold text-base text-white group-hover:text-amber-400 transition">AR Friction Incline Plane</h4>
+                                <div class="text-[11px] text-amber-400/80 font-mono mb-2">กลศาสตร์พื้นเอียง • ปรับมุมด้วยมือ</div>
+                                <p class="text-xs text-slate-400 font-sans leading-relaxed line-clamp-3 mb-4">
+                                    ศึกษาแรงเสียดทานสถิตและจลน์บนพื้นเอียง ควบคุมและปรับมุมลาดเอียงของระนาบจำลองด้วยการเอียงมือหน้ากล้อง
+                                </p>
+                            </div>
+                            <div class="flex gap-2 pt-3 border-t border-slate-800/80">
+                                <button onclick="openSimulatorModal('simulations/mediapipe_hands/lab_incline.html', 'AR MediaPipe Friction Incline Plane Kinematics')" class="flex-1 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-heading font-bold text-xs flex items-center justify-center gap-1.5 transition active:scale-95">
+                                    <i class="fa-solid fa-play text-[10px]"></i> เปิดเล่นจำลอง
+                                </button>
+                                <a href="simulations/mediapipe_hands/lab_incline.html" target="_blank" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition" title="เปิดแท็บใหม่">
+                                    <i class="fa-solid fa-external-link-alt text-xs"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Card 5: Ultimate Intelligence Genesis 3D Arena -->
+                        <div x-show="arTab === 'all' || arTab === 'mediapipe'" x-transition class="p-5 rounded-3xl bg-slate-900/90 border border-slate-800 hover:border-pink-500/50 transition-all flex flex-col justify-between group shadow-xl">
+                            <div>
+                                <div class="flex justify-between items-start mb-3">
+                                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-pink-500 to-rose-500 text-white flex items-center justify-center text-xl shadow-lg shadow-pink-500/20 group-hover:scale-110 transition duration-300">
+                                        <i class="fa-solid fa-atom"></i>
+                                    </div>
+                                    <span class="px-2.5 py-0.5 rounded-full bg-pink-500/20 text-pink-300 text-[10px] font-bold font-mono">Spatial Particles</span>
+                                </div>
+                                <h4 class="font-heading font-bold text-base text-white group-hover:text-pink-400 transition">Ultimate Genesis 3D Arena</h4>
+                                <div class="text-[11px] text-pink-400/80 font-mono mb-2">SciWeek 2569 • อนุภาค 3D คุมด้วยมือ</div>
+                                <p class="text-xs text-slate-400 font-sans leading-relaxed line-clamp-3 mb-4">
+                                    เวทีทดลองฟิสิกส์อนุภาค 3 มิติและสนามแรงโน้มถ่วงจำลอง สั่งการกาง หุบ หมุน และยิงแสงออโรราด้วยท่าทางมือ
+                                </p>
+                            </div>
+                            <div class="flex gap-2 pt-3 border-t border-slate-800/80">
+                                <button onclick="openSimulatorModal('simulations/mediapipe_hands/ultimate.html', 'Ultimate Intelligence Genesis 3D Arena')" class="flex-1 py-2 rounded-xl bg-pink-500 hover:bg-pink-400 text-white font-heading font-bold text-xs flex items-center justify-center gap-1.5 transition active:scale-95">
+                                    <i class="fa-solid fa-play text-[10px]"></i> เปิดเล่นจำลอง
+                                </button>
+                                <a href="simulations/mediapipe_hands/ultimate.html" target="_blank" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition" title="เปิดแท็บใหม่">
+                                    <i class="fa-solid fa-external-link-alt text-xs"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Card 6: Coding4Kids Unplugged Simulator -->
+                        <div x-show="arTab === 'all' || arTab === 'coding4kid'" x-transition class="p-5 rounded-3xl bg-slate-900/90 border border-slate-800 hover:border-teal-500/50 transition-all flex flex-col justify-between group shadow-xl">
+                            <div>
+                                <div class="flex justify-between items-start mb-3">
+                                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-teal-500 to-emerald-500 text-slate-950 flex items-center justify-center text-xl shadow-lg shadow-teal-500/20 group-hover:scale-110 transition duration-300">
+                                        <i class="fa-solid fa-cubes"></i>
+                                    </div>
+                                    <span class="px-2.5 py-0.5 rounded-full bg-teal-500/20 text-teal-300 text-[10px] font-bold font-mono">Unplugged CT</span>
+                                </div>
+                                <h4 class="font-heading font-bold text-base text-white group-hover:text-teal-400 transition">Unplugged Logic Simulator</h4>
+                                <div class="text-[11px] text-teal-400/80 font-mono mb-2">Coding4Kids • ลอจิกและการตัดสินใจ</div>
+                                <p class="text-xs text-slate-400 font-sans leading-relaxed line-clamp-3 mb-4">
+                                    ห้องปฏิบัติการโค้ดดิ้ง Unplugged จำลองการจัดลำดับ เงื่อนไข ถ้า-แล้ว (If-Else) และเครือข่ายเรียงลำดับ (Sorting Network)
+                                </p>
+                            </div>
+                            <div class="flex gap-2 pt-3 border-t border-slate-800/80">
+                                <button onclick="openSimulatorModal('simulations/coding4kid/unplugged-sim.html', 'Coding4Kids Unplugged Logic Simulator')" class="flex-1 py-2 rounded-xl bg-teal-500 hover:bg-teal-400 text-slate-950 font-heading font-bold text-xs flex items-center justify-center gap-1.5 transition active:scale-95">
+                                    <i class="fa-solid fa-play text-[10px]"></i> เปิดเล่นจำลอง
+                                </button>
+                                <a href="simulations/coding4kid/unplugged-sim.html" target="_blank" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition" title="เปิดแท็บใหม่">
+                                    <i class="fa-solid fa-external-link-alt text-xs"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Card 7: Human-Robot Simulator -->
+                        <div x-show="arTab === 'all' || arTab === 'coding4kid'" x-transition class="p-5 rounded-3xl bg-slate-900/90 border border-slate-800 hover:border-purple-500/50 transition-all flex flex-col justify-between group shadow-xl">
+                            <div>
+                                <div class="flex justify-between items-start mb-3">
+                                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-purple-500 to-indigo-500 text-white flex items-center justify-center text-xl shadow-lg shadow-purple-500/20 group-hover:scale-110 transition duration-300">
+                                        <i class="fa-solid fa-person-walking"></i>
+                                    </div>
+                                    <span class="px-2.5 py-0.5 rounded-full bg-purple-500/20 text-purple-300 text-[10px] font-bold font-mono">Robotics</span>
+                                </div>
+                                <h4 class="font-heading font-bold text-base text-white group-hover:text-purple-400 transition">Human-Robot Simulator</h4>
+                                <div class="text-[11px] text-purple-400/80 font-mono mb-2">Coding4Kids • กิจกรรมหุ่นยนต์มนุษย์</div>
+                                <p class="text-xs text-slate-400 font-sans leading-relaxed line-clamp-3 mb-4">
+                                    จำลองการสั่งงานหุ่นยนต์มนุษย์ด้วยคำสั่งการเขียนโค้ดและชุดการ์ดคำสั่ง เพื่อทำความเข้าใจตรรกะความแม่นยำของคอมพิวเตอร์
+                                </p>
+                            </div>
+                            <div class="flex gap-2 pt-3 border-t border-slate-800/80">
+                                <button onclick="openSimulatorModal('simulations/coding4kid/human-robot.html', 'Human-Robot Collaborative Simulator')" class="flex-1 py-2 rounded-xl bg-purple-500 hover:bg-purple-400 text-white font-heading font-bold text-xs flex items-center justify-center gap-1.5 transition active:scale-95">
+                                    <i class="fa-solid fa-play text-[10px]"></i> เปิดเล่นจำลอง
+                                </button>
+                                <a href="simulations/coding4kid/human-robot.html" target="_blank" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition" title="เปิดแท็บใหม่">
+                                    <i class="fa-solid fa-external-link-alt text-xs"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Card 8: Game & Spatial Physics Builder -->
+                        <div x-show="arTab === 'all' || arTab === 'coding4kid'" x-transition class="p-5 rounded-3xl bg-slate-900/90 border border-slate-800 hover:border-yellow-500/50 transition-all flex flex-col justify-between group shadow-xl">
+                            <div>
+                                <div class="flex justify-between items-start mb-3">
+                                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-yellow-500 to-amber-500 text-slate-950 flex items-center justify-center text-xl shadow-lg shadow-yellow-500/20 group-hover:scale-110 transition duration-300">
+                                        <i class="fa-solid fa-gamepad"></i>
+                                    </div>
+                                    <span class="px-2.5 py-0.5 rounded-full bg-yellow-500/20 text-yellow-300 text-[10px] font-bold font-mono">Game Builder</span>
+                                </div>
+                                <h4 class="font-heading font-bold text-base text-white group-hover:text-yellow-400 transition">Game &amp; Spatial Builder</h4>
+                                <div class="text-[11px] text-yellow-400/80 font-mono mb-2">Coding4Kids • สร้างด่านเกมฟิสิกส์</div>
+                                <p class="text-xs text-slate-400 font-sans leading-relaxed line-clamp-3 mb-4">
+                                    เครื่องมือสร้างฉากและออกแบบเกมการเรียนรู้เชิงพื้นที่ กำหนดฟิสิกส์ของตัวละคร แรงโน้มถ่วง และการตรวจจับการชน
+                                </p>
+                            </div>
+                            <div class="flex gap-2 pt-3 border-t border-slate-800/80">
+                                <button onclick="openSimulatorModal('simulations/coding4kid/builder.html', 'Game & Spatial Physics Builder')" class="flex-1 py-2 rounded-xl bg-yellow-500 hover:bg-yellow-400 text-slate-950 font-heading font-bold text-xs flex items-center justify-center gap-1.5 transition active:scale-95">
+                                    <i class="fa-solid fa-play text-[10px]"></i> เปิดเล่นจำลอง
+                                </button>
+                                <a href="simulations/coding4kid/builder.html" target="_blank" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition" title="เปิดแท็บใหม่">
+                                    <i class="fa-solid fa-external-link-alt text-xs"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Card 9: AR Metrology & Vernier Caliper -->
+                        <div x-show="arTab === 'all' || arTab === 'physics'" x-transition class="p-5 rounded-3xl bg-slate-900/90 border border-slate-800 hover:border-sky-500/50 transition-all flex flex-col justify-between group shadow-xl">
+                            <div>
+                                <div class="flex justify-between items-start mb-3">
+                                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-sky-500 to-cyan-500 text-slate-950 flex items-center justify-center text-xl shadow-lg shadow-sky-500/20 group-hover:scale-110 transition duration-300">
+                                        <i class="fa-solid fa-crosshairs"></i>
+                                    </div>
+                                    <span class="px-2.5 py-0.5 rounded-full bg-sky-500/20 text-sky-300 text-[10px] font-bold font-mono">WebAR 3D</span>
+                                </div>
+                                <h4 class="font-heading font-bold text-base text-white group-hover:text-sky-400 transition">AR Metrology Caliper 3D</h4>
+                                <div class="text-[11px] text-sky-400/80 font-mono mb-2">บทที่ 1 • เครื่องมือวัดเวอร์เนียร์ 3 มิติ</div>
+                                <p class="text-xs text-slate-400 font-sans leading-relaxed line-clamp-3 mb-4">
+                                    ปฏิบัติการมาตรวิทยาเสมือนจริง 3 มิติ ปรับเลื่อนปากวัดเวอร์เนียร์แคลิเปอร์และไมโครมิเตอร์ อ่านค่าความละเอียดถึง 0.01 mm
+                                </p>
+                            </div>
+                            <div class="flex gap-2 pt-3 border-t border-slate-800/80">
+                                <button onclick="openSimulatorModal('simulations/chapter01_sec0_ar_metrology.html', 'AR Metrology & Vernier Caliper 3D')" class="flex-1 py-2 rounded-xl bg-sky-500 hover:bg-sky-400 text-slate-950 font-heading font-bold text-xs flex items-center justify-center gap-1.5 transition active:scale-95">
+                                    <i class="fa-solid fa-play text-[10px]"></i> เปิดเล่นจำลอง
+                                </button>
+                                <a href="simulations/chapter01_sec0_ar_metrology.html" target="_blank" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition" title="เปิดแท็บใหม่">
+                                    <i class="fa-solid fa-external-link-alt text-xs"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Card 10: AR Ballistic Pendulum & Momentum -->
+                        <div x-show="arTab === 'all' || arTab === 'physics'" x-transition class="p-5 rounded-3xl bg-slate-900/90 border border-slate-800 hover:border-red-500/50 transition-all flex flex-col justify-between group shadow-xl">
+                            <div>
+                                <div class="flex justify-between items-start mb-3">
+                                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-red-500 to-rose-500 text-white flex items-center justify-center text-xl shadow-lg shadow-red-500/20 group-hover:scale-110 transition duration-300">
+                                        <i class="fa-solid fa-bullseye"></i>
+                                    </div>
+                                    <span class="px-2.5 py-0.5 rounded-full bg-red-500/20 text-red-300 text-[10px] font-bold font-mono">Ballistics</span>
+                                </div>
+                                <h4 class="font-heading font-bold text-base text-white group-hover:text-red-400 transition">AR Ballistic Pendulum</h4>
+                                <div class="text-[11px] text-red-400/80 font-mono mb-2">บทที่ 5 • การชนและการอนุรักษ์โมเมนตัม</div>
+                                <p class="text-xs text-slate-400 font-sans leading-relaxed line-clamp-3 mb-4">
+                                    จำลองการยิงกระสุนปืนเข้าชนลูกตุ้มมวลแขวน คำนวณความเร็วต้นด้วยกฎการอนุรักษ์โมเมนตัมและพลังงานกล
+                                </p>
+                            </div>
+                            <div class="flex gap-2 pt-3 border-t border-slate-800/80">
+                                <button onclick="openSimulatorModal('simulations/chapter05_ballistic_pendulum.html', 'AR Ballistic Pendulum Simulation')" class="flex-1 py-2 rounded-xl bg-red-500 hover:bg-red-400 text-white font-heading font-bold text-xs flex items-center justify-center gap-1.5 transition active:scale-95">
+                                    <i class="fa-solid fa-play text-[10px]"></i> เปิดเล่นจำลอง
+                                </button>
+                                <a href="simulations/chapter05_ballistic_pendulum.html" target="_blank" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition" title="เปิดแท็บใหม่">
+                                    <i class="fa-solid fa-external-link-alt text-xs"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Card 11: 3D Tower of Hanoi & Recursive Space -->
+                        <div x-show="arTab === 'all' || arTab === 'physics'" x-transition class="p-5 rounded-3xl bg-slate-900/90 border border-slate-800 hover:border-violet-500/50 transition-all flex flex-col justify-between group shadow-xl">
+                            <div>
+                                <div class="flex justify-between items-start mb-3">
+                                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-violet-500 to-indigo-500 text-white flex items-center justify-center text-xl shadow-lg shadow-violet-500/20 group-hover:scale-110 transition duration-300">
+                                        <i class="fa-solid fa-monument"></i>
+                                    </div>
+                                    <span class="px-2.5 py-0.5 rounded-full bg-violet-500/20 text-violet-300 text-[10px] font-bold font-mono">Recursion</span>
+                                </div>
+                                <h4 class="font-heading font-bold text-base text-white group-hover:text-violet-400 transition">3D Tower of Hanoi</h4>
+                                <div class="text-[11px] text-violet-400/80 font-mono mb-2">บทที่ 7 • ขั้นตอนวิธีแบบเรียกซ้ำ 3 มิติ</div>
+                                <p class="text-xs text-slate-400 font-sans leading-relaxed line-clamp-3 mb-4">
+                                    หอคอยฮานอย 3D แสดงการเคลื่อนย้ายจานตามขั้นตอนวิธีแบบเวียนเกิด พร้อมแจกแจงโครงสร้างต้นไม้ Recursion Tree
+                                </p>
+                            </div>
+                            <div class="flex gap-2 pt-3 border-t border-slate-800/80">
+                                <button onclick="openSimulatorModal('simulations/chapter07_3d_tower_of_hanoi.html', '3D Tower of Hanoi Simulator')" class="flex-1 py-2 rounded-xl bg-violet-500 hover:bg-violet-400 text-white font-heading font-bold text-xs flex items-center justify-center gap-1.5 transition active:scale-95">
+                                    <i class="fa-solid fa-play text-[10px]"></i> เปิดเล่นจำลอง
+                                </button>
+                                <a href="simulations/chapter07_3d_tower_of_hanoi.html" target="_blank" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition" title="เปิดแท็บใหม่">
+                                    <i class="fa-solid fa-external-link-alt text-xs"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Card 12: In-Browser Python 3 Live Sandbox -->
+                        <div x-show="arTab === 'all' || arTab === 'physics'" x-transition class="p-5 rounded-3xl bg-slate-900/90 border border-slate-800 hover:border-emerald-500/50 transition-all flex flex-col justify-between group shadow-xl">
+                            <div>
+                                <div class="flex justify-between items-start mb-3">
+                                    <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-500 to-cyan-500 text-slate-950 flex items-center justify-center text-xl shadow-lg shadow-emerald-500/20 group-hover:scale-110 transition duration-300">
+                                        <i class="fa-brands fa-python"></i>
+                                    </div>
+                                    <span class="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-bold font-mono">Python 3</span>
+                                </div>
+                                <h4 class="font-heading font-bold text-base text-white group-hover:text-emerald-400 transition">Python 3 Live Sandbox</h4>
+                                <div class="text-[11px] text-emerald-400/80 font-mono mb-2">บทที่ 3 • คอมไพล์ไพทอนเพื่อวิทยาศาสตร์</div>
+                                <p class="text-xs text-slate-400 font-sans leading-relaxed line-clamp-3 mb-4">
+                                    สภาพแวดล้อมเขียนโค้ดภาษาไพทอนสดบนเบราว์เซอร์ ทดลองรันลูป ฟังก์ชันทางคณิตศาสตร์ และพล็อตเส้นกราฟฟิสิกส์ทันที
+                                </p>
+                            </div>
+                            <div class="flex gap-2 pt-3 border-t border-slate-800/80">
+                                <button onclick="openSimulatorModal('simulations/chapter03_inbrowser_python_sandbox.html', 'Python 3 Live Sandbox')" class="flex-1 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-heading font-bold text-xs flex items-center justify-center gap-1.5 transition active:scale-95">
+                                    <i class="fa-solid fa-play text-[10px]"></i> เปิดเล่นจำลอง
+                                </button>
+                                <a href="simulations/chapter03_inbrowser_python_sandbox.html" target="_blank" class="p-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition" title="เปิดแท็บใหม่">
+                                    <i class="fa-solid fa-external-link-alt text-xs"></i>
+                                </a>
+                            </div>
+                        </div>
+
+                    </div>
+
+                </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ======================================================================= -->
+        <!-- 4. SECTION: COURSEWARE & 16-WEEK ROADMAP (WITH PRE/POST TESTS)         -->
+        <!-- ======================================================================= -->
+        <section id="courseware" class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-12">
+                <div>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-50 dark:bg-brand-950 text-brand-600 dark:text-cyan-400 text-xs font-heading font-semibold border border-brand-200 dark:border-brand-800">
+                        <i class="fa-solid fa-calendar-check"></i> Course Roadmap
+                    </span>
+                    <h2 class="text-3xl sm:text-4xl font-heading font-extrabold text-slate-900 dark:text-white mt-2">
+                        แผนการจัดการเรียนรู้ <span class="text-brand-600 dark:text-cyan-400">16 สัปดาห์</span>
+                    </h2>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm mt-1">
+                        พร้อมแบบทดสอบวัดสมรรถนะก่อนเรียน (Pre-test) และหลังเรียน (Post-test) ประจำทุกสัปดาห์
+                    </p>
+                </div>
+
+                <!-- Search Input Bar -->
+                <div class="w-full md:w-80 relative">
+                    <input type="text" id="lessonSearchInput" placeholder="ค้นหาบทเรียน หรือสาระสำคัญ..." 
+                           class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-darkCard text-sm focus:outline-none focus:ring-2 focus:ring-brand-500 font-sans shadow-sm">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-slate-400 text-xs"></i>
+                </div>
+            </div>
+
+            <!-- Phase Filter Chips -->
+            <div class="flex items-center gap-2 overflow-x-auto pb-4 mb-8 text-xs font-heading">
+                <button class="phase-chip active px-4 py-2 rounded-xl bg-brand-500 text-white font-semibold transition flex-shrink-0" data-phase="all">
+                    ทั้งหมด (16 สัปดาห์)
+                </button>
+                <button class="phase-chip px-4 py-2 rounded-xl bg-white dark:bg-darkCard border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-100 transition flex-shrink-0" data-phase="1">
+                    ระยะที่ 1: พื้นฐานการคิดเชิงคำนวณ (สัปดาห์ 1-4)
+                </button>
+                <button class="phase-chip px-4 py-2 rounded-xl bg-white dark:bg-darkCard border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-100 transition flex-shrink-0" data-phase="2">
+                    ระยะที่ 2: วิทยาการข้อมูลและการเขียนโปรแกรม (สัปดาห์ 5-8)
+                </button>
+                <button class="phase-chip px-4 py-2 rounded-xl bg-white dark:bg-darkCard border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-100 transition flex-shrink-0" data-phase="3">
+                    ระยะที่ 3: แบบจำลองทางวิทยาศาสตร์และ AI (สัปดาห์ 9-12)
+                </button>
+                <button class="phase-chip px-4 py-2 rounded-xl bg-white dark:bg-darkCard border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-100 transition flex-shrink-0" data-phase="4">
+                    ระยะที่ 4: นวัตกรรมการสอนและจุลการสอน (สัปดาห์ 13-16)
+                </button>
+            </div>
+
+            <!-- Dynamic Course Cards Grid -->
+            <div id="weeksGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Loaded dynamically by assets/js/app.js -->
+            </div>
+        </section>
+
+        <!-- ======================================================================= -->
+        <!-- 5. SECTION: ASSESSMENTS & PRE/POST TESTS HUB                            -->
+        <!-- ======================================================================= -->
+        <section id="assessments" class="py-20 bg-slate-100 dark:bg-darkCard/50 border-t border-b border-slate-200 dark:border-slate-800">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <div class="text-center max-w-3xl mx-auto mb-14">
+                    <span class="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-400 text-xs font-heading font-semibold border border-emerald-300 dark:border-emerald-800">
+                        <i class="fa-solid fa-graduation-cap"></i> HOTS & 4 CT Pillars
+                    </span>
+                    <h2 class="text-3xl sm:text-4xl font-heading font-extrabold text-slate-900 dark:text-white mt-2">
+                        แบบทดสอบวัดผลสัมฤทธิ์ <span class="text-emerald-600 dark:text-emerald-400">Pre-test & Post-test</span>
+                    </h2>
+                    <p class="text-slate-600 dark:text-slate-400 font-sans text-sm mt-2">
+                        คลังข้อสอบ 30 ชุด (สัปดาห์ละ 2 ชุด) ออกแบบตามกรอบพุทธิพิสัยของบลูม และประเมินเกณฑ์รูบริกส์ 4 เสาหลักการคิดเชิงคำนวณ
+                    </p>
+                </div>
+
+                <!-- 4 CT Pillars Visual Card Grid -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+                    <div class="p-6 rounded-3xl bg-white dark:bg-darkCard border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition">
+                        <div class="w-12 h-12 rounded-2xl bg-blue-500/10 text-blue-600 dark:text-blue-400 flex items-center justify-center font-bold text-xl mb-4">
+                            <i class="fa-solid fa-puzzle-piece"></i>
+                        </div>
+                        <h3 class="font-heading font-bold text-lg text-slate-900 dark:text-white">1. Decomposition</h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-2 font-sans leading-relaxed">
+                            การแยกย่อยปัญหาทางวิทยาศาสตร์ออกเป็นระบบย่อย ระบุตัวแปรต้น ตัวแปรตาม และปัจจัยควบคุม
+                        </p>
+                    </div>
+
+                    <div class="p-6 rounded-3xl bg-white dark:bg-darkCard border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition">
+                        <div class="w-12 h-12 rounded-2xl bg-amber-500/10 text-amber-600 dark:text-amber-400 flex items-center justify-center font-bold text-xl mb-4">
+                            <i class="fa-solid fa-eye"></i>
+                        </div>
+                        <h3 class="font-heading font-bold text-lg text-slate-900 dark:text-white">2. Pattern Recognition</h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-2 font-sans leading-relaxed">
+                            การค้นหารูปแบบ ความสัมพันธ์เชิงฟังก์ชัน และแนวโน้มของข้อมูลเชิงตัวเลขหรือกราฟการทดลอง
+                        </p>
+                    </div>
+
+                    <div class="p-6 rounded-3xl bg-white dark:bg-darkCard border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition">
+                        <div class="w-12 h-12 rounded-2xl bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 flex items-center justify-center font-bold text-xl mb-4">
+                            <i class="fa-solid fa-cube"></i>
+                        </div>
+                        <h3 class="font-heading font-bold text-lg text-slate-900 dark:text-white">3. Abstraction</h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-2 font-sans leading-relaxed">
+                            การคิดเชิงนามธรรม กรองสัญญาณรบกวน สร้างแบบจำลองมวลจุด (Point Mass) และสมการอธิบายระบบ
+                        </p>
+                    </div>
+
+                    <div class="p-6 rounded-3xl bg-white dark:bg-darkCard border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition">
+                        <div class="w-12 h-12 rounded-2xl bg-purple-500/10 text-purple-600 dark:text-purple-400 flex items-center justify-center font-bold text-xl mb-4">
+                            <i class="fa-solid fa-code-merge"></i>
+                        </div>
+                        <h3 class="font-heading font-bold text-lg text-slate-900 dark:text-white">4. Algorithm Design</h3>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 mt-2 font-sans leading-relaxed">
+                            การออกแบบลำดับขั้นตอน ผังงาน (Flowchart) และรหัสลำลอง (Pseudocode) แก้ปัญหาอย่างเป็นระบบ
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Callout Box: Rubrics & Certification -->
+                <div class="p-8 rounded-3xl bg-gradient-to-r from-brand-600 via-indigo-600 to-purple-600 text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6">
+                    <div class="space-y-2">
+                        <h3 class="text-xl sm:text-2xl font-heading font-bold">ระบบประเมินผลรูบริกส์และการออกใบประกาศนียบัตร</h3>
+                        <p class="text-slate-200 text-sm max-w-2xl font-sans">
+                            นิสิต-นักศึกษาครูที่ผ่านการประเมินชิ้นงานและแบบทดสอบครบตามเกณฑ์มาตรฐานคุณวุฒิฯ พ.ศ. 2565 จะได้รับใบประกาศนียบัตรรับรองสมรรถนะดิจิทัลจากรายวิชา
+                        </p>
+                    </div>
+                    <button onclick="Auth.requireAuth(() => RubricEvaluator.showCertificate({ student_id: Auth.currentUser.student_id, student_name: Auth.currentUser.student_name }))" class="px-6 py-3 rounded-xl bg-white text-brand-700 hover:bg-slate-100 font-heading font-bold text-sm shadow-md transition whitespace-nowrap">
+                        <i class="fa-solid fa-award mr-1.5 text-amber-500"></i> ตรวจสอบเกียรติบัตร
+                    </button>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- ======================================================================= -->
+        <!-- 6. SECTION: 180 LABS & E-LIBRARY HUB                                   -->
+        <!-- ======================================================================= -->
+        <section id="labs-library" class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-6 mb-12">
+                <div>
+                    <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50 dark:bg-amber-950 text-amber-700 dark:text-amber-400 text-xs font-heading font-semibold border border-amber-200 dark:border-amber-800">
+                        <i class="fa-solid fa-flask"></i> Digital Assets Hub
+                    </span>
+                    <h2 class="text-3xl sm:text-4xl font-heading font-extrabold text-slate-900 dark:text-white mt-2">
+                        คลังปฏิบัติการ <span class="text-amber-500">180 Labs & ตำราวิชาการ</span>
+                    </h2>
+                    <p class="text-slate-600 dark:text-slate-400 text-sm mt-1">
+                        ใบงานวิทยาการคำนวณมาตรฐาน สไลด์บรรยาย (.pptx) และตำราคู่มือประกอบการสอน
+                    </p>
+                </div>
+
+                <div class="w-full md:w-80 relative">
+                    <input type="text" id="labSearchInput" placeholder="ค้นหาใบงาน หรือรหัสแล็บ..." 
+                           class="w-full pl-10 pr-4 py-2.5 rounded-xl border border-slate-300 dark:border-slate-700 bg-white dark:bg-darkCard text-sm focus:outline-none focus:ring-2 focus:ring-amber-500 font-sans shadow-sm">
+                    <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-3.5 text-slate-400 text-xs"></i>
+                </div>
+            </div>
+
+            <!-- Dynamic 180 Labs Grid Container -->
+            <div id="labsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Dynamically populated by assets/js/app.js -->
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ======================================================================= -->
+    <!-- 7. FOOTER: 4-COLUMN BLUEPRINT WITH ADMIN CMS MANAGEMENT LINK           -->
+    <!-- ======================================================================= -->
+    <footer class="bg-slate-900 text-white pt-16 pb-28 md:pb-8 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 mb-12">
+                
+                <!-- Col 1: About Institution & Curriculum -->
+                <div class="space-y-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-600 to-cyan-400 flex items-center justify-center font-brand font-extrabold text-lg text-white">
+                            CS
+                        </div>
+                        <div>
+                            <div class="font-heading font-bold text-base text-white">4124941 Computational Science</div>
+                            <div class="text-xs text-cyan-400">RBRU Science Education 2027</div>
+                        </div>
+                    </div>
+                    <p class="text-slate-400 text-xs leading-relaxed font-sans">
+                        รายวิชาวิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์ หลักสูตรครุศาสตรบัณฑิต (ค.บ. 4 ปี) สาขาวิชาวิทยาศาสตร์ทั่วไป คณะวิทยาศาสตร์และเทคโนโลยี ร่วมกับ คณะครุศาสตร์ มหาวิทยาลัยราชภัฏรำไพพรรณี จันทบุรี
+                    </p>
+                    <div class="flex items-center gap-3 text-slate-400 pt-2">
+                        <a href="https://www.facebook.com/ScienceRBRU" target="_blank" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-blue-600 hover:text-white flex items-center justify-center transition">
+                            <i class="fa-brands fa-facebook-f text-xs"></i>
+                        </a>
+                        <a href="https://www.science.rbru.ac.th" target="_blank" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-emerald-600 hover:text-white flex items-center justify-center transition">
+                            <i class="fa-solid fa-globe text-xs"></i>
+                        </a>
+                        <a href="https://aidar.rbru.ac.th" target="_blank" class="w-8 h-8 rounded-full bg-slate-800 hover:bg-cyan-600 hover:text-white flex items-center justify-center transition" title="ศูนย์นวัตกรรมเกษตรดิจิทัล">
+                            <i class="fa-solid fa-microchip text-xs"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Col 2: Quick Navigation (5 Main Sections) -->
+                <div>
+                    <h3 class="font-heading font-bold text-sm text-cyan-400 uppercase tracking-wider mb-4">
+                        เมนูลัดของระบบ (Navigation)
+                    </h3>
+                    <ul class="space-y-2 text-xs text-slate-400 font-sans">
+                        <li><a href="#home" class="hover:text-cyan-300 transition flex items-center gap-2"><i class="fa-solid fa-angle-right text-cyan-500"></i> หน้าแรก (Home Overview)</a></li>
+                        <li><a href="#courseware" class="hover:text-cyan-300 transition flex items-center gap-2"><i class="fa-solid fa-angle-right text-cyan-500"></i> แผนบทเรียน 16 สัปดาห์</a></li>
+                        <li><a href="#ar-lab" class="hover:text-cyan-300 transition flex items-center gap-2"><i class="fa-solid fa-angle-right text-cyan-500"></i> ห้องทดลองเสมือนจริง AR 3D Lab</a></li>
+                        <li><a href="#assessments" class="hover:text-cyan-300 transition flex items-center gap-2"><i class="fa-solid fa-angle-right text-cyan-500"></i> แบบทดสอบ Pre-test & Post-test</a></li>
+                        <li><a href="#labs-library" class="hover:text-cyan-300 transition flex items-center gap-2"><i class="fa-solid fa-angle-right text-cyan-500"></i> คลังปฏิบัติการ 180 Labs & ตำรา</a></li>
+                        <li><a href="มคอ3_4124941_วิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์.docx" download class="hover:text-cyan-300 transition flex items-center gap-2"><i class="fa-solid fa-file-word text-blue-400"></i> ดาวน์โหลด มคอ.3 ฉบับเต็ม (.docx)</a></li>
+                    </ul>
+                </div>
+
+                <!-- Col 3: Contact & Campus Info -->
+                <div>
+                    <h3 class="font-heading font-bold text-sm text-cyan-400 uppercase tracking-wider mb-4">
+                        ติดต่ออาจารย์ผู้รับผิดชอบ
+                    </h3>
+                    <ul class="space-y-2.5 text-xs text-slate-400 font-sans">
+                        <li class="flex items-start gap-2.5">
+                            <i class="fa-solid fa-user-tie text-cyan-500 mt-0.5"></i>
+                            <span>ผศ.ดร.ชีวะ ทัศนา (Asst. Prof. Dr. Chewa Thassana)<br><span class="text-slate-500">อาจารย์ผู้รับผิดชอบรายวิชา</span></span>
+                        </li>
+                        <li class="flex items-start gap-2.5">
+                            <i class="fa-solid fa-building text-cyan-500 mt-0.5"></i>
+                            <span>คณะวิทยาศาสตร์และเทคโนโลยี มหาวิทยาลัยราชภัฏรำไพพรรณี จ.จันทบุรี 22000</span>
+                        </li>
+                        <li class="flex items-center gap-2.5">
+                            <i class="fa-solid fa-envelope text-cyan-500"></i>
+                            <a href="mailto:chewa.t@rbru.ac.th" class="hover:text-cyan-300 transition">chewa.t@rbru.ac.th</a>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Col 4: ADMIN MANAGEMENT PORTAL (ตามข้อกำหนด: "admin อยู่ที่ footer") -->
+                <div>
+                    <h3 class="font-heading font-bold text-sm text-cyan-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+                        <i class="fa-solid fa-shield-halved"></i> ระบบอาจารย์และผู้ดูแล
+                    </h3>
+                    <div class="p-4 rounded-2xl bg-slate-800/80 border border-slate-700/80 space-y-3">
+                        <p class="text-xs text-slate-300 font-sans leading-relaxed">
+                            ระบบหลังบ้านสำหรับอาจารย์ผู้สอน เข้าถึงการวิเคราะห์คะแนนรูบริกส์ 4 เสาหลัก CT รายบุคคล ทะเบียนนักศึกษา 30 คน และการส่งออกตัดเกรด CSV
+                        </p>
+                        <a href="admin.php" class="w-full inline-flex items-center justify-center gap-2 py-3 px-4 rounded-xl bg-gradient-to-r from-brand-600 via-blue-600 to-cyan-600 hover:from-brand-500 hover:to-cyan-500 text-white font-heading font-bold text-xs shadow-lg shadow-brand-500/25 transition transform hover:-translate-y-0.5">
+                            <i class="fa-solid fa-user-shield text-sm"></i>
+                            <span>เข้าสู่ระบบหลังบ้าน (Admin CMS)</span>
+                        </a>
+                        <div class="text-[11px] text-slate-400 text-center font-mono">
+                            URL: <span class="text-cyan-300">/admin.php</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Bottom Copyright Bar -->
+            <div class="pt-8 border-t border-slate-800 text-center text-xs text-slate-500 font-sans flex flex-col sm:flex-row justify-between items-center gap-2">
+                <div>
+                    © 2026 คณะวิทยาศาสตร์และเทคโนโลยี มหาวิทยาลัยราชภัฏรำไพพรรณี. สงวนลิขสิทธิ์ทั้งหมด.
+                </div>
+                <div class="text-[11px] text-slate-500 font-mono">
+                    Course 4124941 • Curriculum Revised 2024 (ค.บ. 4 ปี)
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ======================================================================= -->
+    <!-- 7.1 SMART MOBILE BOTTOM NAVIGATION BAR (BANGCHAK 3D CURVED SCOOP DOCK)   -->
+    <!-- ======================================================================= -->
+    <nav id="mobileBottomNav" class="md:hidden fixed bottom-0 left-0 right-0 z-50 pointer-events-auto select-none w-full max-w-[100vw] overflow-visible font-sans" style="padding-bottom: max(env(safe-area-inset-bottom, 0px), 6px);">
+        
+        <!-- 3D Curved Scoop Background with Molded Recessed Dish -->
+        <div class="absolute bottom-0 inset-x-0 w-full h-[78px] pointer-events-none">
+            
+            <!-- Solid Base Shield -->
+            <div class="absolute inset-0 bg-white dark:bg-slate-950 shadow-[0_-10px_35px_rgba(0,0,0,0.12)] border-t border-slate-200/50 dark:border-slate-800/50"></div>
+
+            <!-- 3D Curved Notch SVG Overlay -->
+            <svg class="absolute -top-3 w-full h-[90px] filter drop-shadow-[0_-6px_16px_rgba(0,0,0,0.06)]" viewBox="0 0 375 90" preserveAspectRatio="none">
+                <defs>
+                    <radialGradient id="mobileScoopDish" cx="50%" cy="30%" r="65%">
+                        <stop offset="0%" stop-color="#38bdf8" stop-opacity="0.25" />
+                        <stop offset="60%" stop-color="#0284c7" stop-opacity="0.12" />
+                        <stop offset="100%" stop-color="#0f172a" stop-opacity="0" />
+                    </radialGradient>
+                </defs>
+
+                <!-- Molded Concave Dish Backing -->
+                <ellipse cx="187.5" cy="20" rx="42" ry="20" fill="url(#mobileScoopDish)" />
+
+                <!-- Main Sculpted Curved Bar Body -->
+                <path d="M0,12 
+                         L134,12 
+                         C146,12 153,46 187.5,46 
+                         C222,46 229,12 241,12 
+                         L375,12 
+                         L375,90 
+                         L0,90 Z" 
+                      class="fill-white dark:fill-slate-950 stroke-slate-200 dark:stroke-slate-800" 
+                      stroke-width="1.2" />
+
+                <!-- Subtle Inner Scoop Shadow Curve -->
+                <path d="M136,13 C148,13 155,47 187.5,47 C220,47 227,13 239,13" 
+                      fill="none" 
+                      class="stroke-cyan-500/20" 
+                      stroke-width="2.5" />
+            </svg>
+        </div>
+
+        <!-- Navigation Items Grid (5 Main Sections) -->
+        <div class="relative flex justify-between items-end px-2 sm:px-4 h-[76px] w-full max-w-md mx-auto z-20 pb-2">
+            
+            <!-- Tab 1: หน้าแรก (Home) -->
+            <a href="#home" onclick="handleMobileNavClick('home')" id="mTabHome"
+               class="flex flex-col items-center justify-center w-14 group transition-transform active:scale-90">
+                <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-brand-400 via-sky-500 to-blue-700 p-0.5 shadow-[0_4px_12px_rgba(2,132,199,0.38),inset_0_1.5px_2px_rgba(255,255,255,0.8)] border border-brand-300/40 relative overflow-hidden flex items-center justify-center transition-all duration-300 group-hover:scale-110 ring-2 ring-brand-500/50 scale-105">
+                    <div class="absolute inset-x-1 top-0.5 h-3 bg-gradient-to-b from-white/70 to-transparent rounded-t-xl pointer-events-none"></div>
+                    <i class="fa-solid fa-house text-white text-base drop-shadow-[0_2px_3px_rgba(0,0,0,0.35)]"></i>
+                </div>
+                <span class="text-[10px] font-bold text-brand-600 dark:text-cyan-400 mt-1 tracking-tight font-heading">หน้าแรก</span>
+                <span class="m-nav-dot w-1.5 h-1.5 rounded-full bg-brand-500 mt-0.5 opacity-100 transition-opacity"></span>
+            </a>
+
+            <!-- Tab 2: บทเรียน 16 สัปดาห์ (Courseware) -->
+            <a href="#courseware" onclick="handleMobileNavClick('courseware')" id="mTabCourseware"
+               class="flex flex-col items-center justify-center w-14 group transition-transform active:scale-90">
+                <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-indigo-400 via-purple-500 to-indigo-700 p-0.5 shadow-[0_4px_12px_rgba(99,102,241,0.38),inset_0_1.5px_2px_rgba(255,255,255,0.8)] border border-indigo-300/40 relative overflow-hidden flex items-center justify-center transition-all duration-300 group-hover:scale-110 opacity-85 group-hover:opacity-100">
+                    <div class="absolute inset-x-1 top-0.5 h-3 bg-gradient-to-b from-white/70 to-transparent rounded-t-xl pointer-events-none"></div>
+                    <i class="fa-solid fa-graduation-cap text-white text-base drop-shadow-[0_2px_3px_rgba(0,0,0,0.35)]"></i>
+                    <span class="absolute -top-1 -right-1 flex h-3 w-3">
+                        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-purple-400 opacity-75"></span>
+                        <span class="relative inline-flex rounded-full h-3 w-3 bg-gradient-to-tr from-indigo-400 to-purple-500 shadow-sm border border-white"></span>
+                    </span>
+                </div>
+                <span class="text-[10px] font-semibold text-slate-600 dark:text-slate-400 group-hover:text-indigo-500 mt-1 tracking-tight font-heading">บทเรียน</span>
+                <span class="m-nav-dot w-1.5 h-1.5 rounded-full bg-indigo-500 mt-0.5 opacity-0 transition-opacity"></span>
+            </a>
+
+            <!-- Center Floating Action Button: AR & 3D Lab (Hero Scoop Sphere) -->
+            <div class="relative flex flex-col items-center justify-center -top-3.5 z-30">
+                <a href="#ar-lab" onclick="handleMobileNavClick('ar-lab')" id="mTabArLab"
+                   class="group relative flex items-center justify-center rounded-full p-1 bg-gradient-to-b from-white via-slate-100 to-slate-200 dark:from-slate-800 dark:via-slate-900 dark:to-slate-950 shadow-[0_10px_25px_rgba(6,182,212,0.45),0_2px_5px_rgba(0,0,0,0.12)] border border-white dark:border-slate-700 hover:scale-105 active:scale-90 transition-all duration-300"
+                   style="width: 58px; height: 58px;"
+                   title="เปิดห้องทดลอง 3 มิติเสมือนจริง AR Lab">
+                    <!-- Rotating Aura Ring -->
+                    <div class="absolute inset-0 rounded-full bg-gradient-to-r from-cyan-400 via-teal-300 to-emerald-400 opacity-70 blur-[2px] animate-spin" style="animation-duration: 8s;"></div>
+                    <!-- Inner 3D Sphere Body -->
+                    <div class="w-full h-full rounded-full bg-gradient-to-tr from-cyan-500 via-teal-500 to-emerald-500 shadow-[inset_0_-4px_6px_rgba(0,0,0,0.3),inset_0_2px_4px_rgba(255,255,255,0.8)] border border-cyan-300/40 flex items-center justify-center relative overflow-hidden">
+                        <div class="absolute top-1 left-2 w-5 h-2.5 bg-white/70 rounded-full blur-[0.6px] pointer-events-none"></div>
+                        <i class="fa-solid fa-vr-cardboard text-2xl text-white drop-shadow-[0_2px_4px_rgba(0,0,0,0.35)] group-hover:rotate-12 transition-transform duration-300"></i>
+                    </div>
+                </a>
+                <!-- Floating Pill Badge -->
+                <span class="px-2.5 py-0.5 rounded-full bg-gradient-to-r from-cyan-600 via-teal-600 to-emerald-600 text-white text-[10px] font-bold shadow-[0_2px_8px_rgba(6,182,212,0.4)] border border-cyan-400/50 mt-1 whitespace-nowrap leading-tight tracking-tight font-heading">
+                    AR Lab
+                </span>
+            </div>
+
+            <!-- Tab 4: แบบทดสอบวัดผล (Assessments) -->
+            <a href="#assessments" onclick="handleMobileNavClick('assessments')" id="mTabAssessments"
+               class="flex flex-col items-center justify-center w-14 group transition-transform active:scale-90">
+                <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-emerald-400 via-teal-500 to-emerald-700 p-0.5 shadow-[0_4px_12px_rgba(16,185,129,0.38),inset_0_1.5px_2px_rgba(255,255,255,0.8)] border border-emerald-300/40 relative overflow-hidden flex items-center justify-center transition-all duration-300 group-hover:scale-110 opacity-85 group-hover:opacity-100">
+                    <div class="absolute inset-x-1 top-0.5 h-3 bg-gradient-to-b from-white/70 to-transparent rounded-t-xl pointer-events-none"></div>
+                    <i class="fa-solid fa-clipboard-check text-white text-base drop-shadow-[0_2px_3px_rgba(0,0,0,0.35)]"></i>
+                </div>
+                <span class="text-[10px] font-semibold text-slate-600 dark:text-slate-400 group-hover:text-emerald-500 mt-1 tracking-tight font-heading">แบบทดสอบ</span>
+                <span class="m-nav-dot w-1.5 h-1.5 rounded-full bg-emerald-500 mt-0.5 opacity-0 transition-opacity"></span>
+            </a>
+
+            <!-- Tab 5: 180 Labs & ตำรา (Labs Library) -->
+            <a href="#labs-library" onclick="handleMobileNavClick('labs-library')" id="mTabLabs"
+               class="flex flex-col items-center justify-center w-14 group transition-transform active:scale-90">
+                <div class="w-10 h-10 rounded-2xl bg-gradient-to-br from-amber-400 via-orange-500 to-rose-600 p-0.5 shadow-[0_4px_12px_rgba(245,158,11,0.38),inset_0_1.5px_2px_rgba(255,255,255,0.8)] border border-amber-300/40 relative overflow-hidden flex items-center justify-center transition-all duration-300 group-hover:scale-110 opacity-85 group-hover:opacity-100">
+                    <div class="absolute inset-x-1 top-0.5 h-3 bg-gradient-to-b from-white/70 to-transparent rounded-t-xl pointer-events-none"></div>
+                    <i class="fa-solid fa-flask text-white text-base drop-shadow-[0_2px_3px_rgba(0,0,0,0.35)]"></i>
+                </div>
+                <span class="text-[10px] font-semibold text-slate-600 dark:text-slate-400 group-hover:text-amber-500 mt-1 tracking-tight font-heading">180 Labs</span>
+                <span class="m-nav-dot w-1.5 h-1.5 rounded-full bg-amber-500 mt-0.5 opacity-0 transition-opacity"></span>
+            </a>
+
+        </div>
+    </nav>
+
+    <!-- ======================================================================= -->
+    <!-- 8. AUTONOMOUS AGENTIC AI ASSISTANT ("น้อง LEQs AI" - GLOBE 2570 ARCHITECTURE) -->
+    <!-- ======================================================================= -->
+    
+    <!-- Floating 3D Mascot Trigger (Bottom Right) -->
+    <div id="leqsBotFloatingTrigger" class="fixed bottom-[88px] md:bottom-6 right-3 sm:right-6 z-40 flex flex-col items-end gap-1.5 group select-none">
+        
+        <!-- Speech Bubble Prompt (Floats directly above avatar) -->
+        <div id="leqsBotSpeechBubble" class="hidden sm:flex items-center gap-2 bg-slate-900/95 backdrop-blur-xl px-3.5 py-2 rounded-2xl shadow-2xl border border-emerald-500/30 text-xs font-semibold text-white animate-bounce cursor-pointer hover:border-emerald-400 transition-all max-w-[260px]" onclick="toggleLeqsChatbot()">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping shrink-0"></span>
+            <span id="leqsBubbleText" class="truncate text-[11px]">มีอะไรให้ <strong>น้อง LEQs</strong> ช่วยเนี่ยฮิ? 🌱🌤️</span>
+            <button type="button" class="text-slate-400 hover:text-white ml-1 text-sm leading-none shrink-0" onclick="event.stopPropagation(); document.getElementById('leqsBotSpeechBubble').classList.add('hidden');">&times;</button>
+        </div>
+
+        <!-- 3D Mascot Avatar Circle Button -->
+        <button type="button" id="leqsBotAvatarBtn" onclick="toggleLeqsChatbot()" aria-label="เปิดน้อง LEQs AI Bot"
+            class="relative w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-tr from-emerald-600 via-teal-500 to-cyan-400 p-1 shadow-[0_10px_25px_rgba(16,185,129,0.45)] hover:scale-105 active:scale-95 transition-all duration-300 ring-4 ring-white/90 focus:outline-none">
+            
+            <!-- Rotating Aura Ring -->
+            <div class="absolute inset-0 rounded-full bg-gradient-to-r from-emerald-400 via-teal-300 to-cyan-400 opacity-70 blur-[3px] animate-spin" style="animation-duration: 9s;"></div>
+            
+            <!-- Mascot 3D Agri-Eco Robot Inside -->
+            <div class="relative w-full h-full rounded-full bg-slate-950 overflow-hidden flex items-center justify-center border-2 border-white/70">
+                <svg class="w-14 h-14 sm:w-16 sm:h-16 transform group-hover:rotate-6 transition-transform" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <radialGradient id="robotGrad" cx="35%" cy="30%" r="70%">
+                            <stop offset="0%" stop-color="#10B981"/>
+                            <stop offset="55%" stop-color="#047857"/>
+                            <stop offset="100%" stop-color="#064E3B"/>
+                        </radialGradient>
+                        <radialGradient id="visorGrad" cx="50%" cy="40%" r="60%">
+                            <stop offset="0%" stop-color="#38BDF8"/>
+                            <stop offset="50%" stop-color="#0284C7"/>
+                            <stop offset="100%" stop-color="#0F172A"/>
+                        </radialGradient>
+                        <filter id="ecoGlow">
+                            <feGaussianBlur stdDeviation="1.5" result="coloredBlur"/>
+                            <feMerge>
+                                <feMergeNode in="coloredBlur"/>
+                                <feMergeNode in="SourceGraphic"/>
+                            </feMerge>
+                        </filter>
+                    </defs>
+
+                    <!-- Robot Head Sphere -->
+                    <circle cx="50" cy="50" r="42" fill="url(#robotGrad)" />
+                    
+                    <!-- Smart Agri Glass Visor (Curved 3D Display) -->
+                    <rect x="22" y="32" width="56" height="32" rx="14" fill="url(#visorGrad)" stroke="#38BDF8" stroke-width="1.5" />
+                    <path d="M26 36 Q50 30 74 36" stroke="rgba(255,255,255,0.4)" stroke-width="1.5" fill="none" />
+
+                    <!-- Cute Expressive Glowing Cyan Eyes -->
+                    <g id="leqsEyesGroup">
+                        <ellipse cx="38" cy="48" rx="6" ry="8" fill="#38BDF8" filter="url(#ecoGlow)" />
+                        <circle cx="39" cy="45" r="2.5" fill="#FFFFFF" />
+                        <ellipse cx="62" cy="48" rx="6" ry="8" fill="#38BDF8" filter="url(#ecoGlow)" />
+                        <circle cx="63" cy="45" r="2.5" fill="#FFFFFF" />
+                    </g>
+
+                    <!-- Cheerful Rosy Cheeks -->
+                    <circle cx="28" cy="56" r="3.5" fill="#FB7185" opacity="0.7" />
+                    <circle cx="72" cy="56" r="3.5" fill="#FB7185" opacity="0.7" />
+
+                    <!-- Animated Lip-sync Mouth -->
+                    <path id="leqsMouth" d="M44 58 Q50 64 56 58" stroke="#FFFFFF" stroke-width="2.5" stroke-linecap="round" fill="none" />
+
+                    <!-- Smart Agri Eco Sprout Antenna -->
+                    <path d="M50 14 L50 8" stroke="#34D399" stroke-width="3" stroke-linecap="round" />
+                    <!-- Twin Sprout Leaves on Antenna -->
+                    <path d="M50 8 C44 4, 38 6, 44 12 Z" fill="#34D399" filter="url(#ecoGlow)" />
+                    <path d="M50 8 C56 4, 62 6, 56 12 Z" fill="#34D399" filter="url(#ecoGlow)" />
+                    <circle cx="50" cy="8" r="2" fill="#FBBF24" />
+                </svg>
+            </div>
+
+            <!-- Online Pulse Badge -->
+            <span class="absolute top-0 right-0 w-5 h-5 bg-emerald-500 border-2 border-white rounded-full flex items-center justify-center text-[9px] text-white font-bold shadow-md">
+                <i class="fa-solid fa-sparkles text-[8px]"></i>
+            </span>
+        </button>
+    </div>
+
+    <!-- Chatbot Window Modal (High-End Glassmorphism) -->
+    <div id="leqsChatbotModal" class="fixed bottom-0 md:bottom-6 right-0 sm:right-4 md:right-6 w-full sm:w-[450px] max-w-full h-[90vh] sm:h-[650px] max-h-[96vh] bg-slate-900/95 backdrop-blur-2xl sm:rounded-3xl shadow-2xl border border-white/10 z-[70] flex flex-col overflow-hidden transform translate-y-full opacity-0 pointer-events-none transition-all duration-300 font-sans">
+        
+        <!-- Header -->
+        <div class="px-4 sm:px-5 py-3.5 bg-gradient-to-r from-emerald-900 via-teal-900 to-slate-950 text-white flex items-center justify-between shrink-0 shadow-lg relative overflow-hidden border-b border-white/10">
+            <div class="absolute -right-8 -top-8 w-32 h-32 bg-emerald-400/20 rounded-full blur-xl pointer-events-none"></div>
+
+            <div class="flex items-center gap-2.5 sm:gap-3 relative z-10">
+                <!-- Mini Animated Avatar -->
+                <div class="relative w-10 h-10 sm:w-11 sm:h-11 rounded-2xl bg-gradient-to-tr from-emerald-400 to-cyan-400 p-0.5 shadow-md shrink-0">
+                    <div class="w-full h-full rounded-[14px] bg-slate-950 flex items-center justify-center overflow-hidden">
+                        <span class="text-lg sm:text-xl">🌱</span>
+                    </div>
+                    <span class="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-emerald-400 border-2 border-slate-950 rounded-full animate-ping"></span>
+                </div>
+
+                <div>
+                    <div class="flex items-center gap-2">
+                        <h3 id="leqsBotTitle" class="font-extrabold text-sm sm:text-base leading-tight text-white font-heading">น้อง LEQs AI</h3>
+                        <span id="leqsDialectBadge" class="text-[9px] sm:text-[10px] bg-amber-400 text-slate-950 font-black px-1.5 py-0.2 rounded-full uppercase shadow-xs">สำเนียงจันท์ฮิ</span>
+                    </div>
+                    <div id="leqsBotSubtitle" class="text-[10px] sm:text-[11px] text-teal-200 flex items-center gap-1.5 font-sans">
+                        <span class="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
+                        <span>RAG Agentic AI • วิทยาการคำนวณ 4124941</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Top Right Control Buttons -->
+            <div class="flex items-center gap-1.5 relative z-10">
+                <!-- Language Switcher Pill -->
+                <div class="flex items-center bg-black/40 backdrop-blur-md rounded-xl p-0.5 border border-white/10 text-[10px] font-bold">
+                    <button type="button" onclick="setLeqsLang('th')" id="langBtnTh" title="ภาษาไทยสำเนียงจันท์"
+                        class="px-2 py-0.5 rounded-lg bg-emerald-500 text-white shadow-xs transition">ไทย</button>
+                    <button type="button" onclick="setLeqsLang('en')" id="langBtnEn" title="English AI Mode"
+                        class="px-2 py-0.5 rounded-lg text-slate-400 hover:text-white transition">EN</button>
+                    <button type="button" onclick="setLeqsLang('zh')" id="langBtnZh" title="中文助手"
+                        class="px-2 py-0.5 rounded-lg text-slate-400 hover:text-white transition">中文</button>
+                </div>
+
+                <!-- Test Voice Button -->
+                <button type="button" onclick="testLeqsVoice()" title="ทดสอบฟังเสียงพูดสตูดิโอ"
+                    class="px-2 py-1 rounded-xl bg-emerald-500/20 hover:bg-emerald-500 text-emerald-300 hover:text-white flex items-center gap-1 text-[10px] font-bold transition border border-emerald-400/30">
+                    <i class="fa-solid fa-play text-[9px]"></i>
+                    <span class="hidden sm:inline">เสียง</span>
+                </button>
+
+                <!-- Sound Toggle -->
+                <button type="button" id="leqsVoiceToggleBtn" onclick="toggleLeqsVoice()" title="เปิด/ปิดเสียงพูดน้อง LEQs"
+                    class="w-8 h-8 rounded-xl bg-white/10 hover:bg-white/20 text-teal-200 hover:text-white flex items-center justify-center text-xs transition">
+                    <i id="leqsVoiceIcon" class="fa-solid fa-volume-high"></i>
+                </button>
+                
+                <!-- Clear History -->
+                <button type="button" onclick="clearLeqsChat()" title="ล้างบทสนทนา"
+                    class="w-8 h-8 rounded-xl bg-white/10 hover:bg-white/20 text-slate-400 hover:text-white flex items-center justify-center text-xs transition">
+                    <i class="fa-solid fa-rotate-right"></i>
+                </button>
+
+                <!-- Close Modal -->
+                <button type="button" onclick="toggleLeqsChatbot()" aria-label="ปิดหน้าต่างแชท"
+                    class="w-8 h-8 rounded-xl bg-white/10 hover:bg-rose-500 text-slate-300 hover:text-white flex items-center justify-center text-sm transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Active Voice Indicator Bar (When Speaking) -->
+        <div id="leqsSpeakingIndicator" class="hidden bg-gradient-to-r from-amber-500 via-orange-500 to-amber-600 text-slate-950 px-4 py-1.5 text-[11px] font-bold flex items-center justify-between shrink-0 shadow-sm">
+            <div class="flex items-center gap-2">
+                <div class="flex items-end gap-0.5 h-3">
+                    <span class="w-1 bg-slate-950 rounded-full animate-bounce" style="height: 60%; animation-delay: 0.1s;"></span>
+                    <span class="w-1 bg-slate-950 rounded-full animate-bounce" style="height: 100%; animation-delay: 0.2s;"></span>
+                    <span class="w-1 bg-slate-950 rounded-full animate-bounce" style="height: 40%; animation-delay: 0.3s;"></span>
+                    <span class="w-1 bg-slate-950 rounded-full animate-bounce" style="height: 80%; animation-delay: 0.15s;"></span>
+                </div>
+                <span id="leqsSpeakingText">🎙️ เสียงมนุษย์สตูดิโอ (Studio HD Voice)...</span>
+            </div>
+            <button type="button" onclick="stopLeqsSpeech()" class="text-xs hover:underline text-slate-900 font-extrabold flex items-center gap-1 bg-white/40 px-2 py-0.5 rounded-lg">
+                <i class="fa-solid fa-stop text-[10px]"></i>
+                <span>หยุดเสียง</span>
+            </button>
+        </div>
+
+        <!-- Active Voice Input Indicator Bar (When Mic Listening) -->
+        <div id="leqsListeningIndicator" class="hidden bg-gradient-to-r from-rose-600 via-pink-600 to-rose-700 text-white px-4 py-2 text-[11px] font-bold flex items-center justify-between shrink-0 shadow-md">
+            <div class="flex items-center gap-2">
+                <span class="relative flex h-3 w-3">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-rose-200 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-3 w-3 bg-white"></span>
+                </span>
+                <span id="leqsListeningText">🎙️ กำลังฟังเสียงพูด... พูดคำถามได้เลยเนี่ยฮิ (เช่น "4 เสาหลัก CT มีอะไรบ้าง")</span>
+            </div>
+            <button type="button" onclick="stopVoiceInput()" class="text-xs hover:underline text-white font-extrabold flex items-center gap-1 bg-black/30 hover:bg-black/50 px-2 py-0.5 rounded-lg transition">
+                <i class="fa-solid fa-xmark text-[10px]"></i>
+                <span>ยกเลิก</span>
+            </button>
+        </div>
+
+        <!-- Live RAG Data Source Sync Status Pill -->
+        <div id="leqsRagStatusPill" class="bg-emerald-950/60 border-b border-emerald-500/20 px-3.5 py-1.5 text-[10px] text-emerald-300 flex items-center justify-between shrink-0 font-mono">
+            <div class="flex items-center gap-1.5 truncate">
+                <i class="fa-solid fa-bolt text-emerald-400"></i>
+                <span id="leqsRagSyncText">RAG Live: เชื่อมฐานข้อมูลสดระบบวิทยาการคำนวณ 4124941 ⚡</span>
+            </div>
+            <span class="text-[9px] bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 px-1.5 py-0.2 rounded font-bold uppercase">Active</span>
+        </div>
+
+        <!-- Chat Messages Scroll Container -->
+        <div id="leqsChatMessages" class="flex-1 p-4 overflow-y-auto space-y-3.5 text-xs sm:text-sm bg-slate-950/70">
+            <!-- Messages dynamically injected -->
+        </div>
+
+        <!-- Quick Prompt Suggestions Chips -->
+        <div id="leqsQuickChips" class="px-3 py-2 bg-slate-900 border-t border-white/5 flex items-center gap-1.5 overflow-x-auto text-[11px] shrink-0 no-scrollbar">
+            <!-- Chips dynamically injected based on language -->
+        </div>
+
+        <!-- Chat Input Area -->
+        <div class="p-3 bg-slate-900 border-t border-white/10 shrink-0">
+            <form id="leqsChatForm" onsubmit="handleLeqsChatSubmit(event)" class="flex items-center gap-2">
+                <!-- Voice Input Mic Button -->
+                <button type="button" id="leqsMicBtn" onclick="toggleVoiceInput()" title="กดเพื่อพูดด้วยเสียง"
+                    class="w-10 h-10 rounded-2xl bg-slate-800 hover:bg-emerald-500/20 text-slate-300 hover:text-emerald-400 flex items-center justify-center shrink-0 transition border border-white/10">
+                    <i id="leqsMicIcon" class="fa-solid fa-microphone text-sm"></i>
+                </button>
+
+                <!-- Text Input Field -->
+                <input type="text" id="leqsChatInput" placeholder="พิมพ์ถามน้อง LEQs สำเนียงจันท์ได้เลยเนี่ยฮิ..."
+                    class="flex-1 bg-slate-800/90 hover:bg-slate-800 focus:bg-slate-950 text-white text-xs sm:text-sm px-3.5 py-2.5 rounded-2xl border border-transparent focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/20 focus:outline-none transition placeholder-slate-500 font-sans">
+
+                <!-- Send Button -->
+                <button type="submit" id="leqsSendBtn" aria-label="ส่งข้อความ"
+                    class="w-10 h-10 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-slate-950 font-bold flex items-center justify-center shrink-0 shadow-lg shadow-emerald-500/20 transition active:scale-95">
+                    <i class="fa-solid fa-paper-plane text-xs"></i>
+                </button>
+            </form>
+        </div>
+
+    </div>
+
+    <!-- ======================================================================= -->
+    <!-- 9. MODALS: LESSON VIEWER, QUIZ ENGINE, SIMULATOR, LABS & AUTHENTICATION -->
+    <!-- ======================================================================= -->
+
+    <!-- Interactive Lesson Viewer Modal -->
+    <div class="quiz-modal" id="lessonModal">
+        <div class="quiz-dialog" style="max-width: 1250px; height: 90vh; display: flex; flex-direction: column;">
+            <div class="quiz-header" style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; border-bottom: 1px solid var(--border-light, #e2e8f0);">
+                <div style="display: flex; align-items: center; gap: 0.75rem;">
+                    <span class="lesson-modal-badge" id="lessonModalBadge" style="padding: 4px 10px; border-radius: 999px; background: #0284c7; color: #fff; font-size: 0.75rem; font-weight: bold;">สัปดาห์ที่ 1</span>
+                    <h2 id="lessonModalTitle" style="font-size: 1.15rem; font-weight: 700;">ชื่อบทเรียน</h2>
+                </div>
+                
+                <div class="lesson-modal-ctrls" style="display: flex; gap: 0.4rem; align-items: center;">
+                    <button class="btn-ctrl" onclick="launchModalPretest()" title="ทำแบบทดสอบก่อนเรียน" style="padding: 6px 12px; font-size: 0.78rem; font-weight: 600; border-radius: 8px; background: rgba(99, 102, 241, 0.15); color: #4338ca; border: 1px solid rgba(99, 102, 241, 0.3);">
+                        <i class="fas fa-edit"></i> Pre-test
+                    </button>
+                    <button class="btn-ctrl" onclick="launchModalPosttest()" title="ทำแบบทดสอบหลังเรียน" style="padding: 6px 12px; font-size: 0.78rem; font-weight: 600; border-radius: 8px; background: rgba(16, 185, 129, 0.15); color: #047857; border: 1px solid rgba(16, 185, 129, 0.3);">
+                        <i class="fas fa-award"></i> Post-test
+                    </button>
+                    <button class="btn-ctrl" onclick="navigateModalWeek(-1)" title="สัปดาห์ก่อนหน้า" style="padding: 6px 10px; border-radius: 8px; background: #f1f5f9; border: 1px solid #cbd5e1;">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="btn-ctrl" onclick="navigateModalWeek(1)" title="สัปดาห์ถัดไป" style="padding: 6px 10px; border-radius: 8px; background: #f1f5f9; border: 1px solid #cbd5e1;">
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                    <a href="#" target="_blank" id="btnOpenNewTab" class="btn-ctrl" title="เปิดบทเรียนในแท็บใหม่" style="padding: 6px 10px; border-radius: 8px; background: #f1f5f9; border: 1px solid #cbd5e1;">
+                        <i class="fas fa-external-link-alt"></i>
+                    </a>
+                    <button class="btn-ctrl btn-close" onclick="closeLessonModal()" title="ปิดหน้าต่าง" style="padding: 6px 10px; border-radius: 8px; background: #fee2e2; color: #ef4444; border: 1px solid #fca5a5;">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div style="flex: 1; overflow: hidden; background: #fff;">
+                <iframe id="lessonIframe" style="width: 100%; height: 100%; border: none;" src="about:blank"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quiz Engine Modal -->
+    <div class="quiz-modal" id="quizModal">
+        <div class="quiz-dialog" style="max-width: 850px; background: #fff; border-radius: 20px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); overflow: hidden;">
+            <div class="quiz-header" style="display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 1.75rem; border-bottom: 1px solid #e2e8f0; background: #f8fafc;">
+                <div>
+                    <h3 id="quizTitle" style="font-size: 1.25rem; font-weight: 700; color: #0f172a;">การสอบวัดผลสัมฤทธิ์</h3>
+                </div>
+                <div class="quiz-timer-box" style="display: flex; align-items: center; gap: 6px; font-weight: bold; color: #dc2626;">
+                    <i class="fas fa-stopwatch"></i>
+                    <span id="quizTimer">60:00</span>
+                </div>
+            </div>
+            <div class="quiz-body" id="quizBody" style="padding: 1.5rem 1.75rem; max-height: 70vh; overflow-y: auto;"></div>
+            <div class="quiz-footer" id="quizFooter" style="padding: 1rem 1.75rem; border-top: 1px solid #e2e8f0; background: #f8fafc; display: flex; justify-content: space-between;"></div>
+        </div>
+    </div>
+
+    <!-- Simulator Modal -->
+    <div class="quiz-modal" id="simModal">
+        <div class="quiz-dialog" style="max-width: 1200px; height: 90vh; display: flex; flex-direction: column;">
+            <div class="quiz-header" style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 1.5rem; border-bottom: 1px solid #e2e8f0; background: #0f172a; color: #fff;">
+                <h3 id="simModalTitle" style="font-size: 1.2rem; font-weight: bold;">แบบจำลองวิทยาการคำนวณ</h3>
+                <div style="display: flex; gap: 0.5rem;">
+                    <a href="#" target="_blank" id="simModalOpenNewTab" style="padding: 6px 12px; background: rgba(255,255,255,0.15); border-radius: 8px; font-size: 0.8rem; color: #fff; text-decoration: none;">
+                        <i class="fas fa-external-link-alt"></i> เปิดแท็บใหม่
+                    </a>
+                    <button onclick="closeSimModal()" style="padding: 6px 12px; background: #ef4444; border-radius: 8px; border: none; color: #fff; font-size: 0.8rem; cursor: pointer;">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            <div style="flex: 1;">
+                <iframe id="simModalIframe" src="about:blank" style="width: 100%; height: 100%; border: none;"></iframe>
+            </div>
+        </div>
+    </div>
+
+    <!-- 180 Labs Modal -->
+    <div class="quiz-modal" id="labModal">
+        <div class="quiz-dialog" style="max-width: 900px; max-height: 90vh; overflow-y: auto; background: #fff; border-radius: 20px;">
+            <div class="quiz-header" style="display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 1.75rem; border-bottom: 1px solid #e2e8f0;">
+                <h3 id="labModalTitle" style="font-size: 1.25rem; font-weight: 700; color: #0f172a;">ใบงานปฏิบัติการวิทยาการคำนวณ</h3>
+                <div style="display: flex; gap: 0.5rem;">
+                    <button onclick="printLabModal()" style="padding: 6px 12px; background: #10b981; color: #fff; border: none; border-radius: 8px; cursor: pointer;">
+                        <i class="fas fa-print"></i> พิมพ์ใบงาน A4
+                    </button>
+                    <button onclick="closeLabModal()" style="padding: 6px 12px; background: #ef4444; color: #fff; border: none; border-radius: 8px; cursor: pointer;">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+            <div class="quiz-body" id="labModalBody" style="padding: 1.5rem 1.75rem;"></div>
+        </div>
+    </div>
+
+    <!-- Auth Required Notification Modal -->
+    <div class="quiz-modal" id="authRequiredModal">
+        <div class="quiz-dialog" style="max-width: 480px; text-align: center; padding: 2.25rem 2rem; background: #fff; border-radius: 24px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25);">
+            <div style="width: 64px; height: 64px; border-radius: 50%; background: rgba(99, 102, 241, 0.15); color: #6366f1; font-size: 1.8rem; display: flex; align-items: center; justify-content: center; margin: 0 auto 1.25rem auto;">
+                <i class="fas fa-lock"></i>
+            </div>
+            <h3 style="font-size: 1.35rem; font-weight: 700; color: #0f172a; margin-bottom: 0.6rem;">
+                กรุณาเข้าสู่ระบบก่อนเริ่มทำกิจกรรม
+            </h3>
+            <p style="color: #64748b; font-size: 0.92rem; line-height: 1.6; margin-bottom: 1.75rem;">
+                ท่านจำเป็นต้องเข้าสู่ระบบหรือสมัครสมาชิกด้วยรหัสนักศึกษา เพื่อบันทึกเวลาเรียน ประวัติการทำแบบทดสอบ <strong>Pre-test / Post-test</strong> และประเมินสมรรถนะการคิดเชิงคำนวณ (CT Rubrics) ลงในฐานข้อมูลของท่าน
+            </p>
+            <div style="display: flex; gap: 0.75rem; justify-content: center;">
+                <button onclick="Auth.openLoginModal()" style="flex: 1; padding: 0.75rem 1.25rem; font-size: 0.95rem; font-weight: 600; border-radius: 12px; border: none; background: #4f46e5; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);">
+                    <i class="fas fa-sign-in-alt"></i> เข้าสู่ระบบ
+                </button>
+                <button onclick="Auth.openRegisterModal()" style="flex: 1; padding: 0.75rem 1.25rem; font-size: 0.95rem; font-weight: 600; border-radius: 12px; border: 1px solid #10b981; background: rgba(16, 185, 129, 0.1); color: #10b981; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                    <i class="fas fa-user-plus"></i> สมัครสมาชิก
+                </button>
+            </div>
+            <button onclick="Auth.closeAuthRequiredModal()" style="background: none; border: none; color: #94a3b8; font-size: 0.85rem; margin-top: 1.25rem; cursor: pointer; text-decoration: underline;">
+                กลับสู่หน้าหลัก (เข้าชมแบบผู้มาเยือน)
+            </button>
+        </div>
+    </div>
+
+    <!-- Student Login Modal -->
+    <div class="quiz-modal" id="loginModal">
+        <div class="quiz-dialog" style="max-width: 460px; background: #fff; border-radius: 24px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); overflow: hidden;">
+            <div class="quiz-header" style="display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 1.5rem; border-bottom: 1px solid #e2e8f0; background: #f8fafc;">
+                <h3 style="font-size: 1.15rem; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-key" style="color: #6366f1;"></i> เข้าสู่ระบบผู้เรียน (Student Login)
+                </h3>
+                <button onclick="Auth.closeLoginModal()" style="border: none; background: none; color: #94a3b8; font-size: 1.1rem; cursor: pointer;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="quiz-body" style="padding: 1.5rem;">
+                <div id="loginErrorMsg" style="display: none; padding: 0.75rem; border-radius: 8px; background: #fee2e2; color: #ef4444; font-size: 0.85rem; margin-bottom: 1rem;"></div>
+                <form onsubmit="Auth.handleLogin(event)" style="display: flex; flex-direction: column; gap: 1rem;">
+                    <div>
+                        <label style="font-size: 0.84rem; font-weight: 600; color: #334155; display: block; margin-bottom: 4px;">รหัสนักศึกษา หรือ อีเมล:</label>
+                        <input type="text" id="loginStudentId" required placeholder="เช่น 6614401001" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 0.92rem;">
+                    </div>
+                    <div>
+                        <label style="font-size: 0.84rem; font-weight: 600; color: #334155; display: block; margin-bottom: 4px;">รหัสผ่าน:</label>
+                        <input type="password" id="loginPassword" required placeholder="รหัสผ่านของคุณ" style="width: 100%; padding: 10px 12px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 0.92rem;">
+                    </div>
+                    
+                    <!-- Quick Demo Accounts -->
+                    <div style="background: #f1f5f9; border-radius: 12px; padding: 0.75rem; border: 1px dashed #cbd5e1;">
+                        <div style="font-size: 0.75rem; font-weight: 600; color: #64748b; margin-bottom: 0.4rem;">
+                            <i class="fas fa-magic"></i> คลิกเพื่อทดสอบด่วน (Demo Accounts):
+                        </div>
+                        <div style="display: flex; gap: 0.35rem; flex-wrap: wrap;">
+                            <button type="button" onclick="Auth.fillDemoAccount('6614401001', '123456')" style="font-size: 0.72rem; padding: 0.25rem 0.5rem; border-radius: 6px; border: 1px solid #6366f1; background: #e0e7ff; color: #4338ca; cursor: pointer;">
+                                จิรภัทร (วิทย์ทั่วไป)
+                            </button>
+                            <button type="button" onclick="Auth.fillDemoAccount('6614402001', '123456')" style="font-size: 0.72rem; padding: 0.25rem 0.5rem; border-radius: 6px; border: 1px solid #10b981; background: #d1fae5; color: #047857; cursor: pointer;">
+                                ธีรภัทร (ฟิสิกส์)
+                            </button>
+                            <button type="button" onclick="Auth.fillDemoAccount('chewa', 'PhysiK66')" style="font-size: 0.72rem; padding: 0.25rem 0.5rem; border-radius: 6px; border: 1px solid #f59e0b; background: #fef3c7; color: #b45309; cursor: pointer;">
+                                ผศ.ดร.ชีวะ (อาจารย์)
+                            </button>
+                        </div>
+                    </div>
+
+                    <button type="submit" id="btnLoginSubmit" style="width: 100%; padding: 0.85rem; font-size: 0.95rem; font-weight: 600; border-radius: 12px; border: none; background: #4f46e5; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px;">
+                        <i class="fas fa-sign-in-alt"></i> เข้าสู่ระบบ
+                    </button>
+                </form>
+                <div style="text-align: center; margin-top: 1rem; font-size: 0.85rem; color: #64748b;">
+                    ยังไม่มีบัญชีนักศึกษา? <a href="javascript:void(0)" onclick="Auth.openRegisterModal()" style="color: #4f46e5; font-weight: 600;">สมัครสมาชิกใหม่</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Student Registration Modal -->
+    <div class="quiz-modal" id="registerModal">
+        <div class="quiz-dialog" style="max-width: 500px; background: #fff; border-radius: 24px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); overflow: hidden;">
+            <div class="quiz-header" style="display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 1.5rem; border-bottom: 1px solid #e2e8f0; background: #f8fafc;">
+                <h3 style="font-size: 1.15rem; font-weight: 700; color: #0f172a; display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-user-plus" style="color: #10b981;"></i> สมัครสมาชิกผู้เรียนใหม่
+                </h3>
+                <button onclick="Auth.closeRegisterModal()" style="border: none; background: none; color: #94a3b8; font-size: 1.1rem; cursor: pointer;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="quiz-body" style="padding: 1.5rem;">
+                <div id="regErrorMsg" style="display: none; padding: 0.75rem; border-radius: 8px; background: #fee2e2; color: #ef4444; font-size: 0.85rem; margin-bottom: 1rem;"></div>
+                <form onsubmit="Auth.handleRegister(event)" style="display: flex; flex-direction: column; gap: 0.85rem;">
+                    <div>
+                        <label style="font-size: 0.84rem; font-weight: 600; color: #334155; display: block; margin-bottom: 4px;">รหัสนักศึกษา 10 หลัก: *</label>
+                        <input type="text" id="regStudentId" required placeholder="เช่น 6614401026" style="width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 0.9rem;">
+                    </div>
+                    <div>
+                        <label style="font-size: 0.84rem; font-weight: 600; color: #334155; display: block; margin-bottom: 4px;">ชื่อ-นามสกุล (พร้อมคำนำหน้านาม): *</label>
+                        <input type="text" id="regStudentName" required placeholder="เช่น นายสมชาย สุขเกษม" style="width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 0.9rem;">
+                    </div>
+                    <div>
+                        <label style="font-size: 0.84rem; font-weight: 600; color: #334155; display: block; margin-bottom: 4px;">สาขาวิชา: *</label>
+                        <select id="regDepartment" required style="width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 0.9rem;">
+                            <option value="วิทยาศาสตร์ทั่วไป (ค.บ. 4 ปี)">สาขาวิชาวิทยาศาสตร์ทั่วไป (ค.บ. 4 ปี)</option>
+                            <option value="ฟิสิกส์ (ค.บ. 4 ปี)">สาขาวิชาฟิสิกส์ (ค.บ. 4 ปี)</option>
+                            <option value="คณะวิทยาศาสตร์และเทคโนโลยี">คณะวิทยาศาสตร์และเทคโนโลยี</option>
+                            <option value="คณะครุศาสตร์">คณะครุศาสตร์</option>
+                            <option value="สาขาอื่นๆ">สาขาอื่นๆ</option>
+                        </select>
+                    </div>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem;">
+                        <div>
+                            <label style="font-size: 0.84rem; font-weight: 600; color: #334155; display: block; margin-bottom: 4px;">รหัสผ่าน: *</label>
+                            <input type="password" id="regPassword" required placeholder="อย่างน้อย 4 ตัว" style="width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 0.9rem;">
+                        </div>
+                        <div>
+                            <label style="font-size: 0.84rem; font-weight: 600; color: #334155; display: block; margin-bottom: 4px;">ยืนยันรหัสผ่าน: *</label>
+                            <input type="password" id="regPasswordConfirm" required placeholder="กรอกซ้ำ" style="width: 100%; padding: 9px 12px; border: 1px solid #cbd5e1; border-radius: 10px; font-size: 0.9rem;">
+                        </div>
+                    </div>
+                    <button type="submit" id="btnRegSubmit" style="width: 100%; padding: 0.85rem; font-size: 0.95rem; font-weight: 600; border-radius: 12px; border: none; background: #10b981; color: #fff; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; margin-top: 0.5rem;">
+                        <i class="fas fa-user-plus"></i> ยืนยันการสมัครสมาชิก
+                    </button>
+                </form>
+                <div style="text-align: center; margin-top: 1rem; font-size: 0.85rem; color: #64748b;">
+                    มีบัญชีอยู่แล้ว? <a href="javascript:void(0)" onclick="Auth.openLoginModal()" style="color: #10b981; font-weight: 600;">เข้าสู่ระบบ</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Digital Certificate Modal -->
+    <div class="quiz-modal" id="certificateModal">
+        <div class="quiz-dialog" style="max-width: 880px; background: transparent; border: none; box-shadow: none;">
+            <div id="certificateModalBody"></div>
+        </div>
+    </div>
+
+    <!-- Rubric Evaluator Modal -->
+    <div class="quiz-modal" id="rubricModal">
+        <div class="quiz-dialog" style="max-width: 950px; background: #fff; border-radius: 20px;">
+            <div class="quiz-header" style="display: flex; justify-content: space-between; align-items: center; padding: 1.25rem 1.75rem; border-bottom: 1px solid #e2e8f0;">
+                <h3 id="rubricModalTitle" style="font-size: 1.25rem; font-weight: 700; color: #0f172a;">เกณฑ์การประเมินรูบริกส์ (Rubric Assessment)</h3>
+                <button onclick="RubricEvaluator.close()" style="border: none; background: none; font-size: 1.2rem; cursor: pointer;">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="quiz-body" id="rubricModalBody" style="padding: 1.5rem;"></div>
+        </div>
+    </div>
+
+    <!-- ======================================================================= -->
+    <!-- 10. JAVASCRIPT: AR LAB SIMULATION, WEB AUDIO SYNTH & AI BOT LOGIC      -->
+    <!-- ======================================================================= -->
+    
+    <!-- Core Application & Assessment Scripts -->
+    <script src="assets/js/auth.js"></script>
+    <script src="assets/js/app.js"></script>
+    <script src="assets/js/assessment-engine.js"></script>
+    <script src="assets/js/rubric-evaluator.js"></script>
+
+    <!-- AR Simulation & Audio Synth Engine (Skill Standard Implementation) -->
+    <script>
+        // Web Audio Acoustic Synthesizer (Skill Spec: Real-time Sound Synthesis)
+        let audioCtx = null;
+        let isAudioEnabled = true;
+
+        function playSynthSound(freq = 440, type = 'sine', duration = 0.15) {
+            if (!isAudioEnabled) return;
+            try {
+                if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+                if (audioCtx.state === 'suspended') audioCtx.resume();
+
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+                gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch (e) {
+                // AudioContext autoplay restriction
+            }
+        }
+
+        function toggleAudioSynth() {
+            isAudioEnabled = !isAudioEnabled;
+            const btn = document.getElementById('btnAudioSynth');
+            if (btn) {
+                btn.classList.toggle('text-slate-500', !isAudioEnabled);
+                btn.classList.toggle('text-cyan-300', isAudioEnabled);
+            }
+            if (isAudioEnabled) playSynthSound(660, 'sine', 0.1);
+        }
+
+        // Live Three.js 3D PBR Viewport
+        let scene, camera, renderer, labApparatus, gridHelper;
+        let scenePosY = 0.95; // Eye-Level Rule: Standard Elevation position="0 0.95 -0.2"
+
+        function initThreeJSLab() {
+            const host = document.getElementById('threejsHost');
+            if (!host) return;
+
+            scene = new THREE.Scene();
+            scene.fog = new THREE.FogExp2(0x020617, 0.08);
+
+            camera = new THREE.PerspectiveCamera(45, host.clientWidth / host.clientHeight, 0.1, 100);
+            camera.position.set(0, 1.2, 3.2);
+
+            renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            renderer.setSize(host.clientWidth, host.clientHeight);
+            renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+            renderer.shadowMap.enabled = true;
+            host.appendChild(renderer.domElement);
+
+            // Lighting Standard: Studio Key, Fill, and Cyan Emissive Rim Light
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+            scene.add(ambientLight);
+
+            const keyLight = new THREE.DirectionalLight(0x00f0ff, 1.2);
+            keyLight.position.set(3, 5, 4);
+            scene.add(keyLight);
+
+            const rimLight = new THREE.DirectionalLight(0x6366f1, 1.5);
+            rimLight.position.set(-3, -2, -2);
+            scene.add(rimLight);
+
+            // Floor Grid Helper (Cyan Matrix)
+            gridHelper = new THREE.GridHelper(10, 20, 0x00f0ff, 0x1e293b);
+            gridHelper.position.y = -0.5;
+            scene.add(gridHelper);
+
+            // 3D Apparatus: Physics Launcher Cannon with PBR Materials
+            labApparatus = new THREE.Group();
+            labApparatus.position.set(0, scenePosY - 0.5, 0);
+
+            // Base stand (Brushed Aluminum)
+            const baseGeo = new THREE.CylinderGeometry(0.5, 0.6, 0.15, 32);
+            const metalMat = new THREE.MeshStandardMaterial({
+                color: 0x94a3b8,
+                metalness: 0.85,
+                roughness: 0.25
+            });
+            const baseMesh = new THREE.Mesh(baseGeo, metalMat);
+            labApparatus.add(baseMesh);
+
+            // Laser Cannon Barrel
+            const barrelGeo = new THREE.CylinderGeometry(0.12, 0.15, 1.4, 24);
+            barrelGeo.rotateZ(Math.PI / 4); // 45 degree angle
+            const barrelMat = new THREE.MeshStandardMaterial({
+                color: 0x0ea5e9,
+                metalness: 0.9,
+                roughness: 0.2,
+                emissive: 0x0369a1,
+                emissiveIntensity: 0.2
+            });
+            const barrelMesh = new THREE.Mesh(barrelGeo, barrelMat);
+            barrelMesh.position.set(0.3, 0.5, 0);
+            labApparatus.add(barrelMesh);
+
+            // Optical Glass Indicator Core
+            const coreGeo = new THREE.SphereGeometry(0.2, 24, 24);
+            const coreMat = new THREE.MeshPhysicalMaterial({
+                color: 0x00f0ff,
+                emissive: 0x00f0ff,
+                emissiveIntensity: 0.8,
+                transmission: 0.9,
+                opacity: 1,
+                transparent: true,
+                roughness: 0
+            });
+            const coreMesh = new THREE.Mesh(coreGeo, coreMat);
+            coreMesh.position.set(0, 0.25, 0);
+            labApparatus.add(coreMesh);
+
+            scene.add(labApparatus);
+
+            // Mouse Interaction Orbit Drag
+            let isDragging = false;
+            let prevMouseX = 0;
+
+            host.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                prevMouseX = e.clientX;
+                playSynthSound(520, 'sine', 0.08);
+            });
+            window.addEventListener('mouseup', () => isDragging = false);
+            window.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                const deltaX = e.clientX - prevMouseX;
+                labApparatus.rotation.y += deltaX * 0.01;
+                prevMouseX = e.clientX;
+            });
+
+            // Handle Resize
+            window.addEventListener('resize', () => {
+                if (!host || !camera || !renderer) return;
+                camera.aspect = host.clientWidth / host.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(host.clientWidth, host.clientHeight);
+            });
+
+            // Zero-GC Animation Loop
+            function animate() {
+                requestAnimationFrame(animate);
+                if (!isDragging) {
+                    labApparatus.rotation.y += 0.005; // smooth idle spin
+                }
+                renderer.render(scene, camera);
+            }
+            animate();
+        }
+
+        function adjustLabElev(delta) {
+            scenePosY = Math.max(0.3, Math.min(2.0, scenePosY + delta));
+            if (labApparatus) labApparatus.position.y = scenePosY - 0.5;
+            playSynthSound(440 + scenePosY * 100, 'triangle', 0.1);
+        }
+
+        function selectSimPreset(type) {
+            playSynthSound(780, 'sine', 0.12);
+            if (type === 'projectile') {
+                Auth.requireAuth(() => openSimulatorModal('simulations/chapter08_projectile_motion.html', 'Projectile Motion 3D Lab'));
+            } else if (type === 'sandbox') {
+                Auth.requireAuth(() => openSimulatorModal('simulations/chapter03_python_live_sandbox.html', 'Python 3 Live Sandbox Simulator'));
+            } else if (type === 'wave') {
+                Auth.requireAuth(() => openSimulatorModal('simulations/chapter08_wave_superposition.html', 'Wave Superposition 3D Lab'));
+            }
+        }
+
+        // Live Canvas Oscilloscope Generator (Zero-GC Multi-Channel Wave)
+        function initLiveOscilloscope() {
+            const canvas = document.getElementById('liveOscilloscope');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            let offset = 0;
+
+            function drawScope() {
+                canvas.width = canvas.clientWidth;
+                canvas.height = canvas.clientHeight;
+
+                ctx.fillStyle = 'rgba(8, 15, 30, 0.4)';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+                // Grid lines
+                ctx.strokeStyle = 'rgba(0, 240, 255, 0.1)';
+                ctx.lineWidth = 1;
+                for (let x = 0; x < canvas.width; x += 30) {
+                    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, canvas.height); ctx.stroke();
+                }
+
+                // Wave 1: Velocity Wave (Cyan)
+                ctx.strokeStyle = '#00f0ff';
+                ctx.lineWidth = 2;
+                ctx.beginPath();
+                for (let x = 0; x < canvas.width; x++) {
+                    const y = canvas.height / 2 + Math.sin((x + offset) * 0.04) * 16;
+                    if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+                }
+                ctx.stroke();
+
+                // Wave 2: Displacement Tracker (Amber)
+                ctx.strokeStyle = '#f59e0b';
+                ctx.lineWidth = 1.5;
+                ctx.beginPath();
+                for (let x = 0; x < canvas.width; x++) {
+                    const y = canvas.height / 2 + Math.cos((x + offset * 0.7) * 0.025) * 12;
+                    if (x === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+                }
+                ctx.stroke();
+
+                offset += 2;
+                requestAnimationFrame(drawScope);
+            }
+            drawScope();
+        }
+
+        // Real-time AR MediaPipe 21-Joint Hand Tracking Integration
+        let mpCamera = null;
+        let mpHands = null;
+        let isMediaPipeActive = false;
+        let lastPinchTime = 0;
+
+        function toggleMediaPipeWebcam() {
+            if (isMediaPipeActive) {
+                stopMediaPipeWebcam();
+            } else {
+                startMediaPipeWebcam();
+            }
+        }
+
+        async function startMediaPipeWebcam() {
+            const video = document.getElementById('mpVideo');
+            const canvas = document.getElementById('mpCanvas');
+            const svgSkeleton = document.getElementById('mpSkeletonSvg');
+            const badge = document.getElementById('mediapipeBadge');
+            const btnText = document.getElementById('btnMediaPipeText');
+
+            if (!video || !canvas) return;
+
+            try {
+                if (badge) {
+                    badge.textContent = 'CONNECTING...';
+                    badge.className = 'px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-400 text-[10px] font-bold animate-pulse';
+                }
+
+                if (typeof Hands === 'undefined') {
+                    alert('MediaPipe Hands library กำลังโหลด กรุณารอสักครู่แล้วลองใหม่อีกครั้ง');
+                    if (badge) {
+                        badge.textContent = 'READY';
+                        badge.className = 'px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-400 text-[10px] font-bold';
+                    }
+                    return;
+                }
+
+                if (!mpHands) {
+                    mpHands = new Hands({
+                        locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4/${file}`
+                    });
+
+                    mpHands.setOptions({
+                        maxNumHands: 2,
+                        modelComplexity: 1,
+                        minDetectionConfidence: 0.5,
+                        minTrackingConfidence: 0.5
+                    });
+
+                    mpHands.onResults((results) => {
+                        drawMediaPipeHands(results);
+                    });
+                }
+
+                video.classList.remove('hidden');
+                canvas.classList.remove('hidden');
+                if (svgSkeleton) svgSkeleton.classList.add('hidden');
+
+                if (!mpCamera) {
+                    mpCamera = new Camera(video, {
+                        onFrame: async () => {
+                            if (isMediaPipeActive && mpHands) {
+                                await mpHands.send({ image: video });
+                            }
+                        },
+                        width: 640,
+                        height: 480
+                    });
+                }
+
+                await mpCamera.start();
+                isMediaPipeActive = true;
+
+                if (badge) {
+                    badge.textContent = 'TRACKING 21-JOINTS';
+                    badge.className = 'px-2 py-0.5 rounded-md bg-emerald-500/20 text-emerald-400 text-[10px] font-bold';
+                }
+                if (btnText) {
+                    btnText.textContent = 'ปิดกล้องตรวจจับมือ (Stop Webcam)';
+                }
+
+                playSynthSound(660, 'sine', 0.15);
+            } catch (err) {
+                console.error('MediaPipe Camera Error:', err);
+                alert('ไม่สามารถเปิดกล้องได้: ' + (err.message || 'โปรดอนุญาตให้เว็บบราวเซอร์เข้าถึงกล้อง (Webcam Permission)'));
+                stopMediaPipeWebcam();
+            }
+        }
+
+        function stopMediaPipeWebcam() {
+            const video = document.getElementById('mpVideo');
+            const canvas = document.getElementById('mpCanvas');
+            const svgSkeleton = document.getElementById('mpSkeletonSvg');
+            const badge = document.getElementById('mediapipeBadge');
+            const btnText = document.getElementById('btnMediaPipeText');
+
+            isMediaPipeActive = false;
+            if (mpCamera && mpCamera.stop) {
+                try { mpCamera.stop(); } catch (e) {}
+            }
+
+            if (video && video.srcObject) {
+                try {
+                    const tracks = video.srcObject.getTracks();
+                    tracks.forEach(t => t.stop());
+                    video.srcObject = null;
+                } catch (e) {}
+            }
+
+            if (video) video.classList.add('hidden');
+            if (canvas) {
+                canvas.classList.add('hidden');
+                const ctx = canvas.getContext('2d');
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+            }
+            if (svgSkeleton) svgSkeleton.classList.remove('hidden');
+
+            if (badge) {
+                badge.textContent = 'STANDBY';
+                badge.className = 'px-2 py-0.5 rounded-md bg-slate-700 text-slate-300 text-[10px] font-bold';
+            }
+            if (btnText) {
+                btnText.textContent = 'เปิดกล้องตรวจจับมือจริง (MediaPipe Webcam)';
+            }
+
+            playSynthSound(440, 'triangle', 0.1);
+        }
+
+        function drawMediaPipeHands(results) {
+            const canvas = document.getElementById('mpCanvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            canvas.width = canvas.clientWidth || 320;
+            canvas.height = canvas.clientHeight || 240;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            if (!results.multiHandLandmarks || results.multiHandLandmarks.length === 0) {
+                return;
+            }
+
+            const w = canvas.width;
+            const h = canvas.height;
+
+            const connections = [
+                [0,1],[1,2],[2,3],[3,4],
+                [0,5],[5,6],[6,7],[7,8],
+                [0,9],[9,10],[10,11],[11,12],
+                [0,13],[13,14],[14,15],[15,16],
+                [0,17],[17,18],[18,19],[19,20],
+                [5,9],[9,13],[13,17]
+            ];
+
+            for (let hIdx = 0; hIdx < results.multiHandLandmarks.length; hIdx++) {
+                const landmarks = results.multiHandLandmarks[hIdx];
+                const pts = landmarks.map(lm => ({ x: lm.x * w, y: lm.y * h }));
+
+                // Draw connections
+                ctx.strokeStyle = '#00f0ff';
+                ctx.lineWidth = 2;
+                for (let conn of connections) {
+                    const [i, j] = conn;
+                    if (pts[i] && pts[j]) {
+                        ctx.beginPath();
+                        ctx.moveTo(pts[i].x, pts[i].y);
+                        ctx.lineTo(pts[j].x, pts[j].y);
+                        ctx.stroke();
+                    }
+                }
+
+                // Draw joints
+                pts.forEach((p, i) => {
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, (i === 4 || i === 8 || i === 12) ? 4.5 : 3, 0, 2 * Math.PI);
+                    ctx.fillStyle = (i === 4 || i === 8) ? '#facc15' : '#00f0ff';
+                    ctx.fill();
+                });
+
+                // Compute hand tilt angle from wrist (0) to middle mcp (9)
+                if (pts[0] && pts[9]) {
+                    const dx = pts[9].x - pts[0].x;
+                    const dy = pts[9].y - pts[0].y;
+                    let angleDeg = Math.atan2(dy, dx) * 180 / Math.PI;
+                    let tiltDeg = (angleDeg + 90);
+                    if (tiltDeg > 180) tiltDeg -= 360;
+                    const tiltText = document.getElementById('handTiltText');
+                    if (tiltText) {
+                        tiltText.textContent = (tiltDeg >= 0 ? '+' : '') + tiltDeg.toFixed(1) + '°';
+                    }
+
+                    // Sync with Three.js 3D Apparatus Barrel Rotation
+                    if (labApparatus) {
+                        const targetRotZ = (tiltDeg * Math.PI / 180) * 0.5;
+                        labApparatus.rotation.z += (targetRotZ - labApparatus.rotation.z) * 0.15;
+                    }
+                }
+
+                // Pinch Detection (Thumb tip 4 vs Index tip 8) to trigger Laser Cannon
+                if (pts[4] && pts[8]) {
+                    const dist = Math.hypot(pts[4].x - pts[8].x, pts[4].y - pts[8].y);
+                    if (dist < 28) {
+                        const now = Date.now();
+                        if (now - lastPinchTime > 450) {
+                            lastPinchTime = now;
+                            playSynthSound(920, 'sine', 0.18);
+                            const tiltText = document.getElementById('handTiltText');
+                            if (tiltText) tiltText.textContent = '⚡ PINCH FIRE!';
+                        }
+                    }
+                }
+            }
+        }
+
+        // Smart Mobile Bottom Nav Handler & ScrollSpy
+        function handleMobileNavClick(sectionId) {
+            if (window.playDigitalChime) playDigitalChime('tap');
+            updateMobileNavActive(sectionId);
+        }
+
+        function updateMobileNavActive(activeId) {
+            const tabs = {
+                'home': { id: 'mTabHome', ring: 'ring-brand-500/50', text: 'text-brand-600 dark:text-cyan-400' },
+                'courseware': { id: 'mTabCourseware', ring: 'ring-indigo-500/50', text: 'text-indigo-600 dark:text-indigo-400' },
+                'ar-lab': { id: 'mTabArLab', ring: 'ring-cyan-500/50', text: 'text-cyan-600 dark:text-cyan-400' },
+                'assessments': { id: 'mTabAssessments', ring: 'ring-emerald-500/50', text: 'text-emerald-600 dark:text-emerald-400' },
+                'labs-library': { id: 'mTabLabs', ring: 'ring-amber-500/50', text: 'text-amber-600 dark:text-amber-400' }
+            };
+
+            Object.keys(tabs).forEach(key => {
+                const tabEl = document.getElementById(tabs[key].id);
+                if (!tabEl) return;
+                const iconDiv = tabEl.querySelector('div');
+                const textSpan = tabEl.querySelector('span:not(.m-nav-dot):not(.flex):not(.animate-ping)');
+                const dotSpan = tabEl.querySelector('.m-nav-dot');
+
+                if (key === activeId) {
+                    if (iconDiv) {
+                        iconDiv.classList.add('ring-2', tabs[key].ring, 'scale-105');
+                        iconDiv.classList.remove('opacity-85');
+                    }
+                    if (textSpan) {
+                        textSpan.className = `text-[10px] font-bold ${tabs[key].text} mt-1 tracking-tight font-heading`;
+                    }
+                    if (dotSpan) dotSpan.classList.replace('opacity-0', 'opacity-100');
+                } else {
+                    if (iconDiv) {
+                        iconDiv.classList.remove('ring-2', tabs[key].ring, 'scale-105');
+                        iconDiv.classList.add('opacity-85');
+                    }
+                    if (textSpan) {
+                        textSpan.className = 'text-[10px] font-semibold text-slate-600 dark:text-slate-400 mt-1 tracking-tight font-heading';
+                    }
+                    if (dotSpan) dotSpan.classList.replace('opacity-100', 'opacity-0');
+                }
+            });
+        }
+
+        function initMobileNavScrollSpy() {
+            const sections = [
+                { id: 'home', el: document.getElementById('home') },
+                { id: 'courseware', el: document.getElementById('courseware') },
+                { id: 'ar-lab', el: document.getElementById('ar-lab') },
+                { id: 'assessments', el: document.getElementById('assessments') },
+                { id: 'labs-library', el: document.getElementById('labs-library') }
+            ];
+
+            window.addEventListener('scroll', () => {
+                const scrollPos = window.scrollY + 220;
+                for (let i = sections.length - 1; i >= 0; i--) {
+                    const sec = sections[i];
+                    if (sec.el && sec.el.offsetTop <= scrollPos) {
+                        updateMobileNavActive(sec.id);
+                        break;
+                    }
+                }
+            }, { passive: true });
+        }
+
+        // Initialize 3D Lab and Canvas on DOM Ready
+        document.addEventListener('DOMContentLoaded', () => {
+            initThreeJSLab();
+            initLiveOscilloscope();
+            initMobileNavScrollSpy();
+        });
+    </script>
+
+    <!-- Autonomous Agentic AI Mascot & Voice Assistant ("น้อง LEQs AI") -->
+    <script src="assets/js/ai-agent.js"></script>
+</body>
+</html>

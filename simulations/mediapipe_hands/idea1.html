@@ -1,0 +1,919 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quantum Wave Interference – เปิดงานไซไฟ</title>
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- MediaPipe -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils@0.3/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils@0.3/drawing_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4/hands.js" crossorigin="anonymous"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&display=swap');
+
+        body {
+            font-family: 'Orbitron', 'Sarabun', sans-serif;
+            background: #05080f;
+            color: #fff;
+            overflow: hidden;
+            height: 100vh;
+            user-select: none;
+        }
+
+        #container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background: #05080f;
+            overflow: hidden;
+        }
+
+        video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            opacity: 0.3;
+            filter: blur(3px) brightness(0.4);
+        }
+        #mediapipe-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+        }
+        #three-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* HUD – Quantum Style */
+        #hud {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 10;
+            background: rgba(0, 10, 30, 0.7);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(100, 0, 255, 0.3);
+            border-radius: 12px;
+            padding: 14px 20px;
+            min-width: 220px;
+            font-family: 'Orbitron', monospace;
+            box-shadow: 0 0 40px rgba(100, 0, 255, 0.15);
+        }
+        #hud .title {
+            font-size: 0.75rem;
+            color: #aa66ff;
+            font-weight: 700;
+            border-bottom: 1px solid rgba(100, 0, 255, 0.2);
+            padding-bottom: 6px;
+            margin-bottom: 6px;
+            letter-spacing: 3px;
+        }
+        #hud .line {
+            font-size: 0.65rem;
+            color: rgba(150, 100, 255, 0.7);
+            display: flex;
+            justify-content: space-between;
+            padding: 2px 0;
+        }
+        #hud .line .val {
+            color: #aa88ff;
+            font-weight: 600;
+        }
+        .blink { animation: blinkHUD 1.2s infinite; }
+        @keyframes blinkHUD { 0%,100%{opacity:1;} 50%{opacity:0.2;} }
+
+        /* Status Bar */
+        #status-bar {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            background: rgba(0, 10, 30, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(100, 0, 255, 0.2);
+            border-radius: 40px;
+            padding: 10px 28px;
+            font-family: 'Orbitron', monospace;
+            font-size: 0.75rem;
+            color: rgba(150, 100, 255, 0.8);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 8px; }
+        .dot.green { background: #88ffaa; box-shadow: 0 0 20px #88ffaa; }
+        .dot.yellow { background: #ffcc00; box-shadow: 0 0 20px #ffcc00; }
+        .dot.purple { background: #aa66ff; box-shadow: 0 0 20px #aa66ff; animation: pulse 0.8s infinite alternate; }
+        @keyframes pulse { 0% { transform: scale(1); } 100% { transform: scale(1.3); } }
+
+        /* Title Overlay – Quantum Collapse */
+        #title-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 20;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            pointer-events: none;
+            background: rgba(0,0,0,0.1);
+        }
+        #title-overlay.show {
+            display: flex;
+            animation: collapseIn 1.8s cubic-bezier(0.2, 0.9, 0.3, 1.2) forwards;
+        }
+        @keyframes collapseIn {
+            0% { opacity: 0; transform: scale(0.3) rotateY(90deg); filter: blur(20px); }
+            60% { opacity: 1; transform: scale(1.1) rotateY(-5deg); filter: blur(0); }
+            100% { opacity: 1; transform: scale(1) rotateY(0); filter: blur(0); }
+        }
+        #title-overlay .main {
+            font-size: 4.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #aa66ff, #00ddff, #ff66aa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 80px rgba(170, 102, 255, 0.3);
+            letter-spacing: 6px;
+            text-align: center;
+            padding: 0 20px;
+        }
+        #title-overlay .sub {
+            font-size: 2.2rem;
+            color: #ffd700;
+            text-shadow: 0 0 40px rgba(255, 215, 0, 0.3);
+            margin-top: 10px;
+            letter-spacing: 8px;
+        }
+        #title-overlay .theme {
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.4);
+            margin-top: 16px;
+            letter-spacing: 4px;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            padding-top: 16px;
+        }
+        /* Quantum symbols floating */
+        #title-overlay .symbols {
+            position: absolute;
+            font-size: 2rem;
+            color: rgba(170, 102, 255, 0.1);
+            letter-spacing: 20px;
+            bottom: 60px;
+        }
+
+        @media (max-width: 900px) {
+            #title-overlay .main { font-size: 2.5rem; }
+            #title-overlay .sub { font-size: 1.4rem; }
+            #hud { font-size: 0.5rem; padding: 8px 12px; min-width: 140px; top: 12px; left: 12px; }
+            #status-bar { font-size: 0.55rem; padding: 6px 14px; gap: 10px; bottom: 15px; }
+        }
+        @media (max-width: 500px) {
+            #title-overlay .main { font-size: 1.6rem; }
+            #title-overlay .sub { font-size: 1rem; }
+            #hud { display: none; }
+            #status-bar { font-size: 0.45rem; padding: 4px 10px; }
+        }
+    </style>
+</head>
+<body>
+<div id="container">
+    <video id="video" autoplay playsinline></video>
+    <canvas id="mediapipe-canvas"></canvas>
+    <canvas id="three-canvas"></canvas>
+
+    <!-- HUD – Quantum Style -->
+    <div id="hud">
+        <div class="title">⟡ QUANTUM STATE</div>
+        <div class="line"><span>WAVE FUNCTION</span><span class="val" id="waveState">Ψ</span></div>
+        <div class="line"><span>AMPLITUDE</span><span class="val" id="amplitude">—</span></div>
+        <div class="line"><span>ENTROPY</span><span class="val" id="entropy">—</span></div>
+        <div class="line"><span>STATUS</span><span class="val blink" id="sysStatus">🟢 READY</span></div>
+    </div>
+
+    <!-- Status Bar -->
+    <div id="status-bar">
+        <span><span class="dot green" id="statusDot"></span><span id="statusText">ระบบพร้อม</span></span>
+        <span>|</span>
+        <span>👆 <span id="fingerStatus">รอมือ</span></span>
+        <span>|</span>
+        <span>🎯 <span id="buttonStatus">รอเปิดงาน</span></span>
+    </div>
+
+    <!-- Title Overlay -->
+    <div id="title-overlay">
+        <div class="main">⚛ SCIENCE WEEK 2026</div>
+        <div class="sub">QUANTUM GENESIS</div>
+        <div class="theme">✦ INTELLIGENCE SCIENCE FOR A SUSTAINABLE FUTURE ✦</div>
+        <div class="symbols">Ψ ⊕ ⊗ ⚛ ∞</div>
+    </div>
+</div>
+
+<script>
+    (function() {
+        // ========================================================================
+        // DOM REFS
+        // ========================================================================
+        const video = document.getElementById('video');
+        const mpCanvas = document.getElementById('mediapipe-canvas');
+        const mpCtx = mpCanvas.getContext('2d');
+        const threeCanvas = document.getElementById('three-canvas');
+        const titleOverlay = document.getElementById('title-overlay');
+        const statusText = document.getElementById('statusText');
+        const statusDot = document.getElementById('statusDot');
+        const fingerStatus = document.getElementById('fingerStatus');
+        const buttonStatus = document.getElementById('buttonStatus');
+        const waveState = document.getElementById('waveState');
+        const amplitudeDisplay = document.getElementById('amplitude');
+        const entropyDisplay = document.getElementById('entropy');
+        const sysStatus = document.getElementById('sysStatus');
+
+        // ========================================================================
+        // STATE
+        // ========================================================================
+        let isCeremonyActive = false;
+        let isIdle = true;
+        let handLandmarks = null;
+        let ceremonyStep = 0;
+
+        // Quantum wave parameters
+        let waveAmplitude = 0;
+        let waveEntropy = 0;
+        let waveTime = 0;
+        let waveCollapsed = false;
+
+        // ========================================================================
+        // AUDIO – Quantum Sound (Layered)
+        // ========================================================================
+        let audioCtx = null;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            return audioCtx;
+        }
+
+        function playQuantumSound() {
+            const ctx = initAudio();
+            const now = ctx.currentTime;
+
+            // Layer 1: Pure sine wave (like quantum oscillator)
+            const osc1 = ctx.createOscillator();
+            const gain1 = ctx.createGain();
+            osc1.type = 'sine';
+            osc1.frequency.setValueAtTime(200, now);
+            osc1.frequency.exponentialRampToValueAtTime(800, now + 1.5);
+            gain1.gain.setValueAtTime(0.01, now);
+            gain1.gain.linearRampToValueAtTime(0.2, now + 0.8);
+            gain1.gain.exponentialRampToValueAtTime(0.01, now + 2.0);
+            osc1.connect(gain1);
+            gain1.connect(ctx.destination);
+            osc1.start(now);
+            osc1.stop(now + 2.2);
+
+            // Layer 2: Modulated wave (interference)
+            const osc2 = ctx.createOscillator();
+            const gain2 = ctx.createGain();
+            osc2.type = 'sine';
+            osc2.frequency.setValueAtTime(300, now);
+            osc2.frequency.exponentialRampToValueAtTime(500, now + 1.2);
+            // Add vibrato
+            const lfo = ctx.createOscillator();
+            const lfoGain = ctx.createGain();
+            lfo.frequency.value = 12;
+            lfoGain.gain.value = 80;
+            lfo.connect(lfoGain);
+            lfoGain.connect(osc2.frequency);
+            lfo.start(now);
+            lfo.stop(now + 2.0);
+
+            gain2.gain.setValueAtTime(0.01, now);
+            gain2.gain.linearRampToValueAtTime(0.15, now + 0.6);
+            gain2.gain.exponentialRampToValueAtTime(0.01, now + 1.8);
+            osc2.connect(gain2);
+            gain2.connect(ctx.destination);
+            osc2.start(now);
+            osc2.stop(now + 2.0);
+
+            // Layer 3: Impact (collapse)
+            const osc3 = ctx.createOscillator();
+            const gain3 = ctx.createGain();
+            osc3.type = 'square';
+            osc3.frequency.setValueAtTime(100, now + 1.5);
+            osc3.frequency.exponentialRampToValueAtTime(40, now + 2.2);
+            gain3.gain.setValueAtTime(0.01, now + 1.5);
+            gain3.gain.linearRampToValueAtTime(0.4, now + 1.8);
+            gain3.gain.exponentialRampToValueAtTime(0.01, now + 2.8);
+            osc3.connect(gain3);
+            gain3.connect(ctx.destination);
+            osc3.start(now + 1.5);
+            osc3.stop(now + 3.0);
+        }
+
+        // ========================================================================
+        // THREE.JS – QUANTUM WAVE SHADER (via Canvas 2D for simplicity + Three.js for particles)
+        // ========================================================================
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x05080f);
+
+        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
+        camera.position.set(0, 0, 6);
+        camera.lookAt(0, 0, 0);
+
+        const renderer = new THREE.WebGLRenderer({
+            canvas: threeCanvas,
+            alpha: false,
+            antialias: true
+        });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+        // ========================================================================
+        // 1. BACKGROUND: Quantum Field (particles)
+        // ========================================================================
+        const fieldCount = 800;
+        const fieldGeo = new THREE.BufferGeometry();
+        const fieldPos = new Float32Array(fieldCount * 3);
+        const fieldColors = new Float32Array(fieldCount * 3);
+        const fieldData = [];
+
+        for (let i = 0; i < fieldCount; i++) {
+            fieldPos[i*3] = (Math.random() - 0.5) * 20;
+            fieldPos[i*3+1] = (Math.random() - 0.5) * 14;
+            fieldPos[i*3+2] = (Math.random() - 0.5) * 10 - 5;
+            const hue = 0.6 + Math.random() * 0.2;
+            const col = new THREE.Color().setHSL(hue, 0.8, 0.2 + Math.random() * 0.3);
+            fieldColors[i*3] = col.r;
+            fieldColors[i*3+1] = col.g;
+            fieldColors[i*3+2] = col.b;
+            fieldData.push({
+                phase: Math.random() * Math.PI * 2,
+                speed: 0.2 + Math.random() * 0.5,
+                amp: 0.1 + Math.random() * 0.3
+            });
+        }
+        fieldGeo.setAttribute('position', new THREE.BufferAttribute(fieldPos, 3));
+        fieldGeo.setAttribute('color', new THREE.BufferAttribute(fieldColors, 3));
+
+        const fieldMat = new THREE.PointsMaterial({
+            size: 0.04,
+            vertexColors: true,
+            transparent: true,
+            opacity: 0.6,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false
+        });
+        const field = new THREE.Points(fieldGeo, fieldMat);
+        scene.add(field);
+
+        // ========================================================================
+        // 2. QUANTUM WAVES (Ring particles that expand and interfere)
+        // ========================================================================
+        const waveParticles = [];
+        const waveGroup = new THREE.Group();
+        scene.add(waveGroup);
+
+        // We'll use multiple expanding rings
+        const ringParticles = [];
+        for (let r = 0; r < 6; r++) {
+            const count = 60 + Math.floor(Math.random() * 40);
+            const geo = new THREE.BufferGeometry();
+            const positions = new Float32Array(count * 3);
+            const colors = new Float32Array(count * 3);
+            const sizes = new Float32Array(count);
+            const hue = 0.65 + r * 0.04;
+            const col = new THREE.Color().setHSL(hue, 0.9, 0.5);
+
+            for (let i = 0; i < count; i++) {
+                const angle = (i / count) * Math.PI * 2;
+                const radius = 0.1 + r * 0.15;
+                positions[i*3] = radius * Math.cos(angle);
+                positions[i*3+1] = radius * Math.sin(angle) * 0.3; // flatten
+                positions[i*3+2] = (Math.random() - 0.5) * 0.1;
+                colors[i*3] = col.r;
+                colors[i*3+1] = col.g;
+                colors[i*3+2] = col.b;
+                sizes[i] = 0.02 + Math.random() * 0.04;
+            }
+            geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geo.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+            geo.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+
+            const mat = new THREE.PointsMaterial({
+                size: 0.05,
+                vertexColors: true,
+                transparent: true,
+                opacity: 0,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false
+            });
+            const points = new THREE.Points(geo, mat);
+            points.visible = false;
+            waveGroup.add(points);
+            ringParticles.push({
+                mesh: points,
+                radius: 0.1 + r * 0.15,
+                speed: 0.5 + r * 0.08,
+                phase: r * 0.5,
+                active: false,
+                progress: 0,
+                maxRadius: 2.5 + Math.random() * 1.5
+            });
+        }
+
+        // ========================================================================
+        // 3. COLLAPSE PARTICLES (for wavefunction collapse effect)
+        // ========================================================================
+        const collapseGroup = new THREE.Group();
+        scene.add(collapseGroup);
+
+        const collapseCount = 300;
+        const collapseGeo = new THREE.BufferGeometry();
+        const collapsePos = new Float32Array(collapseCount * 3);
+        const collapseColors = new Float32Array(collapseCount * 3);
+        const collapseData = [];
+
+        for (let i = 0; i < collapseCount; i++) {
+            collapsePos[i*3] = (Math.random() - 0.5) * 4;
+            collapsePos[i*3+1] = (Math.random() - 0.5) * 3;
+            collapsePos[i*3+2] = (Math.random() - 0.5) * 2;
+            const col = new THREE.Color().setHSL(0.7 + Math.random()*0.2, 0.9, 0.5 + Math.random()*0.4);
+            collapseColors[i*3] = col.r;
+            collapseColors[i*3+1] = col.g;
+            collapseColors[i*3+2] = col.b;
+            collapseData.push({
+                vx: (Math.random() - 0.5) * 0.01,
+                vy: (Math.random() - 0.5) * 0.01,
+                vz: (Math.random() - 0.5) * 0.01,
+                life: Math.random()
+            });
+        }
+        collapseGeo.setAttribute('position', new THREE.BufferAttribute(collapsePos, 3));
+        collapseGeo.setAttribute('color', new THREE.BufferAttribute(collapseColors, 3));
+
+        const collapseMat = new THREE.PointsMaterial({
+            size: 0.06,
+            vertexColors: true,
+            transparent: true,
+            opacity: 0,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false
+        });
+        const collapsePoints = new THREE.Points(collapseGeo, collapseMat);
+        collapsePoints.visible = false;
+        collapseGroup.add(collapsePoints);
+
+        // ========================================================================
+        // QUANTUM WAVE FUNCTIONS
+        // ========================================================================
+        let waveStartTime = 0;
+        let activeRings = [];
+
+        function startQuantumWaves() {
+            waveStartTime = performance.now();
+            activeRings = [];
+            // Activate rings with delay
+            ringParticles.forEach((ring, idx) => {
+                setTimeout(() => {
+                    ring.active = true;
+                    ring.progress = 0;
+                    ring.mesh.visible = true;
+                    ring.mesh.material.opacity = 0.8;
+                    activeRings.push(ring);
+                }, idx * 200);
+            });
+
+            // Update HUD
+            waveState.textContent = 'Ψ(t)';
+            sysStatus.textContent = '🔶 WAVES';
+            statusDot.className = 'dot purple';
+            statusText.textContent = '🌊 คลื่นควอนตัมกำลังแพร่กระจาย...';
+        }
+
+        function updateQuantumWaves(time) {
+            const elapsed = (time - waveStartTime) / 1000;
+
+            // Update each ring
+            let allDone = true;
+            activeRings.forEach((ring) => {
+                if (!ring.active) return;
+                ring.progress += 0.008 * ring.speed;
+                const radius = ring.radius + ring.progress * ring.maxRadius;
+
+                if (ring.progress > 1) {
+                    ring.mesh.visible = false;
+                    ring.active = false;
+                    return;
+                }
+                allDone = false;
+
+                // Update positions
+                const positions = ring.mesh.geometry.attributes.position.array;
+                const count = positions.length / 3;
+                const phaseOffset = ring.phase + time * 0.001;
+                for (let i = 0; i < count; i++) {
+                    const angle = (i / count) * Math.PI * 2 + phaseOffset;
+                    const x = radius * Math.cos(angle);
+                    const y = radius * Math.sin(angle) * 0.3;
+                    const z = Math.sin(angle * 3 + time * 0.002) * 0.05;
+                    positions[i*3] = x;
+                    positions[i*3+1] = y;
+                    positions[i*3+2] = z;
+                }
+                ring.mesh.geometry.attributes.position.needsUpdate = true;
+
+                // Fade out
+                const fade = 1 - ring.progress;
+                ring.mesh.material.opacity = fade * 0.8;
+                ring.mesh.material.size = 0.03 + fade * 0.04;
+            });
+
+            // Calculate amplitude (based on number of active rings)
+            const activeCount = activeRings.filter(r => r.active).length;
+            waveAmplitude = activeCount / ringParticles.length;
+            amplitudeDisplay.textContent = (waveAmplitude * 100).toFixed(0) + '%';
+
+            // Entropy increases as waves spread
+            waveEntropy = Math.min(1, elapsed / 3.5);
+            entropyDisplay.textContent = (waveEntropy * 100).toFixed(0) + '%';
+
+            // Check for collapse condition: when all rings have finished or amplitude peaks
+            if (elapsed > 3.5 && !waveCollapsed) {
+                waveCollapsed = true;
+                performWaveCollapse();
+            }
+
+            return allDone;
+        }
+
+        // ========================================================================
+        // WAVEFUNCTION COLLAPSE
+        // ========================================================================
+        function performWaveCollapse() {
+            sysStatus.textContent = '⚛ COLLAPSING';
+            statusText.textContent = '⚛ ฟังก์ชันคลื่นกำลังยุบตัว...';
+            statusDot.className = 'dot yellow';
+
+            // Hide all waves
+            ringParticles.forEach(r => {
+                r.mesh.visible = false;
+                r.active = false;
+            });
+
+            // Show collapse particles
+            collapsePoints.visible = true;
+            collapsePoints.material.opacity = 1;
+
+            // Animate collapse particles outward
+            const pos = collapsePoints.geometry.attributes.position.array;
+            for (let i = 0; i < collapseCount; i++) {
+                const angle = Math.random() * Math.PI * 2;
+                const radius = 0.1 + Math.random() * 0.5;
+                const height = (Math.random() - 0.5) * 0.3;
+                pos[i*3] = radius * Math.cos(angle);
+                pos[i*3+1] = height;
+                pos[i*3+2] = radius * Math.sin(angle);
+                collapseData[i].life = 1;
+                collapseData[i].vx = (Math.random() - 0.5) * 0.05;
+                collapseData[i].vy = (Math.random() - 0.5) * 0.05 + 0.02;
+                collapseData[i].vz = (Math.random() - 0.5) * 0.05;
+            }
+            collapsePoints.geometry.attributes.position.needsUpdate = true;
+
+            // Animate collapse
+            let collapseFrame = 0;
+            const collapseInterval = setInterval(() => {
+                collapseFrame++;
+                const pos2 = collapsePoints.geometry.attributes.position.array;
+                let allDead = true;
+                for (let i = 0; i < collapseCount; i++) {
+                    collapseData[i].life -= 0.01;
+                    if (collapseData[i].life > 0) {
+                        allDead = false;
+                        pos2[i*3] += collapseData[i].vx;
+                        pos2[i*3+1] += collapseData[i].vy;
+                        pos2[i*3+2] += collapseData[i].vz;
+                        collapseData[i].vy += 0.001;
+                    } else {
+                        pos2[i*3] = 0;
+                        pos2[i*3+1] = -10;
+                        pos2[i*3+2] = 0;
+                    }
+                }
+                collapsePoints.geometry.attributes.position.needsUpdate = true;
+                collapsePoints.material.opacity = Math.max(0, 1 - collapseFrame / 60);
+
+                if (allDead || collapseFrame > 80) {
+                    clearInterval(collapseInterval);
+                    collapsePoints.visible = false;
+
+                    // Show title
+                    titleOverlay.classList.add('show');
+                    statusText.textContent = '🎉 เปิดงานสำเร็จ!';
+                    statusDot.className = 'dot green';
+                    sysStatus.textContent = '🟢 ONLINE';
+                    waveState.textContent = 'Ψ→φ';
+                    amplitudeDisplay.textContent = '100%';
+                    entropyDisplay.textContent = '0%';
+
+                    // Auto reset after 6s
+                    setTimeout(() => {
+                        titleOverlay.classList.remove('show');
+                        isCeremonyActive = false;
+                        isIdle = true;
+                        statusText.textContent = 'ระบบพร้อม';
+                        statusDot.className = 'dot green';
+                        sysStatus.textContent = '🟢 READY';
+                        waveState.textContent = 'Ψ';
+                        amplitudeDisplay.textContent = '—';
+                        entropyDisplay.textContent = '—';
+                        buttonStatus.textContent = 'รอเปิดงาน';
+                        waveCollapsed = false;
+                    }, 6000);
+                }
+            }, 20);
+        }
+
+        // ========================================================================
+        // START CEREMONY
+        // ========================================================================
+        function startCeremony() {
+            if (isCeremonyActive) return;
+            isCeremonyActive = true;
+            isIdle = false;
+            statusText.textContent = '⚛ กำลังสร้างคลื่นควอนตัม...';
+            statusDot.className = 'dot purple';
+            sysStatus.textContent = '🔶 ACTIVE';
+
+            // Sound
+            playQuantumSound();
+
+            // Reset wave state
+            waveCollapsed = false;
+            waveStartTime = performance.now();
+            startQuantumWaves();
+        }
+
+        // ========================================================================
+        // MEDIAPIPE HANDS
+        // ========================================================================
+        const hands = new Hands({
+            locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4/${file}`
+        });
+        hands.setOptions({
+            maxNumHands: 1,
+            modelComplexity: 1,
+            minDetectionConfidence: 0.5,
+            minTrackingConfidence: 0.5
+        });
+
+        hands.onResults((results) => {
+            const w = mpCanvas.width;
+            const h = mpCanvas.height;
+            mpCtx.clearRect(0, 0, w, h);
+
+            if (isIdle) drawQuantumButton(w, h);
+
+            if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
+                const landmarks = results.multiHandLandmarks[0];
+                handLandmarks = landmarks;
+                const pts = landmarks.map(lm => ({ x: lm.x * w, y: lm.y * h }));
+
+                // Draw hand (minimal)
+                const connections = [
+                    [0,1],[1,2],[2,3],[3,4],[0,5],[5,6],[6,7],[7,8],
+                    [0,9],[9,10],[10,11],[11,12],[0,13],[13,14],[14,15],[15,16],
+                    [0,17],[17,18],[18,19],[19,20],[5,9],[9,13],[13,17]
+                ];
+                mpCtx.strokeStyle = 'rgba(150, 100, 255, 0.4)';
+                mpCtx.lineWidth = 1.5;
+                for (let conn of connections) {
+                    const [i, j] = conn;
+                    if (i < pts.length && j < pts.length) {
+                        mpCtx.beginPath();
+                        mpCtx.moveTo(pts[i].x, pts[i].y);
+                        mpCtx.lineTo(pts[j].x, pts[j].y);
+                        mpCtx.stroke();
+                    }
+                }
+                pts.forEach((p, i) => {
+                    mpCtx.beginPath();
+                    mpCtx.arc(p.x, p.y, i===8?6:3, 0, 2*Math.PI);
+                    mpCtx.fillStyle = i===8 ? '#aa88ff' : '#8866cc';
+                    mpCtx.shadowColor = 'rgba(170, 136, 255, 0.4)';
+                    mpCtx.shadowBlur = 12;
+                    mpCtx.fill();
+                    mpCtx.shadowBlur = 0;
+                });
+
+                // Detect pinch
+                if (isIdle) {
+                    const indexTip = pts[8];
+                    const thumbTip = pts[4];
+                    if (indexTip && thumbTip) {
+                        const cx = w/2;
+                        const cy = h/2;
+                        const radius = Math.min(w,h) * 0.08;
+                        const dist = Math.hypot(indexTip.x - thumbTip.x, indexTip.y - thumbTip.y);
+                        const isPinch = dist < 30;
+                        const isOver = Math.hypot(indexTip.x - cx, indexTip.y - cy) < radius;
+                        if (isOver && isPinch) {
+                            buttonStatus.textContent = '⚛ เปิด!';
+                            fingerStatus.textContent = '👆 คลิก!';
+                            startCeremony();
+                        } else if (isOver) {
+                            buttonStatus.textContent = '🟣 แตะปุ่ม';
+                            fingerStatus.textContent = '✋ เหนือปุ่ม';
+                        } else {
+                            buttonStatus.textContent = 'รอเปิดงาน';
+                            fingerStatus.textContent = '🖐️ ชี้นิ้ว';
+                        }
+                    }
+                } else {
+                    fingerStatus.textContent = '⏳ กำลังเปิด...';
+                    buttonStatus.textContent = '⚛';
+                }
+                statusText.textContent = 'ตรวจจับมือ';
+                statusDot.className = 'dot green';
+            } else {
+                handLandmarks = null;
+                fingerStatus.textContent = '⏳ รอมือ';
+                if (isIdle) buttonStatus.textContent = 'รอเปิดงาน';
+                statusText.textContent = 'รอตรวจจับ...';
+                statusDot.className = 'dot yellow';
+            }
+        });
+
+        // ========================================================================
+        // DRAW QUANTUM BUTTON
+        // ========================================================================
+        function drawQuantumButton(w, h) {
+            const cx = w/2;
+            const cy = h/2;
+            const radius = Math.min(w,h) * 0.08;
+
+            // Quantum glow (interference pattern)
+            const grad = mpCtx.createRadialGradient(cx, cy, 0, cx, cy, radius * 2);
+            grad.addColorStop(0, 'rgba(170, 100, 255, 0.08)');
+            grad.addColorStop(0.5, 'rgba(100, 50, 200, 0.04)');
+            grad.addColorStop(1, 'rgba(0,0,0,0)');
+            mpCtx.beginPath();
+            mpCtx.arc(cx, cy, radius * 2, 0, 2*Math.PI);
+            mpCtx.fillStyle = grad;
+            mpCtx.fill();
+
+            // Interference rings (like double-slit)
+            for (let i = 1; i <= 5; i++) {
+                const r = radius * (0.3 + i * 0.15);
+                mpCtx.beginPath();
+                mpCtx.arc(cx, cy, r, 0, 2*Math.PI);
+                mpCtx.strokeStyle = `rgba(170, 100, 255, ${0.1 - i * 0.015})`;
+                mpCtx.lineWidth = 1;
+                mpCtx.setLineDash([4, 6]);
+                mpCtx.stroke();
+                mpCtx.setLineDash([]);
+            }
+
+            // Main button
+            const grad2 = mpCtx.createRadialGradient(cx-8, cy-8, 5, cx, cy, radius);
+            grad2.addColorStop(0, '#aa88ff');
+            grad2.addColorStop(0.5, '#7744cc');
+            grad2.addColorStop(1, '#332266');
+            mpCtx.shadowColor = 'rgba(170, 136, 255, 0.5)';
+            mpCtx.shadowBlur = 30;
+            mpCtx.beginPath();
+            mpCtx.arc(cx, cy, radius, 0, 2*Math.PI);
+            mpCtx.fillStyle = grad2;
+            mpCtx.fill();
+            mpCtx.shadowBlur = 0;
+            mpCtx.strokeStyle = 'rgba(170, 136, 255, 0.6)';
+            mpCtx.lineWidth = 2;
+            mpCtx.stroke();
+
+            // Symbol
+            mpCtx.fillStyle = '#fff';
+            mpCtx.font = `bold ${radius*0.35}px Orbitron, Sarabun`;
+            mpCtx.textAlign = 'center';
+            mpCtx.textBaseline = 'middle';
+            mpCtx.shadowColor = 'rgba(0,0,0,0.8)';
+            mpCtx.shadowBlur = 8;
+            mpCtx.fillText('Ψ', cx, cy - 2);
+            mpCtx.shadowBlur = 0;
+
+            // Sub text
+            mpCtx.fillStyle = 'rgba(170, 136, 255, 0.4)';
+            mpCtx.font = `${radius*0.14}px Orbitron, Sarabun`;
+            mpCtx.fillText('⌘ COLLAPSE WAVE', cx, cy + radius + 24);
+        }
+
+        // ========================================================================
+        // CAMERA
+        // ========================================================================
+        const cameraHelper = new Camera(video, {
+            onFrame: async () => {
+                await hands.send({ image: video });
+            },
+            width: 640,
+            height: 480
+        });
+        cameraHelper.start().then(() => {
+            statusText.textContent = 'กล้องพร้อม';
+            statusDot.className = 'dot green';
+        }).catch(err => {
+            statusText.textContent = '❌ ' + err.message;
+            statusDot.className = 'dot red';
+        });
+
+        // ========================================================================
+        // RESIZE
+        // ========================================================================
+        function resizeAll() {
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+            mpCanvas.width = w;
+            mpCanvas.height = h;
+            threeCanvas.width = w;
+            threeCanvas.height = h;
+            renderer.setSize(w, h);
+            camera.aspect = w / h;
+            camera.updateProjectionMatrix();
+        }
+        window.addEventListener('resize', resizeAll);
+
+        // ========================================================================
+        // ANIMATION LOOP
+        // ========================================================================
+        let lastTime = 0;
+
+        function animate(time) {
+            const delta = Math.min((time - lastTime) / 1000, 0.05);
+            lastTime = time;
+
+            // Update quantum waves if active
+            if (isCeremonyActive && !waveCollapsed) {
+                updateQuantumWaves(time);
+            }
+
+            // Animate background field
+            const pos = field.geometry.attributes.position.array;
+            for (let i = 0; i < fieldCount; i++) {
+                const data = fieldData[i];
+                pos[i*3+1] += Math.sin(time * 0.0005 + data.phase) * 0.001;
+                pos[i*3] += Math.cos(time * 0.0003 + data.phase * 2) * 0.001;
+            }
+            field.geometry.attributes.position.needsUpdate = true;
+
+            // Rotate field slowly
+            field.rotation.y += delta * 0.01;
+
+            renderer.render(scene, camera);
+            requestAnimationFrame(animate);
+        }
+        animate(0);
+
+        // ========================================================================
+        // EVENT LISTENERS
+        // ========================================================================
+        document.addEventListener('click', () => initAudio(), { once: true });
+
+        // Keyboard shortcut: press 'Q' to trigger quantum collapse
+        document.addEventListener('keydown', (e) => {
+            if ((e.key === 'q' || e.key === 'Q') && isIdle && !isCeremonyActive) {
+                startCeremony();
+            }
+        });
+
+        // Double-click on container for testing
+        document.getElementById('container').addEventListener('dblclick', () => {
+            if (isIdle && !isCeremonyActive) startCeremony();
+        });
+
+        setTimeout(resizeAll, 500);
+        setInterval(resizeAll, 3000);
+    })();
+</script>
+</body>
+</html>

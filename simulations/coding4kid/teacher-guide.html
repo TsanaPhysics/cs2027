@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="th" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Teacher's Guide | คู่มือวิทยากร - กิจกรรมหุ่นยนต์มนุษย์</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@400;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <style>
+        .guide-section { padding: 4rem 0; }
+        .tips-card { background: #fffbeb; border-left: 5px solid #f59e0b; padding: 1.5rem; border-radius: 8px; margin: 1rem 0; color: #92400e; }
+        .time-slot { display: flex; gap: 2rem; margin-bottom: 2rem; align-items: flex-start; }
+        .time-slot__clock { background: var(--clr-primary); color: white; padding: 0.5rem 1rem; border-radius: 8px; font-weight: 800; min-width: 100px; text-align: center; }
+        .room-layout { background: #f8fafc; border: 2px dashed #cbd5e1; border-radius: 20px; padding: 2rem; text-align: center; }
+    </style>
+</head>
+<body class="site">
+    <nav class="nav glass-nav">
+            <div class="container nav__container">
+                <a href="index.html" class="nav__logo">Game<span>Design</span>4Kids</a>
+                <ul class="nav__list" style="list-style: none; padding: 0; margin: 0; display: flex; gap: 2.5rem;">
+                    <li class="nav__item" style="list-style: none;">
+                        <a href="#" class="nav__link" style="text-decoration: none;"><span data-i18n="menu_physical">Physical Coding</span> <span class="nav__link-arrow">▼</span></a>
+                        <div class="nav__dropdown">
+                            <ul class="nav__dropdown-list" style="list-style: none; padding: 0; margin: 0;">
+                                <li style="list-style: none;"><a href="human-robot.html" class="nav__dropdown-link" data-i18n="menu_human_robot">👣 กิจกรรมสนาม (Human Robot)</a></li>
+                                <li style="list-style: none;"><a href="mission-maps.html" class="nav__dropdown-link" data-i18n="menu_maps">🗺️ แผนผังการจัดสนาม</a></li>
+                                <li style="list-style: none;"><a href="print-cards.html" class="nav__dropdown-link" data-i18n="menu_print">🖨️ พิมพ์บัตรคำสั่ง (PDF)</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="nav__item" style="list-style: none;">
+                        <a href="#" class="nav__link" style="text-decoration: none;"><span data-i18n="menu_digital">Digital Logic</span> <span class="nav__link-arrow">▼</span></a>
+                        <div class="nav__dropdown">
+                            <ul class="nav__dropdown-list" style="list-style: none; padding: 0; margin: 0;">
+                                <li style="list-style: none;"><a href="unplugged-sim.html" class="nav__dropdown-link" data-i18n="menu_logic_sim">🤖 Logic Simulation</a></li>
+                                <li style="list-style: none;"><a href="builder.html" class="nav__dropdown-link" data-i18n="menu_scratch_lab">🛠️ Scratch Code Lab</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="nav__item" style="list-style: none;">
+                        <a href="#" class="nav__link" style="color: var(--clr-accent); text-decoration: none;"><span data-i18n="menu_resources">Resource Hub</span> <span class="nav__link-arrow">▼</span></a>
+                        <div class="nav__dropdown">
+                            <ul class="nav__dropdown-list" style="list-style: none; padding: 0; margin: 0;">
+                                <li style="list-style: none;"><a href="teacher-guide.html" class="nav__dropdown-link" data-i18n="menu_guide">📘 คู่มือวิทยากร (Guide)</a></li>
+                                <li style="list-style: none;"><a href="manual.html" class="nav__dropdown-link" data-i18n="menu_manual">📄 คู่มือการสอน (Manual)</a></li>
+                                <li style="list-style: none;"><a href="slides.html" class="nav__dropdown-link" data-i18n="menu_slides">📊 สไลด์ประกอบการสอน</a></li>
+                            </ul>
+                        </div>
+                    </li>
+                </ul>
+                <div class="nav__actions">
+                    <button onclick="downloadTeacherGuide()" class="btn btn--small btn--primary">📄 ดาวน์โหลด PDF</button>
+                    <button class="btn btn--small btn--outline lang-toggle">TH / EN</button>
+                </div>
+            </div>
+    </nav>
+
+    <main class="container guide-section" style="margin-top: 4rem;">
+        <header class="section__header">
+            <h1 class="section__title">คู่มือวิทยากร: กิจกรรมหุ่นยนต์มนุษย์ (1.30 ชม.)</h1>
+            <p class="hero__lead">เป้าหมาย: สอนตรรกะพื้นฐาน ลำดับขั้นตอน และการแก้ปัญหา (Debugging)</p>
+        </header>
+
+        <section class="section">
+            <h2 style="color: var(--clr-primary);">🕒 การบริหารเวลา (Time Management)</h2>
+            <div class="time-slot">
+                <div class="time-slot__clock">15 นาที</div>
+                <div>
+                    <h3>ช่วงที่ 1: Introduction & Robot Logic</h3>
+                    <p>อธิบายว่าคอมพิวเตอร์คืออะไร และ "ทำไมมันถึงโง่" (ทำงานตามสั่งเท่านั้น) สาธิตการเป็นหุ่นยนต์ที่เดินชนกำแพงหากไม่มีคำสั่งหยุด</p>
+                </div>
+            </div>
+            <div class="time-slot">
+                <div class="time-slot__clock">15 นาที</div>
+                <div>
+                    <h3>ช่วงที่ 2: Training (ด่านฝึกหัด)</h3>
+                    <p>แบ่งกลุ่ม 4 คน ให้ลองใช้บัตรเบื้องต้น (เดินหน้า/เลี้ยว) เพื่อทำความเข้าใจบทบาท Robot และ Programmer</p>
+                </div>
+            </div>
+            <div class="time-slot">
+                <div class="time-slot__clock">45 นาที</div>
+                <div>
+                    <h3>ช่วงที่ 3: The Palace Quest (ภารกิจหลัก)</h3>
+                    <p>ใช้บัตรคำสั่งทั้งหมด (รวม Loop และเงื่อนไข) เพื่อผ่านด่านที่วิทยากรตั้งไว้ให้ซับซ้อนขึ้น</p>
+                </div>
+            </div>
+            <div class="time-slot">
+                <div class="time-slot__clock">15 นาที</div>
+                <div>
+                    <h3>ช่วงที่ 4: Summary & Reflection</h3>
+                    <p>ถอดบทเรียนเรื่อง "Bug" และ "Algorithm" และทำไมลำดับความคิดถึงสำคัญกว่าการลงมือพิมพ์โค้ด</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 style="color: var(--clr-primary);">🎮 ขั้นตอนการจัดกิจกรรมภาคสนาม (5 Steps Guide)</h2>
+            <div class="mission-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 1rem;">
+                <div class="guide-box">
+                    <h3>1. การเตรียมพื้นที่ (Setup)</h3>
+                    <p>ใช้เทปกาวสี (Masking Tape) ตีเส้นตารางขนาด 5x5 บนพื้นห้อง (ช่องละ 50x50 ซม.) วางก้อนหินและขุมทรัพย์ตามแผนที่</p>
+                </div>
+                <div class="guide-box">
+                    <h3>2. แบ่งบทบาท (Roles)</h3>
+                    <p>Programmer (วางแผน), Robot (เดินตามสั่ง), Checker (ตรวจสอบความถูกต้อง)</p>
+                </div>
+                <div class="guide-box">
+                    <h3>3. ช่วงวางแผน (Coding)</h3>
+                    <p>Programmer เรียงบัตรคำสั่งบนโต๊ะข้างสนามตามลำดับที่ต้องการ (ห้าม Robot ดูจนกว่าจะเสร็จ)</p>
+                </div>
+                <div class="guide-box">
+                    <h3>4. ช่วงรันโปรแกรม (Execution)</h3>
+                    <p>Programmer ชี้บัตรทีละใบและอ่านออกเสียง Robot เดินตามเป๊ะๆ ห้าม Programmer พูดแนะนำเพิ่ม</p>
+                </div>
+            </div>
+
+            <div class="tips-card" style="background: #eef2ff; border-color: #6366f1; color: #1e1b4b; margin-top: 2rem;">
+                <strong>⚠️ กติกาศักดิ์สิทธิ์:</strong>
+                <ul style="margin-top: 0.5rem;">
+                    <li><strong>Robot ห้ามคิดเอง:</strong> ต้องรอฟังคำสั่งจาก Programmer เท่านั้น</li>
+                    <li><strong>The BUG Call:</strong> หาก Robot เดินผิดขั้นตอน ให้ตะโกนว่า <strong>"BUG!"</strong> และต้องกลับไปจุด Start ใหม่</li>
+                    <li><strong>Silent Run:</strong> เมื่อเริ่มเดินแล้ว Programmer ห้ามพูดแก้ไข ต้องให้โปรแกรมรันจนจบ</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="section bg-alt" style="border-radius: 30px; padding: 3rem;">
+            <h2>🏠 การจัดห้องเรียน (Room Setup)</h2>
+            <div class="room-layout">
+                <p><strong>The 5x5 Grid:</strong> ใช้เทปกาวสี (Masking Tape) แปะที่พื้นเป็นตาราง 5x5 ช่อง</p>
+                <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; max-width: 300px; margin: 20px auto;">
+                    <div style="background: #fff; height: 50px; border: 1px solid #ccc;"></div>
+                    <div style="background: #fff; height: 50px; border: 1px solid #ccc;"></div>
+                    <div style="background: #fff; height: 50px; border: 1px solid #ccc;"></div>
+                    <div style="background: #fff; height: 50px; border: 1px solid #ccc;"></div>
+                    <div style="background: #ff7e67; height: 50px; border: 1px solid #ccc;">Goal</div>
+                    <!-- row 2 -->
+                    <div style="background: #fff; height: 50px; border: 1px solid #ccc;"></div>
+                    <div style="background: #333; height: 50px; border: 1px solid #ccc; color: white;">Rock</div>
+                    <div style="background: #fff; height: 50px; border: 1px solid #ccc;"></div>
+                    <div style="background: #fff; height: 50px; border: 1px solid #ccc;"></div>
+                    <div style="background: #fff; height: 50px; border: 1px solid #ccc;"></div>
+                    <!-- more rows... -->
+                </div>
+                <p style="margin-top: 1rem;">วาง "อุปสรรค" (หมอน, กล่อง) ไว้ตามจุดต่างๆ เพื่อให้นักเรียนต้องวางแผนอ้อม</p>
+            </div>
+        </section>
+
+        <section class="section bg-alt" style="border-radius: 30px; padding: 3rem;">
+            <h2>🎬 เครื่องมือช่วยสอน: โปรแกรมจำลอง (Interactive Sim)</h2>
+            <div class="room-layout">
+                <p>ก่อนเริ่มเล่นจริง วิทยากรสามารถใช้โปรแกรมจำลองเพื่อสาธิตวิธีการวางบัตรคำสั่งให้นักเรียนดูผ่านหน้าจอได้</p>
+                <div style="margin-top: 2rem; display: flex; gap: 1rem; justify-content: center;">
+                    <a href="unplugged-sim.html" class="btn btn--primary" target="_blank">🚀 เปิดโปรแกรมจำลอง (Logic Sim)</a>
+                    <a href="mission-maps.html" class="btn btn--outline" target="_blank">🗺️ ดูแผนผังการจัดสนาม (Mission Maps)</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2>🏆 เกณฑ์การให้คะแนน (Scoring Rubric)</h2>
+            <table class="schedule-table">
+                <thead>
+                    <tr>
+                        <th>หัวข้อการประเมิน</th>
+                        <th>ระดับคะแนน (1-5 ⭐)</th>
+                        <th>เกณฑ์การตัดสิน</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Algorithm Accuracy</strong></td>
+                        <td>⭐⭐⭐⭐⭐</td>
+                        <td>Robot เดินถึงจุดหมายได้ถูกต้องในรอบเดียว (No Bugs)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Debugging Skill</strong></td>
+                        <td>⭐⭐⭐⭐</td>
+                        <td>หากมีข้อผิดพลาด สามารถแก้ไข (Debug) และทำสำเร็จในรอบที่ 2</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Code Efficiency</strong></td>
+                        <td>⭐⭐⭐⭐⭐</td>
+                        <td>มีการใช้บัตร <strong>Loop</strong> เพื่อลดจำนวนบัตรคำสั่งที่ซ้ำซ้อน</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Role Performance</strong></td>
+                        <td>⭐⭐⭐⭐</td>
+                        <td>Robot ทำตามคำสั่งได้เป๊ะ และ Programmer สื่อสารด้วยบัตรเท่านั้น</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="tips-card" style="margin-top: 2rem;">
+                <strong>รางวัลพิเศษ (Master Programmer Award):</strong> 
+                มอบให้กลุ่มที่ใช้จำนวนบัตรน้อยที่สุด (Shortest Code) ในการผ่านด่านที่ยากที่สุด
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container text-center">
+            <p>© 2026 วิทย์ในวัง - สำหรับครูและวิทยากรเท่านั้น</p>
+        </div>
+    </footer>
+
+    <script>
+        function downloadTeacherGuide() {
+            const element = document.querySelector('main');
+            const opt = {
+                margin:       10,
+                filename:     'Teacher_Guide_Unplugged.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2 },
+                jsPDF:        { unit: 'mm', format: 'a4', orientation: 'portrait' }
+            };
+            
+            const btn = document.querySelector('button[onclick="downloadTeacherGuide()"]');
+            btn.innerText = '⏳ กำลังสร้าง...';
+            btn.disabled = true;
+
+            html2pdf().set(opt).from(element).save().then(() => {
+                btn.innerText = '📄 ดาวน์โหลด PDF';
+                btn.disabled = false;
+            });
+        }
+    </script>
+</body>
+</html>

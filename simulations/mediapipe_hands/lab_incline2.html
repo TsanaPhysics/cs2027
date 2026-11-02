@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ปฏิบัติการที่ 4 - สัมประสิทธิ์ความเสียดทาน (Interactive + ปรับมวลได้)</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        body {
+            background: #f4f7fb;
+            margin: 0;
+            padding: 20px;
+            color: #1a2a3a;
+        }
+        .container {
+            max-width: 1300px;
+            margin: 0 auto;
+        }
+        h1, h2, h3 {
+            color: #0b3b5c;
+        }
+        h1 {
+            text-align: center;
+            border-bottom: 3px solid #2a7faa;
+            padding-bottom: 10px;
+        }
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 25px;
+        }
+        .card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px 25px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.06);
+            margin-bottom: 25px;
+            border: 1px solid #e2edf7;
+        }
+        .card h2 {
+            margin-top: 0;
+            border-left: 5px solid #2a7faa;
+            padding-left: 15px;
+        }
+        canvas#simCanvas {
+            width: 100%;
+            height: auto;
+            background: #f0f8ff;
+            border-radius: 12px;
+            border: 1px solid #cbdae9;
+            display: block;
+            margin: 10px 0;
+        }
+        .slider-container {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+        .slider-container input[type="range"] {
+            flex: 1;
+            min-width: 150px;
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0;
+        }
+        .data-table th {
+            background: #e6f0fa;
+            color: #0b3b5c;
+            padding: 8px 5px;
+            border: 1px solid #bccfdf;
+        }
+        .data-table td {
+            padding: 6px 5px;
+            border: 1px solid #bccfdf;
+            text-align: center;
+        }
+        .data-table input {
+            width: 80px;
+            padding: 6px 4px;
+            border: 1px solid #a0bcd6;
+            border-radius: 6px;
+            text-align: center;
+            font-weight: 500;
+        }
+        .data-table input:focus {
+            outline: 2px solid #2a7faa;
+            border-color: transparent;
+        }
+        .result-box {
+            background: #e6f0fa;
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin-top: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: space-around;
+            border-left: 6px solid #1e6f96;
+        }
+        .result-item {
+            font-size: 1.1rem;
+        }
+        .result-item strong {
+            color: #003153;
+        }
+        .badge {
+            background: #1e6f96;
+            color: white;
+            padding: 4px 14px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .chart-container {
+            position: relative;
+            height: 300px;
+            margin-top: 15px;
+        }
+        .btn {
+            background: #1e6f96;
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 30px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            margin: 5px 5px 0 0;
+        }
+        .btn:hover {
+            background: #0b4a6b;
+            transform: scale(1.02);
+        }
+        .btn-outline {
+            background: transparent;
+            border: 2px solid #1e6f96;
+            color: #1e6f96;
+        }
+        .btn-outline:hover {
+            background: #1e6f96;
+            color: white;
+        }
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        @media (max-width: 800px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+        }
+        .unit-note {
+            font-size: 0.85rem;
+            color: #4e6a7e;
+        }
+        .mass-control {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 6px;
+        }
+        .mass-control label {
+            font-weight: 600;
+        }
+        .mass-control input[type="number"] {
+            width: 80px;
+            padding: 6px 8px;
+            border: 1px solid #a0bcd6;
+            border-radius: 6px;
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>🧪 ปฏิบัติการที่ 4: สัมประสิทธิ์ความเสียดทาน</h1>
+    <p style="text-align:center; margin-top:-10px; color:#2f5575;">จำลองการทดลองและวิเคราะห์ข้อมูลแบบ Real-time (ปรับมวลได้)</p>
+
+    <!-- ส่วนที่ 1: พื้นเอียง -->
+    <div class="card">
+        <h2>📐 ตอนที่ 1: พื้นเอียง (Inclined Plane)</h2>
+        <div class="grid-2">
+            <div>
+                <canvas id="simCanvas" width="450" height="280"></canvas>
+                <div class="slider-container">
+                    <span style="font-weight:600;">มุม θ:</span>
+                    <input type="range" id="angleSlider" min="0" max="60" value="25" step="0.5">
+                    <span id="angleDisplay" style="font-weight:700; min-width:60px;">25.0°</span>
+                </div>
+                <div class="mass-control">
+                    <label>🧊 มวลก้อน (kg):</label>
+                    <input type="number" id="massInput" value="0.50" step="0.01" min="0.01" max="2.00">
+                </div>
+                <div style="display:flex; gap:15px; flex-wrap:wrap; margin-top:8px;">
+                    <span>⬇️ <span id="forceDisplay">2.07</span> N (mg sinθ)</span>
+                    <span>⬆️ <span id="normalDisplay">4.44</span> N (mg cosθ)</span>
+                </div>
+                <div style="margin-top:10px;">
+                    <button class="btn" onclick="recordAngle()">📝 บันทึกมุมนี้ (ครั้ง)</button>
+                    <button class="btn btn-outline" onclick="clearAngles()">↺ ล้างข้อมูล</button>
+                </div>
+                <div style="margin-top:8px;">
+                    <span class="badge">มุมที่บันทึก: </span>
+                    <span id="angleList">(ยังไม่มี)</span>
+                </div>
+            </div>
+            <div>
+                <h3 style="margin-top:0;">📊 ผลการทดลองตอนที่ 1</h3>
+                <table class="data-table">
+                    <tr><th>ครั้งที่</th><th>มุม θ (องศา)</th><th>tan θ</th></tr>
+                    <tr><td>1</td><td id="t1_angle">-</td><td id="t1_tan">-</td></tr>
+                    <tr><td>2</td><td id="t2_angle">-</td><td id="t2_tan">-</td></tr>
+                    <tr><td>3</td><td id="t3_angle">-</td><td id="t3_tan">-</td></tr>
+                </table>
+                <div class="result-box">
+                    <div class="result-item"><strong>θ<sub>เฉลี่ย</sub></strong> = <span id="avgAngle">0.00</span>°</div>
+                    <div class="result-item"><strong>μ<sub>1</sub> (tan θ)</strong> = <span id="mu1Value">0.000</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ส่วนที่ 2: พื้นราบ + รอก -->
+    <div class="card">
+        <h2>⚙️ ตอนที่ 2: พื้นราบพร้อมรอก (Horizontal + Pulley)</h2>
+        <div class="grid-2">
+            <div>
+                <canvas id="simCanvas2" width="450" height="220"></canvas>
+                <p class="unit-note">👆 ป้อนข้อมูลมวล <strong>w₁</strong> (ก้อนบนพื้น) และ <strong>w₂</strong> (น้ำหนักถ่วง) ลงในตารางด้านขวา</p>
+                <div class="result-box" style="justify-content:flex-start; gap:25px;">
+                    <div><strong>ความชัน (μ<sub>2</sub>)</strong> = <span id="mu2Value" style="font-size:1.3rem;">0.000</span></div>
+                    <div><strong>จุดตัดแกน Y</strong> = <span id="interceptValue">0.000</span></div>
+                </div>
+            </div>
+            <div>
+                <h3 style="margin-top:0;">📋 บันทึกข้อมูล (5 ชุด)</h3>
+                <table class="data-table" id="dataTable2">
+                    <tr><th>ครั้งที่</th><th>w₁ (kg)</th><th>w₂ (kg)</th></tr>
+                    <tr><td>1</td><td><input type="number" class="w1" step="0.01" value="0.20"></td><td><input type="number" class="w2" step="0.01" value="0.10"></td></tr>
+                    <tr><td>2</td><td><input type="number" class="w1" step="0.01" value="0.30"></td><td><input type="number" class="w2" step="0.01" value="0.15"></td></tr>
+                    <tr><td>3</td><td><input type="number" class="w1" step="0.01" value="0.40"></td><td><input type="number" class="w2" step="0.01" value="0.20"></td></tr>
+                    <tr><td>4</td><td><input type="number" class="w1" step="0.01" value="0.50"></td><td><input type="number" class="w2" step="0.01" value="0.24"></td></tr>
+                    <tr><td>5</td><td><input type="number" class="w1" step="0.01" value="0.60"></td><td><input type="number" class="w2" step="0.01" value="0.31"></td></tr>
+                </table>
+                <div style="margin-top:10px;">
+                    <button class="btn" onclick="setExampleData()">📥 ใส่ตัวอย่างข้อมูล</button>
+                    <button class="btn btn-outline" onclick="clearData()">🗑️ ล้างข้อมูล</button>
+                </div>
+            </div>
+        </div>
+        <div class="chart-container">
+            <canvas id="scatterChart"></canvas>
+        </div>
+        <div style="display:flex; justify-content:space-between; flex-wrap:wrap; margin-top:10px;">
+            <span><span class="badge">🔵 จุดข้อมูล</span> <span class="badge" style="background:#d32f2f;">🔴 เส้นแนวโน้ม (Trendline)</span></span>
+            <span><strong>เปรียบเทียบ μ₁ vs μ₂:</strong> ความแตกต่าง = <span id="percentDiff" style="font-weight:700; color:#c0392b;">0.00</span>%</span>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ======================== ส่วนของ Canvas ตอนที่ 1 ========================
+    const canvas = document.getElementById('simCanvas');
+    const ctx = canvas.getContext('2d');
+    const angleSlider = document.getElementById('angleSlider');
+    const angleDisplay = document.getElementById('angleDisplay');
+    const massInput = document.getElementById('massInput');
+
+    let currentMass = 0.50; // เริ่มต้น
+    const g = 9.8;
+
+    function drawIncline(angleDeg) {
+        const W = canvas.width, H = canvas.height;
+        ctx.clearRect(0, 0, W, H);
+        const angleRad = angleDeg * Math.PI / 180;
+        const baseX = 80, baseY = 200;
+        const len = 280;
+
+        // พื้นเอียง
+        ctx.beginPath();
+        ctx.moveTo(baseX, baseY);
+        ctx.lineTo(baseX + len * Math.cos(angleRad), baseY - len * Math.sin(angleRad));
+        ctx.lineTo(baseX + len * Math.cos(angleRad) + 40, baseY - len * Math.sin(angleRad));
+        ctx.lineTo(baseX + 40, baseY);
+        ctx.closePath();
+        ctx.fillStyle = '#d4dcec';
+        ctx.fill();
+        ctx.strokeStyle = '#1a3a5c';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // มุม θ
+        ctx.beginPath();
+        ctx.arc(baseX, baseY, 40, -angleRad, 0);
+        ctx.strokeStyle = '#c0392b';
+        ctx.lineWidth = 1.5;
+        ctx.stroke();
+        ctx.fillStyle = '#c0392b';
+        ctx.font = 'bold 14px sans-serif';
+        ctx.fillText('θ', baseX + 48, baseY - 12);
+
+        // ตำแหน่งก้อนวัตถุ
+        const midX = baseX + (len * 0.6) * Math.cos(angleRad);
+        const midY = baseY - (len * 0.6) * Math.sin(angleRad);
+        const blockW = 36, blockH = 20;
+        ctx.save();
+        ctx.translate(midX, midY);
+        ctx.rotate(-angleRad);
+        ctx.fillStyle = '#2c7a9e';
+        ctx.shadowColor = '#00000020';
+        ctx.shadowBlur = 8;
+        ctx.fillRect(-blockW/2, -blockH/2, blockW, blockH);
+        ctx.shadowBlur = 0;
+        ctx.strokeStyle = '#0b3b5c';
+        ctx.lineWidth = 1.5;
+        ctx.strokeRect(-blockW/2, -blockH/2, blockW, blockH);
+        ctx.restore();
+
+        // แสดงแรง (ลูกศร)
+        const arrowScale = 0.8;
+        const fParallel = currentMass * g * Math.sin(angleRad) * arrowScale;
+        const fNormal = currentMass * g * Math.cos(angleRad) * arrowScale;
+
+        drawArrow(ctx, midX, midY, midX + fParallel * 1.8 * Math.cos(angleRad), midY - fParallel * 1.8 * Math.sin(angleRad), '#d32f2f', 'mg sinθ');
+        const normX = midX - fNormal * 1.8 * Math.sin(angleRad);
+        const normY = midY - fNormal * 1.8 * Math.cos(angleRad);
+        drawArrow(ctx, midX, midY, normX, normY, '#2e7d32', 'mg cosθ');
+
+        // อัปเดตค่าที่แสดง (ใช้ currentMass)
+        document.getElementById('forceDisplay').textContent = (currentMass * g * Math.sin(angleRad)).toFixed(2);
+        document.getElementById('normalDisplay').textContent = (currentMass * g * Math.cos(angleRad)).toFixed(2);
+    }
+
+    function drawArrow(ctx, x1, y1, x2, y2, color, label) {
+        const headLen = 10;
+        const dx = x2 - x1, dy = y2 - y1;
+        const angle = Math.atan2(dy, dx);
+        const len = Math.sqrt(dx*dx + dy*dy);
+        if (len < 5) return;
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 2.5;
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(x2, y2);
+        ctx.lineTo(x2 - headLen * Math.cos(angle - 0.4), y2 - headLen * Math.sin(angle - 0.4));
+        ctx.moveTo(x2, y2);
+        ctx.lineTo(x2 - headLen * Math.cos(angle + 0.4), y2 - headLen * Math.sin(angle + 0.4));
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 2.5;
+        ctx.stroke();
+        ctx.fillStyle = color;
+        ctx.font = 'bold 12px sans-serif';
+        const midX = (x1+x2)/2, midY = (y1+y2)/2 - 15;
+        ctx.fillText(label, midX-10, midY);
+    }
+
+    // อัปเดตเมื่อเลื่อนมุม
+    angleSlider.addEventListener('input', () => {
+        const val = parseFloat(angleSlider.value);
+        angleDisplay.textContent = val.toFixed(1) + '°';
+        drawIncline(val);
+    });
+
+    // อัปเดตเมื่อเปลี่ยนมวล
+    massInput.addEventListener('input', function() {
+        const val = parseFloat(this.value);
+        if (!isNaN(val) && val > 0) {
+            currentMass = val;
+        } else {
+            currentMass = 0.50; // ค่าเริ่มต้น
+            this.value = currentMass;
+        }
+        drawIncline(parseFloat(angleSlider.value));
+    });
+
+    // เรียกครั้งแรก
+    drawIncline(25);
+
+    // ฟังก์ชันบันทึกมุม (ไม่ขึ้นกับมวล)
+    let angleRecords = [];
+    function recordAngle() {
+        const val = parseFloat(angleSlider.value);
+        if (angleRecords.length >= 3) {
+            alert('บันทึกครบ 3 ครั้งแล้ว ถ้าต้องการบันทึกใหม่ ให้กด "ล้างข้อมูล"');
+            return;
+        }
+        angleRecords.push(val);
+        updateAngleTable();
+    }
+    function clearAngles() {
+        angleRecords = [];
+        updateAngleTable();
+    }
+    function updateAngleTable() {
+        const ids = ['t1_angle','t2_angle','t3_angle'];
+        const tanIds = ['t1_tan','t2_tan','t3_tan'];
+        for (let i=0; i<3; i++) {
+            if (i < angleRecords.length) {
+                const a = angleRecords[i];
+                document.getElementById(ids[i]).textContent = a.toFixed(1);
+                document.getElementById(tanIds[i]).textContent = Math.tan(a * Math.PI/180).toFixed(4);
+            } else {
+                document.getElementById(ids[i]).textContent = '-';
+                document.getElementById(tanIds[i]).textContent = '-';
+            }
+        }
+        document.getElementById('angleList').textContent = angleRecords.length > 0 ? angleRecords.map(v=>v.toFixed(1)+'°').join(', ') : '(ยังไม่มี)';
+        
+        if (angleRecords.length === 3) {
+            const avg = angleRecords.reduce((a,b)=>a+b,0) / 3;
+            document.getElementById('avgAngle').textContent = avg.toFixed(2);
+            const mu1 = Math.tan(avg * Math.PI/180);
+            document.getElementById('mu1Value').textContent = mu1.toFixed(4);
+        } else {
+            document.getElementById('avgAngle').textContent = '0.00';
+            document.getElementById('mu1Value').textContent = '0.000';
+        }
+        updateComparison();
+    }
+
+    // ======================== ส่วนของ Canvas ตอนที่ 2 ========================
+    const canvas2 = document.getElementById('simCanvas2');
+    const ctx2 = canvas2.getContext('2d');
+    function drawHorizontal(m1, m2) {
+        const W = canvas2.width, H = canvas2.height;
+        ctx2.clearRect(0, 0, W, H);
+        ctx2.fillStyle = '#c9b99a';
+        ctx2.fillRect(30, 130, 350, 20);
+        ctx2.fillStyle = '#a0886a';
+        ctx2.fillRect(30, 150, 350, 8);
+        ctx2.fillRect(50, 158, 12, 50);
+        ctx2.fillRect(340, 158, 12, 50);
+
+        ctx2.beginPath();
+        ctx2.arc(360, 120, 20, 0, Math.PI*2);
+        ctx2.fillStyle = '#4a4a4a';
+        ctx2.fill();
+        ctx2.strokeStyle = '#222';
+        ctx2.lineWidth = 2;
+        ctx2.stroke();
+        ctx2.beginPath();
+        ctx2.arc(360, 120, 6, 0, Math.PI*2);
+        ctx2.fillStyle = '#888';
+        ctx2.fill();
+
+        const blockX = 120, blockY = 110;
+        ctx2.fillStyle = '#2c7a9e';
+        ctx2.shadowBlur = 6;
+        ctx2.shadowColor = '#00000030';
+        ctx2.fillRect(blockX, blockY, 40, 25);
+        ctx2.shadowBlur = 0;
+        ctx2.strokeStyle = '#0b3b5c';
+        ctx2.lineWidth = 1.5;
+        ctx2.strokeRect(blockX, blockY, 40, 25);
+        ctx2.fillStyle = '#fff';
+        ctx2.font = 'bold 11px sans-serif';
+        ctx2.fillText('w₁', blockX+10, blockY+17);
+
+        ctx2.beginPath();
+        ctx2.moveTo(blockX+40, blockY+12);
+        ctx2.lineTo(360-15, 120-8);
+        ctx2.strokeStyle = '#333';
+        ctx2.lineWidth = 2;
+        ctx2.stroke();
+
+        const ropeY = 120 + 20;
+        const massY = Math.min(ropeY + 20 + (m2 * 120), 200);
+        ctx2.fillStyle = '#b85c5c';
+        ctx2.fillRect(360-12, massY, 24, 24);
+        ctx2.strokeStyle = '#7a2e2e';
+        ctx2.lineWidth = 1.5;
+        ctx2.strokeRect(360-12, massY, 24, 24);
+        ctx2.fillStyle = '#fff';
+        ctx2.font = 'bold 11px sans-serif';
+        ctx2.fillText('w₂', 360-7, massY+16);
+
+        ctx2.beginPath();
+        ctx2.moveTo(360, 120+15);
+        ctx2.lineTo(360, massY);
+        ctx2.strokeStyle = '#333';
+        ctx2.lineWidth = 2;
+        ctx2.stroke();
+
+        ctx2.fillStyle = '#0b3b5c';
+        ctx2.font = 'bold 13px sans-serif';
+        ctx2.fillText(`w₁ = ${m1.toFixed(2)} kg  |  w₂ = ${m2.toFixed(2)} kg`, 30, 40);
+    }
+
+    // ======================== กราฟ (Chart.js) ========================
+    let chart = null;
+    function initChart() {
+        const ctx = document.getElementById('scatterChart').getContext('2d');
+        chart = new Chart(ctx, {
+            type: 'scatter',
+            data: {
+                datasets: [{
+                    label: 'ข้อมูลที่วัดได้ (w₁, w₂)',
+                    data: [],
+                    backgroundColor: '#1e6f96',
+                    borderColor: '#1e6f96',
+                    pointRadius: 7,
+                    pointHoverRadius: 10,
+                },
+                {
+                    label: 'เส้นแนวโน้ม (Trendline)',
+                    data: [],
+                    type: 'line',
+                    borderColor: '#d32f2f',
+                    borderWidth: 2.5,
+                    pointRadius: 0,
+                    fill: false,
+                    tension: 0,
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { labels: { usePointStyle: true, padding: 20 } },
+                    tooltip: { callbacks: { label: (ctx) => `(${ctx.parsed.x}, ${ctx.parsed.y})` } }
+                },
+                scales: {
+                    x: { title: { display: true, text: 'w₁ (kg)' }, min: 0 },
+                    y: { title: { display: true, text: 'w₂ (kg)' }, min: 0 }
+                }
+            }
+        });
+        updateChart();
+    }
+
+    // ======================== ฟังก์ชันหลักสำหรับ Part 2 ========================
+    function getDataFromTable() {
+        const w1Inputs = document.querySelectorAll('.w1');
+        const w2Inputs = document.querySelectorAll('.w2');
+        const data = [];
+        for (let i=0; i<w1Inputs.length; i++) {
+            const w1 = parseFloat(w1Inputs[i].value);
+            const w2 = parseFloat(w2Inputs[i].value);
+            if (!isNaN(w1) && !isNaN(w2) && w1 > 0 && w2 >= 0) {
+                data.push({ w1, w2 });
+            }
+        }
+        return data;
+    }
+
+    function updateChart() {
+        const data = getDataFromTable();
+        if (data.length < 2) {
+            document.getElementById('mu2Value').textContent = '0.000';
+            document.getElementById('interceptValue').textContent = '0.000';
+            document.getElementById('percentDiff').textContent = '0.00';
+            if (chart) {
+                chart.data.datasets[0].data = [];
+                chart.data.datasets[1].data = [];
+                chart.update();
+            }
+            drawHorizontal(0, 0);
+            return;
+        }
+
+        const n = data.length;
+        let sumX = 0, sumY = 0, sumXY = 0, sumX2 = 0;
+        data.forEach(p => {
+            sumX += p.w1;
+            sumY += p.w2;
+            sumXY += p.w1 * p.w2;
+            sumX2 += p.w1 * p.w1;
+        });
+        const slope = (n * sumXY - sumX * sumY) / (n * sumX2 - sumX * sumX);
+        const intercept = (sumY - slope * sumX) / n;
+        
+        document.getElementById('mu2Value').textContent = slope.toFixed(4);
+        document.getElementById('interceptValue').textContent = intercept.toFixed(4);
+
+        const scatterData = data.map(p => ({ x: p.w1, y: p.w2 }));
+        let lineData = [];
+        if (data.length > 1) {
+            const minX = Math.min(...data.map(p=>p.w1));
+            const maxX = Math.max(...data.map(p=>p.w1));
+            const pad = (maxX - minX) * 0.1 || 0.1;
+            const x1 = Math.max(0, minX - pad);
+            const x2 = maxX + pad;
+            lineData = [
+                { x: x1, y: slope * x1 + intercept },
+                { x: x2, y: slope * x2 + intercept }
+            ];
+        }
+
+        if (chart) {
+            chart.data.datasets[0].data = scatterData;
+            chart.data.datasets[1].data = lineData;
+            chart.update();
+        }
+
+        const last = data[data.length-1];
+        drawHorizontal(last.w1, last.w2);
+        updateComparison();
+    }
+
+    function updateComparison() {
+        const mu1 = parseFloat(document.getElementById('mu1Value').textContent) || 0;
+        const mu2 = parseFloat(document.getElementById('mu2Value').textContent) || 0;
+        if (mu1 > 0 && mu2 > 0) {
+            const diff = Math.abs(mu1 - mu2) / ((mu1 + mu2)/2) * 100;
+            document.getElementById('percentDiff').textContent = diff.toFixed(2);
+        } else {
+            document.getElementById('percentDiff').textContent = '0.00';
+        }
+    }
+
+    // Event listeners สำหรับ input ในตาราง
+    document.querySelectorAll('.w1, .w2').forEach(el => {
+        el.addEventListener('input', updateChart);
+    });
+
+    function setExampleData() {
+        const examples = [
+            { w1: 0.20, w2: 0.10 },
+            { w1: 0.30, w2: 0.15 },
+            { w1: 0.40, w2: 0.20 },
+            { w1: 0.50, w2: 0.26 },
+            { w1: 0.60, w2: 0.30 }
+        ];
+        const w1Inputs = document.querySelectorAll('.w1');
+        const w2Inputs = document.querySelectorAll('.w2');
+        examples.forEach((e, i) => {
+            if (i < w1Inputs.length) {
+                w1Inputs[i].value = e.w1.toFixed(2);
+                w2Inputs[i].value = e.w2.toFixed(2);
+            }
+        });
+        updateChart();
+    }
+
+    function clearData() {
+        document.querySelectorAll('.w1, .w2').forEach(el => el.value = '');
+        updateChart();
+    }
+
+    // เริ่มต้น
+    window.onload = function() {
+        initChart();
+        setExampleData();
+        drawHorizontal(0.20, 0.10);
+        // ตั้งค่ามวลเริ่มต้น
+        currentMass = parseFloat(massInput.value) || 0.50;
+        drawIncline(25);
+    };
+</script>
+</body>
+</html>

@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IoT Physical Sync – เปิดงานอัจฉริยะ เชื่อมต่อโลกจริง</title>
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- MediaPipe -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils@0.3/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils@0.3/drawing_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4/hands.js" crossorigin="anonymous"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&display=swap');
+
+        body {
+            font-family: 'Orbitron', 'Sarabun', sans-serif;
+            background: #05080f;
+            color: #fff;
+            overflow: hidden;
+            height: 100vh;
+            user-select: none;
+        }
+
+        #container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(ellipse at center, #0a0a1a, #05080f);
+            overflow: hidden;
+        }
+
+        video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            opacity: 0.2;
+            filter: blur(3px) brightness(0.4);
+        }
+        #mediapipe-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+        }
+        #three-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* ===== IoT DASHBOARD ===== */
+        #iot-dashboard {
+            position: absolute;
+            right: 24px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 10;
+            background: rgba(0, 10, 30, 0.8);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(0, 200, 255, 0.15);
+            border-radius: 16px;
+            padding: 18px 16px;
+            min-width: 200px;
+            box-shadow: 0 0 60px rgba(0, 100, 255, 0.05);
+            transition: all 0.5s ease;
+        }
+        #iot-dashboard .header {
+            font-size: 0.6rem;
+            color: rgba(150, 200, 255, 0.4);
+            letter-spacing: 3px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.03);
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+        }
+        .device-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 6px 8px;
+            border-radius: 8px;
+            margin-bottom: 4px;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+        }
+        .device-item .icon { font-size: 1.1rem; width: 28px; text-align: center; }
+        .device-item .name {
+            font-size: 0.6rem;
+            color: rgba(200, 220, 240, 0.6);
+            flex: 1;
+            letter-spacing: 1px;
+        }
+        .device-item .status-led {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #1a2a3a;
+            transition: all 0.3s ease;
+            box-shadow: none;
+        }
+        .device-item .status-led.on {
+            background: #00ff88;
+            box-shadow: 0 0 20px #00ff88;
+        }
+        .device-item .status-led.pulse {
+            animation: ledPulse 0.6s infinite alternate;
+        }
+        @keyframes ledPulse {
+            0% { opacity: 0.3; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1.2); }
+        }
+        .device-item.active {
+            border-color: rgba(0, 255, 200, 0.1);
+            background: rgba(0, 255, 200, 0.03);
+        }
+        .device-item .value {
+            font-size: 0.5rem;
+            color: rgba(150, 200, 255, 0.3);
+            min-width: 24px;
+            text-align: right;
+        }
+
+        /* ===== STATUS BAR ===== */
+        #status-bar {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            background: rgba(0, 10, 30, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 200, 255, 0.15);
+            border-radius: 40px;
+            padding: 10px 28px;
+            font-family: 'Orbitron', monospace;
+            font-size: 0.65rem;
+            color: rgba(0, 255, 200, 0.8);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 8px; }
+        .dot.green { background: #00ff88; box-shadow: 0 0 20px #00ff88; }
+        .dot.yellow { background: #ffcc00; box-shadow: 0 0 20px #ffcc00; }
+        .dot.purple { background: #aa66ff; box-shadow: 0 0 20px #aa66ff; animation: pulse 0.8s infinite alternate; }
+        .dot.iot { background: #00ccff; box-shadow: 0 0 20px #00ccff; animation: pulse 0.5s infinite alternate; }
+        @keyframes pulse { 0% { transform: scale(1); } 100% { transform: scale(1.3); } }
+
+        #ws-status {
+            font-size: 0.55rem;
+            color: rgba(150, 200, 255, 0.4);
+        }
+
+        /* ===== TITLE OVERLAY ===== */
+        #title-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 20;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            pointer-events: none;
+            background: rgba(0,0,0,0.1);
+        }
+        #title-overlay.show { display: flex; animation: fadeInTitle 1.8s cubic-bezier(0.2,0.9,0.3,1.2) forwards; }
+        @keyframes fadeInTitle { 0% { opacity:0; transform: scale(0.7); } 100% { opacity:1; transform: scale(1); } }
+        #title-overlay .main {
+            font-size: 4.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #00ddff, #00ff88, #ffd700);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 80px rgba(0, 255, 200, 0.2);
+            letter-spacing: 8px;
+            text-align: center;
+            padding: 0 20px;
+        }
+        #title-overlay .sub { font-size: 2.2rem; color: #ffd700; text-shadow: 0 0 40px rgba(255,215,0,0.3); margin-top: 10px; letter-spacing: 8px; }
+        #title-overlay .theme { font-size: 1.1rem; color: rgba(255,255,255,0.4); margin-top: 16px; letter-spacing: 4px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 16px; }
+
+        /* ===== ARDUINO CODE MODAL ===== */
+        #code-modal {
+            position: absolute;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 30;
+            background: rgba(0, 10, 30, 0.92);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 200, 255, 0.2);
+            border-radius: 16px;
+            padding: 20px 24px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 400px;
+            overflow-y: auto;
+            display: none;
+            box-shadow: 0 0 80px rgba(0, 100, 255, 0.1);
+        }
+        #code-modal.show { display: block; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { 0% { opacity:0; transform: translateY(20px) scale(0.95); } 100% { opacity:1; transform: translateY(0) scale(1); } }
+        #code-modal .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding-bottom: 10px;
+        }
+        #code-modal .modal-header span {
+            font-size: 0.8rem;
+            color: #00ccff;
+            letter-spacing: 2px;
+        }
+        #code-modal .close-btn {
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.3);
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0 8px;
+        }
+        #code-modal .close-btn:hover { color: #fff; }
+        #code-modal pre {
+            font-family: 'Courier New', monospace;
+            font-size: 0.7rem;
+            color: #88ddff;
+            background: rgba(0,0,0,0.3);
+            padding: 12px;
+            border-radius: 8px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 250px;
+            overflow-y: auto;
+            border: 1px solid rgba(0,200,255,0.05);
+        }
+        #code-modal .note {
+            font-size: 0.55rem;
+            color: rgba(255,255,255,0.3);
+            margin-top: 8px;
+            font-family: 'Sarabun', sans-serif;
+        }
+
+        /* ===== MAIN BUTTON (ศูนย์กลาง) ===== */
+        #main-open-btn {
+            position: absolute;
+            bottom: 160px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 15;
+            background: linear-gradient(135deg, #00ddff, #0088cc);
+            color: #fff;
+            border: none;
+            padding: 16px 48px;
+            border-radius: 60px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            font-family: 'Orbitron', sans-serif;
+            cursor: pointer;
+            box-shadow: 0 0 60px rgba(0, 200, 255, 0.2);
+            transition: all 0.3s ease;
+            letter-spacing: 4px;
+            display: none;
+        }
+        #main-open-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 80px rgba(0, 200, 255, 0.4);
+        }
+        #main-open-btn.show {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @media (max-width: 900px) {
+            #iot-dashboard { right: 12px; padding: 12px 10px; min-width: 140px; top: 50%; transform: translateY(-50%); }
+            .device-item .name { font-size: 0.45rem; }
+            .device-item .icon { font-size: 0.8rem; width: 20px; }
+            #title-overlay .main { font-size: 2.5rem; }
+            #title-overlay .sub { font-size: 1.4rem; }
+            #status-bar { font-size: 0.5rem; padding: 6px 14px; gap: 8px; bottom: 15px; flex-wrap: wrap; }
+            #code-modal { max-width: 95%; padding: 14px 16px; bottom: 70px; }
+            #code-modal pre { font-size: 0.55rem; }
+            #main-open-btn { padding: 12px 24px; font-size: 0.9rem; bottom: 130px; }
+        }
+        @media (max-width: 500px) {
+            #iot-dashboard { display: none; }
+            #title-overlay .main { font-size: 1.6rem; }
+            #title-overlay .sub { font-size: 1rem; }
+            #status-bar { font-size: 0.4rem; padding: 4px 10px; }
+            #main-open-btn { padding: 10px 18px; font-size: 0.7rem; bottom: 100px; }
+        }
+    </style>
+</head>
+<body>
+<div id="container">
+    <video id="video" autoplay playsinline></video>
+    <canvas id="mediapipe-canvas"></canvas>
+    <canvas id="three-canvas"></canvas>
+
+    <!-- ===== IoT DASHBOARD ===== -->
+    <div id="iot-dashboard">
+        <div class="header">⟡ IOT NETWORK</div>
+        <div class="device-item" id="dev-led1">
+            <span class="icon">💡</span>
+            <span class="name">LED Array 1</span>
+            <span class="status-led" id="led1-led"></span>
+            <span class="value" id="led1-val">OFF</span>
+        </div>
+        <div class="device-item" id="dev-led2">
+            <span class="icon">💡</span>
+            <span class="name">LED Array 2</span>
+            <span class="status-led" id="led2-led"></span>
+            <span class="value" id="led2-val">OFF</span>
+        </div>
+        <div class="device-item" id="dev-motor">
+            <span class="icon">⚙️</span>
+            <span class="name">DC Motor</span>
+            <span class="status-led" id="motor-led"></span>
+            <span class="value" id="motor-val">0%</span>
+        </div>
+        <div class="device-item" id="dev-fan">
+            <span class="icon">🌀</span>
+            <span class="name">Cooling Fan</span>
+            <span class="status-led" id="fan-led"></span>
+            <span class="value" id="fan-val">OFF</span>
+        </div>
+        <div class="device-item" id="dev-pump">
+            <span class="icon">💧</span>
+            <span class="name">Water Pump</span>
+            <span class="status-led" id="pump-led"></span>
+            <span class="value" id="pump-val">OFF</span>
+        </div>
+        <div class="device-item" id="dev-speaker">
+            <span class="icon">🔊</span>
+            <span class="name">PA System</span>
+            <span class="status-led" id="speaker-led"></span>
+            <span class="value" id="speaker-val">STANDBY</span>
+        </div>
+        <div style="margin-top:10px; border-top:1px solid rgba(255,255,255,0.03); padding-top:8px; text-align:center;">
+            <button id="toggleCodeBtn" style="background:rgba(0,200,255,0.05); border:1px solid rgba(0,200,255,0.1); color:rgba(255,255,255,0.4); padding:4px 16px; border-radius:20px; font-size:0.5rem; font-family:Orbitron; cursor:pointer;">📟 ESP8266 CODE</button>
+        </div>
+    </div>
+
+    <!-- ===== MAIN OPEN BUTTON ===== -->
+    <button id="main-open-btn" class="show">🚀 OPEN SYSTEM</button>
+
+    <!-- ===== STATUS BAR ===== -->
+    <div id="status-bar">
+        <span><span class="dot green" id="statusDot"></span><span id="statusText">ระบบพร้อม</span></span>
+        <span>|</span>
+        <span>🌐 <span id="wsStatus">DISCONNECTED</span></span>
+        <span>|</span>
+        <span>👆 <span id="fingerStatus">รอมือ</span></span>
+        <span>|</span>
+        <span>🔌 <span id="iotCount">0/6</span> อุปกรณ์</span>
+    </div>
+
+    <!-- ===== TITLE OVERLAY ===== -->
+    <div id="title-overlay">
+        <div class="main">⚡ SYSTEM ACTIVATED</div>
+        <div class="sub">SCIENCE WEEK 2026</div>
+        <div class="theme">✦ INTELLIGENCE SCIENCE FOR A SUSTAINABLE FUTURE ✦</div>
+    </div>
+
+    <!-- ===== ARDUINO CODE MODAL ===== -->
+    <div id="code-modal">
+        <div class="modal-header">
+            <span>📟 ESP8266 WebSocket Client</span>
+            <button class="close-btn" id="closeCodeBtn">✕</button>
+        </div>
+        <pre>
+#include <ESP8266WiFi.h>
+#include <WebSocketsClient.h>
+
+// === CONFIG ===
+const char* ssid = "YOUR_WIFI_SSID";
+const char* password = "YOUR_WIFI_PASS";
+const char* ws_host = "192.168.1.100"; // IP of your server
+const int ws_port = 8080;
+
+WebSocketsClient webSocket;
+
+// === PINS ===
+#define LED1 D1
+#define LED2 D2
+#define MOTOR D3
+#define FAN D4
+#define PUMP D5
+
+void setup() {
+  Serial.begin(115200);
+  pinMode(LED1, OUTPUT);
+  pinMode(LED2, OUTPUT);
+  pinMode(MOTOR, OUTPUT);
+  pinMode(FAN, OUTPUT);
+  pinMode(PUMP, OUTPUT);
+
+  WiFi.begin(ssid, password);
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+  Serial.println("WiFi connected");
+
+  webSocket.begin(ws_host, ws_port, "/");
+  webSocket.onEvent(webSocketEvent);
+  webSocket.setReconnectInterval(5000);
+}
+
+void webSocketEvent(WStype_t type, uint8_t * payload, size_t length) {
+  if (type == WStype_TEXT) {
+    String msg = String((char*)payload);
+    if (msg == "ACTIVATE") {
+      // เปิดอุปกรณ์ทั้งหมด
+      digitalWrite(LED1, HIGH);
+      digitalWrite(LED2, HIGH);
+      analogWrite(MOTOR, 255);
+      digitalWrite(FAN, HIGH);
+      digitalWrite(PUMP, HIGH);
+      // ส่งสถานะกลับ
+      webSocket.sendTXT("STATUS:ACTIVATED");
+    }
+    if (msg == "DEACTIVATE") {
+      digitalWrite(LED1, LOW);
+      digitalWrite(LED2, LOW);
+      analogWrite(MOTOR, 0);
+      digitalWrite(FAN, LOW);
+      digitalWrite(PUMP, LOW);
+      webSocket.sendTXT("STATUS:DEACTIVATED");
+    }
+  }
+}
+
+void loop() {
+  webSocket.loop();
+}
+        </pre>
+        <div class="note">📌 อัปโหลดโค้ดนี้ไปยัง ESP8266 (NodeMCU) และเปลี่ยน WiFi + IP ให้ตรงกับเซิร์ฟเวอร์ของคุณ จากนั้นอุปกรณ์ IoT จะตอบสนองเมื่อกดปุ่มเปิดงาน</div>
+    </div>
+</div>
+
+<script>
+    (function() {
+        // ========================================================================
+        // DOM REFS
+        // ========================================================================
+        const video = document.getElementById('video');
+        const mpCanvas = document.getElementById('mediapipe-canvas');
+        const mpCtx = mpCanvas.getContext('2d');
+        const threeCanvas = document.getElementById('three-canvas');
+        const titleOverlay = document.getElementById('title-overlay');
+        const statusText = document.getElementById('statusText');
+        const statusDot = document.getElementById('statusDot');
+        const fingerStatus = document.getElementById('fingerStatus');
+        const wsStatus = document.getElementById('wsStatus');
+        const iotCount = document.getElementById('iotCount');
+        const mainBtn = document.getElementById('main-open-btn');
+        const codeModal = document.getElementById('code-modal');
+        const toggleCodeBtn = document.getElementById('toggleCodeBtn');
+        const closeCodeBtn = document.getElementById('closeCodeBtn');
+
+        // ========================================================================
+        // STATE
+        // ========================================================================
+        let isCeremonyActive = false;
+        let isIdle = true;
+        let handLandmarks = null;
+        let iotDevices = {
+            led1: { state: false, el: document.getElementById('led1-led'), val: document.getElementById('led1-val') },
+            led2: { state: false, el: document.getElementById('led2-led'), val: document.getElementById('led2-val') },
+            motor: { state: false, el: document.getElementById('motor-led'), val: document.getElementById('motor-val'), level: 0 },
+            fan: { state: false, el: document.getElementById('fan-led'), val: document.getElementById('fan-val') },
+            pump: { state: false, el: document.getElementById('pump-led'), val: document.getElementById('pump-val') },
+            speaker: { state: false, el: document.getElementById('speaker-led'), val: document.getElementById('speaker-val') }
+        };
+        let deviceKeys = ['led1', 'led2', 'motor', 'fan', 'pump', 'speaker'];
+        let ws = null;
+        let wsConnected = false;
+        let ceremonyStep = 0;
+
+        // ========================================================================
+        // AUDIO
+        // ========================================================================
+        let audioCtx = null;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            return audioCtx;
+        }
+
+        function playSystemSound() {
+            const ctx = initAudio();
+            const now = ctx.currentTime;
+
+            // Power-up sweep
+            const osc1 = ctx.createOscillator();
+            const gain1 = ctx.createGain();
+            osc1.type = 'sawtooth';
+            osc1.frequency.setValueAtTime(80, now);
+            osc1.frequency.exponentialRampToValueAtTime(400, now + 1.0);
+            gain1.gain.setValueAtTime(0.01, now);
+            gain1.gain.linearRampToValueAtTime(0.2, now + 0.6);
+            gain1.gain.exponentialRampToValueAtTime(0.01, now + 1.6);
+            osc1.connect(gain1);
+            gain1.connect(ctx.destination);
+            osc1.start(now);
+            osc1.stop(now + 1.8);
+
+            // Digital beep
+            const osc2 = ctx.createOscillator();
+            const gain2 = ctx.createGain();
+            osc2.type = 'square';
+            osc2.frequency.setValueAtTime(600, now + 0.3);
+            osc2.frequency.exponentialRampToValueAtTime(300, now + 0.8);
+            gain2.gain.setValueAtTime(0.01, now + 0.3);
+            gain2.gain.linearRampToValueAtTime(0.15, now + 0.5);
+            gain2.gain.exponentialRampToValueAtTime(0.01, now + 1.0);
+            osc2.connect(gain2);
+            gain2.connect(ctx.destination);
+            osc2.start(now + 0.3);
+            osc2.stop(now + 1.2);
+
+            // Impact (system online)
+            const osc3 = ctx.createOscillator();
+            const gain3 = ctx.createGain();
+            osc3.type = 'sine';
+            osc3.frequency.setValueAtTime(100, now + 1.2);
+            osc3.frequency.exponentialRampToValueAtTime(50, now + 1.8);
+            gain3.gain.setValueAtTime(0.01, now + 1.2);
+            gain3.gain.linearRampToValueAtTime(0.3, now + 1.5);
+            gain3.gain.exponentialRampToValueAtTime(0.01, now + 2.2);
+            osc3.connect(gain3);
+            gain3.connect(ctx.destination);
+            osc3.start(now + 1.2);
+            osc3.stop(now + 2.4);
+        }
+
+        // ========================================================================
+        // THREE.JS – 3D ENERGY NETWORK
+        // ========================================================================
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x05080f);
+
+        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.01, 100);
+        camera.position.set(0, 0, 3);
+        camera.lookAt(0, 0, 0);
+
+        const renderer = new THREE.WebGLRenderer({
+            canvas: threeCanvas,
+            alpha: false,
+            antialias: true
+        });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+        // Background particles
+        const starCount = 400;
+        const starGeo = new THREE.BufferGeometry();
+        const starPos = new Float32Array(starCount * 3);
+        for (let i = 0; i < starCount; i++) {
+            starPos[i*3] = (Math.random() - 0.5) * 12;
+            starPos[i*3+1] = (Math.random() - 0.5) * 10;
+            starPos[i*3+2] = (Math.random() - 0.5) * 8 - 2;
+        }
+        starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+        const starMat = new THREE.PointsMaterial({
+            color: 0x4488aa,
+            size: 0.005,
+            transparent: true,
+            opacity: 0.4,
+            blending: THREE.AdditiveBlending
+        });
+        const stars = new THREE.Points(starGeo, starMat);
+        scene.add(stars);
+
+        // Energy Network: Central hub + connection lines to 6 nodes
+        const networkGroup = new THREE.Group();
+        scene.add(networkGroup);
+
+        // Central core
+        const coreMat = new THREE.MeshBasicMaterial({
+            color: 0x00ddff,
+            transparent: true,
+            opacity: 0.3,
+            blending: THREE.AdditiveBlending
+        });
+        const core = new THREE.Mesh(new THREE.SphereGeometry(0.25, 16, 16), coreMat);
+        networkGroup.add(core);
+
+        // 6 Nodes (representing IoT devices) placed in a circle
+        const nodePositions = [];
+        const nodeCount = 6;
+        const nodeRadius = 0.9;
+        const nodeMat = new THREE.MeshBasicMaterial({
+            color: 0x446688,
+            transparent: true,
+            opacity: 0.3
+        });
+        const nodeActiveMat = new THREE.MeshBasicMaterial({
+            color: 0x00ff88,
+            transparent: true,
+            opacity: 0.6,
+            blending: THREE.AdditiveBlending
+        });
+        const nodeMeshes = [];
+
+        for (let i = 0; i < nodeCount; i++) {
+            const angle = (i / nodeCount) * Math.PI * 2 - Math.PI/2;
+            const x = nodeRadius * Math.cos(angle);
+            const y = nodeRadius * Math.sin(angle) * 0.6;
+            nodePositions.push({ x, y, z: 0 });
+            const mesh = new THREE.Mesh(new THREE.SphereGeometry(0.07, 8, 8), nodeMat.clone());
+            mesh.position.set(x, y, 0);
+            networkGroup.add(mesh);
+            nodeMeshes.push(mesh);
+
+            // Connection line from center to node (inactive)
+            const lineMat = new THREE.LineBasicMaterial({
+                color: 0x446688,
+                transparent: true,
+                opacity: 0.1
+            });
+            const geo = new THREE.BufferGeometry();
+            const positions = new Float32Array([0,0,0, x,y,0]);
+            geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            const line = new THREE.Line(geo, lineMat);
+            networkGroup.add(line);
+            // Store reference
+            mesh.userData.line = line;
+            mesh.userData.active = false;
+            mesh.userData.angle = angle;
+        }
+
+        // Energy flow particles (will animate when activated)
+        const flowCount = 60;
+        const flowGeo = new THREE.BufferGeometry();
+        const flowPos = new Float32Array(flowCount * 3);
+        const flowColors = new Float32Array(flowCount * 3);
+        const flowData = [];
+        for (let i = 0; i < flowCount; i++) {
+            const targetIdx = Math.floor(Math.random() * nodeCount);
+            const progress = Math.random();
+            flowPos[i*3] = progress * nodePositions[targetIdx].x;
+            flowPos[i*3+1] = progress * nodePositions[targetIdx].y;
+            flowPos[i*3+2] = (Math.random() - 0.5) * 0.02;
+            const col = new THREE.Color().setHSL(0.55 + Math.random()*0.15, 0.9, 0.5 + Math.random()*0.4);
+            flowColors[i*3] = col.r;
+            flowColors[i*3+1] = col.g;
+            flowColors[i*3+2] = col.b;
+            flowData.push({
+                targetIdx: targetIdx,
+                progress: progress,
+                speed: 0.005 + Math.random() * 0.015,
+                phase: Math.random() * Math.PI * 2
+            });
+        }
+        flowGeo.setAttribute('position', new THREE.BufferAttribute(flowPos, 3));
+        flowGeo.setAttribute('color', new THREE.BufferAttribute(flowColors, 3));
+        const flowMat = new THREE.PointsMaterial({
+            size: 0.025,
+            vertexColors: true,
+            transparent: true,
+            opacity: 0,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false
+        });
+        const flowPoints = new THREE.Points(flowGeo, flowMat);
+        networkGroup.add(flowPoints);
+
+        let isNetworkActive = false;
+
+        function activateNetwork() {
+            isNetworkActive = true;
+            // Change node colors
+            nodeMeshes.forEach((mesh, idx) => {
+                mesh.material.color.setHex(0x00ff88);
+                mesh.material.opacity = 0.8;
+                mesh.userData.active = true;
+                // Change line color
+                mesh.userData.line.material.color.setHex(0x00ff88);
+                mesh.userData.line.material.opacity = 0.3;
+            });
+            core.material.color.setHex(0xffd700);
+            core.material.opacity = 0.6;
+            flowMat.opacity = 0.8;
+        }
+
+        // ========================================================================
+        // IOT SIMULATION
+        // ========================================================================
+        function updateIoTDevice(key, state, value) {
+            const dev = iotDevices[key];
+            if (!dev) return;
+            dev.state = state;
+            if (state) {
+                dev.el.className = 'status-led on pulse';
+                if (key === 'motor') {
+                    dev.val.textContent = value || '100%';
+                } else if (key === 'speaker') {
+                    dev.val.textContent = 'ON AIR';
+                } else {
+                    dev.val.textContent = 'ON';
+                }
+                document.getElementById('dev-' + key).classList.add('active');
+            } else {
+                dev.el.className = 'status-led';
+                if (key === 'motor') {
+                    dev.val.textContent = '0%';
+                } else if (key === 'speaker') {
+                    dev.val.textContent = 'STANDBY';
+                } else {
+                    dev.val.textContent = 'OFF';
+                }
+                document.getElementById('dev-' + key).classList.remove('active');
+            }
+            updateIotCount();
+        }
+
+        function updateIotCount() {
+            const count = deviceKeys.filter(k => iotDevices[k].state).length;
+            iotCount.textContent = `${count}/${deviceKeys.length}`;
+        }
+
+        function activateAllIoT() {
+            deviceKeys.forEach((key, idx) => {
+                setTimeout(() => {
+                    if (key === 'motor') {
+                        updateIoTDevice(key, true, '100%');
+                    } else {
+                        updateIoTDevice(key, true);
+                    }
+                }, idx * 200);
+            });
+            // Send WebSocket message if connected
+            if (ws && wsConnected) {
+                try { ws.send('ACTIVATE'); } catch(e) {}
+            }
+        }
+
+        function deactivateAllIoT() {
+            deviceKeys.forEach((key) => {
+                updateIoTDevice(key, false);
+            });
+            if (ws && wsConnected) {
+                try { ws.send('DEACTIVATE'); } catch(e) {}
+            }
+        }
+
+        // ========================================================================
+        // WEBSOCKET (for real IoT)
+        // ========================================================================
+        function initWebSocket() {
+            // Try connecting to a local WebSocket server (for demo, we'll just simulate)
+            // For real usage: ws://192.168.1.100:8080
+            try {
+                // Using a public echo server for demonstration of connection
+                // But we'll simulate actual sending
+                ws = new WebSocket('wss://echo.websocket.org');
+                ws.onopen = () => {
+                    wsConnected = true;
+                    wsStatus.textContent = 'CONNECTED ✅';
+                    wsStatus.style.color = '#00ff88';
+                };
+                ws.onclose = () => {
+                    wsConnected = false;
+                    wsStatus.textContent = 'DISCONNECTED';
+                    wsStatus.style.color = 'rgba(150,200,255,0.4)';
+                };
+                ws.onerror = () => {
+                    wsConnected = false;
+                    wsStatus.textContent = 'ERROR';
+                    wsStatus.style.color = '#ff4444';
+                };
+            } catch(e) {
+                wsStatus.textContent = 'NOT AVAIL';
+                wsConnected = false;
+            }
+        }
+
+        // ========================================================================
+        // START CEREMONY (SYSTEM ACTIVATION)
+        // ========================================================================
+        function startCeremony(source = 'gesture') {
+            if (isCeremonyActive) return;
+            isCeremonyActive = true;
+            isIdle = false;
+
+            statusText.textContent = '⚡ กำลังเปิดระบบ...';
+            statusDot.className = 'dot purple';
+            fingerStatus.textContent = '⏳ กำลังเปิด...';
+            mainBtn.classList.remove('show');
+
+            // Sound
+            playSystemSound();
+
+            // Step 1: Activate IoT devices (0s)
+            activateAllIoT();
+
+            // Step 2: Activate 3D network (0.5s)
+            setTimeout(() => {
+                activateNetwork();
+            }, 500);
+
+            // Step 3: Show title (1.5s)
+            setTimeout(() => {
+                titleOverlay.classList.add('show');
+                statusText.textContent = '🎉 ระบบเปิดสำเร็จ!';
+                statusDot.className = 'dot green';
+            }, 1500);
+
+            // Step 4: Add extra firework-like pulses (visual)
+            setTimeout(() => {
+                // Pulse nodes
+                nodeMeshes.forEach((mesh, idx) => {
+                    setTimeout(() => {
+                        mesh.material.opacity = 1;
+                        setTimeout(() => { mesh.material.opacity = 0.6; }, 300);
+                    }, idx * 100);
+                });
+            }, 800);
+
+            // Step 5: Reset after 6s
+            setTimeout(() => {
+                titleOverlay.classList.remove('show');
+                isCeremonyActive = false;
+                isIdle = true;
+                statusText.textContent = 'ระบบพร้อม';
+                statusDot.className = 'dot green';
+                fingerStatus.textContent = 'รอมือ';
+                mainBtn.classList.add('show');
+                // Keep IoT devices on for demonstration
+                // Optionally deactivate after 10s? We'll keep them on.
+            }, 6500);
+        }
+
+        // ========================================================================
+        // MEDIAPIPE HANDS
+        // ========================================================================
+        const hands = new Hands({
+            locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4/${file}`
+        });
+        hands.setOptions({
+            maxNumHands: 1,
+            modelComplexity: 1,
+            minDetectionConfidence: 0.5,
+            minTrackingConfidence: 0.5
+        });
+
+        hands.onResults((results) => {
+            const w = mpCanvas.width;
+            const h = mpCanvas.height;
+            mpCtx.clearRect(0, 0, w, h);
+
+            // Draw gesture hint
+            if (isIdle) drawGestureHint(w, h);
+
+            if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
+                const landmarks = results.multiHandLandmarks[0];
+                handLandmarks = landmarks;
+                const pts = landmarks.map(lm => ({ x: lm.x * w, y: lm.y * h }));
+
+                // Draw hand
+                const connections = [
+                    [0,1],[1,2],[2,3],[3,4],[0,5],[5,6],[6,7],[7,8],
+                    [0,9],[9,10],[10,11],[11,12],[0,13],[13,14],[14,15],[15,16],
+                    [0,17],[17,18],[18,19],[19,20],[5,9],[9,13],[13,17]
+                ];
+                mpCtx.strokeStyle = 'rgba(0, 200, 255, 0.3)';
+                mpCtx.lineWidth = 1.5;
+                for (let conn of connections) {
+                    const [i, j] = conn;
+                    if (i < pts.length && j < pts.length) {
+                        mpCtx.beginPath();
+                        mpCtx.moveTo(pts[i].x, pts[i].y);
+                        mpCtx.lineTo(pts[j].x, pts[j].y);
+                        mpCtx.stroke();
+                    }
+                }
+                pts.forEach((p, i) => {
+                    mpCtx.beginPath();
+                    mpCtx.arc(p.x, p.y, i===8?7:4, 0, 2*Math.PI);
+                    mpCtx.fillStyle = i===8 ? '#00ddff' : '#4488aa';
+                    mpCtx.shadowColor = 'rgba(0,200,255,0.3)';
+                    mpCtx.shadowBlur = 12;
+                    mpCtx.fill();
+                    mpCtx.shadowBlur = 0;
+                });
+
+                // Detect pinch on the "OPEN SYSTEM" button area (center bottom)
+                if (isIdle) {
+                    const indexTip = pts[8];
+                    const thumbTip = pts[4];
+                    if (indexTip && thumbTip) {
+                        const cx = w/2;
+                        const cy = h * 0.75;
+                        const radius = Math.min(w,h) * 0.04;
+                        const dist = Math.hypot(indexTip.x - thumbTip.x, indexTip.y - thumbTip.y);
+                        const isPinch = dist < 30;
+                        const isOver = Math.hypot(indexTip.x - cx, indexTip.y - cy) < radius;
+                        if (isOver && isPinch) {
+                            fingerStatus.textContent = '👆 คลิก!';
+                            startCeremony('gesture');
+                        } else if (isOver) {
+                            fingerStatus.textContent = '✋ เหนือปุ่ม';
+                        } else {
+                            fingerStatus.textContent = '🖐️ ชี้นิ้ว';
+                        }
+                    }
+                } else {
+                    fingerStatus.textContent = '⏳ กำลังเปิด...';
+                }
+                statusText.textContent = 'ตรวจจับมือ';
+                statusDot.className = 'dot green';
+            } else {
+                handLandmarks = null;
+                fingerStatus.textContent = '⏳ รอมือ';
+                statusText.textContent = 'รอตรวจจับ...';
+                statusDot.className = 'dot yellow';
+            }
+        });
+
+        // ========================================================================
+        // DRAW GESTURE HINT
+        // ========================================================================
+        function drawGestureHint(w, h) {
+            const cx = w/2;
+            const cy = h * 0.75;
+            const radius = Math.min(w,h) * 0.04;
+
+            // Glow
+            const grad = mpCtx.createRadialGradient(cx, cy, 0, cx, cy, radius * 2.5);
+            grad.addColorStop(0, 'rgba(0, 200, 255, 0.04)');
+            grad.addColorStop(1, 'rgba(0,0,0,0)');
+            mpCtx.beginPath();
+            mpCtx.arc(cx, cy, radius * 2.5, 0, 2*Math.PI);
+            mpCtx.fillStyle = grad;
+            mpCtx.fill();
+
+            // Pulse ring
+            const pulse = 1 + 0.05 * Math.sin(Date.now() / 500);
+            mpCtx.beginPath();
+            mpCtx.arc(cx, cy, radius * pulse, 0, 2*Math.PI);
+            mpCtx.strokeStyle = 'rgba(0, 200, 255, 0.15)';
+            mpCtx.lineWidth = 1.5;
+            mpCtx.setLineDash([4, 6]);
+            mpCtx.stroke();
+            mpCtx.setLineDash([]);
+
+            // Button
+            const grad2 = mpCtx.createRadialGradient(cx-6, cy-6, 5, cx, cy, radius);
+            grad2.addColorStop(0, '#00ddff');
+            grad2.addColorStop(0.5, '#0088bb');
+            grad2.addColorStop(1, '#004466');
+            mpCtx.shadowColor = 'rgba(0, 200, 255, 0.3)';
+            mpCtx.shadowBlur = 20;
+            mpCtx.beginPath();
+            mpCtx.arc(cx, cy, radius, 0, 2*Math.PI);
+            mpCtx.fillStyle = grad2;
+            mpCtx.fill();
+            mpCtx.shadowBlur = 0;
+            mpCtx.strokeStyle = 'rgba(0, 255, 200, 0.4)';
+            mpCtx.lineWidth = 2;
+            mpCtx.stroke();
+
+            mpCtx.fillStyle = '#fff';
+            mpCtx.font = `bold ${radius*0.3}px Orbitron, Sarabun`;
+            mpCtx.textAlign = 'center';
+            mpCtx.textBaseline = 'middle';
+            mpCtx.shadowColor = 'rgba(0,0,0,0.8)';
+            mpCtx.shadowBlur = 6;
+            mpCtx.fillText('⚡ OPEN', cx, cy-2);
+            mpCtx.shadowBlur = 0;
+
+            mpCtx.fillStyle = 'rgba(0, 255, 200, 0.3)';
+            mpCtx.font = `${radius*0.1}px Orbitron, Sarabun`;
+            mpCtx.fillText('PINCH TO ACTIVATE', cx, cy + radius + 20);
+        }
+
+        // ========================================================================
+        // CAMERA
+        // ========================================================================
+        const cameraHelper = new Camera(video, {
+            onFrame: async () => {
+                await hands.send({ image: video });
+            },
+            width: 640,
+            height: 480
+        });
+        cameraHelper.start().then(() => {
+            statusText.textContent = 'กล้องพร้อม';
+            statusDot.className = 'dot green';
+            initWebSocket();
+        }).catch(err => {
+            statusText.textContent = '❌ ' + err.message;
+            statusDot.className = 'dot red';
+        });
+
+        // ========================================================================
+        // RESIZE
+        // ========================================================================
+        function resizeAll() {
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+            mpCanvas.width = w;
+            mpCanvas.height = h;
+            threeCanvas.width = w;
+            threeCanvas.height = h;
+            renderer.setSize(w, h);
+            camera.aspect = w / h;
+            camera.updateProjectionMatrix();
+        }
+        window.addEventListener('resize', resizeAll);
+
+        // ========================================================================
+        // ANIMATION
+        // ========================================================================
+        let lastTime = 0;
+
+        function animate(time) {
+            const delta = Math.min((time - lastTime) / 1000, 0.05);
+            lastTime = time;
+
+            stars.rotation.y += delta * 0.005;
+
+            // Animate energy flow if active
+            if (isNetworkActive) {
+                const pos = flowPoints.geometry.attributes.position.array;
+                for (let i = 0; i < flowCount; i++) {
+                    const data = flowData[i];
+                    data.progress += data.speed;
+                    if (data.progress > 1) {
+                        data.progress = 0;
+                        data.targetIdx = Math.floor(Math.random() * nodeCount);
+                    }
+                    const target = nodePositions[data.targetIdx];
+                    pos[i*3] = data.progress * target.x;
+                    pos[i*3+1] = data.progress * target.y;
+                    pos[i*3+2] = Math.sin(time * 0.002 + data.phase) * 0.02;
+                }
+                flowPoints.geometry.attributes.position.needsUpdate = true;
+
+                // Core pulse
+                core.scale.setScalar(1 + 0.05 * Math.sin(time * 0.003));
+                core.material.opacity = 0.3 + 0.15 * Math.sin(time * 0.004);
+            }
+
+            // Animate node glow (active nodes)
+            nodeMeshes.forEach((mesh, idx) => {
+                if (mesh.userData.active) {
+                    const pulse = 1 + 0.1 * Math.sin(time * 0.002 + idx);
+                    mesh.scale.setScalar(pulse);
+                }
+            });
+
+            renderer.render(scene, camera);
+            requestAnimationFrame(animate);
+        }
+        animate(0);
+
+        // ========================================================================
+        // EVENT LISTENERS
+        // ========================================================================
+        document.addEventListener('click', () => initAudio(), { once: true });
+
+        mainBtn.addEventListener('click', () => {
+            if (isIdle && !isCeremonyActive) startCeremony('button');
+        });
+
+        toggleCodeBtn.addEventListener('click', () => {
+            codeModal.classList.toggle('show');
+        });
+        closeCodeBtn.addEventListener('click', () => {
+            codeModal.classList.remove('show');
+        });
+
+        // Keyboard shortcut: 'I' for IoT activation (testing)
+        document.addEventListener('keydown', (e) => {
+            if ((e.key === 'i' || e.key === 'I') && isIdle && !isCeremonyActive) {
+                startCeremony('keyboard');
+            }
+        });
+
+        // Double-click to reset IoT (testing)
+        document.getElementById('container').addEventListener('dblclick', () => {
+            if (isCeremonyActive) {
+                deactivateAllIoT();
+                isNetworkActive = false;
+                nodeMeshes.forEach(mesh => {
+                    mesh.material.color.setHex(0x446688);
+                    mesh.material.opacity = 0.3;
+                    mesh.userData.active = false;
+                    mesh.userData.line.material.color.setHex(0x446688);
+                    mesh.userData.line.material.opacity = 0.1;
+                });
+                core.material.color.setHex(0x00ddff);
+                core.material.opacity = 0.3;
+                flowMat.opacity = 0;
+                titleOverlay.classList.remove('show');
+                isCeremonyActive = false;
+                isIdle = true;
+                statusText.textContent = 'ระบบพร้อม';
+                statusDot.className = 'dot green';
+                mainBtn.classList.add('show');
+                fingerStatus.textContent = 'รอมือ';
+                updateIotCount();
+            }
+        });
+
+        setTimeout(resizeAll, 500);
+        setInterval(resizeAll, 3000);
+    })();
+</script>
+</body>
+</html>

@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="th" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unplugged Simulation | เรียนรู้ตรรกะผ่านเกม</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anuphan:wght@300;400;600;700&family=Outfit:wght@400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .sim-container {
+            max-width: 1000px;
+            margin: 10rem auto 4rem;
+            padding: 2rem;
+            background: var(--glass-bg);
+            border-radius: 30px;
+            border: 1px solid var(--glass-border);
+            min-height: 600px;
+        }
+        .sim-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        .sim-nav {
+            display: flex;
+            justify-content: center;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        .sim-tab {
+            padding: 1rem 2rem;
+            border-radius: 15px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 1px solid transparent;
+        }
+        .sim-tab.active {
+            background: var(--clr-primary);
+            box-shadow: 0 10px 20px rgba(99, 102, 241, 0.3);
+        }
+        .sim-screen {
+            background: #0f172a;
+            border-radius: 20px;
+            height: 450px;
+            position: relative;
+            overflow: hidden;
+            display: none;
+        }
+        .sim-screen.active { display: block; }
+
+        /* Game 1: Logic Bridge */
+        .bridge-game { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; color: white; }
+        .condition-box { background: white; color: #1e293b; padding: 1.5rem; border-radius: 15px; margin-bottom: 2rem; text-align: center; font-weight: 700; width: 80%; }
+        .doors { display: flex; gap: 4rem; }
+        .door { width: 120px; height: 180px; border-radius: 10px; cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 3rem; transition: transform 0.2s; }
+        .door:hover { transform: scale(1.05); }
+        .door--green { background: #22c55e; border: 4px solid #4ade80; }
+        .door--red { background: #ef4444; border: 4px solid #f87171; }
+
+        /* Game 2: Loop Robot */
+        .robot-stage { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; }
+        .robot-sprite { font-size: 6rem; transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .robot-controls { margin-top: 2rem; display: flex; gap: 1rem; align-items: center; background: rgba(255,255,255,0.1); padding: 1rem; border-radius: 15px; }
+        .robot-input { width: 60px; padding: 10px; border-radius: 8px; border: none; text-align: center; font-weight: 800; font-size: 1.2rem; }
+
+        /* Game 3: Variable Manager */
+        .var-grid { display: grid; grid-template-columns: 1fr 1fr; height: 100%; padding: 2rem; gap: 2rem; }
+        .var-box { background: rgba(255,255,255,0.05); border: 2px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 1.5rem; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        .var-value { font-size: 4rem; font-weight: 800; color: var(--clr-accent); }
+        .var-actions { display: flex; gap: 1rem; margin-top: 1rem; }
+        .feedback { position: absolute; top: 20px; right: 20px; padding: 1rem; border-radius: 10px; color: white; display: none; z-index: 100; }
+
+        /* Animations */
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-30px); } }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .anim-bounce { animation: bounce 0.5s ease infinite; }
+        .anim-spin { animation: spin 0.5s linear infinite; }
+    </style>
+</head>
+<body class="site">
+    <header class="site-header">
+        <nav class="nav glass-nav">
+            <div class="container nav__container">
+                <a href="index.html" class="nav__logo">Game<span>Design</span>4Kids</a>
+                <a href="unplugged-collection.html" class="btn btn--outline btn--small">← กลับหน้าคู่มือ</a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="feedback" id="feedback-msg"></div>
+
+    <main class="container">
+        <div class="sim-container">
+            <div class="sim-header">
+                <h1 style="color: var(--clr-accent);">Logic Simulation Lab</h1>
+                <p>ลองเล่นกับตรรกะคอมพิวเตอร์ก่อนลงสนามจริง!</p>
+            </div>
+
+            <div class="sim-nav">
+                <div class="sim-tab active" data-target="game1">🚦 If-Else Bridge</div>
+                <div class="sim-tab" data-target="game2">🔄 Loop Robot</div>
+                <div class="sim-tab" data-target="game3">💎 Variable Manager</div>
+            </div>
+
+            <!-- Game 1: If-Else Bridge -->
+            <div class="sim-screen active" id="game1">
+                <div class="bridge-game">
+                    <div class="condition-box">
+                        <span id="condition-text">กำลังสุ่มเงื่อนไข...</span>
+                    </div>
+                    <div class="doors">
+                        <div class="door door--green" onclick="checkDoor('green')">✅</div>
+                        <div class="door door--red" onclick="checkDoor('red')">❌</div>
+                    </div>
+                    <p style="margin-top: 2rem; color: #94a3b8;">คลิกเลือกประตูตามเงื่อนไขที่ปรากฏด้านบน</p>
+                </div>
+            </div>
+
+            <!-- Game 2: Loop Robot -->
+            <div class="sim-screen" id="game2">
+                <div class="robot-stage">
+                    <div class="robot-sprite" id="robot">🤖</div>
+                    <div class="robot-controls">
+                        <span style="color: white; font-weight: 600;">Repeat</span>
+                        <input type="number" id="loop-count" class="robot-input" value="3" min="1" max="10">
+                        <span style="color: white; font-weight: 600;">Times</span>
+                        <button class="btn btn--accent btn--small" onclick="startLoop('bounce')">🦘 กระโดด</button>
+                        <button class="btn btn--primary btn--small" onclick="startLoop('spin')">🌀 หมุนตัว</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Game 3: Variable Manager -->
+            <div class="sim-screen" id="game3">
+                <div class="var-grid">
+                    <div class="var-box">
+                        <h3 style="color: white;">Variable: Score</h3>
+                        <div class="var-value" id="score-val">0</div>
+                        <div class="var-actions">
+                            <button class="btn btn--small btn--accent" onclick="changeVar('score', 10)">+10 Coin</button>
+                            <button class="btn btn--small btn--outline" onclick="changeVar('score', -5)" style="color: white;">-5 Error</button>
+                        </div>
+                    </div>
+                    <div class="var-box">
+                        <h3 style="color: white;">Variable: Life</h3>
+                        <div class="var-value" id="life-val" style="color: #ef4444;">3</div>
+                        <div class="var-actions">
+                            <button class="btn btn--small btn--primary" onclick="changeVar('life', 1)">+1 Health</button>
+                            <button class="btn btn--small btn--outline" onclick="changeVar('life', -1)" style="color: white;">-1 Damage</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Tab Switching Logic
+        const tabs = document.querySelectorAll('.sim-tab');
+        const screens = document.querySelectorAll('.sim-screen');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                tabs.forEach(t => t.classList.remove('active'));
+                screens.forEach(s => s.classList.remove('active'));
+                
+                tab.classList.add('active');
+                document.getElementById(tab.dataset.target).classList.add('active');
+            });
+        });
+
+        // Game 1: Logic Bridge
+        const conditions = [
+            { text: "IF ท้องฟ้าเป็นสีฟ้า ให้ไปประตูสีเขียว", correct: "green" },
+            { text: "IF 10 มากกว่า 5 ให้ไปประตูสีเขียว", correct: "green" },
+            { text: "IF ไฟจราจรสีแดง ให้ไปประตูสีแดง", correct: "red" },
+            { text: "IF 1 + 1 เท่ากับ 3 ให้ไปประตูสีเขียว | ELSE ไปประตูสีแดง", correct: "red" },
+            { text: "IF คุณเป็นหุ่นยนต์ ให้ไปประตูสีเขียว", correct: "green" }
+        ];
+        let currentCondition = 0;
+
+        function updateCondition() {
+            currentCondition = Math.floor(Math.random() * conditions.length);
+            document.getElementById('condition-text').innerText = conditions[currentCondition].text;
+        }
+
+        function checkDoor(color) {
+            const feedback = document.getElementById('feedback-msg');
+            if (color === conditions[currentCondition].correct) {
+                showFeedback("ถูกต้องเก่งมาก! 🌟", "#22c55e");
+                updateCondition();
+            } else {
+                showFeedback("ลองคิดดูอีกทีนะ... ❌", "#ef4444");
+            }
+        }
+
+        // Game 2: Loop Robot
+        async function startLoop(animClass) {
+            const count = document.getElementById('loop-count').value;
+            const robot = document.getElementById('robot');
+            const btns = document.querySelectorAll('#game2 button');
+            
+            btns.forEach(b => b.disabled = true);
+            
+            for (let i = 0; i < count; i++) {
+                showFeedback(`Loop รอบที่ ${i+1}`, "#6366f1");
+                robot.classList.add('anim-' + animClass);
+                await new Promise(r => setTimeout(r, 600));
+                robot.classList.remove('anim-' + animClass);
+                await new Promise(r => setTimeout(r, 200));
+            }
+            
+            btns.forEach(b => b.disabled = false);
+            showFeedback("จบการทำงาน (End Loop) ✨", "#22c55e");
+        }
+
+        // Game 3: Variable Manager
+        let score = 0;
+        let life = 3;
+
+        function changeVar(type, val) {
+            if (type === 'score') {
+                score += val;
+                if (score < 0) score = 0;
+                document.getElementById('score-val').innerText = score;
+                showFeedback(val > 0 ? "Score เพิ่มขึ้น! 💰" : "Score ลดลง 📉", val > 0 ? "#22c55e" : "#f59e0b");
+            } else {
+                life += val;
+                if (life < 0) life = 0;
+                document.getElementById('life-val').innerText = life;
+                showFeedback(val > 0 ? "เพิ่มพลังชีวิต! ❤️" : "โอ๊ย! เจ็บนะ 💥", val > 0 ? "#22c55e" : "#ef4444");
+                if (life === 0) showFeedback("GAME OVER! 💀", "#000");
+            }
+        }
+
+        function showFeedback(msg, color) {
+            const f = document.getElementById('feedback-msg');
+            f.innerText = msg;
+            f.style.background = color;
+            f.style.display = 'block';
+            setTimeout(() => { f.style.display = 'none'; }, 2000);
+        }
+
+        // Initial setup
+        updateCondition();
+    </script>
+</body>
+</html>

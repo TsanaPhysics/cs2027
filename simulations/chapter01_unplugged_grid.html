@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ห้องทดลอง 3D: หุ่นยนต์เก็บตัวอย่างวิทยาศาสตร์บนตารางกริด (3D Robot Grid Navigator)</title>
+
+  <!-- Google Fonts & FontAwesome 6 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Three.js & OrbitControls -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+  <style>
+    :root {
+      --bg-dark: #030712;
+      --card-bg: rgba(11, 19, 43, 0.94);
+      --card-border: rgba(0, 240, 255, 0.25);
+      --cyan: #00f0ff;
+      --emerald: #10b981;
+      --amber: #f59e0b;
+      --rose: #f43f5e;
+      --indigo: #6366f1;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+    body {
+      background: var(--bg-dark);
+      color: #f8fafc;
+      font-family: 'Prompt', 'Sarabun', sans-serif;
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+    }
+    #webgl-container { position: absolute; inset: 0; z-index: 1; }
+    .hud-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      pointer-events: none;
+      z-index: 10;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .hud-overlay * { pointer-events: auto; }
+
+    /* Top Bar */
+    .top-header {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.7);
+    }
+    .header-title-group h1 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Chakra Petch', sans-serif;
+    }
+    .header-title-group h1 i { color: var(--cyan); }
+    .header-subtitle { font-size: 0.8rem; color: #94a3b8; margin-top: 3px; }
+    .header-actions { display: flex; gap: 8px; }
+    .btn-header {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: #e2e8f0;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-family: inherit;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-header:hover {
+      background: rgba(0, 240, 255, 0.15);
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+
+    /* Left Control Dock */
+    .left-dock {
+      position: absolute;
+      top: 90px;
+      left: 16px;
+      width: 320px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 16px;
+      backdrop-filter: blur(14px);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      max-height: calc(100vh - 170px);
+      overflow-y: auto;
+    }
+    .section-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--cyan);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .cmd-pad {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px;
+    }
+    .btn-cmd {
+      background: rgba(15, 23, 42, 0.75);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: #e2e8f0;
+      padding: 9px 8px;
+      border-radius: 8px;
+      font-size: 0.78rem;
+      font-family: inherit;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    .btn-cmd:hover {
+      background: rgba(2, 132, 199, 0.35);
+      border-color: var(--cyan);
+      color: #fff;
+    }
+
+    /* Command Queue List */
+    .queue-box {
+      background: #020617;
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      padding: 10px;
+      min-height: 120px;
+      max-height: 140px;
+      overflow-y: auto;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+      align-content: flex-start;
+    }
+    .queue-chip {
+      background: rgba(0, 240, 255, 0.15);
+      border: 1px solid var(--cyan);
+      color: #fff;
+      font-size: 0.72rem;
+      font-family: 'JetBrains Mono', monospace;
+      padding: 3px 8px;
+      border-radius: 4px;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .btn-run {
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #fff;
+      border: none;
+      padding: 10px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+    .btn-run:hover { filter: brightness(1.15); box-shadow: 0 0 16px var(--emerald); }
+
+    /* Right Guide Dock */
+    .right-dock {
+      position: absolute;
+      top: 90px;
+      right: 16px;
+      width: 310px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 16px;
+      backdrop-filter: blur(14px);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .mission-box {
+      background: rgba(15, 23, 42, 0.55);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 0.76rem;
+      color: #cbd5e1;
+      line-height: 1.5;
+    }
+
+    /* Bottom Telemetry */
+    .bottom-bar {
+      margin-top: auto;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.7);
+    }
+    .tel-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+    .tel-lbl {
+      font-size: 0.7rem;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+    .tel-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <div id="webgl-container"></div>
+
+  <div class="hud-overlay">
+    <!-- Header -->
+    <header class="top-header">
+      <div class="header-title-group">
+        <h1><i class="fas fa-robot"></i> ห้องทดลอง 3D: หุ่นยนต์เก็บตัวอย่างวิทยาศาสตร์บนตารางกริด (Unplugged Grid)</h1>
+        <div class="header-subtitle">วิชา 4124941 วิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์ | ผศ.ดร.ชีวะ ทัศนา (มรภ.รำไพพรรณี)</div>
+      </div>
+      <div class="header-actions">
+        <button class="btn-header" onclick="resetMission()"><i class="fas fa-rotate-left"></i> รีเซ็ตภารกิจ</button>
+        <a href="../lessons/week_01.html" class="btn-header"><i class="fas fa-arrow-left"></i> กลับสู่บทเรียน สัปดาห์ที่ 1</a>
+      </div>
+    </header>
+
+    <!-- Left Controls -->
+    <div class="left-dock">
+      <div class="section-title"><i class="fas fa-gamepad"></i> 1. แผงการ์ดคำสั่ง (Command Cards)</div>
+      <div class="cmd-pad">
+        <button class="btn-cmd" onclick="addCommand('FORWARD')"><i class="fas fa-arrow-up" style="color: var(--cyan);"></i> เดินหน้า 1 ช่อง</button>
+        <button class="btn-cmd" onclick="addCommand('TURN_LEFT')"><i class="fas fa-undo" style="color: var(--amber);"></i> หันซ้าย 90°</button>
+        <button class="btn-cmd" onclick="addCommand('TURN_RIGHT')"><i class="fas fa-redo" style="color: var(--amber);"></i> หันขวา 90°</button>
+        <button class="btn-cmd" onclick="addCommand('COLLECT')"><i class="fas fa-hand-holding" style="color: var(--emerald);"></i> เก็บตัวอย่าง</button>
+      </div>
+
+      <div class="section-title" style="margin-top: 6px;"><i class="fas fa-list-ol"></i> คิวคำสั่งที่วางแผนไว้ (Algorithm Queue)</div>
+      <div class="queue-box" id="queueList">
+        <span style="color: #64748b; font-size: 0.75rem;">(ยังไม่มีคำสั่ง - คลิกการ์ดคำสั่งด้านบน)</span>
+      </div>
+
+      <div style="display: flex; gap: 6px;">
+        <button class="btn-run" style="flex: 1;" onclick="executeQueue()"><i class="fas fa-play"></i> สั่งรันคำสั่ง (Execute)</button>
+        <button class="btn-cmd" style="background: rgba(244, 63, 94, 0.2); border-color: var(--rose); color: var(--rose);" onclick="clearQueue()"><i class="fas fa-trash"></i> ล้างคิว</button>
+      </div>
+    </div>
+
+    <!-- Right Guide -->
+    <div class="right-dock">
+      <div class="section-title"><i class="fas fa-bullseye"></i> ภารกิจการสำรวจแปลงเกษตร (PBL)</div>
+      <div class="mission-box">
+        <strong style="color: var(--cyan);">ภารกิจ:</strong> นำทางหุ่นยนต์ Rover ออกจากจุดเริ่มต้น (0,0) ไปเก็บ <strong>ตัวอย่างดินและพืช (ผลึกสีเขียวมรกต)</strong> ให้ครบทั้ง 3 จุด โดย <strong>ห้ามชนโขดหินกีดขวาง (แท่งสีแดง)</strong>
+      </div>
+      <div class="mission-box">
+        <strong style="color: var(--amber);">การเชื่อมโยงอันปลั๊ก (Unplugged):</strong><br>
+        ในห้องเรียนจริง นักเรียนจะใช้ <em>"การ์ดลูกศรบนกระดาษ Flipchart"</em> ก่อนที่จะนำมาทดสอบบนโปรแกรมจำลอง 3D เพื่อสร้างความเข้าใจเรื่องลำดับการทำงาน (Sequential Execution)
+      </div>
+    </div>
+
+    <!-- Bottom Telemetry -->
+    <div class="bottom-bar">
+      <div class="tel-item">
+        <span class="tel-lbl">พิกัดหุ่นยนต์ (Robot Position)</span>
+        <span class="tel-val" id="telPos" style="color: var(--cyan);">(0, 0)</span>
+      </div>
+      <div class="tel-item">
+        <span class="tel-lbl">ทิศทางที่หันหน้า (Facing Direction)</span>
+        <span class="tel-val" id="telDir">ทิศเหนือ (North)</span>
+      </div>
+      <div class="tel-item">
+        <span class="tel-lbl">ตัวอย่างที่เก็บได้ (Collected Samples)</span>
+        <span class="tel-val" id="telCollected" style="color: var(--emerald);">0 / 3 จุด</span>
+      </div>
+      <div class="tel-item">
+        <span class="tel-lbl">จำนวนคำสั่งที่ใช้ (Steps Count)</span>
+        <span class="tel-val" id="telSteps" style="color: var(--amber);">0 ก้าว</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let scene, camera, renderer, controls;
+    const GRID_SIZE = 5;
+    const CELL_SIZE = 2.0;
+
+    let robotMesh;
+    let robotX = 0, robotZ = 0;
+    let robotDir = 0; // 0: +Z (South), 1: +X (East), 2: -Z (North), 3: -X (West)
+
+    const samples = [
+      { x: 1, z: 2, mesh: null, collected: false },
+      { x: 3, z: 1, mesh: null, collected: false },
+      { x: 4, z: 4, mesh: null, collected: false }
+    ];
+
+    const obstacles = [
+      { x: 1, z: 1 },
+      { x: 2, z: 3 },
+      { x: 3, z: 3 }
+    ];
+
+    let commandQueue = [];
+    let isExecuting = false;
+    let collectedCount = 0;
+    let stepCount = 0;
+
+    function init() {
+      const container = document.getElementById('webgl-container');
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x030712);
+
+      camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+      camera.position.set(0, 14, 14);
+
+      renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      container.appendChild(renderer.domElement);
+
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
+      controls.target.set(0, 0, 0);
+
+      scene.add(new THREE.AmbientLight(0xffffff, 0.7));
+      const dLight = new THREE.DirectionalLight(0x00f0ff, 1.2);
+      dLight.position.set(5, 15, 8);
+      scene.add(dLight);
+
+      buildGridFloor();
+      buildObstacles();
+      buildSamples();
+      buildRobot();
+
+      window.addEventListener('resize', onWindowResize);
+      animate();
+    }
+
+    function gridToWorld(gx, gz) {
+      const offset = (GRID_SIZE - 1) / 2;
+      return {
+        x: (gx - offset) * CELL_SIZE,
+        z: (gz - offset) * CELL_SIZE
+      };
+    }
+
+    function buildGridFloor() {
+      for (let x = 0; x < GRID_SIZE; x++) {
+        for (let z = 0; z < GRID_SIZE; z++) {
+          const w = gridToWorld(x, z);
+          const geom = new THREE.BoxGeometry(CELL_SIZE - 0.1, 0.1, CELL_SIZE - 0.1);
+          const mat = new THREE.MeshStandardMaterial({
+            color: (x + z) % 2 === 0 ? 0x0f172a : 0x1e293b,
+            metalness: 0.6,
+            roughness: 0.3
+          });
+          const tile = new THREE.Mesh(geom, mat);
+          tile.position.set(w.x, 0, w.z);
+          scene.add(tile);
+        }
+      }
+    }
+
+    function buildObstacles() {
+      obstacles.forEach(ob => {
+        const w = gridToWorld(ob.x, ob.z);
+        const geom = new THREE.BoxGeometry(1.2, 1.5, 1.2);
+        const mat = new THREE.MeshStandardMaterial({ color: 0xf43f5e, metalness: 0.5, roughness: 0.4 });
+        const mesh = new THREE.Mesh(geom, mat);
+        mesh.position.set(w.x, 0.75, w.z);
+        scene.add(mesh);
+      });
+    }
+
+    function buildSamples() {
+      samples.forEach(s => {
+        const w = gridToWorld(s.x, s.z);
+        const geom = new THREE.OctahedronGeometry(0.5, 0);
+        const mat = new THREE.MeshStandardMaterial({
+          color: 0x10b981,
+          emissive: 0x10b981,
+          emissiveIntensity: 0.5,
+          roughness: 0.1
+        });
+        const mesh = new THREE.Mesh(geom, mat);
+        mesh.position.set(w.x, 0.8, w.z);
+        scene.add(mesh);
+        s.mesh = mesh;
+      });
+    }
+
+    function buildRobot() {
+      robotMesh = new THREE.Group();
+
+      // Chassis
+      const bGeom = new THREE.BoxGeometry(1.0, 0.5, 1.2);
+      const bMat = new THREE.MeshStandardMaterial({ color: 0x0284c7, metalness: 0.8, roughness: 0.2 });
+      const body = new THREE.Mesh(bGeom, bMat);
+      body.position.y = 0.35;
+      robotMesh.add(body);
+
+      // Eye / Sensor
+      const eyeGeom = new THREE.SphereGeometry(0.2, 12, 12);
+      const eyeMat = new THREE.MeshStandardMaterial({ color: 0x00f0ff, emissive: 0x00f0ff, emissiveIntensity: 0.8 });
+      const eye = new THREE.Mesh(eyeGeom, eyeMat);
+      eye.position.set(0, 0.5, 0.55);
+      robotMesh.add(eye);
+
+      // Wheels
+      for (let i = -1; i <= 1; i += 2) {
+        for (let j = -1; j <= 1; j += 2) {
+          const wGeom = new THREE.CylinderGeometry(0.2, 0.2, 0.15, 12);
+          wGeom.rotateZ(Math.PI / 2);
+          const wMat = new THREE.MeshStandardMaterial({ color: 0x334155 });
+          const wheel = new THREE.Mesh(wGeom, wMat);
+          wheel.position.set(i * 0.55, 0.2, j * 0.4);
+          robotMesh.add(wheel);
+        }
+      }
+
+      updateRobotTransform();
+      scene.add(robotMesh);
+    }
+
+    function updateRobotTransform() {
+      const w = gridToWorld(robotX, robotZ);
+      robotMesh.position.set(w.x, 0, w.z);
+      robotMesh.rotation.y = robotDir * (Math.PI / 2);
+
+      const dirs = ['ทิศใต้ (South)', 'ทิศตะวันออก (East)', 'ทิศเหนือ (North)', 'ทิศตะวันตก (West)'];
+      document.getElementById('telPos').innerText = `(${robotX}, ${robotZ})`;
+      document.getElementById('telDir').innerText = dirs[robotDir];
+    }
+
+    function addCommand(cmd) {
+      if (isExecuting) return;
+      commandQueue.push(cmd);
+      renderQueueUI();
+    }
+
+    function clearQueue() {
+      if (isExecuting) return;
+      commandQueue = [];
+      renderQueueUI();
+    }
+
+    function renderQueueUI() {
+      const box = document.getElementById('queueList');
+      if (commandQueue.length === 0) {
+        box.innerHTML = '<span style="color: #64748b; font-size: 0.75rem;">(ยังไม่มีคำสั่ง - คลิกการ์ดคำสั่งด้านบน)</span>';
+        return;
+      }
+      box.innerHTML = commandQueue.map((cmd, idx) => {
+        const labels = {
+          'FORWARD': 'เดินหน้า',
+          'TURN_LEFT': 'หันซ้าย',
+          'TURN_RIGHT': 'หันขวา',
+          'COLLECT': 'เก็บตัวอย่าง'
+        };
+        return `<span class="queue-chip">${idx + 1}. ${labels[cmd]}</span>`;
+      }).join('');
+    }
+
+    function executeQueue() {
+      if (isExecuting || commandQueue.length === 0) return;
+      isExecuting = true;
+      let stepIdx = 0;
+
+      const timer = setInterval(() => {
+        if (stepIdx < commandQueue.length) {
+          const cmd = commandQueue[stepIdx];
+          runOneCommand(cmd);
+          stepCount++;
+          document.getElementById('telSteps').innerText = `${stepCount} ก้าว`;
+          stepIdx++;
+        } else {
+          clearInterval(timer);
+          isExecuting = false;
+          checkMissionComplete();
+        }
+      }, 600);
+    }
+
+    function runOneCommand(cmd) {
+      if (cmd === 'FORWARD') {
+        let nxtX = robotX;
+        let nxtZ = robotZ;
+        if (robotDir === 0) nxtZ += 1;
+        else if (robotDir === 1) nxtX += 1;
+        else if (robotDir === 2) nxtZ -= 1;
+        else if (robotDir === 3) nxtX -= 1;
+
+        // Check boundaries
+        if (nxtX >= 0 && nxtX < GRID_SIZE && nxtZ >= 0 && nxtZ < GRID_SIZE) {
+          // Check obstacles
+          const hitObstacle = obstacles.some(ob => ob.x === nxtX && ob.y === nxtZ);
+          if (!hitObstacle) {
+            robotX = nxtX;
+            robotZ = nxtZ;
+            updateRobotTransform();
+          } else {
+            flashRobot(0xf43f5e);
+          }
+        } else {
+          flashRobot(0xf43f5e);
+        }
+      } else if (cmd === 'TURN_LEFT') {
+        robotDir = (robotDir + 3) % 4;
+        updateRobotTransform();
+      } else if (cmd === 'TURN_RIGHT') {
+        robotDir = (robotDir + 1) % 4;
+        updateRobotTransform();
+      } else if (cmd === 'COLLECT') {
+        const s = samples.find(s => s.x === robotX && s.z === robotZ && !s.collected);
+        if (s) {
+          s.collected = true;
+          s.mesh.visible = false;
+          collectedCount++;
+          document.getElementById('telCollected').innerText = `${collectedCount} / 3 จุด`;
+          flashRobot(0x10b981);
+        }
+      }
+    }
+
+    function flashRobot(hex) {
+      robotMesh.children[0].material.color.setHex(hex);
+      setTimeout(() => {
+        robotMesh.children[0].material.color.setHex(0x0284c7);
+      }, 300);
+    }
+
+    function checkMissionComplete() {
+      if (collectedCount === 3) {
+        alert('🎉 ยินดีด้วย! หุ่นยนต์เก็บตัวอย่างวิทยาศาสตร์ครบทั้ง 3 จุดเรียบร้อยแล้ว!');
+      }
+    }
+
+    function resetMission() {
+      robotX = 0;
+      robotZ = 0;
+      robotDir = 0;
+      collectedCount = 0;
+      stepCount = 0;
+      commandQueue = [];
+      samples.forEach(s => {
+        s.collected = false;
+        if (s.mesh) s.mesh.visible = true;
+      });
+      updateRobotTransform();
+      renderQueueUI();
+      document.getElementById('telCollected').innerText = '0 / 3 จุด';
+      document.getElementById('telSteps').innerText = '0 ก้าว';
+      camera.position.set(0, 14, 14);
+      controls.target.set(0, 0, 0);
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+      samples.forEach(s => {
+        if (s.mesh && s.mesh.visible) {
+          s.mesh.rotation.y += 0.02;
+          s.mesh.rotation.x += 0.01;
+        }
+      });
+      controls.update();
+      renderer.render(scene, camera);
+    }
+
+    function onWindowResize() {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    window.onload = init;
+  </script>
+</body>
+</html>

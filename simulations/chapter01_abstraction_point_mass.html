@@ -1,0 +1,1235 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ห้องทดลอง 3D: การคิดเชิงนามธรรม (Abstraction & Point-Mass Sandbox)</title>
+
+  <!-- Google Fonts & FontAwesome 6 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Three.js & OrbitControls -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+  <style>
+    :root {
+      --bg-dark: #030712;
+      --card-bg: rgba(11, 19, 43, 0.92);
+      --card-border: rgba(0, 240, 255, 0.25);
+      --cyan: #00f0ff;
+      --cyan-glow: rgba(0, 240, 255, 0.4);
+      --emerald: #10b981;
+      --amber: #f59e0b;
+      --rose: #f43f5e;
+      --blue: #3b82f6;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+
+    body {
+      background: var(--bg-dark);
+      color: #f8fafc;
+      font-family: 'Prompt', 'Sarabun', sans-serif;
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+    }
+
+    #webgl-canvas {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    /* Top HUD Header */
+    .top-bar {
+      position: absolute;
+      top: 14px;
+      left: 16px;
+      right: 16px;
+      z-index: 30;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      pointer-events: none;
+    }
+
+    .brand-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--card-border);
+      border-left: 5px solid var(--cyan);
+      border-radius: 14px;
+      padding: 10px 18px;
+      pointer-events: auto;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+    .brand-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #0284c7, #00f0ff);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.4rem;
+      color: #030712;
+      box-shadow: 0 0 20px var(--cyan-glow);
+    }
+    .brand-text h1 {
+      font-family: 'Chakra Petch', sans-serif;
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .brand-text p {
+      font-size: 0.8rem;
+      color: #94a3b8;
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 8px;
+      pointer-events: auto;
+    }
+
+    .btn-nav {
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--card-border);
+      color: #e2e8f0;
+      padding: 9px 14px;
+      border-radius: 10px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+      font-family: inherit;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+    }
+    .btn-nav:hover {
+      transform: translateY(-2px);
+      border-color: var(--cyan);
+      color: #fff;
+      box-shadow: 0 0 15px var(--cyan-glow);
+    }
+    .btn-nav.primary {
+      background: linear-gradient(135deg, #0284c7, #00f0ff);
+      color: #030712;
+      font-weight: 700;
+      border: none;
+    }
+
+    /* Left Control Dock */
+    .left-dock {
+      position: absolute;
+      top: 90px;
+      left: 16px;
+      z-index: 30;
+      width: 320px;
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 16px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-height: calc(100vh - 170px);
+      overflow-y: auto;
+    }
+
+    .section-title {
+      font-size: 0.76rem;
+      font-weight: 700;
+      color: var(--cyan);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      margin-bottom: 2px;
+    }
+
+    /* Level Selector Cards */
+    .level-cards-list {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+    }
+    .level-card-btn {
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px;
+      padding: 9px 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #cbd5e1;
+      font-family: inherit;
+    }
+    .level-card-btn:hover {
+      background: rgba(2, 132, 199, 0.25);
+      border-color: var(--cyan);
+      transform: translateX(3px);
+    }
+    .level-card-btn.active {
+      background: linear-gradient(135deg, rgba(2, 132, 199, 0.45), rgba(0, 240, 255, 0.2));
+      border: 1.5px solid var(--cyan);
+      color: #fff;
+      box-shadow: 0 0 16px rgba(0, 240, 255, 0.3);
+    }
+    .level-badge {
+      font-size: 0.68rem;
+      font-weight: 800;
+      padding: 2px 7px;
+      border-radius: 6px;
+      background: rgba(0, 240, 255, 0.15);
+      color: var(--cyan);
+    }
+    .level-poly {
+      font-size: 0.72rem;
+      font-family: 'JetBrains Mono', monospace;
+      color: #94a3b8;
+    }
+
+    /* Experiment Sliders & Controls */
+    .dock-box {
+      background: rgba(15, 23, 42, 0.55);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .slider-row {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .slider-header {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      color: #cbd5e1;
+    }
+    .slider-header strong {
+      color: var(--amber);
+      font-family: 'JetBrains Mono', monospace;
+    }
+    input[type=range] {
+      width: 100%;
+      height: 6px;
+      border-radius: 3px;
+      background: #1e293b;
+      outline: none;
+      accent-color: var(--cyan);
+      cursor: pointer;
+    }
+
+    .btn-launch {
+      background: linear-gradient(135deg, #059669, #10b981);
+      color: #fff;
+      font-family: inherit;
+      font-weight: 700;
+      font-size: 0.92rem;
+      border: none;
+      padding: 11px;
+      border-radius: 10px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+      box-shadow: 0 0 20px rgba(16, 185, 129, 0.4);
+    }
+    .btn-launch:hover {
+      transform: scale(1.02);
+      box-shadow: 0 0 25px rgba(16, 185, 129, 0.6);
+    }
+    .btn-launch.running {
+      background: linear-gradient(135deg, #dc2626, #ef4444);
+      box-shadow: 0 0 20px rgba(239, 68, 68, 0.4);
+    }
+
+    /* Step Guide Tutorial Banner (Top Center) */
+    .guide-banner {
+      position: absolute;
+      top: 90px;
+      left: 352px;
+      right: 16px;
+      z-index: 20;
+      background: rgba(11, 19, 43, 0.85);
+      backdrop-filter: blur(12px);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 10px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      pointer-events: none;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.6);
+    }
+    .guide-steps {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      font-size: 0.8rem;
+    }
+    .guide-step {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #cbd5e1;
+    }
+    .step-num {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      background: var(--cyan);
+      color: #030712;
+      font-size: 0.72rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Bottom Telemetry HUD */
+    .bottom-hud {
+      position: absolute;
+      bottom: 16px;
+      left: 16px;
+      right: 16px;
+      z-index: 30;
+      background: var(--card-bg);
+      backdrop-filter: blur(16px);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 12px 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 16px;
+      box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+      pointer-events: none;
+    }
+    .hud-block {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+    .hud-caption {
+      font-size: 0.68rem;
+      color: #94a3b8;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .hud-value {
+      font-size: 1.1rem;
+      font-weight: 700;
+      font-family: 'JetBrains Mono', monospace;
+      color: #fff;
+    }
+    .hud-sub {
+      font-size: 0.72rem;
+      color: #64748b;
+    }
+
+    /* 3D 360 View Indicator */
+    .orbit-hint {
+      position: absolute;
+      bottom: 110px;
+      right: 20px;
+      z-index: 20;
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 0.75rem;
+      color: #94a3b8;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    /* Worksheet Modal */
+    #modal-worksheet {
+      position: absolute;
+      inset: 0;
+      z-index: 100;
+      background: rgba(3, 7, 18, 0.9);
+      backdrop-filter: blur(14px);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .modal-box {
+      background: #0b1329;
+      border: 2px solid var(--cyan);
+      border-radius: 16px;
+      padding: 24px;
+      max-width: 820px;
+      width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.9);
+    }
+    .modal-box table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 16px 0;
+      font-size: 0.88rem;
+    }
+    .modal-box th, .modal-box td {
+      border: 1px solid #1e293b;
+      padding: 9px 12px;
+      text-align: center;
+    }
+    .modal-box th {
+      background: #132247;
+      color: var(--cyan);
+    }
+
+    @media (max-width: 900px) {
+      .guide-banner { display: none; }
+      .left-dock { width: 260px; top: 80px; }
+      .bottom-hud { grid-template-columns: 1fr 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 3D WebGL Canvas -->
+  <div id="webgl-canvas"></div>
+
+  <!-- Top Navigation & Branding -->
+  <div class="top-bar">
+    <div class="brand-card">
+      <div class="brand-icon"><i class="fas fa-atom"></i></div>
+      <div class="brand-text">
+        <h1>การคิดเชิงนามธรรม: จากรถยนต์สู่มวลจุด (Point Mass Sandbox)</h1>
+        <p>บทเรียนวิทยาการคำนวณและฟิสิกส์ • มหาวิทยาลัยราชภัฏรำไพพรรณี</p>
+      </div>
+    </div>
+
+    <div class="top-actions">
+      <button class="btn-nav" onclick="openWorksheet()"><i class="fas fa-file-alt"></i> ใบงาน & ทฤษฎี</button>
+      <button class="btn-nav" onclick="toggleCameraView()"><i class="fas fa-video"></i> สลับมุมกล้อง</button>
+      <button class="btn-nav primary" onclick="goBackToCourse()"><i class="fas fa-arrow-left"></i> กลับสู่บทเรียน</button>
+    </div>
+  </div>
+
+  <!-- Step-by-Step Guide Banner -->
+  <div class="guide-banner">
+    <div class="guide-steps">
+      <div class="guide-step">
+        <span class="step-num">1</span>
+        <span><strong>เลือกระดับ:</strong> ลองกดสลับ Level 0 (รถยนต์จริง) กับ Level 3 (มวลจุด)</span>
+      </div>
+      <div class="guide-step">
+        <span class="step-num">2</span>
+        <span><strong>ปรับแรง $F$:</strong> สไลด์แถบแรงผลัก</span>
+      </div>
+      <div class="guide-step">
+        <span class="step-num">3</span>
+        <span><strong>กดปล่อยรถ:</strong> สังเกตว่าผลการเคลื่อนที่ $s, v$ เท่ากันเป๊ะ แต่ CPU ต่างกัน 50,000 เท่า!</span>
+      </div>
+    </div>
+    <span style="color:var(--emerald); font-weight:700; font-size:0.78rem;"><i class="fas fa-check-circle"></i> พร้อมทดลอง</span>
+  </div>
+
+  <!-- Left Interactive Control Dock -->
+  <div class="left-dock">
+    <div class="section-title"><i class="fas fa-layer-group"></i> 1. เลือกระดับนามธรรม (Abstraction):</div>
+    
+    <div class="level-cards-list">
+      <button class="level-card-btn" id="btn-lvl-0" onclick="selectLevel(0)">
+        <div>
+          <div style="font-weight:700; font-size:0.85rem;">🚗 Level 0: รถยนต์จริง</div>
+          <div class="level-poly">120,000 Polygons</div>
+        </div>
+        <span class="level-badge" style="color:#f43f5e; background:rgba(244,63,94,0.15);">Full 3D</span>
+      </button>
+
+      <button class="level-card-btn" id="btn-lvl-1" onclick="selectLevel(1)">
+        <div>
+          <div style="font-weight:700; font-size:0.85rem;">🚙 Level 1: เปลือกนอกลดทอน</div>
+          <div class="level-poly">12,000 Polygons</div>
+        </div>
+        <span class="level-badge" style="color:#38bdf8; background:rgba(56,189,248,0.15);">Low-Poly</span>
+      </button>
+
+      <button class="level-card-btn" id="btn-lvl-2" onclick="selectLevel(2)">
+        <div>
+          <div style="font-weight:700; font-size:0.85rem;">📦 Level 2: กล่องขอบเขต</div>
+          <div class="level-poly">12 Polygons</div>
+        </div>
+        <span class="level-badge" style="color:#a855f7; background:rgba(168,85,247,0.15);">Box Bound</span>
+      </button>
+
+      <button class="level-card-btn active" id="btn-lvl-3" onclick="selectLevel(3)">
+        <div>
+          <div style="font-weight:700; font-size:0.85rem;">🔴 Level 3: มวลจุด Point Mass</div>
+          <div class="level-poly">1 Polygon (Ideal Physics)</div>
+        </div>
+        <span class="level-badge" style="color:#10b981; background:rgba(16,185,129,0.15);">★ แนะนำ</span>
+      </button>
+    </div>
+
+    <div class="section-title" style="margin-top:6px;"><i class="fas fa-sliders-h"></i> 2. กำหนดตัวแปรฟิสิกส์:</div>
+    <div class="dock-box">
+      <div class="slider-row">
+        <div class="slider-header">
+          <span>แรงขับเคลื่อน ($F$):</span>
+          <strong id="val-force">3,000 N</strong>
+        </div>
+        <input type="range" id="range-force" min="1000" max="8000" step="500" value="3000" oninput="updatePhysicsValues()">
+      </div>
+
+      <div class="slider-row">
+        <div class="slider-header">
+          <span>มวลรวมของรถ ($m$):</span>
+          <strong id="val-mass">1,500 kg</strong>
+        </div>
+        <input type="range" id="range-mass" min="800" max="3000" step="100" value="1500" oninput="updatePhysicsValues()">
+      </div>
+
+      <div style="font-size:0.75rem; color:#94a3b8; display:flex; justify-content:space-between; border-top:1px solid rgba(255,255,255,0.08); padding-top:6px;">
+        <span>อัตราเร่งตามสูตร $a = F/m$:</span>
+        <strong id="val-accel" style="color:var(--cyan); font-family:'JetBrains Mono';">2.00 m/s²</strong>
+      </div>
+    </div>
+
+    <div class="section-title" style="margin-top:6px;"><i class="fas fa-play-circle"></i> 3. ดำเนินการทดสอบ:</div>
+    <button class="btn-launch" id="btn-launch-run" onclick="toggleRunTest()">
+      <i class="fas fa-play" id="launch-icon"></i> <span id="launch-text">ปล่อยวัตถุวิ่งทดสอบ (Run Test)</span>
+    </button>
+    <button class="btn-nav" onclick="resetCar()" style="justify-content:center;">
+      <i class="fas fa-undo"></i> รีเซ็ตกลับจุดเริ่มต้น
+    </button>
+  </div>
+
+  <!-- 3D Orbit Controls Hint -->
+  <div class="orbit-hint">
+    <i class="fas fa-mouse"></i> หมุนดูได้รอบทิศทาง 360° | เลื่อนล้อเมาส์เพื่อซูม
+  </div>
+
+  <!-- Bottom Telemetry HUD -->
+  <div class="bottom-hud">
+    <div class="hud-block">
+      <span class="hud-caption">ระดับโมเดลปัจจุบัน</span>
+      <span class="hud-value" id="hud-name" style="color:var(--cyan);">Level 3: มวลจุด</span>
+      <span class="hud-sub" id="hud-mesh-info">Single Particle Node</span>
+    </div>
+
+    <div class="hud-block">
+      <span class="hud-caption">เวลาคำนวณของซีพียู (Compute Cost)</span>
+      <span class="hud-value" id="hud-latency" style="color:var(--emerald);">0.02 ms</span>
+      <span class="hud-sub" id="hud-fps">50,000 FPS • เร็วกว่าเดิม 840x</span>
+    </div>
+
+    <div class="hud-block">
+      <span class="hud-caption">ความเร็วขณะนี้ ($v = at$)</span>
+      <span class="hud-value" id="hud-velocity" style="color:var(--amber);">0.0 km/h</span>
+      <span class="hud-sub" id="hud-vel-ms">0.00 m/s</span>
+    </div>
+
+    <div class="hud-block">
+      <span class="hud-caption">ระยะทางที่วิ่งได้ ($s = \frac{1}{2}at^2$)</span>
+      <span class="hud-value" id="hud-distance" style="color:#fff;">0.00 m</span>
+      <span class="hud-sub" id="hud-time-sec">เวลา: 0.00 s</span>
+    </div>
+
+    <div class="hud-block">
+      <span class="hud-caption">ความแม่นยำทางฟิสิกส์ (Accuracy)</span>
+      <span class="hud-value" style="color:var(--emerald);">100%</span>
+      <span class="hud-sub">สมการ $s, v$ ตรงกันเป๊ะทุกระดับ</span>
+    </div>
+  </div>
+
+  <!-- Modal Worksheet -->
+  <div id="modal-worksheet">
+    <div class="modal-box">
+      <div style="display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #1e293b; padding-bottom:12px;">
+        <h2 style="font-size:1.2rem; color:var(--cyan); font-family:'Chakra Petch';">
+          <i class="fas fa-book-open"></i> ใบความรู้และตารางเปรียบเทียบ: การคิดเชิงนามธรรม (Abstraction)
+        </h2>
+        <button class="btn-nav" onclick="closeWorksheet()" style="padding:4px 10px; background:#ef4444; color:#fff; border:none;">✕ ปิด</button>
+      </div>
+
+      <div style="margin-top:14px; font-size:0.88rem; line-height:1.7; color:#cbd5e1;">
+        <p><strong>หัวใจสำคัญของ Abstraction ในวิทยาการคอมพิวเตอร์และฟิสิกส์:</strong></p>
+        <p>เมื่อเราต้องการศึกษาการเคลื่อนที่ของวัตถุ (เช่น รถยนต์วิ่งเป็นเส้นตรง, ดาวเทียมโคจรรอบโลก, การตกอย่างอิสระ) วัตถุทุกจุดภายในรถยนต์เคลื่อนที่ไปด้วยความเร็วเดียวกัน ดังนั้น รายละเอียดทางกายภาพ เช่น กระจกมองข้าง เบาะหนัง ล้อแม็ก ดอกยาง และสีของตัวถัง <strong>ไม่มีผลต่อสมการการเคลื่อนที่ $s = vt$ หรือ $F = ma$ เลยแม้แต่น้อย!</strong></p>
+        <p>การละทิ้งรายละเอียดเหล่านั้นแล้วแทนค่าด้วย <strong>"มวลจุด (Point Mass)"</strong> จึงทำให้ระบบคอมพิวเตอร์สามารถคำนวณและจำลองการเคลื่อนที่ได้เร็วกว่าเดิมกว่า 50,000 เท่า โดยไม่สูญเสียความแม่นยำทางฟิสิกส์</p>
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>ระดับนามธรรม</th>
+            <th>รูปแบบแบบจำลอง</th>
+            <th>จำนวนโพลีกอน</th>
+            <th>เวลาประมวลผล</th>
+            <th>ความคลาดเคลื่อน</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Level 0</strong></td>
+            <td>รถยนต์จริง (Full Model)</td>
+            <td>120,000</td>
+            <td>16.80 ms (60 FPS)</td>
+            <td>0.00%</td>
+          </tr>
+          <tr>
+            <td><strong>Level 1</strong></td>
+            <td>เปลือกนอกลดทอน (Low-Poly)</td>
+            <td>12,000</td>
+            <td>4.20 ms (238 FPS)</td>
+            <td>0.00%</td>
+          </tr>
+          <tr>
+            <td><strong>Level 2</strong></td>
+            <td>กล่องขอบเขต (Bounding Box)</td>
+            <td>12</td>
+            <td>0.30 ms (3,300 FPS)</td>
+            <td>0.00%</td>
+          </tr>
+          <tr style="background:rgba(16,185,129,0.15); color:#10b981; font-weight:700;">
+            <td>Level 3</td>
+            <td>มวลจุด (Point Mass)</td>
+            <td>1</td>
+            <td>0.02 ms (50,000 FPS)</td>
+            <td>0.00% (แม่นยำ 100%)</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div style="display:flex; justify-content:flex-end; gap:8px;">
+        <button class="btn-nav" onclick="window.print()"><i class="fas fa-print"></i> พิมพ์ใบงาน A4</button>
+        <button class="btn-nav primary" onclick="closeWorksheet()">เข้าใจแล้ว</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Audio Synthesizer -->
+  <script>
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    function beep(freq = 440, type = 'sine', duration = 0.12) {
+      try {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = type;
+        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
+        gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + duration);
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        osc.start();
+        osc.stop(audioCtx.currentTime + duration);
+      } catch(e) {}
+    }
+  </script>
+
+  <!-- High-End Three.js 3D Engine -->
+  <script>
+    let scene, camera, renderer, controls;
+    let carAnchorGroup;
+    let model0, model1, model2, model3;
+    let velocityArrow, forceArrow, groundTrajectoryLine;
+    let cameraMode = 0; // 0 = Perspective Orbit, 1 = Side Follow, 2 = Top Down
+
+    // Physics State
+    let currentLvl = 3;
+    let forceN = 3000;
+    let massKg = 1500;
+    let accel = 2.0; // a = F/m
+    let isRunning = false;
+    let simTimeSec = 0;
+    let carPosX = -12; // Start position
+    let carVelX = 0;
+
+    // Materials Library for Gorgeous Visuals
+    let carPaintMat, windowMat, chromeMat, tireMat, rimMat, pointMassMat, laserBoxMat;
+
+    function initEngine() {
+      const container = document.getElementById('webgl-canvas');
+      const w = container.clientWidth || window.innerWidth;
+      const h = container.clientHeight || window.innerHeight;
+
+      // 1. Scene & Atmosphere
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x030712);
+      scene.fog = new THREE.FogExp2(0x030712, 0.025);
+
+      // 2. Camera
+      camera = new THREE.PerspectiveCamera(45, w / h, 0.1, 100);
+      camera.position.set(-6, 4.5, 9);
+
+      // 3. Renderer with PBR Tone Mapping
+      renderer = new THREE.WebGLRenderer({ antialias: true, powerPreference: 'high-performance' });
+      renderer.setSize(w, h);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      renderer.shadowMap.enabled = true;
+      renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+      renderer.toneMapping = THREE.ACESFilmicToneMapping;
+      renderer.toneMappingExposure = 1.1;
+      container.appendChild(renderer.domElement);
+
+      // 4. Orbit Controls
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.06;
+      controls.maxPolarAngle = Math.PI / 2 - 0.02; // Prevent going underground
+      controls.minDistance = 3;
+      controls.maxDistance = 28;
+      controls.target.set(-2, 1, 0);
+
+      // 5. High-Tech Studio Lighting
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.65);
+      scene.add(ambientLight);
+
+      // Main Sun/Key Light
+      const keyLight = new THREE.DirectionalLight(0x00f0ff, 1.4);
+      keyLight.position.set(10, 16, 12);
+      keyLight.castShadow = true;
+      keyLight.shadow.mapSize.width = 2048;
+      keyLight.shadow.mapSize.height = 2048;
+      keyLight.shadow.bias = -0.0005;
+      scene.add(keyLight);
+
+      // Purple Rim/Back Light
+      const rimLight = new THREE.DirectionalLight(0xa855f7, 0.9);
+      rimLight.position.set(-12, 10, -10);
+      scene.add(rimLight);
+
+      // Warm Under-glow Accent
+      const underGlow = new THREE.PointLight(0x00f0ff, 1.2, 12);
+      underGlow.position.set(0, 0.5, 0);
+      scene.add(underGlow);
+
+      // 6. Cyber Track Ground & Grid
+      buildLaboratoryFloor();
+
+      // 7. Car Parent Moving Anchor
+      carAnchorGroup = new THREE.Group();
+      carAnchorGroup.position.set(carPosX, 0, 0);
+      scene.add(carAnchorGroup);
+
+      // 8. Build All 4 High-Fidelity Models
+      initMaterials();
+      buildLevel0Car();
+      buildLevel1LowPoly();
+      buildLevel2BoundingBox();
+      buildLevel3PointMass();
+
+      // 9. Physics Vector Arrows
+      buildPhysicsVectors();
+
+      // 10. Start Loop
+      selectLevel(3);
+      window.addEventListener('resize', onResize);
+      renderLoop();
+    }
+
+    function initMaterials() {
+      // Metallic Sports Car Paint (Sapphire Cyan)
+      carPaintMat = new THREE.MeshStandardMaterial({
+        color: 0x0284c7,
+        metalness: 0.85,
+        roughness: 0.18
+      });
+
+      // Glass Tinted Windows
+      windowMat = new THREE.MeshStandardMaterial({
+        color: 0x0f172a,
+        metalness: 0.95,
+        roughness: 0.05,
+        transparent: true,
+        opacity: 0.75
+      });
+
+      // Chrome Trim & Mirrors
+      chromeMat = new THREE.MeshStandardMaterial({
+        color: 0xe2e8f0,
+        metalness: 0.98,
+        roughness: 0.05
+      });
+
+      // Rubber Tire
+      tireMat = new THREE.MeshStandardMaterial({
+        color: 0x111827,
+        roughness: 0.85,
+        metalness: 0.1
+      });
+
+      // Cyan Alloy Rims
+      rimMat = new THREE.MeshStandardMaterial({
+        color: 0x00f0ff,
+        metalness: 0.9,
+        roughness: 0.2
+      });
+
+      // Holographic Bounding Box
+      laserBoxMat = new THREE.MeshStandardMaterial({
+        color: 0x00f0ff,
+        transparent: true,
+        opacity: 0.22,
+        roughness: 0.2
+      });
+
+      // Glowing Point Mass Core
+      pointMassMat = new THREE.MeshStandardMaterial({
+        color: 0xef4444,
+        emissive: 0xef4444,
+        emissiveIntensity: 1.0,
+        roughness: 0.1
+      });
+    }
+
+    // Build Gorgeous Laboratory Floor & Track
+    function buildLaboratoryFloor() {
+      // 40m Highway Runway
+      const trackGeo = new THREE.PlaneGeometry(60, 4.5);
+      const trackMat = new THREE.MeshStandardMaterial({
+        color: 0x070d1e,
+        roughness: 0.4,
+        metalness: 0.4
+      });
+      const trackMesh = new THREE.Mesh(trackGeo, trackMat);
+      trackMesh.rotation.x = -Math.PI / 2;
+      trackMesh.position.y = 0.01;
+      trackMesh.receiveShadow = true;
+      scene.add(trackMesh);
+
+      // Glowing Cyan Track Borders
+      const borderGeo = new THREE.BoxGeometry(60, 0.04, 0.08);
+      const borderMat = new THREE.MeshBasicMaterial({ color: 0x00f0ff });
+      const bTop = new THREE.Mesh(borderGeo, borderMat);
+      bTop.position.set(0, 0.03, 2.25);
+      const bBottom = new THREE.Mesh(borderGeo, borderMat);
+      bBottom.position.set(0, 0.03, -2.25);
+      scene.add(bTop, bBottom);
+
+      // Distance Metric Markers on Road (every 5 meters)
+      for (let x = -15; x <= 20; x += 5) {
+        const lineGeo = new THREE.PlaneGeometry(0.15, 3.5);
+        const lineMat = new THREE.MeshBasicMaterial({ color: 0x1e293b });
+        const mark = new THREE.Mesh(lineGeo, lineMat);
+        mark.rotation.x = -Math.PI / 2;
+        mark.position.set(x, 0.02, 0);
+        scene.add(mark);
+      }
+
+      // Start & Finish Lasers
+      const finishGate = new THREE.Mesh(new THREE.BoxGeometry(0.3, 3.5, 4.8), new THREE.MeshBasicMaterial({
+        color: 0x10b981,
+        transparent: true,
+        opacity: 0.15
+      }));
+      finishGate.position.set(15, 1.75, 0);
+      scene.add(finishGate);
+
+      // Cyber Grid
+      const grid = new THREE.GridHelper(70, 70, 0x00f0ff, 0x0f172a);
+      grid.position.y = 0;
+      scene.add(grid);
+    }
+
+    // LEVEL 0: Realistic Sleek 3D Sports Car
+    function buildLevel0Car() {
+      model0 = new THREE.Group();
+
+      // Aerodynamic Lower Body Chassis
+      const lowerGeo = new THREE.BoxGeometry(3.6, 0.55, 1.7, 12, 6, 8);
+      const lowerMesh = new THREE.Mesh(lowerGeo, carPaintMat);
+      lowerMesh.position.y = 0.55;
+      lowerMesh.castShadow = true;
+      model0.add(lowerMesh);
+
+      // Upper Cockpit Cabin
+      const cabinGeo = new THREE.BoxGeometry(1.8, 0.52, 1.35, 8, 4, 6);
+      const cabinMesh = new THREE.Mesh(cabinGeo, windowMat);
+      cabinMesh.position.set(-0.25, 0.98, 0);
+      cabinMesh.castShadow = true;
+      model0.add(cabinMesh);
+
+      // Front Hood Scoop
+      const hoodGeo = new THREE.BoxGeometry(0.8, 0.15, 0.8);
+      const hoodMesh = new THREE.Mesh(hoodGeo, carPaintMat);
+      hoodMesh.position.set(1.1, 0.85, 0);
+      model0.add(hoodMesh);
+
+      // Rear Spoiler Wing
+      const wingGeo = new THREE.BoxGeometry(0.35, 0.08, 1.6);
+      const wingMesh = new THREE.Mesh(wingGeo, carPaintMat);
+      wingMesh.position.set(-1.65, 1.15, 0);
+      const strutL = new THREE.Mesh(new THREE.BoxGeometry(0.08, 0.35, 0.08), chromeMat);
+      strutL.position.set(-1.65, 0.95, 0.55);
+      const strutR = strutL.clone();
+      strutR.position.set(-1.65, 0.95, -0.55);
+      model0.add(wingMesh, strutL, strutR);
+
+      // Dual LED Headlights
+      const hlMat = new THREE.MeshBasicMaterial({ color: 0x00f0ff });
+      const hlL = new THREE.Mesh(new THREE.BoxGeometry(0.12, 0.15, 0.35), hlMat);
+      hlL.position.set(1.8, 0.6, 0.55);
+      const hlR = hlL.clone();
+      hlR.position.set(1.8, 0.6, -0.55);
+      model0.add(hlL, hlR);
+
+      // Taillights (Neon Red)
+      const tlMat = new THREE.MeshBasicMaterial({ color: 0xef4444 });
+      const tlL = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.12, 0.5), tlMat);
+      tlL.position.set(-1.8, 0.65, 0.45);
+      const tlR = tlL.clone();
+      tlR.position.set(-1.8, 0.65, -0.45);
+      model0.add(tlL, tlR);
+
+      // 4 Realistic Wheels with Rims & Brake Calipers
+      const wheelPositions = [
+        [1.15, 0.38, 0.92],
+        [-1.15, 0.38, 0.92],
+        [1.15, 0.38, -0.92],
+        [-1.15, 0.38, -0.92]
+      ];
+
+      wheelPositions.forEach(p => {
+        const wGrp = new THREE.Group();
+        // Tire
+        const tire = new THREE.Mesh(new THREE.CylinderGeometry(0.38, 0.38, 0.28, 32), tireMat);
+        tire.rotation.x = Math.PI / 2;
+        tire.castShadow = true;
+        wGrp.add(tire);
+        // Rim
+        const rim = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.24, 0.30, 16), rimMat);
+        rim.rotation.x = Math.PI / 2;
+        wGrp.add(rim);
+
+        wGrp.position.set(p[0], p[1], p[2]);
+        model0.add(wGrp);
+      });
+
+      carAnchorGroup.add(model0);
+    }
+
+    // LEVEL 1: Low-Poly Faceted Shell
+    function buildLevel1LowPoly() {
+      model1 = new THREE.Group();
+
+      const shellGeo = new THREE.BoxGeometry(3.5, 0.95, 1.6, 3, 2, 2);
+      const shellMesh = new THREE.Mesh(shellGeo, new THREE.MeshStandardMaterial({
+        color: 0x38bdf8,
+        flatShading: true,
+        roughness: 0.4
+      }));
+      shellMesh.position.y = 0.72;
+      shellMesh.castShadow = true;
+      model1.add(shellMesh);
+
+      // Simple 8-sided cylinder wheels
+      const swGeo = new THREE.CylinderGeometry(0.36, 0.36, 0.25, 8);
+      const wheelPositions = [
+        [1.15, 0.36, 0.9],
+        [-1.15, 0.36, 0.9],
+        [1.15, 0.36, -0.9],
+        [-1.15, 0.36, -0.9]
+      ];
+      wheelPositions.forEach(p => {
+        const w = new THREE.Mesh(swGeo, tireMat);
+        w.rotation.x = Math.PI / 2;
+        w.position.set(p[0], p[1], p[2]);
+        model1.add(w);
+      });
+
+      carAnchorGroup.add(model1);
+    }
+
+    // LEVEL 2: Holographic Bounding Box
+    function buildLevel2BoundingBox() {
+      model2 = new THREE.Group();
+
+      const boxGeo = new THREE.BoxGeometry(3.8, 1.4, 1.8);
+      const boxMesh = new THREE.Mesh(boxGeo, laserBoxMat);
+      boxMesh.position.y = 0.75;
+      model2.add(boxMesh);
+
+      // Glowing Cyan Edges
+      const edges = new THREE.EdgesGeometry(boxGeo);
+      const edgeLines = new THREE.LineSegments(edges, new THREE.LineBasicMaterial({ color: 0x00f0ff, linewidth: 2 }));
+      edgeLines.position.y = 0.75;
+      model2.add(edgeLines);
+
+      // Yellow Center of Gravity (CoG) Ball
+      const cogSphere = new THREE.Mesh(new THREE.SphereGeometry(0.12, 16, 16), new THREE.MeshBasicMaterial({ color: 0xf59e0b }));
+      cogSphere.position.y = 0.75;
+      model2.add(cogSphere);
+
+      carAnchorGroup.add(model2);
+    }
+
+    // LEVEL 3: Glowing Pulsing Quantum Point Mass
+    function buildLevel3PointMass() {
+      model3 = new THREE.Group();
+
+      // Glowing Sphere Core
+      const coreSphere = new THREE.Mesh(new THREE.SphereGeometry(0.3, 32, 32), pointMassMat);
+      coreSphere.position.y = 0.75;
+      coreSphere.castShadow = true;
+      model3.add(coreSphere);
+
+      // Rotating Orbital Rings
+      const ringGeo = new THREE.TorusGeometry(0.55, 0.02, 16, 64);
+      const ringMat = new THREE.MeshBasicMaterial({ color: 0x00f0ff });
+      const ring1 = new THREE.Mesh(ringGeo, ringMat);
+      ring1.position.y = 0.75;
+      ring1.rotation.x = Math.PI / 3;
+
+      const ring2 = new THREE.Mesh(ringGeo, new THREE.MeshBasicMaterial({ color: 0xfacc15 }));
+      ring2.position.y = 0.75;
+      ring2.rotation.y = Math.PI / 3;
+
+      model3.add(ring1, ring2);
+
+      // Ground Shadow Projection Disc
+      const groundShadow = new THREE.Mesh(
+        new THREE.CircleGeometry(0.5, 32),
+        new THREE.MeshBasicMaterial({ color: 0xef4444, transparent: true, opacity: 0.35 })
+      );
+      groundShadow.rotation.x = -Math.PI / 2;
+      groundShadow.position.y = 0.02;
+      model3.add(groundShadow);
+
+      carAnchorGroup.add(model3);
+    }
+
+    // Physics Vectors (Velocity & Force)
+    function buildPhysicsVectors() {
+      // Velocity Vector (Cyan)
+      velocityArrow = new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), new THREE.Vector3(0, 0.75, 0), 2.0, 0x00f0ff, 0.4, 0.25);
+      carAnchorGroup.add(velocityArrow);
+
+      // Force Vector (Emerald Green)
+      forceArrow = new THREE.ArrowHelper(new THREE.Vector3(1, 0, 0), new THREE.Vector3(0, 1.25, 0), 1.5, 0x10b981, 0.35, 0.2);
+      carAnchorGroup.add(forceArrow);
+    }
+
+    // Switch Abstraction Level
+    function selectLevel(lvl) {
+      currentLvl = lvl;
+
+      // Update 3D Model Visibility
+      model0.visible = (lvl === 0);
+      model1.visible = (lvl === 1);
+      model2.visible = (lvl === 2);
+      model3.visible = (lvl === 3);
+
+      // Update Buttons State
+      for (let i = 0; i <= 3; i++) {
+        const btn = document.getElementById(`btn-lvl-${i}`);
+        if (btn) btn.classList.toggle('active', i === lvl);
+      }
+
+      // Update Telemetry
+      const names = ['Level 0: รถยนต์จริง (Full Model)', 'Level 1: เปลือกนอกลดทอน (Low-Poly)', 'Level 2: กล่องขอบเขต (Bounding Box)', 'Level 3: มวลจุด (Point Mass)'];
+      const latencies = ['16.80 ms', '4.20 ms', '0.30 ms', '0.02 ms'];
+      const fps = ['60 FPS (基準)', '238 FPS (เร็วขึ้น 4x)', '3,300 FPS (เร็วขึ้น 56x)', '50,000 FPS (เร็วขึ้น 840x)'];
+      const meshes = ['120,000 Polygons • Full Geometry', '12,000 Polygons • Faceted Shell', '12 Polygons • Bounding Box', '1 Polygon • Single Node (Ideal)'];
+
+      document.getElementById('hud-name').innerText = names[lvl];
+      document.getElementById('hud-latency').innerText = latencies[lvl];
+      document.getElementById('hud-latency').style.color = (lvl === 3 ? 'var(--emerald)' : (lvl === 0 ? 'var(--rose)' : 'var(--cyan)'));
+      document.getElementById('hud-fps').innerText = fps[lvl];
+      document.getElementById('hud-mesh-info').innerText = meshes[lvl];
+
+      beep(260 + lvl * 120, 'sine', 0.1);
+    }
+
+    // Sliders Update
+    function updatePhysicsValues() {
+      forceN = parseFloat(document.getElementById('range-force').value);
+      massKg = parseFloat(document.getElementById('range-mass').value);
+      accel = forceN / massKg;
+
+      document.getElementById('val-force').innerText = `${forceN.toLocaleString()} N`;
+      document.getElementById('val-mass').innerText = `${massKg.toLocaleString()} kg`;
+      document.getElementById('val-accel').innerText = `${accel.toFixed(2)} m/s²`;
+
+      if (forceArrow) {
+        const arrowLen = Math.min(3.5, 0.8 + (forceN / 8000) * 2.5);
+        forceArrow.setLength(arrowLen, 0.35, 0.2);
+      }
+    }
+
+    // Run / Stop Simulation
+    function toggleRunTest() {
+      isRunning = !isRunning;
+      const btn = document.getElementById('btn-launch-run');
+      const icon = document.getElementById('launch-icon');
+      const txt = document.getElementById('launch-text');
+
+      if (isRunning) {
+        btn.classList.add('running');
+        icon.className = 'fas fa-pause';
+        txt.textContent = 'หยุดชั่วคราว (Pause)';
+        beep(520, 'triangle', 0.15);
+      } else {
+        btn.classList.remove('running');
+        icon.className = 'fas fa-play';
+        txt.textContent = 'วิ่งต่อ (Resume)';
+        beep(360, 'sine', 0.1);
+      }
+    }
+
+    function resetCar() {
+      isRunning = false;
+      simTimeSec = 0;
+      carPosX = -12;
+      carVelX = 0;
+      carAnchorGroup.position.set(carPosX, 0, 0);
+
+      const btn = document.getElementById('btn-launch-run');
+      btn.classList.remove('running');
+      document.getElementById('launch-icon').className = 'fas fa-play';
+      document.getElementById('launch-text').textContent = 'ปล่อยวัตถุวิ่งทดสอบ (Run Test)';
+
+      updateTelemetry(0, 0, 0);
+      beep(300, 'sine', 0.2);
+    }
+
+    function updateTelemetry(v_ms, s_m, t_s) {
+      const v_kmh = v_ms * 3.6;
+      document.getElementById('hud-velocity').innerText = `${v_kmh.toFixed(1)} km/h`;
+      document.getElementById('hud-vel-ms').innerText = `${v_ms.toFixed(2)} m/s`;
+      document.getElementById('hud-distance').innerText = `${s_m.toFixed(2)} m`;
+      document.getElementById('hud-time-sec').innerText = `เวลา: ${t_s.toFixed(2)} s`;
+    }
+
+    function toggleCameraView() {
+      cameraMode = (cameraMode + 1) % 3;
+      if (cameraMode === 0) {
+        // Orbit 3D
+        camera.position.set(-6, 4.5, 9);
+        controls.target.set(-2, 1, 0);
+      } else if (cameraMode === 1) {
+        // Track Side View
+        camera.position.set(carPosX, 1.8, 8);
+        controls.target.set(carPosX, 0.8, 0);
+      } else {
+        // Top-Down Bird's Eye View
+        camera.position.set(0, 16, 0.1);
+        controls.target.set(0, 0, 0);
+      }
+      beep(400, 'sine', 0.1);
+    }
+
+    // Animation Loop
+    function renderLoop() {
+      requestAnimationFrame(renderLoop);
+
+      // Handle motion physics
+      if (isRunning) {
+        const dt = 0.016; // 60 FPS delta
+        simTimeSec += dt;
+        carVelX = accel * simTimeSec;
+        const distM = 0.5 * accel * simTimeSec * simTimeSec;
+
+        // Scale distance to 3D world units
+        carPosX = -12 + (distM * 0.8);
+
+        // Stop at finish line
+        if (carPosX >= 16) {
+          carPosX = 16;
+          isRunning = false;
+          document.getElementById('btn-launch-run').classList.remove('running');
+          document.getElementById('launch-icon').className = 'fas fa-flag-checkered';
+          document.getElementById('launch-text').textContent = 'เข้าเส้นชัยแล้ว! (Finished)';
+          beep(680, 'sine', 0.3);
+        }
+
+        carAnchorGroup.position.x = carPosX;
+        updateTelemetry(carVelX, distM, simTimeSec);
+
+        // Dynamic camera tracking in side view
+        if (cameraMode === 1) {
+          camera.position.x = carPosX;
+          controls.target.x = carPosX;
+        }
+
+        // Dynamically scale velocity arrow
+        if (velocityArrow) {
+          const arrowLength = Math.min(4.0, 1.0 + carVelX * 0.15);
+          velocityArrow.setLength(arrowLength, 0.4, 0.25);
+        }
+      }
+
+      // Orbit controls update
+      if (controls) controls.update();
+
+      // Render 3D Scene
+      if (renderer && scene && camera) {
+        renderer.render(scene, camera);
+      }
+    }
+
+    function onResize() {
+      const container = document.getElementById('webgl-canvas');
+      if (!container || !renderer || !camera) return;
+      const w = container.clientWidth || window.innerWidth;
+      const h = container.clientHeight || window.innerHeight;
+      camera.aspect = w / h;
+      camera.updateProjectionMatrix();
+      renderer.setSize(w, h);
+    }
+
+    // Modal Sheet
+    function openWorksheet() {
+      document.getElementById('modal-worksheet').style.display = 'flex';
+      beep(480, 'sine', 0.1);
+    }
+    function closeWorksheet() {
+      document.getElementById('modal-worksheet').style.display = 'none';
+    }
+
+    function goBackToCourse() {
+      if (window.parent && window.parent !== window) {
+        if (typeof window.parent.closeSimModal === 'function') {
+          window.parent.closeSimModal();
+          return;
+        }
+      }
+      window.location.href = '../index.html';
+    }
+
+    // Start on DOM ready
+    window.addEventListener('DOMContentLoaded', () => {
+      initEngine();
+      updatePhysicsValues();
+    });
+  </script>
+</body>
+</html>

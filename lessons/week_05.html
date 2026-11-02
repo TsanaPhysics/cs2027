@@ -1,0 +1,1478 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แผนการสอนสัปดาห์ที่ 5 - การเขียนโปรแกรมอย่างง่าย 1 (ตัวแปร ข้อมูล และเงื่อนไข) ด้วย Scratch/Python</title>
+    <!-- ฟอนต์ Sarabun และ Inter จาก Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- MathJax 3 for Scientific Notation & Equations -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [["$", "$"], ["\\(", "\\)"]],
+                displayMath: [["$$", "$$"], ["\\[", "\\]"]],
+                processEscapes: true,
+                processEnvironments: true
+            },
+            options: {
+                skipHtmlTags: ["script", "noscript", "style", "textarea", "pre", "code"]
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --primary: #0f172a;
+            --primary-light: #1e293b;
+            --accent: #2563eb;
+            --accent-hover: #1d4ed8;
+            --secondary: #0891b2;
+            --success: #059669;
+            --warning: #d97706;
+            --danger: #dc2626;
+            --purple: #7c3aed;
+            --scratch-orange: #ffab19;
+            --scratch-blue: #4c97ff;
+            --scratch-green: #59c059;
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --border-focus: #94a3b8;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.08), 0 2px 4px -2px rgba(0,0,0,0.05);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.05);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Sarabun', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.8;
+            font-size: 16px;
+        }
+
+        .container {
+            max-width: 1140px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        .nav-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 1.25rem;
+            padding: 0.5rem 1rem;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.25s ease;
+        }
+
+        .nav-back:hover {
+            color: var(--accent-hover);
+            transform: translateX(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0369a1 100%);
+            color: #ffffff;
+            padding: 3rem 2.5rem;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            top: -40%;
+            right: -10%;
+            width: 480px;
+            height: 480px;
+            background: radial-gradient(circle, rgba(56, 189, 248, 0.25) 0%, rgba(255, 255, 255, 0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .header-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(8px);
+            padding: 0.35rem 0.85rem;
+            border-radius: 9999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header h1 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            line-height: 1.3;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.02em;
+        }
+
+        .header .subtitle {
+            font-size: 1.15rem;
+            opacity: 0.92;
+            font-weight: 400;
+            max-width: 880px;
+        }
+
+        .header .course-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 1.25rem 1.5rem;
+            border-radius: 12px;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .header .course-info span {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.92rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .tab-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 0.85rem 1.4rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            transition: all 0.25s ease;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .tab-btn:hover {
+            color: var(--text-main);
+            background: #ffffff;
+            border-color: var(--border-focus);
+            transform: translateY(-1px);
+        }
+
+        .tab-btn.active {
+            background: var(--accent);
+            color: #ffffff;
+            border-color: var(--accent);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+        }
+
+        .content-section {
+            display: none;
+            animation: fadeIn 0.35s ease-out;
+        }
+
+        .content-section.active { display: block; }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--bg-card);
+            border-radius: 14px;
+            padding: 2.25rem;
+            margin-bottom: 1.75rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+        }
+
+        .card-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding-bottom: 0.85rem;
+            border-bottom: 2px solid #f1f5f9;
+        }
+
+        .card-title i { color: var(--accent); }
+
+        p {
+            margin-bottom: 1rem;
+            color: #334155;
+            text-align: justify;
+        }
+
+        .academic-callout {
+            background: #f8fafc;
+            border-left: 4px solid var(--accent);
+            border-radius: 0 10px 10px 0;
+            padding: 1.25rem 1.5rem;
+            margin: 1.25rem 0;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .academic-callout.tip {
+            border-left-color: var(--success);
+            background: #f0fdf4;
+        }
+
+        .academic-callout.purple {
+            border-left-color: var(--purple);
+            background: #faf5ff;
+        }
+
+        .academic-callout.warning {
+            border-left-color: var(--warning);
+            background: #fffbeb;
+        }
+
+        .academic-callout-title {
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .wlo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.25rem;
+            margin-top: 1.5rem;
+        }
+
+        .wlo-card {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            border-top: 4px solid var(--accent);
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .wlo-card.c2 { border-top-color: var(--secondary); }
+        .wlo-card.c3 { border-top-color: var(--purple); }
+        .wlo-card.c4 { border-top-color: var(--success); }
+
+        .wlo-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .wlo-tag {
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 0.2rem 0.6rem;
+            border-radius: 9999px;
+            background: #eff6ff;
+            color: var(--accent);
+        }
+
+        .wlo-card.c2 .wlo-tag { background: #ecfeff; color: var(--secondary); }
+        .wlo-card.c3 .wlo-tag { background: #f5f3ff; color: var(--purple); }
+        .wlo-card.c4 .wlo-tag { background: #f0fdf4; color: var(--success); }
+
+        .svg-container {
+            width: 100%;
+            background: #ffffff;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            padding: 1rem;
+            margin: 1.5rem 0;
+            box-shadow: var(--shadow-sm);
+            overflow-x: auto;
+        }
+
+        .svg-container svg {
+            display: block;
+            margin: 0 auto;
+            max-width: 100%;
+            height: auto;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.95rem;
+            text-align: left;
+            background: white;
+        }
+
+        th {
+            background-color: #f1f5f9;
+            color: var(--primary);
+            font-weight: 700;
+            padding: 1rem 1.25rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        td {
+            padding: 1rem 1.25rem;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+            color: #334155;
+        }
+
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background-color: #f8fafc; }
+
+        .session-block {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.25rem;
+            border: 1px solid var(--border);
+        }
+
+        .session-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .session-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .time-badge {
+            background: var(--primary);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 9999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .code-container {
+            border-radius: 10px;
+            overflow: hidden;
+            background: #0f172a;
+            color: #f8fafc;
+            margin: 1.5rem 0;
+            border: 1px solid #334155;
+            box-shadow: var(--shadow-md);
+        }
+
+        .code-header {
+            background: #1e293b;
+            padding: 0.65rem 1.25rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.85rem;
+            color: #94a3b8;
+            font-family: 'Inter', monospace;
+            border-bottom: 1px solid #334155;
+        }
+
+        .code-body {
+            padding: 1.25rem;
+            overflow-x: auto;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .code-body .keyword { color: #f472b6; font-weight: 600; }
+        .code-body .function { color: #60a5fa; }
+        .code-body .string { color: #34d399; }
+        .code-body .comment { color: #94a3b8; font-style: italic; }
+        .code-body .number { color: #fbbf24; }
+
+        .reference-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .reference-item {
+            padding: 1.2rem 0;
+            border-bottom: 1px solid var(--border);
+            text-align: justify;
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        .reference-item:last-child { border-bottom: none; }
+        .reference-item a { color: var(--accent); text-decoration: none; word-break: break-all; }
+        .reference-item a:hover { text-decoration: underline; }
+
+        .footer {
+            text-align: center;
+            padding: 2.5rem 0;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border);
+            margin-top: 3rem;
+        }
+
+        @media (max-width: 768px) {
+            .header { padding: 2rem 1.5rem; }
+            .header h1 { font-size: 1.6rem; }
+            .card { padding: 1.5rem; }
+            .tab-btn { padding: 0.7rem 1rem; font-size: 0.88rem; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <!-- ปุ่มย้อนกลับสู่ระบบหลัก -->
+    <a href="../index.html" class="nav-back">
+        <i class="fas fa-arrow-left"></i> กลับสู่หน้าหลักระบบการเรียนรู้ (Main Portal)
+    </a>
+
+    <!-- ส่วนหัวของบทเรียน -->
+    <header class="header">
+        <div class="header-badge">
+            <i class="fas fa-laptop-code"></i> Phase 2: Programming & Scientific Simulation (สัปดาห์ที่ 5/16)
+        </div>
+        <h1>การเขียนโปรแกรมอย่างง่าย 1 (ตัวแปร ข้อมูล และเงื่อนไข) ด้วย Scratch/Python</h1>
+        <p class="subtitle">
+            การเปลี่ยนผ่านกระบวนทัศน์จากแบบบล็อกสู่แบบข้อความ (Block-to-Text Transition) โครงสร้างการจัดสรรหน่วยความจำตัวแปรทางวิทยาศาสตร์ และการจำลองระบบพลวัตด้วยเงื่อนไข If-Elif-Else ตามแนวทาง สสวท.
+        </p>
+        <div class="course-info">
+            <span><i class="fas fa-book-open"></i> <strong>รหัสวิชา:</strong> 4124941</span>
+            <span><i class="fas fa-graduation-cap"></i> <strong>รายวิชา:</strong> วิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์</span>
+            <span><i class="fas fa-user-tie"></i> <strong>ผู้สอน:</strong> ผู้ช่วยศาสตราจารย์ ดร.ชีวะ ทัศนา</span>
+            <span><i class="fas fa-clock"></i> <strong>เวลา:</strong> 4 ชั่วโมง (บรรยาย 2 ชม. + ปฏิบัติ 2 ชม.)</span>
+        </div>
+    </header>
+
+    <!-- แถบนำทางแท็บ (6 แท็บมาตรฐาน) -->
+    <div class="tabs">
+        <button class="tab-btn active" onclick="showTab('tab1', this)">
+            <i class="fas fa-bullseye"></i> 1. ผลลัพธ์การเรียนรู้ (WLOs)
+        </button>
+        <button class="tab-btn" onclick="showTab('tab2', this)">
+            <i class="fas fa-code"></i> 2. สาระสำคัญ & สื่อทัศนศิลป์
+        </button>
+        <button class="tab-btn" onclick="showTab('tab3', this)">
+            <i class="fas fa-chalkboard-teacher"></i> 3. กิจกรรมการเรียนรู้เชิงรุก
+        </button>
+        <button class="tab-btn" onclick="showTab('tab4', this)">
+            <i class="fas fa-tasks"></i> 4. การวัดและประเมินผล (Rubrics)
+        </button>
+        <button class="tab-btn" onclick="showTab('tab5', this)">
+            <i class="fas fa-brain"></i> 5. ข้อสอบวัดสมรรถนะ (HOTS)
+        </button>
+        <button class="tab-btn" onclick="showTab('tab6', this)">
+            <i class="fas fa-book"></i> 6. เอกสารอ้างอิง (APA 7th)
+        </button>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- แท็บที่ 1: ผลลัพธ์การเรียนรู้ (WLOs) -->
+    <!-- ========================================== -->
+    <div id="tab1" class="content-section active">
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-award"></i> ผลลัพธ์การเรียนรู้ระดับสัปดาห์ (Weekly Learning Outcomes: WLOs)</h2>
+            <p>
+                ออกแบบตามกรอบอนุกรมวิธานของบลูมฉบับปรับปรุง (Revised Bloom's Taxonomy) ผสานกับการสอนคู่ขนานระหว่างการเขียนโปรแกรมแบบบล็อกและแบบข้อความ (Parallel Instruction: Jeon & Kwon, 2024; Sungur & Ozkan, 2026):
+            </p>
+
+            <div class="wlo-grid">
+                <!-- WLO 1 -->
+                <div class="wlo-card">
+                    <div class="wlo-header">
+                        <span class="wlo-tag">WLO 1: ด้านความรู้เชิงสถาปัตยกรรม</span>
+                        <i class="fas fa-database text-accent"></i>
+                    </div>
+                    <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--primary);">ตัวแปรและการจัดสรรชนิดข้อมูล</h3>
+                    <p style="font-size: 0.92rem; color: #475569; margin: 0;">
+                        อธิบายมโนทัศน์ของตัวแปร (Variables) ในฐานะตัวแทนหน่วยความจำ ชนิดข้อมูลพื้นฐาน (<code>int</code>, <code>float</code>, <code>str</code>, <code>bool</code>) และกลไก Type Casting ในการคำนวณสูตรวิทยาศาสตร์ได้อย่างถูกต้อง
+                    </p>
+                </div>
+
+                <!-- WLO 2 -->
+                <div class="wlo-card c2">
+                    <div class="wlo-header">
+                        <span class="wlo-tag">WLO 2: ด้านการเปรียบเทียบกระบวนทัศน์</span>
+                        <i class="fas fa-cubes text-secondary"></i>
+                    </div>
+                    <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--primary);">การถ่ายโอน Scratch สู่ Python</h3>
+                    <p style="font-size: 0.92rem; color: #475569; margin: 0;">
+                        เปรียบเทียบและถ่ายโอนโครงสร้างคำสั่งระหว่าง Visual Block-based (Scratch 3.0) และ Text-based (Python 3.11) ตามกรอบ Parallel Programming Paradigm โดยไม่สูญเสียความหมายเชิงความหมาย (Semantic Preservation)
+                    </p>
+                </div>
+
+                <!-- WLO 3 -->
+                <div class="wlo-card c3">
+                    <div class="wlo-header">
+                        <span class="wlo-tag">WLO 3: ด้านการเขียนโปรแกรมจำลอง</span>
+                        <i class="fas fa-code-branch text-purple"></i>
+                    </div>
+                    <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--primary);">การสร้างแบบจำลองเงื่อนไขวิทยาศาสตร์</h3>
+                    <p style="font-size: 0.92rem; color: #475569; margin: 0;">
+                        เขียนโปรแกรมโครงสร้างเงื่อนไข <code>if-elif-else</code> ร่วมกับตัวดำเนินการทางตรรกศาสตร์ (<code>and</code>, <code>or</code>, <code>not</code>) เพื่อจำลองกฎการเคลื่อนที่ข้อที่สองของนิวตัน (\(\Sigma F = ma\)) และการจำแนกระดับกรด-เบสจากสเกล pH
+                    </p>
+                </div>
+
+                <!-- WLO 4 -->
+                <div class="wlo-card c4">
+                    <div class="wlo-header">
+                        <span class="wlo-tag">WLO 4: ด้านการจัดการเรียนรู้</span>
+                        <i class="fas fa-users-cog text-success"></i>
+                    </div>
+                    <h3 style="font-size: 1.05rem; font-weight: 700; color: var(--primary);">การจัดการเรียนรู้แบบ Pair Programming</h3>
+                    <p style="font-size: 0.92rem; color: #475569; margin: 0;">
+                        ประยุกต์ใช้เทคนิค <strong>Pair Programming (Driver & Navigator)</strong> ในการจัดกิจกรรมการเรียนรู้แบบสืบเสาะวิทยาศาสตร์เพื่อลดภาวะตื่นกลัวไวยากรณ์ (Syntax Anxiety) ในนักเรียนระดับมัธยมศึกษา
+                    </p>
+                </div>
+            </div>
+
+            <div class="academic-callout tip" style="margin-top: 1.5rem;">
+                <div class="academic-callout-title">
+                    <i class="fas fa-lightbulb"></i> ทฤษฎีการสอนคู่ขนาน Block-to-Text (Jeon & Kwon, 2024)
+                </div>
+                <p style="margin: 0; font-size: 0.92rem;">
+                    การเรียนรู้แบบคู่ขนาน (Parallel Instruction) โดยให้ผู้เรียนเห็นบล็อก Scratch ควบคู่กับไวยากรณ์ Python ในหน้าจอเดียวกัน ช่วยลดความหวาดกลัวต่อข้อผิดพลาดทางไวยากรณ์ (Syntax Errors) ได้ถึง 42% ทำให้นักศึกษาสามารถมุ่งเน้นที่ <strong>"ตรรกะทางวิทยาศาสตร์" (Scientific Logic)</strong> ได้อย่างมีประสิทธิภาพสูงสุด
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- แท็บที่ 2: สาระสำคัญ & สื่อทัศนศิลป์ -->
+    <!-- ========================================== -->
+    <div id="tab2" class="content-section">
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-laptop-code"></i> สาระสำคัญเชิงวิชาการ: ตัวแปร ข้อมูล และตรรกะเงื่อนไขในวิทยาศาสตร์</h2>
+            
+            <p>
+                การเปลี่ยนผ่านเข้าสู่ Phase 2 ของรายวิชาคือการนำผังงานและรหัสลำลองจาก Phase 1 มาทำให้มีชีวิตผ่าน <strong>การเขียนโปรแกรมคอมพิวเตอร์ (Computer Programming)</strong> คอมพิวเตอร์ไม่สามารถเข้าใจสูตรฟิสิกส์หรือเคมีได้โดยตรง หากไม่มีการนิยามตัวแปร (Variables) การกำหนดชนิดข้อมูลที่ถูกต้อง (Data Types) และการสร้างระบบตัดสินใจที่มีเงื่อนไขครอบคลุม (Conditionals) (Sungur & Ozkan, 2026; Weintrop et al., 2016):
+            </p>
+
+            <!-- INFOGRAPHIC 5.1: DATA TYPES & TYPE CASTING PIPELINE -->
+            <div class="svg-container">
+                <svg viewBox="0 0 960 380" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <filter id="shadow51" x="-5%" y="-5%" width="110%" height="115%">
+                            <feDropShadow dx="0" dy="3" stdDeviation="4" flood-opacity="0.12"/>
+                        </filter>
+                        <linearGradient id="gInt" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#1e3a8a"/><stop offset="100%" stop-color="#2563eb"/>
+                        </linearGradient>
+                        <linearGradient id="gFloat" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#0e7490"/><stop offset="100%" stop-color="#06b6d4"/>
+                        </linearGradient>
+                        <linearGradient id="gStr" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#b45309"/><stop offset="100%" stop-color="#f59e0b"/>
+                        </linearGradient>
+                        <linearGradient id="gBool" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#047857"/><stop offset="100%" stop-color="#10b981"/>
+                        </linearGradient>
+                    </defs>
+
+                    <!-- Title -->
+                    <text x="480" y="30" font-family="'Sarabun', sans-serif" font-size="18" font-weight="700" fill="#0f172a" text-anchor="middle">
+                        ภาพที่ 5.1: สถาปัตยกรรมชนิดข้อมูลและการแปลงชนิดข้อมูลวิทยาศาสตร์ (Scientific Data Types & Type Casting Pipeline)
+                    </text>
+                    <text x="480" y="52" font-family="'Sarabun', sans-serif" font-size="13" fill="#64748b" text-anchor="middle">
+                        กลไกการรับค่าจากคีย์บอร์ดหรือเซนเซอร์ (Input as String) สู่การประมวลผลทางคณิตศาสตร์ใน Python 3.11
+                    </text>
+
+                    <!-- 4 Data Types Cards -->
+                    <!-- 1. Integer -->
+                    <g transform="translate(30, 80)" filter="url(#shadow51)">
+                        <rect x="0" y="0" width="205" height="175" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+                        <rect x="0" y="0" width="205" height="40" rx="12" fill="url(#gInt)"/>
+                        <rect x="0" y="25" width="205" height="15" fill="url(#gInt)"/>
+                        <text x="102" y="27" font-family="'Inter', sans-serif" font-size="14" font-weight="700" fill="#ffffff" text-anchor="middle">INTEGER (int)</text>
+                        <text x="15" y="65" font-family="'Sarabun', sans-serif" font-size="12" font-weight="700" fill="#1e3a8a">จำนวนเต็ม (ไม่มีทศนิยม)</text>
+                        <text x="15" y="90" font-family="'Sarabun', sans-serif" font-size="11.5" fill="#475569">• เลขอะตอม \(Z = 6\)</text>
+                        <text x="15" y="112" font-family="'Sarabun', sans-serif" font-size="11.5" fill="#475569">• จำนวนครั้งการทดลอง (3 ซ้ำ)</text>
+                        <text x="15" y="134" font-family="'Sarabun', sans-serif" font-size="11.5" fill="#475569">• ประจุไฟฟ้า (+1, -2)</text>
+                        <rect x="15" y="145" width="175" height="20" rx="4" fill="#eff6ff"/>
+                        <text x="102" y="159" font-family="'Inter', monospace" font-size="11" fill="#1e40af" text-anchor="middle">n_trials = int("3")</text>
+                    </g>
+
+                    <!-- 2. Float -->
+                    <g transform="translate(265, 80)" filter="url(#shadow51)">
+                        <rect x="0" y="0" width="205" height="175" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+                        <rect x="0" y="0" width="205" height="40" rx="12" fill="url(#gFloat)"/>
+                        <rect x="0" y="25" width="205" height="15" fill="url(#gFloat)"/>
+                        <text x="102" y="27" font-family="'Inter', sans-serif" font-size="14" font-weight="700" fill="#ffffff" text-anchor="middle">FLOAT (float)</text>
+                        <text x="15" y="65" font-family="'Sarabun', sans-serif" font-size="12" font-weight="700" fill="#0e7490">ทศนิยม (ตัวเลขความแม่นยำสูง)</text>
+                        <text x="15" y="90" font-family="'Sarabun', sans-serif" font-size="11.5" fill="#475569">• ค่าคงที่โน้มถ่วง \(g = 9.806\)</text>
+                        <text x="15" y="112" font-family="'Sarabun', sans-serif" font-size="11.5" fill="#475569">• ค่าความเป็นกรด \(pH = 7.35\)</text>
+                        <text x="15" y="134" font-family="'Sarabun', sans-serif" font-size="11.5" fill="#475569">• มวลสาร \(M = 45.250\text{ g}\)</text>
+                        <rect x="15" y="145" width="175" height="20" rx="4" fill="#ecfeff"/>
+                        <text x="102" y="159" font-family="'Inter', monospace" font-size="11" fill="#0e7490" text-anchor="middle">mass = float("45.25")</text>
+                    </g>
+
+                    <!-- 3. String -->
+                    <g transform="translate(500, 80)" filter="url(#shadow51)">
+                        <rect x="0" y="0" width="205" height="175" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+                        <rect x="0" y="0" width="205" height="40" rx="12" fill="url(#gStr)"/>
+                        <rect x="0" y="25" width="205" height="15" fill="url(#gStr)"/>
+                        <text x="102" y="27" font-family="'Inter', sans-serif" font-size="14" font-weight="700" fill="#ffffff" text-anchor="middle">STRING (str)</text>
+                        <text x="15" y="65" font-family="'Sarabun', sans-serif" font-size="12" font-weight="700" fill="#b45309">ข้อความตัวอักษร</text>
+                        <text x="15" y="90" font-family="'Sarabun', sans-serif" font-size="11.5" fill="#475569">• สัญลักษณ์ธาตุ "Na", "Cl"</text>
+                        <text x="15" y="112" font-family="'Sarabun', sans-serif" font-size="11.5" fill="#475569">• สีสารละลาย "Pink", "Blue"</text>
+                        <text x="15" y="134" font-family="'Sarabun', sans-serif" font-size="11.5" fill="#475569">• ลำดับเบสดีเอ็นเอ "ATCG"</text>
+                        <rect x="15" y="145" width="175" height="20" rx="4" fill="#fffbeb"/>
+                        <text x="102" y="159" font-family="'Inter', monospace" font-size="11" fill="#b45309" text-anchor="middle">elem = str("Oxygen")</text>
+                    </g>
+
+                    <!-- 4. Boolean -->
+                    <g transform="translate(735, 80)" filter="url(#shadow51)">
+                        <rect x="0" y="0" width="195" height="175" rx="12" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+                        <rect x="0" y="0" width="195" height="40" rx="12" fill="url(#gBool)"/>
+                        <rect x="0" y="25" width="195" height="15" fill="url(#gBool)"/>
+                        <text x="97" y="27" font-family="'Inter', sans-serif" font-size="14" font-weight="700" fill="#ffffff" text-anchor="middle">BOOLEAN (bool)</text>
+                        <text x="15" y="65" font-family="'Sarabun', sans-serif" font-size="12" font-weight="700" fill="#047857">ตรรกะความจริง (True/False)</text>
+                        <text x="15" y="90" font-family="'Sarabun', sans-serif" font-size="11.5" fill="#475569">• สารเปลี่ยนสีหรือไม่</text>
+                        <text x="15" y="112" font-family="'Sarabun', sans-serif" font-size="11.5" fill="#475569">• อุณหภูมิถึงจุดเดือดหรือยัง</text>
+                        <text x="15" y="134" font-family="'Sarabun', sans-serif" font-size="11.5" fill="#475569">• ผลการทดสอบ (Pass/Fail)</text>
+                        <rect x="15" y="145" width="165" height="20" rx="4" fill="#ecfdf5"/>
+                        <text x="97" y="159" font-family="'Inter', monospace" font-size="11" fill="#047857" text-anchor="middle">is_boiling = True</text>
+                    </g>
+
+                    <!-- Type Casting Workflow Banner -->
+                    <g transform="translate(30, 275)" filter="url(#shadow51)">
+                        <rect x="0" y="0" width="900" height="90" rx="10" fill="#0f172a"/>
+                        <text x="25" y="28" font-family="'Inter', sans-serif" font-size="13" font-weight="700" fill="#38bdf8">
+                            ⚠️ CRITICAL SCIENTIFIC BUG WARNING: TYPE CASTING IN PYTHON INPUT
+                        </text>
+                        <text x="25" y="52" font-family="'Sarabun', sans-serif" font-size="12" fill="#e2e8f0">
+                            คำสั่ง <code style="color: #f472b6;">input()</code> ในภาษา Python จะคืนค่าเป็น <strong style="color: #fbbf24;">String</strong> เสมอ! หากนำไปคูณโดยไม่แปลงชนิดข้อมูล เช่น <code style="color: #fca5a5;">"10" * 2</code> ผลลัพธ์จะเป็น <code style="color: #fca5a5;">"1010"</code> ไม่ใช่ 20!
+                        </text>
+                        <text x="25" y="72" font-family="'Sarabun', sans-serif" font-size="12" fill="#86efac">
+                            ✓ รูปแบบที่ถูกต้อง: <code style="color: #86efac;">mass = float(input("กรอกมวล (kg): "))</code> เพื่อแปลงสตริงเป็นทศนิยมก่อนนำไปเข้าสูตร \(F = ma\)
+                        </text>
+                    </g>
+                </svg>
+            </div>
+
+            <!-- SECTION 2: PARALLEL PARADIGM SCRATCH VS PYTHON -->
+            <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--primary); margin: 2rem 0 0.75rem 0;">
+                <i class="fas fa-columns text-accent"></i> กระบวนทัศน์การสอนคู่ขนาน: บล็อกคำสั่ง Scratch 3.0 ปะทะ โค้ดภาษา Python 3.11
+            </h3>
+            <p>
+                ตามทฤษฎีการสอนคู่ขนาน (Parallel Instruction: Jeon & Kwon, 2024) การนำบล็อกภาพ Scratch มาวางประกบคู่กับโค้ด Python ช่วยให้นักศึกษาและนักเรียนมัธยมมองเห็นโครงสร้างที่เหมือนกัน (Structural Isomorphism) ของการจำลองกฎการเคลื่อนที่ข้อที่สองของนิวตัน (\(F = ma\)):
+            </p>
+
+            <!-- INFOGRAPHIC 5.2: PARALLEL PROGRAMMING COMPARISON -->
+            <div class="svg-container">
+                <svg viewBox="0 0 960 430" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <filter id="shadow52" x="-5%" y="-5%" width="110%" height="115%">
+                            <feDropShadow dx="0" dy="3" stdDeviation="4" flood-opacity="0.12"/>
+                        </filter>
+                    </defs>
+
+                    <!-- Title -->
+                    <text x="480" y="28" font-family="'Sarabun', sans-serif" font-size="18" font-weight="700" fill="#0f172a" text-anchor="middle">
+                        ภาพที่ 5.2: การเทียบเคียงกระบวนทัศน์คู่ขนาน Scratch 3.0 vs Python 3.11 (กฎข้อที่ 2 ของนิวตัน \(\Sigma F = ma\))
+                    </text>
+                    <text x="480" y="48" font-family="'Sarabun', sans-serif" font-size="13" fill="#64748b" text-anchor="middle">
+                        การเปรียบเทียบการรับค่า (Input), การคำนวณ (Compute), และการตัดสินใจ (If-Else) ในสองรูปแบบ
+                    </text>
+
+                    <!-- Left: Scratch 3.0 Block Code Simulation -->
+                    <g filter="url(#shadow52)">
+                        <rect x="30" y="70" width="435" height="340" rx="14" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+                        <rect x="30" y="70" width="435" height="42" rx="14" fill="#ffab19"/>
+                        <rect x="30" y="97" width="435" height="15" fill="#ffab19"/>
+                        <text x="247" y="97" font-family="'Inter', sans-serif" font-size="15" font-weight="700" fill="#ffffff" text-anchor="middle">
+                            🐱 SCRATCH 3.0 (VISUAL BLOCK-BASED)
+                        </text>
+
+                        <!-- Scratch Blocks Stack -->
+                        <g transform="translate(50, 130)">
+                            <!-- When Flag Clicked -->
+                            <rect x="0" y="0" width="160" height="28" rx="14" fill="#ffbf00"/>
+                            <text x="80" y="18" font-family="'Sarabun', sans-serif" font-size="11" font-weight="700" fill="#ffffff" text-anchor="middle">🏁 เมื่อคลิกธงเขียว</text>
+
+                            <!-- Ask Mass -->
+                            <rect x="0" y="32" width="230" height="28" rx="4" fill="#4c97ff"/>
+                            <text x="115" y="50" font-family="'Sarabun', sans-serif" font-size="11" fill="#ffffff" text-anchor="middle">ถาม [ ระบุมวล m (kg): ] และรอ</text>
+
+                            <!-- Set mass to answer -->
+                            <rect x="0" y="64" width="180" height="28" rx="4" fill="#ff8c1a"/>
+                            <text x="90" y="82" font-family="'Sarabun', sans-serif" font-size="11" fill="#ffffff" text-anchor="middle">ตั้งค่า [ mass ] เป็น (คำตอบ)</text>
+
+                            <!-- Ask Acc -->
+                            <rect x="0" y="96" width="230" height="28" rx="4" fill="#4c97ff"/>
+                            <text x="115" y="114" font-family="'Sarabun', sans-serif" font-size="11" fill="#ffffff" text-anchor="middle">ถาม [ ระบุความเร่ง a (m/s²): ] และรอ</text>
+
+                            <!-- Set Force to mass * a -->
+                            <rect x="0" y="128" width="220" height="28" rx="4" fill="#ff8c1a"/>
+                            <text x="110" y="146" font-family="'Sarabun', sans-serif" font-size="11" fill="#ffffff" text-anchor="middle">ตั้งค่า [ Force ] เป็น ((mass) * (คำตอบ))</text>
+
+                            <!-- If Force > 100 -->
+                            <rect x="0" y="160" width="360" height="85" rx="6" fill="#ffab19" stroke="#cf8b17" stroke-width="1"/>
+                            <text x="15" y="178" font-family="'Sarabun', sans-serif" font-size="11" font-weight="700" fill="#ffffff">ถ้า &lt; (Force) &gt; [ 100 ] &gt; แล้ว</text>
+                            
+                            <!-- Inside If -->
+                            <rect x="25" y="185" width="280" height="24" rx="4" fill="#9966ff"/>
+                            <text x="165" y="201" font-family="'Sarabun', sans-serif" font-size="10.5" fill="#ffffff" text-anchor="middle">พูด [ แรงมหาศาล! เกินพิกัดความปลอดภัย ] 2 วิ</text>
+
+                            <!-- Else block -->
+                            <text x="15" y="222" font-family="'Sarabun', sans-serif" font-size="11" font-weight="700" fill="#ffffff">มิฉะนั้น พูด [ อยู่ในเกณฑ์ปลอดภัย ] 2 วิ</text>
+                        </g>
+
+                        <!-- Subtitle badge -->
+                        <text x="50" y="390" font-family="'Sarabun', sans-serif" font-size="11.5" fill="#64748b">
+                            จุดเด่น: ไม่มีทางเกิด Syntax Error, เหมาะสำหรับสร้างความคุ้นเคยกับ Logic
+                        </text>
+                    </g>
+
+                    <!-- Right: Python 3.11 Text Code -->
+                    <g filter="url(#shadow52)">
+                        <rect x="495" y="70" width="435" height="340" rx="14" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+                        <rect x="495" y="70" width="435" height="42" rx="14" fill="#0f172a"/>
+                        <rect x="495" y="97" width="435" height="15" fill="#0f172a"/>
+                        <text x="712" y="97" font-family="'Inter', sans-serif" font-size="15" font-weight="700" fill="#38bdf8" text-anchor="middle">
+                            🐍 PYTHON 3.11 (TEXT-BASED SIMULATOR)
+                        </text>
+
+                        <!-- Python Code Block -->
+                        <g transform="translate(515, 125)">
+                            <rect x="0" y="0" width="395" height="240" rx="8" fill="#0f172a"/>
+                            
+                            <text x="15" y="25" font-family="'Inter', monospace" font-size="12" fill="#94a3b8"># 1. รับค่าและแปลงชนิดข้อมูล (Type Casting)</text>
+                            <text x="15" y="48" font-family="'Inter', monospace" font-size="12" fill="#f8fafc">
+                                <tspan fill="#f472b6">mass</tspan> = <tspan fill="#60a5fa">float</tspan>(<tspan fill="#60a5fa">input</tspan>(<tspan fill="#34d399">"ระบุมวล m (kg): "</tspan>))
+                            </text>
+                            <text x="15" y="70" font-family="'Inter', monospace" font-size="12" fill="#f8fafc">
+                                <tspan fill="#f472b6">acc</tspan> = <tspan fill="#60a5fa">float</tspan>(<tspan fill="#60a5fa">input</tspan>(<tspan fill="#34d399">"ระบุความเร่ง a (m/s²): "</tspan>))
+                            </text>
+
+                            <text x="15" y="100" font-family="'Inter', monospace" font-size="12" fill="#94a3b8"># 2. คำนวณตามกฎข้อที่ 2 ของนิวตัน F = ma</text>
+                            <text x="15" y="122" font-family="'Inter', monospace" font-size="12" fill="#f8fafc">
+                                <tspan fill="#f472b6">force</tspan> = mass * acc
+                            </text>
+
+                            <text x="15" y="152" font-family="'Inter', monospace" font-size="12" fill="#94a3b8"># 3. ตรวจสอบเงื่อนไข If-Else</text>
+                            <text x="15" y="174" font-family="'Inter', monospace" font-size="12" fill="#f8fafc">
+                                <tspan fill="#f472b6">if</tspan> force &gt; <tspan fill="#fbbf24">100.0</tspan>:
+                            </text>
+                            <text x="35" y="196" font-family="'Inter', monospace" font-size="12" fill="#f8fafc">
+                                <tspan fill="#60a5fa">print</tspan>(<tspan fill="#34d399">f"แรง {force:.2f} N: เกินพิกัดความปลอดภัย!"</tspan>)
+                            </text>
+                            <text x="15" y="218" font-family="'Inter', monospace" font-size="12" fill="#f8fafc">
+                                <tspan fill="#f472b6">else</tspan>:
+                            </text>
+                            <text x="35" y="235" font-family="'Inter', monospace" font-size="12" fill="#f8fafc">
+                                <tspan fill="#60a5fa">print</tspan>(<tspan fill="#34d399">f"แรง {force:.2f} N: อยู่ในเกณฑ์ปลอดภัย"</tspan>)
+                            </text>
+                        </g>
+
+                        <!-- Subtitle badge -->
+                        <text x="515" y="390" font-family="'Sarabun', sans-serif" font-size="11.5" fill="#64748b">
+                            จุดเด่น: คำนวณระดับวิทยาศาสตร์ได้รวดเร็ว เชื่อมโยง Data Science และ AI
+                        </text>
+                    </g>
+                </svg>
+            </div>
+
+            <!-- SECTION 3: MULTI-BRANCHING pH SCALE ARCHITECTURE -->
+            <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--primary); margin: 2rem 0 0.75rem 0;">
+                <i class="fas fa-vial text-secondary"></i> โครงสร้างการตัดสินใจหลายเงื่อนไข: สเกล pH และการจำแนกสารเคมี (Multi-Branching If-Elif-Else)
+            </h3>
+            <p>
+                ในทางเคมี ค่าความเป็นกรด-ด่าง (\(pH\)) ของสารละลายมีช่วงต่อเนื่องตั้งแต่ 0 ถึง 14 การจำแนกสารจึงไม่สามารถใช้เพียง <code>if-else</code> ธรรมดาได้ แต่ต้องใช้ <strong>โครงสร้างหลายทางเลือก (Multi-Branching: <code>if-elif-else</code>)</strong> ร่วมกับเงื่อนไขทางคณิตศาสตร์ที่รัดกุม:
+            </p>
+
+            <!-- INFOGRAPHIC 5.3: pH SCALE DECISION ARCHITECTURE -->
+            <div class="svg-container">
+                <svg viewBox="0 0 960 400" width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <filter id="shadow53" x="-5%" y="-5%" width="110%" height="115%">
+                            <feDropShadow dx="0" dy="3" stdDeviation="4" flood-opacity="0.12"/>
+                        </filter>
+                    </defs>
+
+                    <!-- Title -->
+                    <text x="480" y="28" font-family="'Sarabun', sans-serif" font-size="18" font-weight="700" fill="#0f172a" text-anchor="middle">
+                        ภาพที่ 5.3: โครงสร้างตรรกะ If-Elif-Else จำแนกระดับสารละลายตามสเกล pH (Chemical pH Decision Tree)
+                    </text>
+                    <text x="480" y="48" font-family="'Sarabun', sans-serif" font-size="13" fill="#64748b" text-anchor="middle">
+                        การเชื่อมโยงช่วงค่าทางเคมี (Boundary Conditions) สู่ตรรกะโปรแกรมที่ไร้ช่องโหว่
+                    </text>
+
+                    <!-- pH Spectrum Gradient Bar -->
+                    <g transform="translate(50, 70)">
+                        <defs>
+                            <linearGradient id="phGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#ef4444"/>
+                                <stop offset="25%" stop-color="#f97316"/>
+                                <stop offset="50%" stop-color="#22c55e"/>
+                                <stop offset="75%" stop-color="#3b82f6"/>
+                                <stop offset="100%" stop-color="#6b21a8"/>
+                            </linearGradient>
+                        </defs>
+                        <rect x="0" y="0" width="860" height="35" rx="8" fill="url(#phGrad)"/>
+                        
+                        <!-- Scale Numbers -->
+                        <text x="15" y="23" font-family="'Inter', sans-serif" font-size="13" font-weight="700" fill="#ffffff">0</text>
+                        <text x="215" y="23" font-family="'Inter', sans-serif" font-size="13" font-weight="700" fill="#ffffff">3.0</text>
+                        <text x="430" y="23" font-family="'Inter', sans-serif" font-size="14" font-weight="700" fill="#ffffff">7.0 (Neutral)</text>
+                        <text x="645" y="23" font-family="'Inter', sans-serif" font-size="13" font-weight="700" fill="#ffffff">11.0</text>
+                        <text x="835" y="23" font-family="'Inter', sans-serif" font-size="13" font-weight="700" fill="#ffffff">14</text>
+                    </g>
+
+                    <!-- 5 Decision Branches Grid -->
+                    <!-- 1. Strong Acid -->
+                    <g transform="translate(50, 130)" filter="url(#shadow53)">
+                        <rect x="0" y="0" width="160" height="230" rx="10" fill="#ffffff" stroke="#fca5a5" stroke-width="1.5"/>
+                        <rect x="0" y="0" width="160" height="34" rx="10" fill="#ef4444"/>
+                        <rect x="0" y="20" width="160" height="14" fill="#ef4444"/>
+                        <text x="80" y="22" font-family="'Sarabun', sans-serif" font-size="13" font-weight="700" fill="#ffffff" text-anchor="middle">กรดแก่ (Strong Acid)</text>
+                        <text x="80" y="55" font-family="'Inter', monospace" font-size="11" font-weight="700" fill="#dc2626" text-anchor="middle">if ph &lt; 3.0:</text>
+                        <text x="12" y="80" font-family="'Sarabun', sans-serif" font-size="11.5" fill="#475569">• \(HCl\), \(H_2SO_4\)</text>
+                        <text x="12" y="102" font-family="'Sarabun', sans-serif" font-size="11.5" fill="#475569">• กัดกร่อนรุนแรง</text>
+                        <text x="12" y="124" font-family="'Sarabun', sans-serif" font-size="11.5" fill="#475569">• กระดาษลิตมัสแดง</text>
+                        <rect x="10" y="145" width="140" height="70" rx="6" fill="#fef2f2"/>
+                        <text x="80" y="165" font-family="'Inter', sans-serif" font-size="10" fill="#991b1b" font-weight="700" text-anchor="middle">PYTHON OUTPUT:</text>
+                        <text x="80" y="185" font-family="'Sarabun', sans-serif" font-size="10.5" fill="#7f1d1d" text-anchor="middle">"อันตราย: กรดแก่"</text>
+                        <text x="80" y="202" font-family="'Sarabun', sans-serif" font-size="10" fill="#b91c1c" text-anchor="middle">สวมถุงมือป้องกัน</text>
+                    </g>
+
+                    <!-- 2. Weak Acid -->
+                    <g transform="translate(225, 130)" filter="url(#shadow53)">
+                        <rect x="0" y="0" width="160" height="230" rx="10" fill="#ffffff" stroke="#fed7aa" stroke-width="1.5"/>
+                        <rect x="0" y="0" width="160" height="34" rx="10" fill="#f97316"/>
+                        <rect x="0" y="20" width="160" height="14" fill="#f97316"/>
+                        <text x="80" y="22" font-family="'Sarabun', sans-serif" font-size="13" font-weight="700" fill="#ffffff" text-anchor="middle">กรดอ่อน (Weak Acid)</text>
+                        <text x="80" y="55" font-family="'Inter', monospace" font-size="11" font-weight="700" fill="#c2410c" text-anchor="middle">elif ph &lt; 7.0:</text>
+                        <text x="12" y="80" font-family="'Sarabun', sans-serif" font-size="11.5" fill="#475569">• น้ำส้มสายชู, น้ำมะนาว</text>
+                        <text x="12" y="102" font-family="'Sarabun', sans-serif" font-size="11.5" fill="#475569">• กรดแอซีติก</text>
+                        <text x="12" y="124" font-family="'Sarabun', sans-serif" font-size="11.5" fill="#475569">• มีรสเปรี้ยว</text>
+                        <rect x="10" y="145" width="140" height="70" rx="6" fill="#fff7ed"/>
+                        <text x="80" y="165" font-family="'Inter', sans-serif" font-size="10" fill="#9a3412" font-weight="700" text-anchor="middle">PYTHON OUTPUT:</text>
+                        <text x="80" y="185" font-family="'Sarabun', sans-serif" font-size="10.5" fill="#9a3412" text-anchor="middle">"กรดอ่อน (Weak)"</text>
+                        <text x="80" y="202" font-family="'Sarabun', sans-serif" font-size="10" fill="#c2410c" text-anchor="middle">ใช้ในอาหารได้</text>
+                    </g>
+
+                    <!-- 3. Neutral -->
+                    <g transform="translate(400, 130)" filter="url(#shadow53)">
+                        <rect x="0" y="0" width="160" height="230" rx="10" fill="#ffffff" stroke="#bbf7d0" stroke-width="1.5"/>
+                        <rect x="0" y="0" width="160" height="34" rx="10" fill="#22c55e"/>
+                        <rect x="0" y="20" width="160" height="14" fill="#22c55e"/>
+                        <text x="80" y="22" font-family="'Sarabun', sans-serif" font-size="13" font-weight="700" fill="#ffffff" text-anchor="middle">เป็นกลาง (Neutral)</text>
+                        <text x="80" y="55" font-family="'Inter', monospace" font-size="11" font-weight="700" fill="#15803d" text-anchor="middle">elif ph == 7.0:</text>
+                        <text x="12" y="80" font-family="'Sarabun', sans-serif" font-size="11.5" fill="#475569">• น้ำบริสุทธิ์ \(H_2O\)</text>
+                        <text x="12" y="102" font-family="'Sarabun', sans-serif" font-size="11.5" fill="#475569">• สารละลายเกลือแกง</text>
+                        <text x="12" y="124" font-family="'Sarabun', sans-serif" font-size="11.5" fill="#475569">• จุดสะเทินพอดี</text>
+                        <rect x="10" y="145" width="140" height="70" rx="6" fill="#f0fdf4"/>
+                        <text x="80" y="165" font-family="'Inter', sans-serif" font-size="10" fill="#166534" font-weight="700" text-anchor="middle">PYTHON OUTPUT:</text>
+                        <text x="80" y="185" font-family="'Sarabun', sans-serif" font-size="10.5" fill="#14532d" text-anchor="middle">"สารละลายเป็นกลาง"</text>
+                        <text x="80" y="202" font-family="'Sarabun', sans-serif" font-size="10" fill="#15803d" text-anchor="middle">สภาวะสมดุล</text>
+                    </g>
+
+                    <!-- 4. Weak Base -->
+                    <g transform="translate(575, 130)" filter="url(#shadow53)">
+                        <rect x="0" y="0" width="160" height="230" rx="10" fill="#ffffff" stroke="#bfdbfe" stroke-width="1.5"/>
+                        <rect x="0" y="0" width="160" height="34" rx="10" fill="#3b82f6"/>
+                        <rect x="0" y="20" width="160" height="14" fill="#3b82f6"/>
+                        <text x="80" y="22" font-family="'Sarabun', sans-serif" font-size="13" font-weight="700" fill="#ffffff" text-anchor="middle">เบสอ่อน (Weak Base)</text>
+                        <text x="80" y="55" font-family="'Inter', monospace" font-size="11" font-weight="700" fill="#1d4ed8" text-anchor="middle">elif ph &lt;= 11.0:</text>
+                        <text x="12" y="80" font-family="'Sarabun', sans-serif" font-size="11.5" fill="#475569">• ผงฟู, สบู่</text>
+                        <text x="12" y="102" font-family="'Sarabun', sans-serif" font-size="11.5" fill="#475569">• สารละลายแอมโมเนีย</text>
+                        <text x="12" y="124" font-family="'Sarabun', sans-serif" font-size="11.5" fill="#475569">• ลื่นมือ รสฝาด</text>
+                        <rect x="10" y="145" width="140" height="70" rx="6" fill="#eff6ff"/>
+                        <text x="80" y="165" font-family="'Inter', sans-serif" font-size="10" fill="#1e40af" font-weight="700" text-anchor="middle">PYTHON OUTPUT:</text>
+                        <text x="80" y="185" font-family="'Sarabun', sans-serif" font-size="10.5" fill="#1e3a8a" text-anchor="middle">"เบสอ่อน (Weak)"</text>
+                        <text x="80" y="202" font-family="'Sarabun', sans-serif" font-size="10" fill="#2563eb" text-anchor="middle">ทำความสะอาด</text>
+                    </g>
+
+                    <!-- 5. Strong Base -->
+                    <g transform="translate(750, 130)" filter="url(#shadow53)">
+                        <rect x="0" y="0" width="160" height="230" rx="10" fill="#ffffff" stroke="#e9d5ff" stroke-width="1.5"/>
+                        <rect x="0" y="0" width="160" height="34" rx="10" fill="#8b5cf6"/>
+                        <rect x="0" y="20" width="160" height="14" fill="#8b5cf6"/>
+                        <text x="80" y="22" font-family="'Sarabun', sans-serif" font-size="13" font-weight="700" fill="#ffffff" text-anchor="middle">เบสแก่ (Strong Base)</text>
+                        <text x="80" y="55" font-family="'Inter', monospace" font-size="11" font-weight="700" fill="#6d28d9" text-anchor="middle">else:</text>
+                        <text x="12" y="80" font-family="'Sarabun', sans-serif" font-size="11.5" fill="#475569">• โซดาไฟ \(NaOH\)</text>
+                        <text x="12" y="102" font-family="'Sarabun', sans-serif" font-size="11.5" fill="#475569">• น้ำยาขจัดท่ออุดตัน</text>
+                        <text x="12" y="124" font-family="'Sarabun', sans-serif" font-size="11.5" fill="#475569">• กัดกร่อนเนื้อเยื่อ</text>
+                        <rect x="10" y="145" width="140" height="70" rx="6" fill="#faf5ff"/>
+                        <text x="80" y="165" font-family="'Inter', sans-serif" font-size="10" fill="#6b21a8" font-weight="700" text-anchor="middle">PYTHON OUTPUT:</text>
+                        <text x="80" y="185" font-family="'Sarabun', sans-serif" font-size="10.5" fill="#581c87" text-anchor="middle">"อันตราย: เบสแก่"</text>
+                        <text x="80" y="202" font-family="'Sarabun', sans-serif" font-size="10" fill="#7c3aed" text-anchor="middle">สวมแว่นตานิรภัย</text>
+                    </g>
+                </svg>
+            </div>
+
+            <!-- SECTION 4: OPERATORS SYNTHESIS TABLE -->
+            <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--primary); margin: 2rem 0 0.75rem 0;">
+                <i class="fas fa-calculator text-purple"></i> ตารางที่ 5.1: เมทริกซ์ตัวดำเนินการทางคณิตศาสตร์และตรรกศาสตร์ในสูตรวิทยาศาสตร์
+            </h3>
+
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 18%;">หมวดหมู่ตัวดำเนินการ</th>
+                            <th style="width: 20%;">สัญลักษณ์ใน Python</th>
+                            <th style="width: 32%;">ตัวอย่างสูตรวิทยาศาสตร์</th>
+                            <th style="width: 30%;">ความหมายและการทำงานเชิงคอมพิวเตอร์</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>คณิตศาสตร์ (Arithmetic)</strong></td>
+                            <td><code>+</code>, <code>-</code>, <code>*</code>, <code>/</code>, <code>**</code>, <code>%</code></td>
+                            <td>พลังงานจลน์ \(E_k = \frac{1}{2}mv^2\)<br><code>ek = 0.5 * m * (v ** 2)</code></td>
+                            <td><code>**</code> คือการยกกำลัง (Power) ต่างจากภาษาอื่นที่ใช้ <code>^</code></td>
+                        </tr>
+                        <tr>
+                            <td><strong>เปรียบเทียบ (Relational)</strong></td>
+                            <td><code>==</code>, <code>!=</code>, <code>&gt;</code>, <code>&lt;</code>, <code>&gt;=</code>, <code>&lt;=</code></td>
+                            <td>การเดือดของน้ำ \(T \ge 100^\circ\text{C}\)<br><code>is_boiling = (temp &gt;= 100.0)</code></td>
+                            <td><code>==</code> คือการเปรียบเทียบความเท่ากัน (ต่างจาก <code>=</code> ที่เป็นการกำหนดค่า)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>ตรรกศาสตร์ (Logical)</strong></td>
+                            <td><code>and</code>, <code>or</code>, <code>not</code></td>
+                            <td>สภาวะสังเคราะห์แสง (มีแสง AND มี \(CO_2\))<br><code>if has_light and has_co2:</code></td>
+                            <td>เชื่อมโยงเงื่อนไขทางวิทยาศาสตร์หลายตัวแปรพร้อมกัน</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- SECTION 5: EXECUTABLE PYTHON SIMULATOR -->
+            <h3 style="font-size: 1.25rem; font-weight: 700; color: var(--primary); margin: 2rem 0 0.75rem 0;">
+                <i class="fab fa-python text-success"></i> ตัวแบบจำลองภาษา Python 3.11: โปรแกรมคำนวณกฎการเคลื่อนที่และจำแนกสารละลาย
+            </h3>
+            <p>
+                ตัวแบบจำลองโค้ด Python 3.11 ด้านล่างประกอบด้วยระบบคำนวณแรงตามกฎข้อที่ 2 ของนิวตัน และระบบจำแนกระดับกรด-เบสจากค่า pH พร้อมระบบดักจับข้อผิดพลาด (Exception Handling):
+            </p>
+
+            <div class="code-container">
+                <div class="code-header">
+                    <span><i class="fab fa-python"></i> newton_motion_and_ph_classifier.py (Executable Python 3.11)</span>
+                    <span>4124941 วิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์</span>
+                </div>
+                <div class="code-body">
+<pre><code><span class="comment"># =====================================================================</span>
+<span class="comment"># โครงการ: ตัวแบบจำลองการคำนวณฟิสิกส์และเคมีด้วยตัวแปรและเงื่อนไข</span>
+<span class="comment"># ผู้พัฒนา: ผู้ช่วยศาสตราจารย์ ดร.ชีวะ ทัศนา</span>
+<span class="comment"># สังกัด: คณะวิทยาศาสตร์และเทคโนโลยี มหาวิทยาลัยราชภัฏรำไพพรรณี</span>
+<span class="comment"># =====================================================================</span>
+
+<span class="keyword">from</span> typing <span class="keyword">import</span> Dict, Any
+
+<span class="comment"># ---------------------------------------------------------------------</span>
+<span class="comment"># 1. NEWTON'S 2ND LAW SIMULATOR (F = ma with Safety Condition)</span>
+<span class="comment"># ---------------------------------------------------------------------</span>
+<span class="keyword">def</span> <span class="function">calculate_newton_force</span>(mass_kg: float, acc_ms2: float, safety_limit_newtons: float = 100.0) -> Dict[str, Any]:
+    <span class="string">"""
+    คำนวณแรงลัพธ์ตามกฎข้อที่ 2 ของนิวตัน F = ma และตรวจสอบพิกัดความปลอดภัย
+    mass_kg: มวลของวัตถุ (กิโลกรัม)
+    acc_ms2: ความเร่ง (เมตร/วินาทีกำลังสอง)
+    """</span>
+    <span class="keyword">if</span> mass_kg &lt;= 0:
+        <span class="keyword">raise</span> ValueError(<span class="string">"มวลของวัตถุต้องมีค่ามากกว่าศูนย์เสมอ"</span>)
+        
+    force = mass_kg * acc_ms2
+    is_safe = force &lt;= safety_limit_newtons
+    
+    status_msg = <span class="string">"แรงอยู่ในเกณฑ์ปลอดภัยสำหรับการทดลอง"</span> <span class="keyword">if</span> is_safe <span class="keyword">else</span> <span class="string">"คำเตือน: แรงเกินพิกัดความปลอดภัยของโครงสร้าง!"</span>
+    
+    <span class="keyword">return</span> {
+        <span class="string">"mass"</span>: mass_kg,
+        <span class="string">"acceleration"</span>: acc_ms2,
+        <span class="string">"force_newtons"</span>: round(force, 2),
+        <span class="string">"is_safe"</span>: is_safe,
+        <span class="string">"message"</span>: status_msg
+    }
+
+
+<span class="comment"># ---------------------------------------------------------------------</span>
+<span class="comment"># 2. CHEMICAL pH CLASSIFIER (Multi-branching if-elif-else)</span>
+<span class="comment"># ---------------------------------------------------------------------</span>
+<span class="keyword">def</span> <span class="function">classify_chemical_ph</span>(ph_val: float) -> Dict[str, Any]:
+    <span class="string">"""
+    จำแนกระดับความเป็นกรด-ด่างของสารละลาย และคำนวณความเข้มข้นไฮโดรเนียมไอออน
+    """</span>
+    <span class="keyword">if</span> ph_val &lt; 0.0 <span class="keyword">or</span> ph_val > 14.0:
+        <span class="keyword">raise</span> ValueError(<span class="string">"ค่า pH มาตรฐานในสารละลายน้ำต้องอยู่ระหว่าง 0.0 ถึง 14.0"</span>)
+        
+    <span class="comment"># Multi-branching classification</span>
+    <span class="keyword">if</span> ph_val &lt; 3.0:
+        category = <span class="string">"กรดแก่ (Strong Acid)"</span>
+        precaution = <span class="string">"อันตรายสูง: สวมถุงมือไนไตรล์และแว่นตานิรภัย"</span>
+    <span class="keyword">elif</span> ph_val &lt; 7.0:
+        category = <span class="string">"กรดอ่อน (Weak Acid)"</span>
+        precaution = <span class="string">"ความปลอดภัยปานกลาง: ระวังการสัมผัสดวงตา"</span>
+    <span class="keyword">elif</span> ph_val == 7.0:
+        category = <span class="string">"เป็นกลาง (Neutral)"</span>
+        precaution = <span class="string">"ปลอดภัย: สภาวะสมดุลทางเคมี"</span>
+    <span class="keyword">elif</span> ph_val &lt;= 11.0:
+        category = <span class="string">"เบสอ่อน (Weak Base)"</span>
+        precaution = <span class="string">"ความปลอดภัยปานกลาง: สารมีความลื่น ล้างด้วยน้ำสะอาด"</span>
+    <span class="keyword">else</span>:
+        category = <span class="string">"เบสแก่ (Strong Base)"</span>
+        precaution = <span class="string">"อันตรายสูง: มีฤทธิ์กัดกร่อนผิวหนังรุนแรง"</span>
+        
+    h_ion_conc = 10.0 ** (-ph_val)  <span class="comment"># [H3O+] = 10^(-pH)</span>
+    
+    <span class="keyword">return</span> {
+        <span class="string">"pH"</span>: ph_val,
+        <span class="string">"category"</span>: category,
+        <span class="string">"h_concentration_molar"</span>: f<span class="string">"{h_ion_conc:.2e} M"</span>,
+        <span class="string">"safety_precaution"</span>: precaution
+    }
+
+
+<span class="comment"># ---------------------------------------------------------------------</span>
+<span class="comment"># EXECUTION & DEMONSTRATION</span>
+<span class="comment"># ---------------------------------------------------------------------</span>
+<span class="keyword">if</span> __name__ == <span class="string">"__main__"</span>:
+    print(<span class="string">"=== [1] ทดสอบการคำนวณกฎข้อที่ 2 ของนิวตัน (F = ma) ==="</span>)
+    test_physics = calculate_newton_force(mass_kg=12.5, acc_ms2=9.8)
+    print(f<span class="string">"มวล: {test_physics['mass']} kg, ความเร่ง: {test_physics['acceleration']} m/s²"</span>)
+    print(f<span class="string">"แรงลัพธ์คำนวณได้: {test_physics['force_newtons']} N"</span>)
+    print(f<span class="string">"สถานะความปลอดภัย: {test_physics['message']}\n"</span>)
+
+    print(<span class="string">"=== [2] ทดสอบการจำแนกสารละลายตามค่า pH สเกล ==="</span>)
+    samples = [1.5, 4.2, 7.0, 9.5, 13.0]
+    <span class="keyword">for</span> sample_ph <span class="keyword">in</span> samples:
+        res = classify_chemical_ph(sample_ph)
+        print(f<span class="string">"pH {res['pH']:&lt;4} -> {res['category']:&lt;24} | ความเข้มข้น H+: {res['h_concentration_molar']}"</span>)
+</code></pre>
+                </div>
+            </div>
+        </div>
+    
+        <!-- ปฏิบัติการจำลองเสมือนจริงประจำสัปดาห์ (Interactive Science Simulator & 180 Labs) -->
+        <div class="card" id="sim-section" style="border: 2px solid #0284c7; box-shadow: 0 8px 24px rgba(2, 132, 199, 0.12); margin-top: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.75rem;">
+                <h2 class="card-title" style="margin-bottom: 0; color: #0284c7;">
+                    <i class="fas fa-cube"></i> ปฏิบัติการจำลองเสมือนจริง: LAB 3.0: แบบจำลองหน่วยความจำ Stack & Heap (Python Memory Architecture) (Hybrid 2D/3D AR)
+                </h2>
+                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                    <a href="../simulations/chapter03_memory_model.html" target="_blank" class="nav-back" style="margin-bottom: 0; padding: 0.45rem 0.9rem; font-size: 0.85rem; background: #0284c7; color: #fff;">
+                        <i class="fas fa-external-link-alt"></i> เปิดแบบจำลองเต็มหน้าจอ
+                    </a>
+                    <a href="../assets/slides/Computing Science for Science Teaching - Chapter 5.pptx" download class="nav-back" style="margin-bottom: 0; padding: 0.45rem 0.9rem; font-size: 0.85rem; background: #f59e0b; color: #fff;"><i class="fas fa-file-powerpoint"></i> ดาวน์โหลดสไลด์ (.pptx)</a>
+                </div>
+            </div>
+
+            <p style="font-size: 0.95rem; color: #334155; margin-bottom: 1rem;">
+                <strong>แบบจำลองเชิงโต้ตอบสำหรับห้องเรียนวิทยาศาสตร์:</strong> ให้นักศึกษาทดลองปรับค่าพารามิเตอร์ สังเกตการณ์เปลี่ยนแปลง และวิเคราะห์ข้อมูลตามกระบวนการคิดเชิงคำนวณ (Computational Thinking):
+            </p>
+
+            <div style="margin: 1rem 0; border-radius: 12px; overflow: hidden; border: 1px solid #cbd5e1; height: 600px; box-shadow: var(--shadow-md);">
+                <iframe src="../simulations/chapter03_memory_model.html" style="width: 100%; height: 100%; border: none;"></iframe>
+            </div>
+
+            <div style="margin: 0.85rem 0; display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;"><span style="font-size: 0.85rem; font-weight: 600; color: #64748b;"><i class="fas fa-cubes"></i> แบบจำลองเสริมในบท:</span> <a href="../simulations/chapter03_python_live_sandbox.html" target="_blank" style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.35rem 0.75rem; background: #ecfdf5; color: #059669; border-radius: 6px; font-size: 0.82rem; font-weight: 700; text-decoration: none; border: 1px solid #a7f3d0;"><i class="fab fa-python"></i> ⚡ เปิดห้องทดลอง Python 3 Live Sandbox (Skulpt Runtime)</a> <a href="../simulations/chapter03_inbrowser_python_sandbox.html" target="_blank" style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.35rem 0.75rem; background: #e0f2fe; color: #0284c7; border-radius: 6px; font-size: 0.82rem; font-weight: 600; text-decoration: none; border: 1px solid #bae6fd;"><i class="fas fa-play-circle"></i> 3.0 แซนด์บ็อกซ์รันโค้ด Python บนเบราว์เซอร์ (In-Browser Python AR) — AR MediaPipe Lab</a> <a href="../simulations/chapter04_automated_decision_system.html" target="_blank" style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.35rem 0.75rem; background: #e0f2fe; color: #0284c7; border-radius: 6px; font-size: 0.82rem; font-weight: 600; text-decoration: none; border: 1px solid #bae6fd;"><i class="fas fa-play-circle"></i> 4.0 ระบบตัดสินใจอัตโนมัติ (Automated Decision Controller AR)</a></div>
+
+            <!-- คลังใบงานปฏิบัติการที่สอดคล้องจาก 180 Labs Manual -->
+            <div style="margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid #e2e8f0;">
+                <h3 style="font-size: 1.05rem; font-weight: 700; color: #0f172a; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-flask" style="color: #10b981;"></i> ใบงานปฏิบัติการที่สอดคล้อง (จากคู่มือปฏิบัติการ ๑๘๐ การทดลอง):
+                </h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem;">
+                    
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.1rem; border-left: 4px solid #10b981; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem; flex-wrap: wrap; gap: 0.25rem;">
+                    <span style="background: #10b981; color: #fff; font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.55rem; border-radius: 4px;">LAB 2.1.1</span>
+                    <span style="font-size: 0.78rem; color: #64748b;"><i class="far fa-clock"></i> 45 นาที | C3 (ประยุกต์ใช้)</span>
+                </div>
+                <h4 style="font-size: 0.98rem; font-weight: 700; color: #0f172a; margin-bottom: 0.2rem;">การพิสูจน์มโนทัศน์พื้นฐาน ปฐมบทโปรแกรมเชิงภาพและสภาพแวดล้อม</h4>
+                <p style="font-size: 0.82rem; color: #64748b; font-style: italic; margin-bottom: 0.5rem;">Foundational Verification: Visual Programming Environment</p>
+                <div style="background: #ffffff; border: 1px dashed #cbd5e1; border-radius: 6px; padding: 0.45rem 0.75rem; font-size: 0.85rem; margin-bottom: 0.5rem; overflow-x: auto;"><strong>สมการทฤษฎี:</strong> $$\text{ตัวแปรสถานะแกนกลาง}: \mathcal{S}_{2.1.1} = f(\mathbf{x}, \mathbf{p}) \quad \text{โดยที่ } \mathbf{x} \in \mathbb{R}^n$$</div>
+                <div style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.25rem;"><i class="fas fa-question-circle" style="color: #3b82f6;"></i> คำถามท้ายการทดลอง:</div>
+                <ul style="font-size: 0.82rem; color: #475569; margin-bottom: 0; padding-left: 1.25rem; line-height: 1.5;">
+                    <li style="margin-bottom: 0.25rem;">จงอธิบายความสอดคล้องระหว่างค่าที่วัดได้กับทฤษฎีใน ปฐมบทโปรแกรมเชิงภาพและสภาพแวดล้อม</li><li style="margin-bottom: 0.25rem;">หากปรับเปลี่ยนสภาวะแวดล้อม ตัวแปรควบคุมใดส่งผลต่อความไว (Sensitivity) ของระบบมากที่สุด?</li>
+                </ul>
+            </div>
+        
+
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.1rem; border-left: 4px solid #10b981; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem; flex-wrap: wrap; gap: 0.25rem;">
+                    <span style="background: #10b981; color: #fff; font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.55rem; border-radius: 4px;">LAB 2.1.2</span>
+                    <span style="font-size: 0.78rem; color: #64748b;"><i class="far fa-clock"></i> 60 นาที | C4 (วิเคราะห์)</span>
+                </div>
+                <h4 style="font-size: 0.98rem; font-weight: 700; color: #0f172a; margin-bottom: 0.2rem;">การวิเคราะห์สมรรถนะและขั้นตอนวิธี ปฐมบทโปรแกรมเชิงภาพและสภาพแวดล้อม</h4>
+                <p style="font-size: 0.82rem; color: #64748b; font-style: italic; margin-bottom: 0.5rem;">Performance & Algorithmic Analysis: Visual Programming Environment</p>
+                <div style="background: #ffffff; border: 1px dashed #cbd5e1; border-radius: 6px; padding: 0.45rem 0.75rem; font-size: 0.85rem; margin-bottom: 0.5rem; overflow-x: auto;"><strong>สมการทฤษฎี:</strong> $$\text{ประสิทธิภาพเชิงเวลาและความคลาดเคลื่อน}: \varepsilon = \frac{|y_{\text{measured}} - y_{\text{model}}|}{y_{\text{model}}} \times 100\%$$</div>
+                <div style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.25rem;"><i class="fas fa-question-circle" style="color: #3b82f6;"></i> คำถามท้ายการทดลอง:</div>
+                <ul style="font-size: 0.82rem; color: #475569; margin-bottom: 0; padding-left: 1.25rem; line-height: 1.5;">
+                    <li style="margin-bottom: 0.25rem;">อัตราการเพิ่มขึ้นของเวลาประมวลผลสอดคล้องกับความซับซ้อน Big-O ระดับใด?</li><li style="margin-bottom: 0.25rem;">เสนอแนะแนวทางการปรับปรุงขั้นตอนวิธีเพื่อลดการใช้หน่วยความจำลงอย่างน้อย 30%</li>
+                </ul>
+            </div>
+        
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ========================================== -->
+    <!-- แท็บที่ 3: กิจกรรมการเรียนรู้เชิงรุก (Active Learning) -->
+    <!-- ========================================== -->
+    <div id="tab3" class="content-section">
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-users-cog"></i> กิจกรรมการเรียนรู้เชิงรุก (Active Learning: Pair Programming Workshop)</h2>
+            <p>
+                แผนการจัดการเรียนรู้ 4 ชั่วโมง เน้นการเขียนโปรแกรมคู่ขนาน (Parallel Programming) และการจับคู่เขียนโปรแกรม (Pair Programming: Driver & Navigator) ตามข้อเสนอแนะของ Jeon & Kwon (2024) และ Sungur & Ozkan (2026):
+            </p>
+
+            <!-- PART 1: LECTURE & DUAL-CODE SANDBOX 120 MIN -->
+            <div class="session-block">
+                <div class="session-header">
+                    <span class="session-title"><i class="fas fa-book-reader text-accent"></i> ชั่วโมงที่ 1-2: ภาคบรรยายและการทดลองคู่ขนาน (Dual-Code Sandbox: Scratch & Python)</span>
+                    <span class="time-badge"><i class="far fa-clock"></i> 120 นาที</span>
+                </div>
+
+                <ol style="padding-left: 1.5rem; margin-bottom: 0;">
+                    <li style="margin-bottom: 1rem;">
+                        <strong>ขั้นกระตุ้นความสนใจ (Engagement - 20 นาที): "ปริศนาทำไม '10' + '20' ได้ '1020'?"</strong>
+                        <p style="margin: 0.25rem 0 0.5rem 0; font-size: 0.95rem;">
+                            อาจารย์เปิดโปรแกรม Python ใน Google Colab พิมพ์คำสั่ง <code>a = input(); b = input(); print(a + b)</code> ป้อนเลข 10 และ 20 แล้วแสดงผลลัพธ์ <code>1020</code> ตั้งคำถามท้าทาย: <em>"เหตุใดคอมพิวเตอร์จึงไม่ตอบ 30? ปัญหานี้สัมพันธ์กับชนิดของข้อมูลอย่างไร?"</em> นำเข้าสู่มโนทัศน์ของ <strong>Data Types และ Type Casting</strong>
+                        </p>
+                    </li>
+
+                    <li style="margin-bottom: 1rem;">
+                        <strong>ขั้นสำรวจและอธิบาย (Exploration & Explanation - 55 นาที): "ตัวแปร ชนิดข้อมูล และคู่ขนาน Scratch/Python"</strong>
+                        <p style="margin: 0.25rem 0 0.5rem 0; font-size: 0.95rem;">
+                            อาจารย์สาธิตการสร้างตัวแปรใน Scratch 3.0 (บล็อกสีส้ม) เทียบกับการเขียนใน Python 3.11 บรรยายเรื่องกฎการตั้งชื่อตัวแปร (Snake Case: <code>mass_kg</code>, <code>temperature_c</code>) อธิบายโครงสร้างเงื่อนไข <code>if-elif-else</code> และการเยื้องหน้า (Indentation 4 Spaces) ที่เป็นหัวใจของ Python
+                        </p>
+                    </li>
+
+                    <li style="margin-bottom: 1rem;">
+                        <strong>กิจกรรมย่อย "Code-Along Simulation" (30 นาที):</strong>
+                        <p style="margin: 0.25rem 0 0.5rem 0; font-size: 0.95rem;">
+                            นักศึกษาเปิดคอมพิวเตอร์พิมพ์โค้ดตามอาจารย์ทีละบรรทัด สร้างโปรแกรมคำนวณดัชนีมวลกาย (BMI) พร้อมเงื่อนไขจำแนกระดับสุขภาพ โดยสังเกตผลกระทบเมื่อลืมใส่ฟังก์ชัน <code>float()</code> ในการแปลงค่า <code>input()</code>
+                        </p>
+                    </li>
+
+                    <li>
+                        <strong>ขั้นสรุปเชื่อมโยง (Elaboration - 15 นาที):</strong>
+                        <p style="margin: 0.25rem 0 0; font-size: 0.95rem;">
+                            อภิปรายเปรียบเทียบข้อดี-ข้อจำกัดระหว่าง Scratch (มองเห็นภาพรวมง่าย) กับ Python (คำนวณวิทยาศาสตร์และประมวลผลข้อมูลขนาดใหญ่ได้ดีกว่า)
+                        </p>
+                    </li>
+                </ol>
+            </div>
+
+            <!-- PART 2: PAIR PROGRAMMING WORKSHOP 120 MIN -->
+            <div class="session-block">
+                <div class="session-header">
+                    <span class="session-title"><i class="fas fa-user-friends text-secondary"></i> ชั่วโมงที่ 3-4: ปฏิบัติการ Pair Programming "นักวิทยาศาสตร์จับคู่โปรแกรมเมอร์"</span>
+                    <span class="time-badge"><i class="far fa-clock"></i> 120 นาที</span>
+                </div>
+
+                <ol style="padding-left: 1.5rem; margin-bottom: 0;">
+                    <li style="margin-bottom: 1rem;">
+                        <strong>กิจกรรมจับคู่เขียนโค้ด (Pair Programming Workshop - 70 นาที):</strong>
+                        <p style="margin: 0.25rem 0 0.5rem 0; font-size: 0.95rem;">
+                            จับคู่นักศึกษา 2 คน สวมบทบาทสลับกันระหว่าง <strong>"Driver"</strong> (ผู้พิมพ์โค้ด) และ <strong>"Navigator"</strong> (ผู้ตรวจสอบสูตรและตรรกะ) เลือกแก้โจทย์วิทยาศาสตร์ 1 ข้อ:
+                        </p>
+                        <ul style="padding-left: 1.5rem; font-size: 0.92rem; color: #475569;">
+                            <li><strong>โจทย์ A (ฟิสิกส์):</strong> โปรแกรมคำนวณพลังงานจลน์ \(E_k = \frac{1}{2}mv^2\) และตรวจสอบว่าถ้าความเร็ว \(v > 120\text{ km/h}\) ให้แจ้งเตือนความเร็วอันตราย</li>
+                            <li><strong>โจทย์ B (เคมี):</strong> โปรแกรมคำนวณความเข้มข้นสารละลาย \(C = n/V\) พร้อมตรวจสอบว่าสารละลายอิ่มตัวหรือไม่</li>
+                            <li><strong>โจทย์ C (ชีววิทยา):</strong> โปรแกรมตรวจสอบอุณหภูมิร่างกายและชีพจร (Nested If-Else) เพื่อคัดกรองภาวะติดเชื้อเบื้องต้น</li>
+                        </ul>
+                    </li>
+
+                    <li style="margin-bottom: 1rem;">
+                        <strong>กิจกรรม "Live Bug Hunt & Peer Code Review" (35 นาที):</strong>
+                        <p style="margin: 0.25rem 0 0.5rem 0; font-size: 0.95rem;">
+                            สุ่มตัวแทน 2-3 คู่ขึ้นแสดงผลงานบนจอโปรเจกเตอร์ อาจารย์และเพื่อนร่วมชั้นช่วยกันตรวจจับบั๊กที่พบบ่อย (เช่น ลืมใส่เครื่องหมาย <code>:</code> หลังคำสั่ง <code>if</code>, ใช้เครื่องหมาย <code>=</code> แทน <code>==</code> ในการเปรียบเทียบ)
+                        </p>
+                    </li>
+
+                    <li>
+                        <strong>สรุปผลและมอบหมายงาน (Debrief & Homework - 15 นาที):</strong>
+                        <p style="margin: 0.25rem 0 0; font-size: 0.95rem;">
+                            อาจารย์สรุปภาพรวมและมอบหมายให้นักศึกษาปรับปรุงโค้ดส่งผ่าน Google Classroom เพื่อเตรียมพร้อมสู่การเขียนลูปวนซ้ำ (Loops) ในสัปดาห์ที่ 6
+                        </p>
+                    </li>
+                </ol>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- แท็บที่ 4: การวัดและประเมินผล (Rubrics) -->
+    <!-- ========================================== -->
+    <div id="tab4" class="content-section">
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-check-double"></i> เกณฑ์การวัดและประเมินผลการเรียนรู้ (Authentic Rubrics Matrix)</h2>
+            <p>
+                เกณฑ์การประเมินผลงานการเขียนโปรแกรมจำลองวิทยาศาสตร์ 4 ระดับคุณภาพ พัฒนาตามเกณฑ์สมรรถนะการเขียนโปรแกรมเพื่อการสอนวิทยาศาสตร์ (Sungur & Ozkan, 2026; Listiaji et al., 2026):
+            </p>
+
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 20%;">มิติการประเมิน</th>
+                            <th style="width: 20%;">ดีมาก (4 คะแนน)</th>
+                            <th style="width: 20%;">ดี (3 คะแนน)</th>
+                            <th style="width: 20%;">พอใช้ (2 คะแนน)</th>
+                            <th style="width: 20%;">ปรับปรุง (1 คะแนน)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>1. การจัดการตัวแปรและชนิดข้อมูล (Variable & Data Typing)</strong></td>
+                            <td>ตั้งชื่อตัวแปรสื่อความหมายตามสูตรวิทยาศาสตร์ มีการใช้ Type Casting (<code>float</code>, <code>int</code>) ครบถ้วน ถูกต้อง 100% ไม่มีข้อผิดพลาด Type Mismatch</td>
+                            <td>ตั้งชื่อตัวแปรได้ถูกต้อง มีการแปลงชนิดข้อมูลครบถ้วน แต่อาจมีชื่อตัวแปรบางตัวที่สั้นหรือไม่ชัดเจน</td>
+                            <td>ลืมแปลงชนิดข้อมูลในบางจุด ส่งผลให้การคำนวณคลาดเคลื่อน หรือใช้ชนิดข้อมูลไม่เหมาะสมกับปริมาณทางกายภาพ</td>
+                            <td>ไม่เข้าใจแนวคิดเรื่องชนิดข้อมูล ไม่มีการแปลงค่า <code>input()</code> ทำให้โปรแกรมเกิด Error</td>
+                        </tr>
+                        <tr>
+                            <td><strong>2. ความถูกต้องของตรรกะเงื่อนไข (Conditional Logic)</strong></td>
+                            <td>ใช้ <code>if-elif-else</code> และตัวดำเนินการตรรกะ (<code>and</code>, <code>or</code>) ครอบคลุมทุกช่วงค่าทางวิทยาศาสตร์ ไม่มีช่องว่างเงื่อนไข (No Gap) และไม่มีเงื่อนไขที่ซ้ำซ้อน</td>
+                            <td>โครงสร้างเงื่อนไขถูกต้องเป็นส่วนใหญ่ ครอบคลุมกรณีทดสอบหลักเกือบทั้งหมด</td>
+                            <td>เงื่อนไขมีช่องโหว่ เช่น ลืมกรณีค่าขอบเขต (Boundary Conditions เช่น กรณีค่าเท่ากับพอดี) หรือใช้เครื่องหมายเปรียบเทียบสลับกัน</td>
+                            <td>ตรรกะเงื่อนไขผิดพลาด ไม่สามารถตัดสินใจตามเงื่อนไขที่โจทย์กำหนดได้</td>
+                        </tr>
+                        <tr>
+                            <td><strong>3. การถ่ายโอนความรู้คู่ขนาน (Block-to-Text Transfer)</strong></td>
+                            <td>สามารถอธิบายความเชื่อมโยงระหว่างบล็อก Scratch กับไวยากรณ์ Python ได้อย่างชัดเจน เข้าใจกลไกการทำงานของทั้งสองกระบวนทัศน์อย่างลึกซึ้ง</td>
+                            <td>เปรียบเทียบความเหมือนและความต่างระหว่าง Scratch และ Python ได้ถูกต้องเป็นส่วนใหญ่</td>
+                            <td>เขียนได้เฉพาะบล็อก Scratch หรือเฉพาะ Python อย่างใดอย่างหนึ่ง แต่ไม่สามารถเชื่อมโยงทั้งสองรูปแบบเข้าด้วยกันได้</td>
+                            <td>ไม่เข้าใจความเชื่อมโยงระหว่างการเขียนโปรแกรมแบบบล็อกและแบบข้อความ</td>
+                        </tr>
+                        <tr>
+                            <td><strong>4. ความถูกต้องทางวิทยาศาสตร์ (Scientific Accuracy)</strong></td>
+                            <td>สูตรการคำนวณทางวิทยาศาสตร์ถูกต้องสมบูรณ์ หน่วยทางกายภาพถูกต้อง มีระบบตรวจสอบข้อมูลนำเข้าป้องกันค่าที่ไม่สมเหตุสมผล (เช่น มวลติดลบ)</td>
+                            <td>สูตรคำนวณถูกต้อง ผลลัพธ์ทางวิทยาศาสตร์ถูกต้อง แต่อาจขาดการตรวจสอบข้อมูลนำเข้าที่ผิดพลาด</td>
+                            <td>สูตรคำนวณทางวิทยาศาสตร์มีข้อผิดพลาดบางจุด เช่น ลืมคูณสัมประสิทธิ์ หรือหน่วยไม่สอดคล้องกัน</td>
+                            <td>สูตรวิทยาศาสตร์ผิดพลาดอย่างสิ้นเชิง ไม่สะท้อนหลักการทางฟิสิกส์หรือเคมี</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- แท็บที่ 5: ข้อสอบวัดสมรรถนะ (HOTS) -->
+    <!-- ========================================== -->
+    <div id="tab5" class="content-section">
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-brain"></i> ข้อสอบวัดสมรรถนะการคิดขั้นสูง (Higher-Order Thinking Skills: HOTS)</h2>
+            <p>
+                ข้อสอบวัดสมรรถนะคัดสรรจาก <strong>คลังข้อสอบมาตรฐานวิทยาการคำนวณ สสวท. (60 ข้อ)</strong> หมวดการเขียนโปรแกรมแก้ปัญหาวิทยาศาสตร์:
+            </p>
+
+            <!-- QUESTION 1 -->
+            <div class="session-block" style="background: white; border-left: 4px solid var(--accent); margin-bottom: 1.5rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                    <h4 style="color: var(--primary); margin: 0;">
+                        <i class="fas fa-question-circle text-accent"></i> ข้อที่ 1: การวิเคราะห์ข้อผิดพลาด Type Error ในการรับค่าการทดลอง (HOTS: Analyzing & Debugging)
+                    </h4>
+                    <span class="wlo-tag">สสวท. หมวด Data Types</span>
+                </div>
+                
+                <p><strong>สถานการณ์:</strong> นักเรียนเขียนโปรแกรมภาษา Python เพื่อคำนวณความเร็วของรถทดลองฟิสิกส์ตามสมการ \(v = s / t\) ดังนี้:</p>
+                <div style="background: #0f172a; color: #f8fafc; padding: 1rem; border-radius: 8px; font-family: monospace; font-size: 0.9rem; margin-bottom: 0.75rem;">
+                    s = input("ระยะทาง (m): ")<br>
+                    t = input("เวลา (s): ")<br>
+                    v = s / t<br>
+                    print("ความเร็วคือ:", v)
+                </div>
+                <p>เมื่อผู้ใช้ป้อนระยะทาง <code>100</code> และเวลา <code>5</code> โปรแกรมจะแสดงผลลัพธ์อย่างไร?</p>
+
+                <div style="margin: 1rem 0; padding-left: 0.5rem;">
+                    <div style="margin-bottom: 0.4rem;"><strong>ก.</strong> แสดงผลลัพธ์: <code>ความเร็วคือ: 20.0</code></div>
+                    <div style="margin-bottom: 0.4rem;"><strong>ข.</strong> แสดงผลลัพธ์: <code>ความเร็วคือ: 100/5</code></div>
+                    <div style="margin-bottom: 0.4rem;"><strong>ค.</strong> เกิดข้อผิดพลาด <code>TypeError: unsupported operand type(s) for /: 'str' and 'str'</code> เพราะคำสั่ง <code>input()</code> คืนค่าเป็น String ซึ่งไม่สามารถนำมาหารกันทางคณิตศาสตร์ได้</div>
+                    <div style="margin-bottom: 0.4rem;"><strong>ง.</strong> เกิดข้อผิดพลาด <code>ZeroDivisionError</code> เพราะคอมพิวเตอร์มองไม่เห็นตัวเลข</div>
+                </div>
+
+                <div class="academic-callout tip" style="margin-top: 1rem;">
+                    <strong><i class="fas fa-check-circle"></i> เฉลย: ค. เกิดข้อผิดพลาด TypeError</strong><br>
+                    <span style="font-size: 0.92rem; color: #166534;">
+                        <em>บทวิเคราะห์เชิงวิทยาการคำนวณ:</em> ในภาษา Python ฟังก์ชัน <code>input()</code> จะรับข้อมูลเข้ามาเป็นชนิดข้อความ (String) เสมอ แม้ผู้ใช้จะพิมพ์ตัวเลข 100 และ 5 เข้าไป ตัวแปร \(s\) จะมีค่าเป็น <code>"100"</code> และ \(t\) จะมีค่าเป็น <code>"5"</code> ซึ่งตัวดำเนินการหาร <code>/</code> ไม่รองรับข้อมูลชนิดสตริง การแก้ไขที่ถูกต้องคือต้องทำ Type Casting: <code>s = float(input(...))</code> และ <code>t = float(input(...))</code> ก่อนนำไปคำนวณ
+                    </span>
+                </div>
+            </div>
+
+            <!-- QUESTION 2 -->
+            <div class="session-block" style="background: white; border-left: 4px solid var(--purple);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.5rem;">
+                    <h4 style="color: var(--primary); margin: 0;">
+                        <i class="fas fa-question-circle text-purple"></i> ข้อที่ 2: การออกแบบเงื่อนไขตรรกศาสตร์จำแนกสถานะของสาร (HOTS: Evaluating & Logic Design)
+                    </h4>
+                    <span class="wlo-tag" style="background: #f5f3ff; color: var(--purple);">สสวท. หมวด Conditionals</span>
+                </div>
+
+                <p><strong>สถานการณ์:</strong> ครูต้องการเขียนโปรแกรมตรวจสอบสถานะของน้ำบริสุทธิ์ ณ ความดันบรรยากาศ 1 atm โดยพิจารณาจากอุณหภูมิ \(T\) (°C):</p>
+                <ul style="padding-left: 1.5rem; margin-bottom: 0.75rem; font-size: 0.93rem;">
+                    <li>ถ้า \(T \le 0\) เป็น "ของแข็ง (น้ำแข็ง)"</li>
+                    <li>ถ้า \(0 < T < 100\) เป็น "ของเหลว (น้ำ)"</li>
+                    <li>ถ้า \(T \ge 100\) เป็น "แก๊ส (ไอน้ำ)"</li>
+                </ul>
+                <p>ข้อใดเป็นโครงสร้างโค้ดภาษา Python ที่ถูกต้อง รัดกุม และครอบคลุมทุกช่วงอุณหภูมิทางกายภาพมากที่สุด?</p>
+
+                <div style="margin: 1rem 0; padding-left: 0.5rem;">
+                    <div style="margin-bottom: 0.6rem;">
+                        <strong>ก.</strong><br>
+                        <code>if T &lt;= 0: print("Solid")<br>if T &gt; 0 and T &lt; 100: print("Liquid")<br>if T &gt;= 100: print("Gas")</code>
+                    </div>
+                    <div style="margin-bottom: 0.6rem;">
+                        <strong>ข.</strong> (โครงสร้าง If-Elif-Else ที่มีประสิทธิภาพสูงสุด)<br>
+                        <code>if T &lt;= 0:<br>&nbsp;&nbsp;&nbsp;&nbsp;print("Solid")<br>elif T &lt; 100:<br>&nbsp;&nbsp;&nbsp;&nbsp;print("Liquid")<br>else:<br>&nbsp;&nbsp;&nbsp;&nbsp;print("Gas")</code>
+                    </div>
+                    <div style="margin-bottom: 0.6rem;">
+                        <strong>ค.</strong><br>
+                        <code>if T == 0: print("Solid")<br>elif T == 100: print("Gas")<br>else: print("Liquid")</code>
+                    </div>
+                    <div style="margin-bottom: 0.6rem;">
+                        <strong>ง.</strong><br>
+                        <code>if T &gt;= 100: print("Gas")<br>else: print("Liquid")</code>
+                    </div>
+                </div>
+
+                <div class="academic-callout tip" style="margin-top: 1rem;">
+                    <strong><i class="fas fa-check-circle"></i> เฉลย: ข. โครงสร้าง If-Elif-Else ที่มีประสิทธิภาพสูงสุด</strong><br>
+                    <span style="font-size: 0.92rem; color: #166534;">
+                        <em>บทวิเคราะห์เชิงตรรกศาสตร์:</em><br>
+                        1. ตัวเลือก ข. ใช้โครงสร้าง <code>if-elif-else</code> แบบคัดกรองเป็นลำดับขั้น เมื่อเงื่อนไขแรก <code>T <= 0</code> ไม่เป็นจริง แสดงว่าค่า \(T > 0\) เสมอโดยอัตโนมัติ ดังนั้นในบล็อก <code>elif T < 100:</code> จึงไม่จำเป็นต้องเขียนเงื่อนไขซ้ำซ้อน <code>T > 0 and ...</code> ช่วยลดภาระการประมวลผลของ CPU<br>
+                        2. และหากไม่เข้าทั้งสองเงื่อนไข บล็อก <code>else:</code> จะรองรับค่า \(T \ge 100\) ทุกค่าอย่างสมบูรณ์แบบโดยไม่มีช่องว่างเงื่อนไข (No Boundary Gap)
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- แท็บที่ 6: เอกสารอ้างอิง (APA 7th Edition) -->
+    <!-- ========================================== -->
+    <div id="tab6" class="content-section">
+        <div class="card">
+            <h2 class="card-title"><i class="fas fa-book-reader"></i> เอกสารอ้างอิงทางวิชาการ (Academic References - APA 7th Edition)</h2>
+            <p>
+                เอกสาร ตำรา และงานวิจัยระดับสากลและระดับชาติที่ใช้ประกอบการสังเคราะห์เนื้อหาและกิจกรรมในสัปดาห์ที่ 5 (สืบค้นผ่าน Consensus.app และคลัง สสวท.):
+            </p>
+
+            <ul class="reference-list">
+                <li class="reference-item">
+                    Dúo-Terrón, P. (2023). Analysis of Scratch software in scientific production for 20 years: Programming in education to develop computational thinking and STEAM disciplines. <em>Education Sciences</em>, 13(4), 404. <a href="https://doi.org/10.3390/educsci13040404" target="_blank">https://doi.org/10.3390/educsci13040404</a>
+                </li>
+                <li class="reference-item">
+                    Fagerlund, J., Häkkinen, P., Vesisenaho, M., & Viiri, J. (2020). Computational thinking in programming with Scratch in primary schools: A systematic review. <em>Computer Applications in Engineering Education</em>, 29(1), 12–28. <a href="https://doi.org/10.1002/cae.22255" target="_blank">https://doi.org/10.1002/cae.22255</a>
+                </li>
+                <li class="reference-item">
+                    Jeon, M., & Kwon, K. (2024). Parallel instruction of text-based and block-based programming: On novice programmers’ computational thinking practices. <em>TechTrends</em>, 68(6), 1012–1026. <a href="https://doi.org/10.1007/s11528-024-00993-8" target="_blank">https://doi.org/10.1007/s11528-024-00993-8</a>
+                </li>
+                <li class="reference-item">
+                    Listiaji, P., Amelia, R. N., & Molnár, G. (2026). Development and validation of a measure assessing computational thinking in science teacher education. <em>Thinking Skills and Creativity</em>, 59, 102372. <a href="https://doi.org/10.1016/j.tsc.2026.102372" target="_blank">https://doi.org/10.1016/j.tsc.2026.102372</a>
+                </li>
+                <li class="reference-item">
+                    Sun, J. W., Wang, R. B., & Wei, B. (2026). Teaching computational thinking skills through Scratch in K-12 education: A systematic review. <em>Journal of Computer Assisted Learning</em>, 42(1), e70230. <a href="https://doi.org/10.1002/jcal.70230" target="_blank">https://doi.org/10.1002/jcal.70230</a>
+                </li>
+                <li class="reference-item">
+                    Sungur, S., & Ozkan, G. (2026). Coding science: The role of block-based programming activities in enhancing computational thinking and science achievement. <em>Journal of Science Education and Technology</em>, 35(1), 45–62. <a href="https://doi.org/10.1007/s10956-026-10317-5" target="_blank">https://doi.org/10.1007/s10956-026-10317-5</a>
+                </li>
+                <li class="reference-item">
+                    Weintrop, D., Beheshti, E., Horn, M., Orton, K., Jona, K., Trouille, L., & Wilensky, U. (2016). Defining computational thinking for mathematics and science classrooms. <em>Journal of Science Education and Technology</em>, 25(1), 127–147. <a href="https://doi.org/10.1007/s10956-015-9581-5" target="_blank">https://doi.org/10.1007/s10956-015-9581-5</a>
+                </li>
+                <li class="reference-item">
+                    Zhang, L. C., & Nouri, J. (2019). A systematic review of learning computational thinking through Scratch in K-9. <em>Computers & Education</em>, 141, 103607. <a href="https://doi.org/10.1016/j.compedu.2019.103607" target="_blank">https://doi.org/10.1016/j.compedu.2019.103607</a>
+                </li>
+                <li class="reference-item">
+                    ชีวะ ทัศนา. (2567). <em>การจัดการเรียนรู้วิทยาการคำนวณและปัญญาประดิษฐ์ในชั้นเรียนวิทยาศาสตร์ยุคดิจิทัล</em>. ภาควิชาฟิสิกส์และวิทยาศาสตร์ทั่วไป คณะวิทยาศาสตร์และเทคโนโลยี มหาวิทยาลัยราชภัฏรำไพพรรณี.
+                </li>
+                <li class="reference-item">
+                    สถาบันส่งเสริมการสอนวิทยาศาสตร์และเทคโนโลยี (สสวท.). (2561). <em>คู่มือการใช้หลักสูตรรายวิชาพื้นฐานวิทยาศาสตร์ สาระเทคโนโลยี (วิทยาการคำนวณ) กลุ่มสาระการเรียนรู้วิทยาศาสตร์ (ฉบับปรับปรุง พ.ศ. 2560)</em>. กระทรวงศึกษาธิการ.
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- ส่วนท้าย -->
+    <footer class="footer">
+        <p>© 2026 รายวิชา 4124941 วิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์ | ผู้ช่วยศาสตราจารย์ ดร.ชีวะ ทัศนา</p>
+        <p>คณะวิทยาศาสตร์และเทคโนโลยี มหาวิทยาลัยราชภัฏรำไพพรรณี</p>
+    </footer>
+</div>
+
+<script>
+    function showTab(tabId, btnElement) {
+        document.querySelectorAll('.content-section').forEach(function(section) {
+            section.classList.remove('active');
+        });
+        document.querySelectorAll('.tab-btn').forEach(function(btn) {
+            btn.classList.remove('active');
+        });
+        const targetSection = document.getElementById(tabId);
+        if (targetSection) {
+            targetSection.classList.add('active');
+        }
+        if (btnElement) {
+            btnElement.classList.add('active');
+        }
+        window.scrollTo({ top: 120, behavior: 'smooth' });
+    }
+</script>
+
+</body>
+</html>

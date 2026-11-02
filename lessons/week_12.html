@@ -1,0 +1,1350 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แผนการสอนสัปดาห์ที่ 12 - การพัฒนาสื่อการเรียนรู้ ลิขสิทธิ์ดิจิทัล และการซักซ้อมจุลการสอน (Learning Materials, Digital Copyright & Micro-teaching Rehearsal)</title>
+    <!-- ฟอนต์ Sarabun และ Inter จาก Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- MathJax 3 for Scientific Notation & Equations -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [["$", "$"], ["\\(", "\\)"]],
+                displayMath: [["$$", "$$"], ["\\[", "\\]"]],
+                processEscapes: true,
+                processEnvironments: true
+            },
+            options: {
+                skipHtmlTags: ["script", "noscript", "style", "textarea", "pre", "code"]
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --primary: #0f172a;
+            --primary-light: #1e293b;
+            --accent: #2563eb;
+            --accent-hover: #1d4ed8;
+            --secondary: #0891b2;
+            --success: #059669;
+            --warning: #d97706;
+            --danger: #dc2626;
+            --purple: #7c3aed;
+            --amber: #f59e0b;
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --border-focus: #94a3b8;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.08), 0 2px 4px -2px rgba(0,0,0,0.05);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.05);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Sarabun', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.8;
+            font-size: 16px;
+        }
+
+        .container {
+            max-width: 1140px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        .nav-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 1.25rem;
+            padding: 0.5rem 1rem;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.25s ease;
+        }
+
+        .nav-back:hover {
+            color: var(--accent-hover);
+            transform: translateX(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e3a8a 50%, #0d9488 100%);
+            color: #ffffff;
+            padding: 3rem 2.5rem;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            top: -40%;
+            right: -10%;
+            width: 480px;
+            height: 480px;
+            background: radial-gradient(circle, rgba(20, 184, 166, 0.25) 0%, rgba(255, 255, 255, 0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .header-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(8px);
+            padding: 0.35rem 0.85rem;
+            border-radius: 9999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header h1 {
+            font-size: 2.1rem;
+            font-weight: 700;
+            line-height: 1.35;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.02em;
+        }
+
+        .header .subtitle {
+            font-size: 1.15rem;
+            opacity: 0.92;
+            font-weight: 400;
+            max-width: 880px;
+        }
+
+        .header .course-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 1.25rem 1.5rem;
+            border-radius: 12px;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .header .course-info span {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.92rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .tab-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 0.85rem 1.4rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            transition: all 0.25s ease;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .tab-btn:hover {
+            background: #f1f5f9;
+            color: var(--accent);
+            border-color: #cbd5e1;
+        }
+
+        .tab-btn.active {
+            background: var(--accent);
+            color: #ffffff;
+            border-color: var(--accent);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+
+        .content-section {
+            display: none;
+            animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--bg-card);
+            border-radius: 14px;
+            padding: 2.25rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+        }
+
+        .card-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding-bottom: 0.85rem;
+            border-bottom: 2px solid #f1f5f9;
+        }
+
+        .card-title i {
+            color: var(--secondary);
+        }
+
+        .highlight-box {
+            background-color: #eff6ff;
+            border-left: 4px solid var(--accent);
+            padding: 1.25rem 1.5rem;
+            border-radius: 0 10px 10px 0;
+            margin: 1.5rem 0;
+            font-size: 0.98rem;
+        }
+
+        .highlight-box.warning {
+            background-color: #fffbeb;
+            border-left-color: var(--warning);
+        }
+
+        .highlight-box.success {
+            background-color: #ecfdf5;
+            border-left-color: var(--success);
+        }
+
+        .highlight-box.purple {
+            background-color: #f5f3ff;
+            border-left-color: var(--purple);
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.25rem;
+            margin: 1.5rem 0;
+        }
+
+        .feature-box {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.25s ease;
+        }
+
+        .feature-box:hover {
+            border-color: var(--accent);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .feature-box h4 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+            background: #ffffff;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid var(--border);
+        }
+
+        th, td {
+            padding: 1rem 1.25rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+
+        th {
+            background-color: #f8fafc;
+            font-weight: 700;
+            color: var(--primary);
+            border-bottom: 2px solid var(--border);
+        }
+
+        tr:last-child td {
+            border-bottom: none;
+        }
+
+        tr:hover td {
+            background-color: #f8fafc;
+        }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .badge-blue { background: #dbeafe; color: #1e40af; }
+        .badge-green { background: #d1fae5; color: #065f46; }
+        .badge-amber { background: #fef3c7; color: #92400e; }
+        .badge-purple { background: #ede9fe; color: #5b21b6; }
+        .badge-red { background: #fee2e2; color: #991b1b; }
+
+        .time-badge {
+            background: var(--primary-light);
+            color: #ffffff;
+            padding: 0.3rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .code-container {
+            background: #0f172a;
+            color: #e2e8f0;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            border: 1px solid #334155;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .code-container .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 0.75rem;
+            margin-bottom: 1rem;
+            border-bottom: 1px solid #334155;
+            color: #94a3b8;
+            font-size: 0.82rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .code-comment { color: #64748b; font-style: italic; }
+        .code-keyword { color: #38bdf8; font-weight: bold; }
+        .code-func { color: #a78bfa; }
+        .code-string { color: #34d399; }
+        .code-num { color: #fbbf24; }
+
+        .quiz-option {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem 1.25rem;
+            margin-bottom: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .quiz-option:hover {
+            border-color: var(--accent);
+            background: #f8fafc;
+        }
+
+        .quiz-explanation {
+            display: none;
+            margin-top: 1.25rem;
+            padding: 1.25rem;
+            border-radius: 8px;
+            background: #f8fafc;
+            border: 1px solid var(--border);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2.5rem 0;
+            color: var(--text-muted);
+            font-size: 0.92rem;
+            border-top: 1px solid var(--border);
+            margin-top: 3rem;
+        }
+
+        @media (max-width: 768px) {
+            .header { padding: 2rem 1.5rem; }
+            .header h1 { font-size: 1.6rem; }
+            .card { padding: 1.5rem; }
+            .tab-btn { padding: 0.7rem 1.1rem; font-size: 0.88rem; }
+            .grid-2, .grid-3 { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <a href="../index.html" class="nav-back">
+        <i class="fas fa-arrow-left"></i> กลับสู่หน้าหลักรายวิชา
+    </a>
+
+    <!-- Header Section -->
+    <header class="header">
+        <div class="header-badge">
+            <i class="fas fa-scale-balanced"></i> สัปดาห์ที่ 12 • Materials & Fair Use
+        </div>
+        <h1>การพัฒนาสื่อการเรียนรู้ ลิขสิทธิ์ดิจิทัล และการซักซ้อมจุลการสอน<br><span style="font-size: 1.35rem; font-weight: 500; opacity: 0.92;">Learning Materials Development, Digital Copyright, Fair Use & Micro-teaching Rehearsal</span></h1>
+        <p class="subtitle">
+            บูรณาการการพัฒนาชุดสื่อวิทยาการคำนวณและใบกิจกรรมสืบเสาะ กฎหมายลิขสิทธิ์และการใช้โดยชอบธรรม (Fair Use 4 Factors) สัญญาอนุญาตครีเอทีฟคอมมอนส์ (Creative Commons) และการซักซ้อมจุลการสอนเสมือนจริง (Dry Run)
+        </p>
+        <div class="course-info">
+            <span><i class="fas fa-book-open text-accent"></i> <strong>รหัสวิชา:</strong> 4124941</span>
+            <span><i class="fas fa-graduation-cap text-accent"></i> <strong>รายวิชา:</strong> วิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์</span>
+            <span><i class="fas fa-chalkboard-user text-accent"></i> <strong>ผู้สอน:</strong> ผศ.ดร.ชีวะ ทัศนา</span>
+            <span><i class="fas fa-clock text-accent"></i> <strong>เวลาเรียน:</strong> 4 ชั่วโมง (บรรยาย 1 ชม. / ปฏิบัติ 3 ชม.)</span>
+        </div>
+    </header>
+
+    <!-- Navigation Tabs (The 6-Tab Standard) -->
+    <div class="tabs">
+        <button class="tab-btn active" onclick="showTab('tab1', this)">
+            <i class="fas fa-bullseye"></i> 1. ผลลัพธ์การเรียนรู้ (WLOs)
+        </button>
+        <button class="tab-btn" onclick="showTab('tab2', this)">
+            <i class="fas fa-book-bookmark"></i> 2. สาระสำคัญ & สื่อทัศนศิลป์
+        </button>
+        <button class="tab-btn" onclick="showTab('tab3', this)">
+            <i class="fas fa-hands-holding-circle"></i> 3. กิจกรรมการเรียนรู้ 5E
+        </button>
+        <button class="tab-btn" onclick="showTab('tab4', this)">
+            <i class="fas fa-chart-simple"></i> 4. การวัดและประเมินผล
+        </button>
+        <button class="tab-btn" onclick="showTab('tab5', this)">
+            <i class="fas fa-clipboard-question"></i> 5. ข้อสอบวัดสมรรถนะ HOTS
+        </button>
+        <button class="tab-btn" onclick="showTab('tab6', this)">
+            <i class="fas fa-quote-left"></i> 6. เอกสารอ้างอิง APA 7th
+        </button>
+    </div>
+
+    <!-- ==================== TAB 1: ผลลัพธ์การเรียนรู้ ==================== -->
+    <div id="tab1" class="content-section active">
+        <div class="card">
+            <h2 class="card-title">
+                <i class="fas fa-bullseye"></i> ผลลัพธ์การเรียนรู้รายสัปดาห์ (Weekly Learning Outcomes: WLOs)
+            </h2>
+            <p style="margin-bottom: 1.5rem; color: var(--text-muted);">
+                เมื่อสิ้นสุดการเรียนรู้ในสัปดาห์ที่ 12 นักศึกษาครูวิทยาศาสตร์สามารถแสดงสมรรถนะตามกรอบผลลัพธ์การเรียนรู้ 4 มิติ (K-P-A-PCK) ดังนี้:
+            </p>
+
+            <div class="grid-2">
+                <div class="feature-box">
+                    <h4><i class="fas fa-brain text-accent"></i> 1. ด้านความรู้เชิงทฤษฎี (Knowledge - K)</h4>
+                    <p>อธิบายหลักการออกแบบสื่อการเรียนรู้วิทยาศาสตร์เชิงสืบเสาะ, วิเคราะห์ข้อยกเว้นการละเมิดลิขสิทธิ์เพื่อการศึกษาตามหลักการใช้ลิขสิทธิ์ที่เป็นธรรม 4 ประการ (Fair Use 4 Factors Analysis), ระบุประเภทและเงื่อนไขของสัญญาอนุญาตครีเอทีฟคอมมอนส์ (Creative Commons: CC0 ถึง CC-BY-NC-ND) และโครงสร้างมาตรฐานการอ้างอิง TASL</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4><i class="fas fa-laptop-code text-secondary"></i> 2. ด้านทักษะและการปฏิบัติการ (Skills - P)</h4>
+                    <p>พัฒนาชุดสื่อประกอบการสอน (สไลด์มัลติมีเดีย, ใบกิจกรรมสืบเสาะคู่ขนานกับโปรแกรมจำลอง, แบบประเมินผล) โดยใช้ทรัพยากร OER ที่ถูกต้องตามกฎหมาย และดำเนินการซักซ้อมจุลการสอนเสมือนจริง (Micro-teaching Dry Run 15 นาที) พร้อมการบริหารจัดการเวลาและแผนสำรองทางเทคนิค (Plan B)</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4><i class="fas fa-scale-balanced text-warning"></i> 3. ด้านเจตคติและจริยธรรมดิจิทัล (Attitude - A)</h4>
+                    <p>ตระหนักถึงความสำคัญของการเคารพทรัพย์สินทางปัญญา (Intellectual Property Respect), มีจรรยาบรรณวิชาชีพครูในการให้เกียรติผู้สร้างสรรค์ผลงานเดิม และมีความพร้อมในการเป็นกัลยาณมิตรวิพากษ์ (Critical & Supportive Peer Reviewer)</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4><i class="fas fa-chalkboard-user text-purple"></i> 4. ด้านการประยุกต์เชิงวิชาชีพครู (Pedagogical Application - PCK/TPACK)</h4>
+                    <p>ประสานบทบาทของทีมผู้สอน 3 เสาหลัก (ครูผู้สอนหลัก, ครูผู้ช่วยจัดกระบวนการ, ผู้ควบคุมเทคโนโลยีแบบจำลอง) เพื่อลดการสะดุดของการจัดกิจกรรมในห้องเรียน และเตรียมความพร้อมอย่างสมบูรณ์สำหรับการจุลการสอนเก็บคะแนนจริง (Graded Micro-teaching 20%) ในสัปดาห์ที่ 13-14</p>
+                </div>
+            </div>
+
+            <div class="highlight-box success">
+                <i class="fas fa-circle-check text-success" style="margin-right: 0.5rem;"></i>
+                <strong>ความเชื่อมโยงกับหลักสูตร:</strong> สัปดาห์นี้เป็นการบูรณาการ <em>"แผนการสอน (Lesson Plan)"</em> จากสัปดาห์ที่ 11 ร่วมกับ <em>"ชุดสื่อและใบงานที่ถูกลิขสิทธิ์ 100%"</em> เพื่อเข้าสู่กระบวนการซักซ้อม Dry Run ป้องกันความผิดพลาดก่อนลงสนามปฏิบัติการสอนจริงในสัปดาห์ถัดไป
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== TAB 2: สาระสำคัญ & สื่อทัศนศิลป์ ==================== -->
+    <div id="tab2" class="content-section">
+        <div class="card">
+            <h2 class="card-title">
+                <i class="fas fa-scale-unbalanced-flip"></i> 1. กฎหมายลิขสิทธิ์และการใช้โดยชอบธรรมสำหรับการศึกษา (Fair Use in Science Teaching)
+            </h2>
+            <p>
+                ในการสร้างสื่อการเรียนรู้วิทยาศาสตร์ ครูมักจำเป็นต้องนำภาพถ่ายทางดาราศาสตร์ ไดอะแกรมทางชีววิทยา หรือข้อมูลผลการทดลองของผู้อื่นมาประกอบใบงาน พระราชบัญญัติลิขสิทธิ์ พ.ศ. 2537 (และฉบับแก้ไขเพิ่มเติม) ได้ให้ข้อยกเว้นสำหรับการใช้เพื่อประโยชน์ในการเรียนการสอนไว้ แต่ต้องอยู่ภายใต้เกณฑ์ <strong>การใช้ลิขสิทธิ์ที่เป็นธรรม (Fair Use Doctrine)</strong> ทั้ง 4 ปัจจัย:
+            </p>
+
+            <!-- Infographic SVG 12.1: Fair Use Decision Tree -->
+            <div style="margin: 2rem 0; text-align: center;">
+                <svg viewBox="0 0 960 480" width="100%" height="auto" style="max-width: 960px; border-radius: 12px; background: #ffffff; box-shadow: 0 4px 20px rgba(0,0,0,0.06); border: 1px solid #e2e8f0;" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <linearGradient id="grad_fair" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stop-color="#1e293b"/>
+                            <stop offset="100%" stop-color="#0f172a"/>
+                        </linearGradient>
+                        <filter id="shadow_card" x="-10%" y="-10%" width="120%" height="120%">
+                            <feDropShadow dx="0" dy="4" stdDeviation="5" flood-color="#0f172a" flood-opacity="0.08"/>
+                        </filter>
+                    </defs>
+
+                    <!-- Title -->
+                    <text x="480" y="38" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="20" font-weight="700" fill="#0f172a">
+                        แผนผังที่ 12.1: แผนผังการตัดสินใจใช้ลิขสิทธิ์ที่เป็นธรรมสำหรับครูวิทยาศาสตร์ (Fair Use 4 Factors Analysis)
+                    </text>
+                    <text x="480" y="64" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="13" fill="#64748b">
+                        การวิเคราะห์ 4 ปัจจัยทางกฎหมายก่อนนำภาพ ตาราง หรือข้อความวิจัยมาใช้ในสื่อการสอน
+                    </text>
+
+                    <!-- Factor 1: Purpose -->
+                    <g transform="translate(45, 95)" filter="url(#shadow_card)">
+                        <rect width="205" height="240" rx="10" fill="#eff6ff" stroke="#3b82f6" stroke-width="2"/>
+                        <circle cx="102" cy="35" r="20" fill="#2563eb"/>
+                        <text x="102" y="42" text-anchor="middle" font-family="'Inter', sans-serif" font-size="16" font-weight="700" fill="#ffffff">1</text>
+                        <text x="102" y="78" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="14" font-weight="700" fill="#1e40af">Purpose & Character</text>
+                        <text x="102" y="96" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="11" fill="#3b82f6">วัตถุประสงค์ของการนำไปใช้</text>
+                        <line x1="15" y1="110" x2="190" y2="110" stroke="#bfdbfe"/>
+                        
+                        <text x="15" y="132" font-family="'Sarabun', sans-serif" font-size="11" fill="#15803d">✔ เพื่อการศึกษา ไม่แสวงหากำไร</text>
+                        <text x="15" y="152" font-family="'Sarabun', sans-serif" font-size="11" fill="#15803d">✔ เป็นการแปลงสภาพ (Transformative)</text>
+                        <text x="15" y="172" font-family="'Sarabun', sans-serif" font-size="11" fill="#b91c1c">✖ เพื่อการค้า / ขายคอร์สกวดวิชา</text>
+                        <text x="15" y="192" font-family="'Sarabun', sans-serif" font-size="11" fill="#b91c1c">✖ คัดลอกตรงๆ โดยไม่เพิ่มคุณค่า</text>
+                    </g>
+
+                    <!-- Factor 2: Nature -->
+                    <g transform="translate(265, 95)" filter="url(#shadow_card)">
+                        <rect width="205" height="240" rx="10" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/>
+                        <circle cx="102" cy="35" r="20" fill="#16a34a"/>
+                        <text x="102" y="42" text-anchor="middle" font-family="'Inter', sans-serif" font-size="16" font-weight="700" fill="#ffffff">2</text>
+                        <text x="102" y="78" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="14" font-weight="700" fill="#15803d">Nature of Work</text>
+                        <text x="102" y="96" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="11" fill="#16a34a">ลักษณะของผลงานเดิม</text>
+                        <line x1="15" y1="110" x2="190" y2="110" stroke="#bbf7d0"/>
+
+                        <text x="15" y="132" font-family="'Sarabun', sans-serif" font-size="11" fill="#15803d">✔ ข้อมูลข้อเท็จจริงทางวิทยาศาสตร์</text>
+                        <text x="15" y="152" font-family="'Sarabun', sans-serif" font-size="11" fill="#15803d">✔ บทความวิจัยที่ตีพิมพ์เผยแพร่แล้ว</text>
+                        <text x="15" y="172" font-family="'Sarabun', sans-serif" font-size="11" fill="#b91c1c">✖ นวนิยาย บทเพลง ภาพยนตร์ศิลปะ</text>
+                        <text x="15" y="192" font-family="'Sarabun', sans-serif" font-size="11" fill="#b91c1c">✖ งานลับที่ยังไม่เคยเผยแพร่สู่สาธารณะ</text>
+                    </g>
+
+                    <!-- Factor 3: Amount -->
+                    <g transform="translate(485, 95)" filter="url(#shadow_card)">
+                        <rect width="205" height="240" rx="10" fill="#fffbeb" stroke="#f59e0b" stroke-width="2"/>
+                        <circle cx="102" cy="35" r="20" fill="#d97706"/>
+                        <text x="102" y="42" text-anchor="middle" font-family="'Inter', sans-serif" font-size="16" font-weight="700" fill="#ffffff">3</text>
+                        <text x="102" y="78" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="14" font-weight="700" fill="#92400e">Amount & Substantiality</text>
+                        <text x="102" y="96" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="11" fill="#d97706">ปริมาณและสาระสำคัญ</text>
+                        <line x1="15" y1="110" x2="190" y2="110" stroke="#fde68a"/>
+
+                        <text x="15" y="132" font-family="'Sarabun', sans-serif" font-size="11" fill="#15803d">✔ ดึงมาเฉพาะภาพหรือกราฟที่จำเป็น</text>
+                        <text x="15" y="152" font-family="'Sarabun', sans-serif" font-size="11" fill="#15803d">✔ สัดส่วนน้อยเมื่อเทียบกับทั้งเล่ม</text>
+                        <text x="15" y="172" font-family="'Sarabun', sans-serif" font-size="11" fill="#b91c1c">✖ ถ่ายสำเนาหนังสือทั้งเล่มแจกเด็ก</text>
+                        <text x="15" y="192" font-family="'Sarabun', sans-serif" font-size="11" fill="#b91c1c">✖ คัดลอก "แก่นสำคัญหัวใจหลัก" ทั้งหมด</text>
+                    </g>
+
+                    <!-- Factor 4: Market Effect -->
+                    <g transform="translate(705, 95)" filter="url(#shadow_card)">
+                        <rect width="205" height="240" rx="10" fill="#fef2f2" stroke="#ef4444" stroke-width="2"/>
+                        <circle cx="102" cy="35" r="20" fill="#dc2626"/>
+                        <text x="102" y="42" text-anchor="middle" font-family="'Inter', sans-serif" font-size="16" font-weight="700" fill="#ffffff">4</text>
+                        <text x="102" y="78" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="14" font-weight="700" fill="#991b1b">Effect on Market</text>
+                        <text x="102" y="96" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="11" fill="#ef4444">ผลกระทบต่อตลาดเชิงพาณิชย์</text>
+                        <line x1="15" y1="110" x2="190" y2="110" stroke="#fecaca"/>
+
+                        <text x="15" y="132" font-family="'Sarabun', sans-serif" font-size="11" fill="#15803d">✔ ไม่กระทบยอดขายของเจ้าของเดิม</text>
+                        <text x="15" y="152" font-family="'Sarabun', sans-serif" font-size="11" fill="#15803d">✔ ไม่มีจำหน่ายในตลาดโรงเรียน</text>
+                        <text x="15" y="172" font-family="'Sarabun', sans-serif" font-size="11" fill="#b91c1c">✖ นักเรียนไม่จำเป็นต้องซื้อหนังสือจริง</text>
+                        <text x="15" y="192" font-family="'Sarabun', sans-serif" font-size="11" fill="#b91c1c">✖ ทำลายรายได้ของผู้แต่ง/สำนักพิมพ์</text>
+                    </g>
+
+                    <!-- Bottom Evaluation Bar -->
+                    <rect x="45" y="360" width="865" height="90" rx="8" fill="#f8fafc" stroke="#cbd5e1"/>
+                    <text x="480" y="388" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="13" font-weight="700" fill="#0f172a">
+                        ⚖️ กฎทองสำหรับการศึกษา (Golden Rule of Educational Fair Use):
+                    </text>
+                    <text x="480" y="412" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="12" fill="#334155">
+                        หากผลการประเมินเอื้อต่อ Fair Use ตั้งแต่ 3 ปัจจัยขึ้นไป สามารถนำมาใช้ประกอบการสอนได้ โดยต้อง **ใส่การอ้างอิงแหล่งที่มา (Attribution) ทุกครั้งอย่างชัดเจน**
+                    </text>
+                    <text x="480" y="432" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="12" fill="#2563eb">
+                        ทางเลือกที่ดีที่สุดและปลอดภัย 100%: ให้เลือกใช้สื่อที่เป็น "ทรัพยากรการศึกษาแบบเปิด (OER)" หรือสัญญาอนุญาต "Creative Commons (CC)"
+                    </text>
+                </svg>
+            </div>
+
+            <!-- Table 12.1: Fair Use Matrix -->
+            <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--primary); margin: 2rem 0 1rem 0;">
+                ตารางที่ 12.1: เมทริกซ์การวิเคราะห์ 4 ปัจจัยการใช้ลิขสิทธิ์โดยชอบธรรมสำหรับการจัดการเรียนรู้วิทยาศาสตร์
+            </h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 18%;">ปัจจัย (Factor)</th>
+                        <th style="width: 27%;">น้ำหนักเอื้อต่อ Fair Use (ใช้ได้)</th>
+                        <th style="width: 27%;">น้ำหนักเสี่ยงละเมิดลิขสิทธิ์ (ห้ามใช้)</th>
+                        <th style="width: 28%;">แนวปฏิบัติที่ดีสำหรับครูวิทยาศาสตร์</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>1. Purpose</strong><br><small style="color: var(--text-muted);">วัตถุประสงค์</small></td>
+                        <td>การสอนในชั้นเรียน, การวิจารณ์, การวิจัย, ไม่คิดค่าใช้จ่าย, มีการนำมาสร้างบริบทใหม่ (Transformative)</td>
+                        <td>การนำไปขายเชิงพาณิชย์, บังคับซื้อใบงาน, หรือโพสต์บนเว็บสาธารณะเพื่อหารายได้จากโฆษณา</td>
+                        <td>ใช้สื่อเพื่อกระตุ้นการสืบเสาะวิทยาศาสตร์ในคาบเรียนเท่านั้น ไม่นำไปแสวงหาผลประโยชน์ทางการเงิน</td>
+                    </tr>
+                    <tr>
+                        <td><strong>2. Nature</strong><br><small style="color: var(--text-muted);">ลักษณะผลงาน</small></td>
+                        <td>งานที่มีลักษณะเป็นข้อเท็จจริง (Factual), สถิติ, ตารางธาตุ, กราฟวิทยาศาสตร์ที่เผยแพร่แล้ว</td>
+                        <td>งานวรรณกรรมสร้างสรรค์สูง, ผลงานศิลปะ 3D เชิงพาณิชย์, งานวิจัยที่ยังไม่ได้ตีพิมพ์</td>
+                        <td>เลือกใช้แผนภาพวิทยาศาสตร์หรือตารางข้อมูลทางธรรมชาติ หลีกเลี่ยงภาพวาดการ์ตูนที่มีลิขสิทธิ์ทางการค้าของสตูดิโอ</td>
+                    </tr>
+                    <tr>
+                        <td><strong>3. Amount</strong><br><small style="color: var(--text-muted);">ปริมาณที่ใช้</small></td>
+                        <td>ใช้เฉพาะส่วนที่จำเป็นต่อการบรรลุตัวชี้วัด (เช่น กราฟ 1 รูป จากบทความวิจัย 20 หน้า)</td>
+                        <td>คัดลอกบทเรียนทั้งบทหรือเอกสารคู่มือทั้งเล่มมาแจกนักเรียนแทนการจัดซื้อ</td>
+                        <td>ดึงเฉพาะภาพประกอบที่เชื่อมโยงกับโปรแกรมจำลอง และสกัดสาระสำคัญมาเรียบเรียงใหม่</td>
+                    </tr>
+                    <tr>
+                        <td><strong>4. Market Effect</strong><br><small style="color: var(--text-muted);">ผลกระทบต่อตลาด</small></td>
+                        <td>การใช้ของครูไม่ส่งผลกระทบต่อยอดจำหน่ายหนังสือหรือลิขสิทธิ์ซอฟต์แวร์ต้นทาง</td>
+                        <td>การแจกไฟล์ทำให้นักเรียนหรือผู้ปกครองไม่จำเป็นต้องซื้อหนังสือเรียนที่สำนักพิมพ์จัดจำหน่าย</td>
+                        <td>ไม่แจกจ่ายไฟล์หนังสือเรียนเชิงพาณิชย์ และไม่นำแบบฝึกหัดสำเร็จรูปของสำนักพิมพ์มาสแกนแจก</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2 class="card-title" style="margin-top: 2.5rem;">
+                <i class="fab fa-creative-commons"></i> 2. สัญญาอนุญาตครีเอทีฟคอมมอนส์ (Creative Commons Licenses) และมาตรฐาน TASL
+            </h2>
+            <p>
+                <strong>Creative Commons (CC)</strong> คือระบบสัญญาอนุญาตมาตรฐานสากลที่เปิดโอกาสให้เจ้าของผลงานอนุญาตให้สาธารณชนนำผลงานไปใช้ต่อได้ภายใต้เงื่อนไขที่กำหนดอย่างโปร่งใส ซึ่งเป็นรากฐานของ <strong>ทรัพยากรการศึกษาแบบเปิด (Open Educational Resources: OER)</strong>:
+            </p>
+
+            <!-- Infographic SVG 12.2: CC Spectrum & TASL -->
+            <div style="margin: 2rem 0; text-align: center;">
+                <svg viewBox="0 0 960 440" width="100%" height="auto" style="max-width: 960px; border-radius: 12px; background: #ffffff; box-shadow: 0 4px 20px rgba(0,0,0,0.06); border: 1px solid #e2e8f0;" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Title -->
+                    <text x="480" y="38" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="19" font-weight="700" fill="#0f172a">
+                        แผนผังที่ 12.2: สเปกตรัมสัญญาอนุญาต Creative Commons และโครงสร้างการอ้างอิง TASL
+                    </text>
+                    <text x="480" y="60" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="13" fill="#64748b">
+                        ระดับความเป็นอิสระในการนำไปใช้ (จากเปิดกว้างที่สุด สู่มีเงื่อนไขจำกัด) และสูตรการให้เครดิตที่ถูกต้อง 100%
+                    </text>
+
+                    <!-- Spectrum Bar -->
+                    <g transform="translate(45, 85)">
+                        <!-- Level 1: CC0 -->
+                        <rect x="0" y="0" width="135" height="150" rx="8" fill="#dcfce7" stroke="#22c55e" stroke-width="1.5"/>
+                        <circle cx="67" cy="35" r="18" fill="#16a34a"/>
+                        <text x="67" y="42" text-anchor="middle" font-family="'Inter', sans-serif" font-size="12" font-weight="700" fill="#ffffff">CC0</text>
+                        <text x="67" y="75" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="12" font-weight="700" fill="#15803d">Public Domain</text>
+                        <text x="67" y="95" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="10" fill="#166534">สาธารณสมบัติ</text>
+                        <text x="67" y="115" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="10" fill="#334155">ใช้ ดัดแปลง ขาย</text>
+                        <text x="67" y="130" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="10" font-weight="600" fill="#15803d">ไม่ต้องระบุนาม</text>
+
+                        <!-- Level 2: CC-BY -->
+                        <rect x="145" y="0" width="135" height="150" rx="8" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5"/>
+                        <circle cx="212" cy="35" r="18" fill="#2563eb"/>
+                        <text x="212" y="42" text-anchor="middle" font-family="'Inter', sans-serif" font-size="11" font-weight="700" fill="#ffffff">BY</text>
+                        <text x="212" y="75" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="12" font-weight="700" fill="#1d4ed8">CC BY</text>
+                        <text x="212" y="95" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="10" fill="#1e40af">Attribution</text>
+                        <text x="212" y="115" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="10" fill="#334155">ใช้ ดัดแปลง ขาย</text>
+                        <text x="212" y="130" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="10" font-weight="600" fill="#1d4ed8">ต้องระบุชื่อผู้สร้าง</text>
+
+                        <!-- Level 3: CC-BY-SA -->
+                        <rect x="290" y="0" width="135" height="150" rx="8" fill="#f0fdfa" stroke="#0d9488" stroke-width="1.5"/>
+                        <circle cx="357" cy="35" r="18" fill="#0d9488"/>
+                        <text x="357" y="42" text-anchor="middle" font-family="'Inter', sans-serif" font-size="10" font-weight="700" fill="#ffffff">BY-SA</text>
+                        <text x="357" y="75" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="12" font-weight="700" fill="#0f766e">CC BY-SA</text>
+                        <text x="357" y="95" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="10" fill="#0f766e">ShareAlike</text>
+                        <text x="357" y="115" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="10" fill="#334155">ใช้ ดัดแปลงได้</text>
+                        <text x="357" y="130" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="10" font-weight="600" fill="#0f766e">เผยแพร่ต่อด้วยสัญญาเดิม</text>
+
+                        <!-- Level 4: CC-BY-NC -->
+                        <rect x="435" y="0" width="135" height="150" rx="8" fill="#fffbeb" stroke="#f59e0b" stroke-width="1.5"/>
+                        <circle cx="502" cy="35" r="18" fill="#d97706"/>
+                        <text x="502" y="42" text-anchor="middle" font-family="'Inter', sans-serif" font-size="10" font-weight="700" fill="#ffffff">BY-NC</text>
+                        <text x="502" y="75" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="12" font-weight="700" fill="#b45309">CC BY-NC</text>
+                        <text x="502" y="95" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="10" fill="#b45309">NonCommercial</text>
+                        <text x="502" y="115" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="10" fill="#334155">ใช้ ดัดแปลงได้</text>
+                        <text x="502" y="130" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="10" font-weight="600" fill="#b45309">ห้ามใช้เพื่อการค้า</text>
+
+                        <!-- Level 5: CC-BY-NC-SA -->
+                        <rect x="580" y="0" width="140" height="150" rx="8" fill="#faf5ff" stroke="#a855f7" stroke-width="1.5"/>
+                        <circle cx="650" cy="35" r="18" fill="#9333ea"/>
+                        <text x="650" y="42" text-anchor="middle" font-family="'Inter', sans-serif" font-size="9" font-weight="700" fill="#ffffff">NC-SA</text>
+                        <text x="650" y="75" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="12" font-weight="700" fill="#7e22ce">CC BY-NC-SA</text>
+                        <text x="650" y="95" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="10" fill="#7e22ce">NonCom-ShareAlike</text>
+                        <text x="650" y="115" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="10" fill="#334155">ห้ามค้า + ส่งต่อสัญญาเดิม</text>
+                        <text x="650" y="130" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="10" font-weight="600" fill="#7e22ce">ยอดนิยมในงาน OER</text>
+
+                        <!-- Level 6: CC-BY-ND -->
+                        <rect x="730" y="0" width="140" height="150" rx="8" fill="#fef2f2" stroke="#f87171" stroke-width="1.5"/>
+                        <circle cx="800" cy="35" r="18" fill="#dc2626"/>
+                        <text x="800" y="42" text-anchor="middle" font-family="'Inter', sans-serif" font-size="10" font-weight="700" fill="#ffffff">BY-ND</text>
+                        <text x="800" y="75" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="12" font-weight="700" fill="#b91c1c">CC BY-ND</text>
+                        <text x="800" y="95" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="10" fill="#b91c1c">NoDerivatives</text>
+                        <text x="800" y="115" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="10" fill="#334155">ใช้เผยแพร่ได้ทั้งชิ้น</text>
+                        <text x="800" y="130" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="10" font-weight="600" fill="#b91c1c">ห้ามดัดแปลงแก้ไข</text>
+                    </g>
+
+                    <!-- Formula Box: TASL Framework -->
+                    <g transform="translate(45, 260)">
+                        <rect width="870" height="150" rx="10" fill="#0f172a" stroke="#334155" stroke-width="1.5"/>
+                        <text x="435" y="32" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="15" font-weight="700" fill="#38bdf8">
+                            📋 มาตรฐานสากลการให้เกียรติผู้สร้างสรรค์: สูตร TASL (Title, Author, Source, License)
+                        </text>
+                        
+                        <!-- 4 Pillars of TASL -->
+                        <rect x="25" y="50" width="190" height="80" rx="6" fill="#1e293b"/>
+                        <text x="120" y="75" text-anchor="middle" font-family="'Inter', sans-serif" font-size="14" font-weight="700" fill="#facc15">T - Title</text>
+                        <text x="120" y="98" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="11" fill="#cbd5e1">ชื่อของผลงานชิ้นนั้น</text>
+
+                        <rect x="235" y="50" width="190" height="80" rx="6" fill="#1e293b"/>
+                        <text x="330" y="75" text-anchor="middle" font-family="'Inter', sans-serif" font-size="14" font-weight="700" fill="#38bdf8">A - Author</text>
+                        <text x="330" y="98" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="11" fill="#cbd5e1">ชื่อเจ้าของหรือผู้สร้าง</text>
+
+                        <rect x="445" y="50" width="190" height="80" rx="6" fill="#1e293b"/>
+                        <text x="540" y="75" text-anchor="middle" font-family="'Inter', sans-serif" font-size="14" font-weight="700" fill="#4ade80">S - Source</text>
+                        <text x="540" y="98" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="11" fill="#cbd5e1">ลิงก์ URL ไปยังต้นฉบับ</text>
+
+                        <rect x="655" y="50" width="190" height="80" rx="6" fill="#1e293b"/>
+                        <text x="750" y="75" text-anchor="middle" font-family="'Inter', sans-serif" font-size="14" font-weight="700" fill="#f472b6">L - License</text>
+                        <text x="750" y="98" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="11" fill="#cbd5e1">รหัสสัญญาอนุญาต CC</text>
+                    </g>
+                </svg>
+            </div>
+
+            <!-- Table 12.2: CC License Matrix -->
+            <h3 style="font-size: 1.15rem; font-weight: 700; color: var(--primary); margin: 2rem 0 1rem 0;">
+                ตารางที่ 12.2: สรุปประเภทสัญญาอนุญาต Creative Commons สัญลักษณ์ และตัวอย่างการนำไปใช้ในสื่อการสอน
+            </h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 15%;">ประเภท CC</th>
+                        <th style="width: 25%;">ความหมายและเงื่อนไขหลัก</th>
+                        <th style="width: 30%;">สิ่งที่ครูวิทยาศาสตร์ทำได้ / ห้ามทำ</th>
+                        <th style="width: 30%;">ตัวอย่างข้อความอ้างอิงตามสูตร TASL</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="badge badge-green">CC BY</span></td>
+                        <td>อนุญาตให้นำไปใช้ ทำซ้ำ แจกจ่าย และดัดแปลงได้ แม้กระทั่งเพื่อการค้า โดยต้องระบุชื่อผู้สร้างเดิม</td>
+                        <td><span style="color: var(--success); font-weight: 600;">✔ ดัดแปลงได้อิสระ</span> เช่น นำกราฟิกโมเลกุลน้ำมาเปลี่ยนสีเพื่อใส่ในสไลด์สอน</td>
+                        <td><em>"Water Molecule 3D"</em> by ChemLab, from Wikimedia Commons, used under CC BY 4.0.</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-blue">CC BY-SA</span></td>
+                        <td>อนุญาตให้ดัดแปลงได้ แต่ผลงานที่สร้างใหม่ต้องเผยแพร่ต่อด้วยสัญญาอนุญาตประเภทเดียวกัน (ShareAlike)</td>
+                        <td><span style="color: var(--accent); font-weight: 600;">✔ เหมาะกับโครงงาน Open Source</span> หากนำโค้ดจำลองมาปรับแต่ง ต้องเปิดโค้ดต่อ</td>
+                        <td><em>"Pendulum Physics Simulator"</em> by OpenEdu, from GitHub, used under CC BY-SA 4.0.</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-amber">CC BY-NC-SA</span></td>
+                        <td>อนุญาตให้นำไปใช้และดัดแปลงได้เฉพาะการศึกษา/ไม่แสวงหากำไร และต้องส่งต่อด้วยสัญญาอนุญาตเดียวกัน</td>
+                        <td><span style="color: var(--warning); font-weight: 600;">✔ สัญญายอดนิยมของ OER</span> สำหรับใบงานในโรงเรียน ห้ามนำไปพิมพ์ขาย</td>
+                        <td><em>"Cell Division Handout"</em> by BioTeacher, from OER Commons, used under CC BY-NC-SA 4.0.</td>
+                    </tr>
+                    <tr>
+                        <td><span class="badge badge-red">CC BY-ND</span></td>
+                        <td>อนุญาตให้นำไปแจกจ่ายและใช้งานได้ แต่ต้องคงสภาพต้นฉบับเดิมไว้ทั้งหมด ห้ามตัดต่อหรือดัดแปลง</td>
+                        <td><span style="color: var(--danger); font-weight: 600;">✖ ห้ามดัดแปลงแก้ไข</span> ต้องนำแผนภาพไปใช้ทั้งแผ่น ห้ามตัดเอาเฉพาะบางส่วน</td>
+                        <td><em>"Periodic Table of Elements 2026"</em> by IUPAC, used under CC BY-ND 4.0.</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h2 class="card-title" style="margin-top: 2.5rem;">
+                <i class="fas fa-users-viewfinder"></i> 3. สถาปัตยกรรมสถานีจุลการสอนและการประสานบทบาท 3 เสาหลัก (Micro-teaching Rehearsal)
+            </h2>
+            <p>
+                การจุลการสอน (Micro-teaching) ที่มีการบูรณาการโปรแกรมจำลองคอมพิวเตอร์และใบกิจกรรมคู่ขนาน ไม่สามารถอาศัยครูผู้สอนเพียงคนเดียวหน้ากระดานได้ แต่ต้องทำงานแบบทีมเวิร์ก <strong>"3-Pillar Teaching Team"</strong> เพื่อให้การเรียนรู้ดำเนินไปอย่างราบรื่นและควบคุมเวลาได้แม่นยำ:
+            </p>
+
+            <!-- Infographic SVG 12.3: Micro-teaching Layout -->
+            <div style="margin: 2rem 0; text-align: center;">
+                <svg viewBox="0 0 960 400" width="100%" height="auto" style="max-width: 960px; border-radius: 12px; background: #ffffff; box-shadow: 0 4px 20px rgba(0,0,0,0.06); border: 1px solid #e2e8f0;" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Title -->
+                    <text x="480" y="38" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="19" font-weight="700" fill="#0f172a">
+                        แผนผังที่ 12.3: สถาปัตยกรรมสถานีจุลการสอนและการประสานบทบาททีมครู 3 เสาหลัก
+                    </text>
+                    <text x="480" y="60" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="13" fill="#64748b">
+                        การจัดวางตำแหน่ง ผังห้องเรียนจำลอง และการทำงานประสานกันในเวลา 15 นาที
+                    </text>
+
+                    <!-- Classroom Stage -->
+                    <g transform="translate(45, 85)">
+                        <!-- Role 1: Lead Teacher -->
+                        <rect x="0" y="0" width="270" height="230" rx="10" fill="#eff6ff" stroke="#3b82f6" stroke-width="2"/>
+                        <circle cx="135" cy="40" r="22" fill="#2563eb"/>
+                        <text x="135" y="47" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="18" fill="#ffffff">👨‍🏫</text>
+                        <text x="135" y="85" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="15" font-weight="700" fill="#1e40af">1. ครูผู้สอนหลัก (Lead Teacher)</text>
+                        <text x="135" y="105" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="11" fill="#3b82f6">ตำแหน่ง: หน้าชั้นเรียน & จอฉาย</text>
+                        <line x1="20" y1="120" x2="250" y2="120" stroke="#bfdbfe"/>
+                        
+                        <text x="20" y="142" font-family="'Sarabun', sans-serif" font-size="11" fill="#334155">• นำเข้าสู่บทเรียนด้วยปรากฏการณ์ชวนคิด</text>
+                        <text x="20" y="162" font-family="'Sarabun', sans-serif" font-size="11" fill="#334155">• ยิงคำถามสืบเสาะ (Inquiry Questioning)</text>
+                        <text x="20" y="182" font-family="'Sarabun', sans-serif" font-size="11" fill="#334155">• สรุปมโนทัศน์และบริหารเวลา 15 นาที</text>
+                        <text x="20" y="202" font-family="'Sarabun', sans-serif" font-size="11" fill="#334155">• ควบคุมปฏิสัมพันธ์ในห้องเรียน (Eye Contact)</text>
+                    </g>
+
+                    <!-- Role 2: Co-Teacher / Facilitator -->
+                    <g transform="translate(345, 85)">
+                        <rect x="0" y="0" width="270" height="230" rx="10" fill="#f0fdf4" stroke="#16a34a" stroke-width="2"/>
+                        <circle cx="135" cy="40" r="22" fill="#16a34a"/>
+                        <text x="135" y="47" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="18" fill="#ffffff">🧑‍🤝‍🧑</text>
+                        <text x="135" y="85" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="15" font-weight="700" fill="#15803d">2. ครูผู้ช่วย (Facilitator)</text>
+                        <text x="135" y="105" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="11" fill="#16a34a">ตำแหน่ง: เดินประกบกลุ่มผู้เรียน</text>
+                        <line x1="20" y1="120" x2="250" y2="120" stroke="#bbf7d0"/>
+
+                        <text x="20" y="142" font-family="'Sarabun', sans-serif" font-size="11" fill="#334155">• แจกจ่ายใบงานและอุปกรณ์ทดลอง</text>
+                        <text x="20" y="162" font-family="'Sarabun', sans-serif" font-size="11" fill="#334155">• สังเกตและให้คำแนะนำเด็กที่ติดขัด</text>
+                        <text x="20" y="182" font-family="'Sarabun', sans-serif" font-size="11" fill="#334155">• คอยส่งสัญญาณเวลาให้อาจารย์ผู้สอนหลัก</text>
+                        <text x="20" y="202" font-family="'Sarabun', sans-serif" font-size="11" fill="#334155">• บันทึกพฤติกรรมการเรียนรู้และคำตอบเด็ก</text>
+                    </g>
+
+                    <!-- Role 3: Tech Controller -->
+                    <g transform="translate(645, 85)">
+                        <rect x="0" y="0" width="270" height="230" rx="10" fill="#faf5ff" stroke="#9333ea" stroke-width="2"/>
+                        <circle cx="135" cy="40" r="22" fill="#9333ea"/>
+                        <text x="135" y="47" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="18" fill="#ffffff">💻</text>
+                        <text x="135" y="85" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="15" font-weight="700" fill="#6b21a8">3. ผู้คุมสื่อเทคโนโลยี (Tech Operator)</text>
+                        <text x="135" y="105" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="11" fill="#9333ea">ตำแหน่ง: โต๊ะควบคุมโสตทัศนูปกรณ์</text>
+                        <line x1="20" y1="120" x2="250" y2="120" stroke="#e9d5ff"/>
+
+                        <text x="20" y="142" font-family="'Sarabun', sans-serif" font-size="11" fill="#334155">• ควบคุมการรันโปรแกรมจำลองสด (Live Demo)</text>
+                        <text x="20" y="162" font-family="'Sarabun', sans-serif" font-size="11" fill="#334155">• ปรับ Slider ตามคำสั่งของผู้สอนหลัก</text>
+                        <text x="20" y="182" font-family="'Sarabun', sans-serif" font-size="11" fill="#334155">• สลับสไลด์เปิด Plan B ทันทีเมื่อระบบสะดุด</text>
+                        <text x="20" y="202" font-family="'Sarabun', sans-serif" font-size="11" fill="#334155">• บันทึกวิดีโอคลิปการสอนเพื่อทำ AAR</text>
+                    </g>
+
+                    <!-- Bottom Bar: Plan B & Dry Run Reflection -->
+                    <rect x="45" y="335" width="870" height="42" rx="8" fill="#f8fafc" stroke="#cbd5e1"/>
+                    <text x="480" y="361" text-anchor="middle" font-family="'Sarabun', sans-serif" font-size="12" font-weight="600" fill="#334155">
+                        🛡️ มาตรการแผนสำรอง (Plan B Strategy): ต้องเตรียมไฟล์โปรแกรมแบบ Offline, วิดีโอจับภาพหน้าจอ (Screen Recording) และเอกสารภาพนิ่งสำรองเสมอ
+                    </text>
+                </svg>
+            </div>
+
+            <!-- Python Fair Use & CC Analyzer Script -->
+            <h2 class="card-title" style="margin-top: 2.5rem;">
+                <i class="fas fa-terminal"></i> 4. ตัวแบบจำลองภาษา Python 3.11: เครื่องมือประเมิน Fair Use และสร้างข้อความอ้างอิง TASL
+            </h2>
+            <p>
+                ตัวอย่างโค้ดสคริปต์ภาษา Python 3.11 ที่รันได้จริง 100% สำหรับการคำนวณคะแนนความเสี่ยงด้านลิขสิทธิ์ และจัดรูปแบบข้อความอ้างอิงสัญญาอนุญาต Creative Commons ตามสูตร TASL โดยอัตโนมัติ:
+            </p>
+
+            <div class="code-container">
+                <div class="code-header">
+                    <span><i class="fab fa-python" style="color: #38bdf8;"></i> Python 3.11 • CopyrightFairUseAnalyzer.py</span>
+                    <span>100% Tested & Executable</span>
+                </div>
+<pre><code><span class="code-keyword">class</span> <span class="code-func">CopyrightFairUseAnalyzer</span>:
+    <span class="code-string">"""
+    ระบบประเมินความเสี่ยงด้านลิขสิทธิ์สำหรับการจัดการเรียนรู้วิทยาศาสตร์
+    และเครื่องมือสร้างข้อความอ้างอิง TASL Attribution อัตโนมัติ
+    """</span>
+    <span class="code-keyword">def</span> <span class="code-func">__init__</span>(self):
+        <span class="code-keyword">pass</span>
+
+    <span class="code-keyword">def</span> <span class="code-func">evaluate_fair_use</span>(self, purpose_nonprofit, nature_factual, amount_small, effect_no_harm):
+        <span class="code-string">"""
+        ประเมินปัจจัย 4 ประการของ Fair Use (คืนค่าผลการตัดสินและระดับความเสี่ยง)
+        """</span>
+        factors = [purpose_nonprofit, nature_factual, amount_small, effect_no_harm]
+        pro_fair_use = sum(<span class="code-num">1</span> <span class="code-keyword">for</span> f <span class="code-keyword">in</span> factors <span class="code-keyword">if</span> f)
+        
+        <span class="code-keyword">if</span> pro_fair_use &gt;= <span class="code-num">3</span>:
+            verdict = <span class="code-string">"High Likelihood of Fair Use (มีความชอบธรรมสูงมาก นำมาใช้ประกอบการสอนได้)"</span>
+            risk = <span class="code-string">"Low Risk"</span>
+        <span class="code-keyword">elif</span> pro_fair_use == <span class="code-num">2</span>:
+            verdict = <span class="code-string">"Uncertain / Moderate Risk (ควรขออนุญาตเจ้าของลิขสิทธิ์หรือมองหาทางเลือก OER)"</span>
+            risk = <span class="code-string">"Moderate Risk"</span>
+        <span class="code-keyword">else</span>:
+            verdict = <span class="code-string">"Likely Copyright Infringement (เสี่ยงละเมิดลิขสิทธิ์สูงมาก ห้ามนำมาใช้โดยไม่ได้รับอนุญาต)"</span>
+            risk = <span class="code-string">"High Risk"</span>
+            
+        <span class="code-keyword">return</span> pro_fair_use, <span class="code-num">4</span>, risk, verdict
+
+    <span class="code-keyword">def</span> <span class="code-func">format_tasl_attribution</span>(self, title, author, source_url, license_code):
+        <span class="code-string">"""สร้างข้อความให้เกียรติผู้สร้างสรรค์ตามสูตร TASL"""</span>
+        <span class="code-keyword">return</span> f<span class="code-string">'"{title}" by {author}, available at {source_url}, used under {license_code}.'</span>
+
+<span class="code-comment"># ==========================================================</span>
+<span class="code-comment"># ตัวอย่างการทดสอบระบบอัตโนมัติ (Automated Unit Test)</span>
+<span class="code-comment"># ==========================================================</span>
+<span class="code-keyword">if</span> __name__ == <span class="code-string">"__main__"</span>:
+    analyzer = CopyrightFairUseAnalyzer()
+    print(<span class="code-string">"--- 1. ทดสอบการประเมิน 4 ปัจจัย Fair Use ---"</span>)
+    pro, total, risk, verdict = analyzer.evaluate_fair_use(
+        purpose_nonprofit=<span class="code-keyword">True</span>, 
+        nature_factual=<span class="code-keyword">True</span>, 
+        amount_small=<span class="code-keyword">True</span>, 
+        effect_no_harm=<span class="code-keyword">True</span>
+    )
+    print(f<span class="code-string">"ผลการประเมิน: ผ่าน {pro}/{total} ปัจจัย -> ระดับ: {risk}"</span>)
+    print(f<span class="code-string">"คำวินิจฉัย: {verdict}"</span>)
+
+    print(<span class="code-string">"\n--- 2. ทดสอบการสร้างข้อความอ้างอิง TASL ---"</span>)
+    tasl = analyzer.format_tasl_attribution(
+        title=<span class="code-string">"Photosynthesis Energy Cycle"</span>,
+        author=<span class="code-string">"Dr. S. Green"</span>,
+        source_url=<span class="code-string">"https://commons.wikimedia.org/wiki/File:Photosynthesis.svg"</span>,
+        license_code=<span class="code-string">"CC BY-SA 4.0"</span>
+    )
+    print(f<span class="code-string">"ข้อความอ้างอิงที่ได้: {tasl}"</span>)
+</code></pre>
+            </div>
+        </div>
+    
+        <!-- ปฏิบัติการจำลองเสมือนจริงประจำสัปดาห์ (Interactive Science Simulator & 180 Labs) -->
+        <div class="card" id="sim-section" style="border: 2px solid #0284c7; box-shadow: 0 8px 24px rgba(2, 132, 199, 0.12); margin-top: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.75rem;">
+                <h2 class="card-title" style="margin-bottom: 0; color: #0284c7;">
+                    <i class="fas fa-cube"></i> ปฏิบัติการจำลองเสมือนจริง: 10.3 เทมเพลตรายงานโครงงาน 5 บทมาตรฐานวิชาการ (Thesis Formatter AR) — AR MediaPipe Lab • RBRU MOOC
+                </h2>
+                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                    <a href="../simulations/chapter10_thesis_formatter.html" target="_blank" class="nav-back" style="margin-bottom: 0; padding: 0.45rem 0.9rem; font-size: 0.85rem; background: #0284c7; color: #fff;">
+                        <i class="fas fa-external-link-alt"></i> เปิดแบบจำลองเต็มหน้าจอ
+                    </a>
+                    <a href="../assets/slides/Computing Science for Science Teaching - Chapter 8: Ethical and Societal Implications of Computing in Science.pptx" download class="nav-back" style="margin-bottom: 0; padding: 0.45rem 0.9rem; font-size: 0.85rem; background: #f59e0b; color: #fff;"><i class="fas fa-file-powerpoint"></i> ดาวน์โหลดสไลด์ (.pptx)</a>
+                </div>
+            </div>
+
+            <p style="font-size: 0.95rem; color: #334155; margin-bottom: 1rem;">
+                <strong>แบบจำลองเชิงโต้ตอบสำหรับห้องเรียนวิทยาศาสตร์:</strong> ให้นักศึกษาทดลองปรับค่าพารามิเตอร์ สังเกตการณ์เปลี่ยนแปลง และวิเคราะห์ข้อมูลตามกระบวนการคิดเชิงคำนวณ (Computational Thinking):
+            </p>
+
+            <div style="margin: 1rem 0; border-radius: 12px; overflow: hidden; border: 1px solid #cbd5e1; height: 600px; box-shadow: var(--shadow-md);">
+                <iframe src="../simulations/chapter10_thesis_formatter.html" style="width: 100%; height: 100%; border: none;"></iframe>
+            </div>
+
+            <div style="margin: 0.85rem 0; display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;"><span style="font-size: 0.85rem; font-weight: 600; color: #64748b;"><i class="fas fa-cubes"></i> แบบจำลองเสริมในบท:</span> <a href="../simulations/chapter08_matplotlib_2d_plotter.html" target="_blank" style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.35rem 0.75rem; background: #e0f2fe; color: #0284c7; border-radius: 6px; font-size: 0.82rem; font-weight: 600; text-decoration: none; border: 1px solid #bae6fd;"><i class="fas fa-play-circle"></i> 8.2 เครื่องมือพล็อตกราฟวิทยาศาสตร์เชิงโต้ตอบ (2D Plotter AR) — AR MediaPipe Lab • RBRU MOOC</a></div>
+
+            <!-- คลังใบงานปฏิบัติการที่สอดคล้องจาก 180 Labs Manual -->
+            <div style="margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid #e2e8f0;">
+                <h3 style="font-size: 1.05rem; font-weight: 700; color: #0f172a; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-flask" style="color: #10b981;"></i> ใบงานปฏิบัติการที่สอดคล้อง (จากคู่มือปฏิบัติการ ๑๘๐ การทดลอง):
+                </h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem;">
+                    
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.1rem; border-left: 4px solid #10b981; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem; flex-wrap: wrap; gap: 0.25rem;">
+                    <span style="background: #10b981; color: #fff; font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.55rem; border-radius: 4px;">LAB 4.2.1</span>
+                    <span style="font-size: 0.78rem; color: #64748b;"><i class="far fa-clock"></i> 45 นาที | C3 (ประยุกต์ใช้)</span>
+                </div>
+                <h4 style="font-size: 0.98rem; font-weight: 700; color: #0f172a; margin-bottom: 0.2rem;">การพิสูจน์มโนทัศน์พื้นฐาน โครงสร้างข้อมูลแถวลำดับและรายการโยง</h4>
+                <p style="font-size: 0.82rem; color: #64748b; font-style: italic; margin-bottom: 0.5rem;">Foundational Verification: Arrays & Linked Lists</p>
+                <div style="background: #ffffff; border: 1px dashed #cbd5e1; border-radius: 6px; padding: 0.45rem 0.75rem; font-size: 0.85rem; margin-bottom: 0.5rem; overflow-x: auto;"><strong>สมการทฤษฎี:</strong> $$\text{ตัวแปรสถานะแกนกลาง}: \mathcal{S}_{4.2.1} = f(\mathbf{x}, \mathbf{p}) \quad \text{โดยที่ } \mathbf{x} \in \mathbb{R}^n$$</div>
+                <div style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.25rem;"><i class="fas fa-question-circle" style="color: #3b82f6;"></i> คำถามท้ายการทดลอง:</div>
+                <ul style="font-size: 0.82rem; color: #475569; margin-bottom: 0; padding-left: 1.25rem; line-height: 1.5;">
+                    <li style="margin-bottom: 0.25rem;">จงอธิบายความสอดคล้องระหว่างค่าที่วัดได้กับทฤษฎีใน โครงสร้างข้อมูลแถวลำดับและรายการโยง</li><li style="margin-bottom: 0.25rem;">หากปรับเปลี่ยนสภาวะแวดล้อม ตัวแปรควบคุมใดส่งผลต่อความไว (Sensitivity) ของระบบมากที่สุด?</li>
+                </ul>
+            </div>
+        
+
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.1rem; border-left: 4px solid #10b981; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem; flex-wrap: wrap; gap: 0.25rem;">
+                    <span style="background: #10b981; color: #fff; font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.55rem; border-radius: 4px;">LAB 4.2.2</span>
+                    <span style="font-size: 0.78rem; color: #64748b;"><i class="far fa-clock"></i> 60 นาที | C4 (วิเคราะห์)</span>
+                </div>
+                <h4 style="font-size: 0.98rem; font-weight: 700; color: #0f172a; margin-bottom: 0.2rem;">การวิเคราะห์สมรรถนะและขั้นตอนวิธี โครงสร้างข้อมูลแถวลำดับและรายการโยง</h4>
+                <p style="font-size: 0.82rem; color: #64748b; font-style: italic; margin-bottom: 0.5rem;">Performance & Algorithmic Analysis: Arrays & Linked Lists</p>
+                <div style="background: #ffffff; border: 1px dashed #cbd5e1; border-radius: 6px; padding: 0.45rem 0.75rem; font-size: 0.85rem; margin-bottom: 0.5rem; overflow-x: auto;"><strong>สมการทฤษฎี:</strong> $$\text{ประสิทธิภาพเชิงเวลาและความคลาดเคลื่อน}: \varepsilon = \frac{|y_{\text{measured}} - y_{\text{model}}|}{y_{\text{model}}} \times 100\%$$</div>
+                <div style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.25rem;"><i class="fas fa-question-circle" style="color: #3b82f6;"></i> คำถามท้ายการทดลอง:</div>
+                <ul style="font-size: 0.82rem; color: #475569; margin-bottom: 0; padding-left: 1.25rem; line-height: 1.5;">
+                    <li style="margin-bottom: 0.25rem;">อัตราการเพิ่มขึ้นของเวลาประมวลผลสอดคล้องกับความซับซ้อน Big-O ระดับใด?</li><li style="margin-bottom: 0.25rem;">เสนอแนะแนวทางการปรับปรุงขั้นตอนวิธีเพื่อลดการใช้หน่วยความจำลงอย่างน้อย 30%</li>
+                </ul>
+            </div>
+        
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ==================== TAB 3: กิจกรรมการเรียนรู้ 5E ==================== -->
+    <div id="tab3" class="content-section">
+        <div class="card">
+            <h2 class="card-title">
+                <i class="fas fa-chalkboard-user"></i> แผนการจัดกิจกรรมการเรียนรู้เชิงรุก (Active Learning 5E Model - 4 ชั่วโมง)
+            </h2>
+            <p style="margin-bottom: 1.5rem; color: var(--text-muted);">
+                การพัฒนาชุดสื่อการเรียนรู้วิทยาการคำนวณและเวิร์กช็อปซักซ้อมจุลการสอนเสมือนจริง (Materials Workshop & Dry Run Rehearsal):
+            </p>
+
+            <!-- ภาคบรรยาย 1 ชม. -->
+            <div style="background: #ffffff; border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <h3 style="font-size: 1.2rem; color: var(--primary);"><i class="fas fa-book-open text-accent"></i> ภาคบรรยายและสร้างกรอบกฎหมาย (Lecture & Legal Principles)</h3>
+                    <span class="time-badge"><i class="fas fa-clock"></i> 60 นาที</span>
+                </div>
+
+                <div style="margin-bottom: 1.25rem;">
+                    <h4 style="color: var(--secondary); margin-bottom: 0.5rem;">1. ขั้นสร้างความสนใจ (Engagement) - 15 นาที</h4>
+                    <ul>
+                        <li><strong>กรณีศึกษาจริง:</strong> อาจารย์นำเสนอคดีฟ้องร้องลิขสิทธิ์ภาพถ่ายทางชีววิทยาที่ครูนำไปจัดพิมพ์ในคู่มือเตรียมสอบวางจำหน่าย และเคสการแชร์ไฟล์ชีท PDF สำนักพิมพ์ลง Google Drive สาธารณะ</li>
+                        <li><strong>ประเด็นกระตุกคิด:</strong> "เส้นแบ่งระหว่าง 'การใช้เพื่อการศึกษา (Fair Use)' กับ 'การละเมิดลิขสิทธิ์ (Infringement)' อยู่ตรงไหน? และในฐานะครูรุ่นใหม่ เราจะใช้สื่ออย่างไรให้ถูกกฎหมาย 100%?"</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 style="color: var(--secondary); margin-bottom: 0.5rem;">2. ขั้นสำรวจและค้นหา (Exploration) - 45 นาที</h4>
+                    <ul>
+                        <li><strong>การบรรยายเชิงทฤษฎี:</strong> อาจารย์อธิบายกรอบ Fair Use 4 ปัจจัย, การเลือกใช้สัญญาอนุญาต Creative Commons, และคลังทรัพยากรเปิด OER (Wikimedia Commons, PhET, OER Commons)</li>
+                        <li><strong>การแนะนำสูตร TASL:</strong> สาธิตการเขียนเครดิตอ้างอิงท้ายใบงานวิทยาศาสตร์ตามมาตรฐานสากล</li>
+                        <li><strong>ชี้แจงกติกาจุลการสอน:</strong> อธิบายผังห้องเรียนจำลอง บทบาท 3 เสาหลัก และการเตรียมแผนสำรอง Plan B</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- ภาคปฏิบัติ 3 ชม. -->
+            <div style="background: #ffffff; border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <h3 style="font-size: 1.2rem; color: var(--primary);"><i class="fas fa-laptop-code text-secondary"></i> ภาคปฏิบัติการและซักซ้อมเสมือนจริง (Laboratory & Micro-teaching Dry Run)</h3>
+                    <span class="time-badge"><i class="fas fa-clock"></i> 180 นาที</span>
+                </div>
+
+                <div style="margin-bottom: 1.25rem;">
+                    <h4 style="color: var(--secondary); margin-bottom: 0.5rem;">3. ขั้นอธิบายและลงข้อสรุป (Explanation: Finalize Materials & OER Audit) - 60 นาที</h4>
+                    <ul>
+                        <li><strong>กิจกรรมจัดทำชุดสื่อฉบับสมบูรณ์:</strong> แต่ละกลุ่มตรวจทานใบกิจกรรมสืบเสาะ (Inquiry Worksheet) สไลด์มัลติมีเดีย และโปรแกรมจำลองของตนเอง</li>
+                        <li><strong>การทำ OER Audit:</strong> ตรวจสอบว่าภาพและไอคอนทั้งหมดในสไลด์และใบงานมีระบุสัญญาอนุญาต CC และ TASL Attribution ถูกต้องครบถ้วน</li>
+                        <li>จัดเตรียมไฟล์สำรอง Plan B (ไฟล์วิดีโอบันทึกหน้าจอ และเอกสารสรุปภาพนิ่ง) บรรจุลง USB Flash Drive</li>
+                    </ul>
+                </div>
+
+                <div style="margin-bottom: 1.25rem;">
+                    <h4 style="color: var(--secondary); margin-bottom: 0.5rem;">4. ขั้นขยายความรู้ (Elaboration: Micro-teaching Dry Run) - 90 นาที</h4>
+                    <ul>
+                        <li><strong>กิจกรรมการซักซ้อมจุลการสอนเสมือนจริง (Dry Run 15 นาที):</strong> แต่ละกลุ่มส่งทีมตัวแทนขึ้นประจำสถานีจำลองหน้าชั้นเรียน โดยแบ่งบทบาทเป็น 3 เสาหลัก (ครูหลัก, ครูผู้ช่วย, ผู้คุมสื่อ)</li>
+                        <li>ทดลองจัดการเรียนรู้จริง 15 นาที โดยมีเพื่อนร่วมชั้นรับบทเป็นนักเรียนชั้น ม.1-ม.3 ที่มีพฤติกรรมหลากหลาย (Interactive Simulation Roleplay)</li>
+                        <li>อาจารย์และเพื่อนร่วมชั้นสังเกตการณ์ จับเวลา และบันทึกข้อผิดพลาดในการใช้สื่อและการสื่อสาร</li>
+                    </ul>
+                </div>
+
+                <div>
+                    <h4 style="color: var(--secondary); margin-bottom: 0.5rem;">5. ขั้นประเมินผล (Evaluation & After Action Review - AAR) - 30 นาที</h4>
+                    <ul>
+                        <li><strong>กิจกรรมสะท้อนคิดหลังการซ้อม (AAR Session):</strong> อาจารย์และเพื่อนร่วมชั้นให้ข้อเสนอแนะเชิงสร้างสรรค์รายกลุ่ม เช่น "จังหวะส่งสลับหน้าจอช้าไป 20 วินาที", "ใบงานควรกำหนดกรอบให้ชัด", "คำถามกระตุ้นคิดในขั้น Explore ชัดเจนดีมาก"</li>
+                        <li>นัดหมายลำดับการจุลการสอนเก็บคะแนนจริง (Graded Micro-teaching: กลุ่มที่ 1 ในสัปดาห์ที่ 13 และกลุ่มที่ 2 ในสัปดาห์ที่ 14)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== TAB 4: การวัดและประเมินผล ==================== -->
+    <div id="tab4" class="content-section">
+        <div class="card">
+            <h2 class="card-title">
+                <i class="fas fa-chart-pie"></i> การวัดและประเมินผลการเรียนรู้ (Assessment & Rubrics)
+            </h2>
+            <p style="margin-bottom: 1.5rem; color: var(--text-muted);">
+                เกณฑ์การประเมินความพร้อมของชุดสื่อการเรียนรู้ จริยธรรมลิขสิทธิ์ และทักษะการซักซ้อมจุลการสอน (Micro-teaching Rehearsal Rubrics) รวม 16 คะแนน (Formative Milestone):
+            </p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 20%;">มิติการประเมิน</th>
+                        <th style="width: 20%;">ยอดเยี่ยม (4 คะแนน)</th>
+                        <th style="width: 20%;">ดี (3 คะแนน)</th>
+                        <th style="width: 20%;">พอใช้ (2 คะแนน)</th>
+                        <th style="width: 20%;">ปรับปรุง (1 คะแนน)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>1. ความถูกต้องด้านลิขสิทธิ์และ OER (Copyright & TASL Compliance)</strong></td>
+                        <td>ภาพ กราฟิก และสื่อทั้งหมดใช้ทรัพยากร OER/Creative Commons หรือผ่านเกณฑ์ Fair Use ชัดเจน มีการอ้างอิง TASL ถูกต้อง 100% ไร้ความเสี่ยงทางกฎหมาย</td>
+                        <td>สื่อส่วนใหญ่เป็น OER และมีระบุสัญญาอนุญาต แต่อาจขาดข้อมูลบางส่วนในสูตร TASL เช่น ไม่ได้ใส่ลิงก์ URL ต้นฉบับ</td>
+                        <td>มีภาพหรือสื่อที่มีลิขสิทธิ์เชิงพาณิชย์ปะปนอยู่โดยไม่มีการดัดแปลงหรือขออนุญาต หรือไม่มีการระบุนามเจ้าของผลงานเดิม</td>
+                        <td>คัดลอกสื่อ แบบฝึกหัด หรือภาพที่มีลิขสิทธิ์ของผู้อื่นมาใช้ทั้งชุดโดยไม่ให้เครดิต และมีความเสี่ยงต่อการละเมิดลิขสิทธิ์อย่างร้ายแรง</td>
+                    </tr>
+                    <tr>
+                        <td><strong>2. คุณภาพและประโยชน์ของชุดสื่อ (Pedagogical Media Quality)</strong></td>
+                        <td>ใบงานและสื่อมัลติมีเดียออกแบบสวยงาม ลด Extraneous Cognitive Load ชัดเจน มีคำถามนำการสืบเสาะที่เชื่อมโยงกับโปรแกรมจำลองได้อย่างลงตัว</td>
+                        <td>สื่อมีความชัดเจน อ่านง่าย ใบงานสอดคล้องกับโปรแกรมจำลอง แต่อาจมีรายละเอียดตัวหนังสือแน่นเกินไปในบางจุด</td>
+                        <td>สื่อทำหน้าที่เป็นเพียงเอกสารบันทึกผล ไม่ได้กระตุ้นกระบวนการคิดเชิงคำนวณ หรือโปรแกรมจำลองแสดงผลได้ไม่ชัดเจนบนจอฉาย</td>
+                        <td>สื่อการสอนไม่สมบูรณ์ มีข้อผิดพลาดทางวิทยาศาสตร์ หรือใบงานไม่สัมพันธ์กับกิจกรรมในโปรแกรมจำลอง</td>
+                    </tr>
+                    <tr>
+                        <td><strong>3. ทักษะการจัดการสอนและบทบาททีม (Team Dynamics & Delivery)</strong></td>
+                        <td>ทีมครู 3 เสาหลักประสานงานกันได้อย่างไร้รอยต่อ ครูหลักสบตานักเรียน ครูผู้ช่วยดูแลทั่วถึง ผู้คุมสื่อควบคุมโปรแกรมได้อย่างแม่นยำ</td>
+                        <td>การแบ่งบทบาทชัดเจน การสอนลื่นไหล แต่อาจมีจังหวะสะดุดเล็กน้อยในการส่งสัญญาณระหว่างครูผู้สอนหลักกับผู้คุมจอภาพ</td>
+                        <td>ครูผู้สอนหลักทำหน้าที่เกือบทั้งหมด ขาดการมีส่วนร่วมของครูผู้ช่วย หรือผู้คุมสื่อมีปัญหาในการปรับค่าพารามิเตอร์</td>
+                        <td>ขาดการวางแผนร่วมกัน เกิดความสับสนในการดำเนินกิจกรรมหน้าชั้นเรียนอย่างชัดเจน</td>
+                    </tr>
+                    <tr>
+                        <td><strong>4. การบริหารเวลาและแผนสำรอง (Time Management & Plan B)</strong></td>
+                        <td>บริหารเวลา 15 นาทีได้อย่างแม่นยำตามสัดส่วน 5E มีไฟล์สำรอง Plan B ที่พร้อมใช้งานได้ทันทีเมื่อเกิดเหตุขัดข้องทางเทคนิค</td>
+                        <td>บริหารเวลาได้ใกล้เคียง 15 นาที (เกิน/ขาดไม่เกิน 2 นาที) มีไฟล์สำรองเตรียมไว้แต่อาจต้องใช้เวลาสลับโปรแกรมนานเล็กน้อย</td>
+                        <td>ควบคุมเวลาไม่ได้ เกินกว่า 15 นาทีมากจนต้องตัดทอนขั้นสรุป หรือไม่มีการเตรียมไฟล์สำรองกรณีเน็ตหลุด</td>
+                        <td>การสอนไม่จบตามขั้นตอน ไม่มีแผนสำรอง และโปรแกรมค้างจนไม่สามารถดำเนินกิจกรรมต่อไปได้</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="highlight-box">
+                <i class="fas fa-calendar-check text-accent" style="margin-right: 0.5rem;"></i>
+                <strong>กำหนดการถัดไป:</strong> นักศึกษาต้องนำผลการวิพากษ์ AAR ในสัปดาห์นี้ ไปปรับปรุงสื่อและสคริปต์การสอนเพื่อเข้าสู่การ <strong>จุลการสอนเก็บคะแนนจริง (Graded Micro-teaching 20%)</strong> ในสัปดาห์ที่ 13 (กลุ่ม 1–4) และสัปดาห์ที่ 14 (กลุ่ม 5–8)
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== TAB 5: ข้อสอบวัดสมรรถนะ HOTS ==================== -->
+    <div id="tab5" class="content-section">
+        <div class="card">
+            <h2 class="card-title">
+                <i class="fas fa-clipboard-question"></i> แบบทดสอบวัดสมรรถนะการคิดขั้นสูง (HOTS) ตามแนวทาง สสวท.
+            </h2>
+            <p style="margin-bottom: 1.5rem; color: var(--text-muted);">
+                ข้อสอบวัดสมรรถนะการคิดขั้นสูง (High-Order Thinking Skills) สำหรับครูวิทยาศาสตร์ เพื่อประเมินความสามารถในการตัดสินใจทางกฎหมายลิขสิทธิ์และการแก้ปัญหาเฉพาะหน้าในชั้นเรียน:
+            </p>
+
+            <!-- HOTS Question 1 -->
+            <div style="background: #ffffff; border: 1px solid var(--border); border-radius: 12px; padding: 1.75rem; margin-bottom: 2rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <span class="badge badge-blue">ข้อที่ 1 • การตัดสินใจด้านลิขสิทธิ์และการใช้โดยชอบธรรม (Evaluating & Fair Use Decision)</span>
+                    <span style="font-size: 0.85rem; color: var(--text-muted);"><i class="fas fa-brain"></i> Bloom: Evaluating</span>
+                </div>
+                <h4 style="font-size: 1.05rem; line-height: 1.7; margin-bottom: 1rem; color: var(--primary);">
+                    <strong>สถานการณ์:</strong> ครูมานะต้องการจัดทำเอกสารประกอบการสอนวิทยาศาสตร์ เรื่อง <em>"ระบบสุริยะและดาราศาสตร์ฟิสิกส์"</em> สำหรับนักเรียน ม.3 โดยครูมานะดำเนินการ 3 กรณี:<br>
+                    1. แคปเจอร์ภาพถ่ายดาวพฤหัสบดีความละเอียดสูงจากเว็บไซต์องค์การ NASA ซึ่งเป็นผลงานของหน่วยงานรัฐบาลสหรัฐฯ (US Public Domain) มาใส่ในใบงาน พร้อมใส่ลิงก์อ้างอิง<br>
+                    2. สแกนภาพวาดการ์ตูนมาสคอตนักบินอวกาศจากหนังสือการ์ตูนลิขสิทธิ์ชื่อดังของญี่ปุ่น มาตัดต่อใส่ใบงานโดยลบลายน้ำออกเพื่อดึงดูดใจนักเรียน<br>
+                    3. คัดลอกตารางข้อมูลคาบการโคจรและมวลของดาวเคราะห์จากตำราดาราศาสตร์ของมหาวิทยาลัยมาจัดเรียงใหม่ในแบบจำลอง Python ของตนเอง<br><br>
+                    ในฐานะครูวิทยาศาสตร์ที่มีความรู้ด้านจริยธรรมดิจิทัล ข้อใดประเมินความถูกต้องตามกฎหมายลิขสิทธิ์และการใช้โดยชอบธรรม (Fair Use) ได้ถูกต้องที่สุด?
+                </h4>
+
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="toggleExplanation('exp1', false, this)">
+                        <span style="font-weight: 700; color: var(--accent);">ก.</span>
+                        <div>ทั้ง 3 กรณีเป็นการละเมิดลิขสิทธิ์ทั้งหมด เพราะครูมานะไม่ได้ทำหนังสือขออนุญาตเป็นลายลักษณ์อักษรจาก NASA, ญี่ปุ่น และมหาวิทยาลัยล่วงหน้า</div>
+                    </div>
+                    <div class="quiz-option" onclick="toggleExplanation('exp1', true, this)">
+                        <span style="font-weight: 700; color: var(--accent);">ข.</span>
+                        <div>กรณีที่ 1 และ 3 ถูกต้องตามกฎหมาย (กรณีที่ 1 เป็นสาธารณสมบัติ Public Domain ของ NASA และกรณีที่ 3 ข้อมูลตัวเลขทางดาราศาสตร์เป็นข้อเท็จจริงที่ไม่ได้รับความคุ้มครองลิขสิทธิ์ตามมาตรา 7); ส่วนกรณีที่ 2 ผิดกฎหมายลิขสิทธิ์อย่างร้ายแรง เพราะละเมิดสิทธิในผลงานสร้างสรรค์และมีเจตนาลบลายน้ำเพื่อปกปิดข้อมูลการบริหารสิทธิ</div>
+                    </div>
+                    <div class="quiz-option" onclick="toggleExplanation('exp1', false, this)">
+                        <span style="font-weight: 700; color: var(--accent);">ค.</span>
+                        <div>ทั้ง 3 กรณีถือเป็น Fair Use 100% โดยอัตโนมัติ เพราะครูมานะนำมาใช้สอนนักเรียนในโรงเรียนรัฐบาลโดยไม่ได้นำไปพิมพ์ขาย</div>
+                    </div>
+                    <div class="quiz-option" onclick="toggleExplanation('exp1', false, this)">
+                        <span style="font-weight: 700; color: var(--accent);">ง.</span>
+                        <div>กรณีที่ 2 ทำได้เพราะเป็นการใช้งานเพื่อการศึกษา (Fair Use) ไม่แสวงหากำไร; ส่วนกรณีที่ 3 ผิดกฎหมายเพราะคัดลอกตารางตัวเลขจากตำราของผู้อื่น</div>
+                    </div>
+                </div>
+
+                <div id="exp1" class="quiz-explanation">
+                    <h5 style="color: var(--success); font-weight: 700; margin-bottom: 0.5rem;"><i class="fas fa-circle-check"></i> เฉลยข้อ ข. (ถูกต้อง)</h5>
+                    <p style="font-size: 0.95rem; line-height: 1.7; color: var(--text-main);">
+                        <strong>คำอธิบายเชิงกฎหมายลิขสิทธิ์และการสอนวิทยาศาสตร์:</strong><br>
+                        - <strong>กรณีที่ 1:</strong> ผลงานของ NASA จัดเป็น <em>United States Government Works</em> ซึ่งเป็นสาธารณสมบัติ (Public Domain) โดยอัตโนมัติ สามารถนำมาใช้ประกอบการสอนได้ฟรี เพียงแค่อ้างอิงที่มา<br>
+                        - <strong>กรณีที่ 3:</strong> ตาม พ.ร.บ. ลิขสิทธิ์ มาตรา 7 <em>"ข้อเท็จจริงและข่าวประจำวัน"</em> ข้อมูลตัวเลขทางวิทยาศาสตร์ เช่น มวล ขนาด คาบการโคจร เป็นสัจธรรมทางธรรมชาติที่ไม่สามารถมีใครผูกขาดลิขสิทธิ์ได้ การนำตัวเลขมาพลอตกราฟหรือเขียนโค้ดใหม่จึงถูกกฎหมาย 100%<br>
+                        - <strong>กรณีที่ 2:</strong> การนำภาพวาดการ์ตูนสร้างสรรค์มาใช้ และที่สำคัญคือ <strong>การลบลายน้ำ</strong> เข้าข่ายความผิดฐาน <em>"การลบหรือเปลี่ยนแปลงข้อมูลการบริหารสิทธิ (Rights Management Information)"</em> ตามมาตรา 53/1 ของ พ.ร.บ. ลิขสิทธิ์ ซึ่งไม่ใช่ Fair Use และมีโทษทางอาญา จึงเป็นข้อห้ามเด็ดขาดสำหรับครู
+                    </p>
+                </div>
+            </div>
+
+            <!-- HOTS Question 2 -->
+            <div style="background: #ffffff; border: 1px solid var(--border); border-radius: 12px; padding: 1.75rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <span class="badge badge-purple">ข้อที่ 2 • การบริหารจัดการชั้นเรียนและการแก้ปัญหาเฉพาะหน้า (Classroom Management & Plan B)</span>
+                    <span style="font-size: 0.85rem; color: var(--text-muted);"><i class="fas fa-brain"></i> Bloom: Creating</span>
+                </div>
+                <h4 style="font-size: 1.05rem; line-height: 1.7; margin-bottom: 1rem; color: var(--primary);">
+                    <strong>สถานการณ์:</strong> ในการจุลการสอน (Micro-teaching) เรื่อง <em>"การหักเหของคลื่นแสงผ่านตัวกลางต่างชนิดกัน"</em> กำหนดเวลา 15 นาที โดยใช้โปรแกรมจำลองเสมือนจริง เมื่อเริ่มสอนไปได้ 4 นาที ถึงขั้น Explore ที่นักเรียนต้องทดลองปรับสไลเดอร์ค่าดัชนีหักเห (\(n\)) บนจอโปรเจกเตอร์ ปรากฏว่า <strong>"ระบบเครือข่ายอินเทอร์เน็ตของโรงเรียนขัดข้อง และคอมพิวเตอร์หลักที่ต่อโปรเจกเตอร์เกิดอาการค้าง (Crash) จอฟ้าดับไป"</strong><br><br>
+                    หากท่านเป็น <strong>"ทีมผู้สอน 3 เสาหลัก (ครูหลัก, ครูผู้ช่วย, ผู้คุมสื่อ)"</strong> การปฏิบัติการในข้อใดสะท้อนทักษะการแก้ปัญหาเฉพาะหน้าและการบริหารจัดการชั้นเรียนวิทยาศาสตร์ที่มีความเป็นมืออาชีพสูงสุด?
+                </h4>
+
+                <div class="quiz-options">
+                    <div class="quiz-option" onclick="toggleExplanation('exp2', false, this)">
+                        <span style="font-weight: 700; color: var(--accent);">ก.</span>
+                        <div>ครูผู้สอนหลักหยุดการสอนทันที และขอให้อาจารย์ผู้ประเมินยุติการจับเวลาเพื่อรอช่างเทคนิคมาซ่อมคอมพิวเตอร์ให้เสร็จก่อน</div>
+                    </div>
+                    <div class="quiz-option" onclick="toggleExplanation('exp2', false, this)">
+                        <span style="font-weight: 700; color: var(--accent);">ข.</span>
+                        <div>ครูผู้สอนหลักยืนเฉยๆ รอให้ผู้คุมสื่อรีสตาร์ทเครื่องใหม่ ขณะที่ครูผู้ช่วยบอกให้นักเรียนในห้องนั่งเงียบๆ รอสัญญาณ</div>
+                    </div>
+                    <div class="quiz-option" onclick="toggleExplanation('exp2', true, this)">
+                        <span style="font-weight: 700; color: var(--accent);">ค.</span>
+                        <div>ผู้คุมสื่อเปิดใช้งาน <strong>Plan B</strong> ทันที โดยใช้ไฟล์ภาพจำลองออฟไลน์บนแท็บเล็ตสำรองฉายขึ้นจอ หรือเตรียมสลับสายจอ ขณะที่ครูผู้สอนหลักยังคงดึงสมาธินักเรียนอย่างต่อเนื่องโดยให้ทำกิจกรรมสืบเสาะบนใบงาน (Inquiry Worksheet) ที่ครูผู้ช่วยรีบแจกจ่าย และชวนนักเรียนอภิปรายสมมติฐานกฎของสเนลล์ (Snell's Law) โดยไม่ปล่อยให้เกิด Dead Air ในชั้นเรียน</div>
+                    </div>
+                    <div class="quiz-option" onclick="toggleExplanation('exp2', false, this)">
+                        <span style="font-weight: 700; color: var(--accent);">ง.</span>
+                        <div>ยกเลิกการสอน 5E ทั้งหมด แล้วเปลี่ยนเป็นครูผู้สอนหลักบรรยายบอกคำตอบสูตร \(n_1 \sin\theta_1 = n_2 \sin\theta_2\) บนกระดานดำให้นักเรียนจดจำทันที</div>
+                    </div>
+                </div>
+
+                <div id="exp2" class="quiz-explanation">
+                    <h5 style="color: var(--success); font-weight: 700; margin-bottom: 0.5rem;"><i class="fas fa-circle-check"></i> เฉลยข้อ ค. (ถูกต้อง)</h5>
+                    <p style="font-size: 0.95rem; line-height: 1.7; color: var(--text-main);">
+                        <strong>คำอธิบายเชิงจิตวิทยาการสอนและการจัดการชั้นเรียน (Classroom Orchestration):</strong><br>
+                        - ในสถานการณ์จริงในโรงเรียน ปัญหาเทคโนโลยีขัดข้อง (Hardware/Network failure) เป็นเรื่องที่เกิดขึ้นได้เสมอ เกณฑ์การประเมินทักษะครูไม่ได้วัดว่า "เทคโนโลยีไม่เคยพัง" แต่วัดว่า <strong>"เมื่อเทคโนโลยีพัง ครูสามารถรักษาสภาพแวดล้อมการเรียนรู้ (Learning Continuity) ได้อย่างไร"</strong><br>
+                        - การปฏิบัติการตามข้อ ค. แสดงถึง Team Dynamics ที่ยอดเยี่ยม: ครูผู้สอนหลักไม่เสียขวัญและควบคุม Dead Air, ครูผู้ช่วยแจกใบงานเพื่อเปลี่ยนโฟกัสการเรียนรู้สู่การสืบเสาะบนกระดาษ, และผู้คุมสื่อดำเนินการแก้ไขตาม Plan B อย่างเป็นระบบโดยไม่รบกวนสมาธิของผู้เรียน
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== TAB 6: เอกสารอ้างอิง ==================== -->
+    <div id="tab6" class="content-section">
+        <div class="card">
+            <h2 class="card-title">
+                <i class="fas fa-book"></i> เอกสารและงานวิจัยอ้างอิง (References - APA 7th Edition)
+            </h2>
+            <p style="margin-bottom: 1.5rem; color: var(--text-muted);">
+                คลังวรรณกรรมวิจัยระดับนานาชาติและระดับชาติด้านกฎหมายลิขสิทธิ์ดิจิทัล, ทรัพยากรการศึกษาแบบเปิด (OER), และการพัฒนาสมรรถนะการสอนผ่านการจุลการสอน:
+            </p>
+
+            <ul style="list-style: none; padding-left: 0; line-height: 2;">
+                <li style="margin-bottom: 1.25rem; padding-left: 1.75rem; text-indent: -1.75rem;">
+                    <i class="fas fa-file-lines text-accent" style="margin-right: 0.5rem;"></i>
+                    Creative Commons. (2024). <em>Best practices for creative commons attribution</em>. Creative Commons Wiki. 
+                    <a href="https://wiki.creativecommons.org/wiki/Best_practices_for_attribution" target="_blank" style="color: var(--accent); text-decoration: underline;">https://wiki.creativecommons.org/wiki/Best_practices_for_attribution</a>
+                </li>
+
+                <li style="margin-bottom: 1.25rem; padding-left: 1.75rem; text-indent: -1.75rem;">
+                    <i class="fas fa-file-lines text-accent" style="margin-right: 0.5rem;"></i>
+                    Karlsen, N., & Aalbergsjø, S. G. (2026). Developing pre-service teachers’ TPACK for programming simulations in science education. <em>Educational Technology Research and Development</em>, 74(1), 1–25. 
+                    <a href="https://doi.org/10.1007/s11423-026-10674-3" target="_blank" style="color: var(--accent); text-decoration: underline;">https://doi.org/10.1007/s11423-026-10674-3</a>
+                </li>
+
+                <li style="margin-bottom: 1.25rem; padding-left: 1.75rem; text-indent: -1.75rem;">
+                    <i class="fas fa-file-lines text-accent" style="margin-right: 0.5rem;"></i>
+                    Khamdun, Fakhriyah, F., Masfuah, S., & Roysa, M. (2026). Scientific virtual laboratory-based project to improve computational thinking of pre-service teachers. <em>Multidisciplinary Reviews</em>, 9(1), e2026392. 
+                    <a href="https://doi.org/10.31893/multirev.2026392" target="_blank" style="color: var(--accent); text-decoration: underline;">https://doi.org/10.31893/multirev.2026392</a>
+                </li>
+
+                <li style="margin-bottom: 1.25rem; padding-left: 1.75rem; text-indent: -1.75rem;">
+                    <i class="fas fa-file-lines text-accent" style="margin-right: 0.5rem;"></i>
+                    Osborne, J., Pimentel, D., Alberts, B., Allchin, D., Barzilai, S., Bergstrom, C., Coffey, J., & Donovan, B. (2022). <em>Science education in an age of misinformation</em>. Stanford University. 
+                    <a href="https://doi.org/10.25740/cx564kt2998" target="_blank" style="color: var(--accent); text-decoration: underline;">https://doi.org/10.25740/cx564kt2998</a>
+                </li>
+
+                <li style="margin-bottom: 1.25rem; padding-left: 1.75rem; text-indent: -1.75rem;">
+                    <i class="fas fa-file-lines text-accent" style="margin-right: 0.5rem;"></i>
+                    Ragonis, N., Rosenberg-Kima, R. B., & Hazzan, O. (2024). A computational thinking course for all preservice K-12 teachers: implementing the four pedagogies for developing computational thinking (4P4CT) framework. <em>Educational Technology Research and Development</em>, 72(4), 2135–2161. 
+                    <a href="https://doi.org/10.1007/s11423-024-10406-5" target="_blank" style="color: var(--accent); text-decoration: underline;">https://doi.org/10.1007/s11423-024-10406-5</a>
+                </li>
+
+                <li style="margin-bottom: 1.25rem; padding-left: 1.75rem; text-indent: -1.75rem;">
+                    <i class="fas fa-book text-accent" style="margin-right: 0.5rem;"></i>
+                    กรมทรัพย์สินทางปัญญา กระทรวงพาณิชย์. (2565). <em>คู่มือการใช้ลิขสิทธิ์ของผู้อื่นโดยชอบธรรม (Fair Use) ในบริบทการศึกษาและการวิจัย</em>. กระทรวงพาณิชย์.
+                </li>
+
+                <li style="margin-bottom: 1.25rem; padding-left: 1.75rem; text-indent: -1.75rem;">
+                    <i class="fas fa-book text-accent" style="margin-right: 0.5rem;"></i>
+                    สถาบันส่งเสริมการสอนวิทยาศาสตร์และเทคโนโลยี. (2561). <em>คู่มือการใช้หลักสูตรรายวิชาพื้นฐานวิทยาศาสตร์ สาระเทคโนโลยี (วิทยาการคำนวณ) ตามมาตรฐานการเรียนรู้และตัวชี้วัด กลุ่มสาระการเรียนรู้วิทยาศาสตร์ (ฉบับปรับปรุง พ.ศ. 2560)</em>. โรงพิมพ์แห่งจุฬาลงกรณ์มหาวิทยาลัย.
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>© 2026 รายวิชา 4124941 วิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์ | <strong>ผู้ช่วยศาสตราจารย์ ดร.ชีวะ ทัศนา</strong></p>
+        <p>คณะวิทยาศาสตร์และเทคโนโลยี มหาวิทยาลัยราชภัฏรำไพพรรณี</p>
+    </footer>
+</div>
+
+<!-- Interactive Scripts -->
+<script>
+    function showTab(tabId, btnElement) {
+        document.querySelectorAll('.content-section').forEach(function(section) {
+            section.classList.remove('active');
+        });
+        document.querySelectorAll('.tab-btn').forEach(function(btn) {
+            btn.classList.remove('active');
+        });
+        document.getElementById(tabId).classList.add('active');
+        btnElement.classList.add('active');
+        window.scrollTo({ top: 120, behavior: 'smooth' });
+    }
+
+    function toggleExplanation(expId, isCorrect, element) {
+        var expBox = document.getElementById(expId);
+        if (expBox) {
+            expBox.style.display = 'block';
+        }
+        var parentUl = element.parentElement;
+        var options = parentUl.querySelectorAll('.quiz-option');
+        options.forEach(function(opt) {
+            opt.style.borderColor = '#e2e8f0';
+            opt.style.backgroundColor = '#ffffff';
+        });
+        if (isCorrect) {
+            element.style.borderColor = '#10b981';
+            element.style.backgroundColor = '#ecfdf5';
+        } else {
+            element.style.borderColor = '#ef4444';
+            element.style.backgroundColor = '#fef2f2';
+        }
+    }
+</script>
+
+</body>
+</html>

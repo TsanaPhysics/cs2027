@@ -1,0 +1,1557 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>แผนการสอนสัปดาห์ที่ 15 - การนำเสนอโครงงานนวัตกรรมสื่อวิทยาการคำนวณ การประเมินสมรรถนะแบบ 360 องศา และการสรุปสังเคราะห์องค์ความรู้รอบรู้ (Final Project Showcase, 360° Assessment & Course Synthesis)</title>
+    <!-- ฟอนต์ Sarabun และ Inter จาก Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome 6 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- MathJax 3 for Scientific Notation & Equations -->
+    <script>
+        window.MathJax = {
+            tex: {
+                inlineMath: [["$", "$"], ["\\(", "\\)"]],
+                displayMath: [["$$", "$$"], ["\\[", "\\]"]],
+                processEscapes: true,
+                processEnvironments: true
+            },
+            options: {
+                skipHtmlTags: ["script", "noscript", "style", "textarea", "pre", "code"]
+            }
+        };
+    </script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+
+    <style>
+        :root {
+            --primary: #0f172a;
+            --primary-light: #1e293b;
+            --accent: #2563eb;
+            --accent-hover: #1d4ed8;
+            --secondary: #0891b2;
+            --success: #059669;
+            --warning: #d97706;
+            --danger: #dc2626;
+            --purple: #7c3aed;
+            --amber: #f59e0b;
+            --rose: #e11d48;
+            --teal: #0d9488;
+            --indigo: #4f46e5;
+            --bg-body: #f8fafc;
+            --bg-card: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --border-focus: #94a3b8;
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.05);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.08), 0 2px 4px -2px rgba(0,0,0,0.05);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.05);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Sarabun', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            line-height: 1.8;
+            font-size: 16px;
+        }
+
+        .container {
+            max-width: 1140px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        .nav-back {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 1.25rem;
+            padding: 0.5rem 1rem;
+            background: white;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            transition: all 0.25s ease;
+        }
+
+        .nav-back:hover {
+            color: var(--accent-hover);
+            transform: translateX(-4px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .header {
+            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 45%, #065f46 100%);
+            color: #ffffff;
+            padding: 3rem 2.5rem;
+            border-radius: 16px;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .header::after {
+            content: '';
+            position: absolute;
+            top: -40%;
+            right: -10%;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(16, 185, 129, 0.22) 0%, rgba(255, 255, 255, 0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .header-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(8px);
+            padding: 0.35rem 0.85rem;
+            border-radius: 9999px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .header h1 {
+            font-size: 2.1rem;
+            font-weight: 700;
+            line-height: 1.35;
+            margin-bottom: 0.75rem;
+            letter-spacing: -0.02em;
+        }
+
+        .header .subtitle {
+            font-size: 1.15rem;
+            opacity: 0.92;
+            font-weight: 400;
+            max-width: 900px;
+        }
+
+        .header .course-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+            background: rgba(255, 255, 255, 0.08);
+            padding: 1.25rem 1.5rem;
+            border-radius: 12px;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+        }
+
+        .header .course-info span {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            font-size: 0.92rem;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            overflow-x: auto;
+            padding-bottom: 0.5rem;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .tab-btn {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            padding: 0.85rem 1.4rem;
+            border-radius: 10px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 0.95rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            transition: all 0.25s ease;
+            white-space: nowrap;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .tab-btn:hover {
+            background: #f1f5f9;
+            color: var(--accent);
+            border-color: #cbd5e1;
+        }
+
+        .tab-btn.active {
+            background: var(--accent);
+            color: #ffffff;
+            border-color: var(--accent);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+
+        .content-section {
+            display: none;
+            animation: fadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .card {
+            background: var(--bg-card);
+            border-radius: 14px;
+            padding: 2.25rem;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border);
+        }
+
+        .card-title {
+            font-size: 1.35rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding-bottom: 0.85rem;
+            border-bottom: 2px solid #f1f5f9;
+        }
+
+        .card-title i {
+            color: var(--secondary);
+        }
+
+        .highlight-box {
+            background-color: #eff6ff;
+            border-left: 4px solid var(--accent);
+            padding: 1.25rem 1.5rem;
+            border-radius: 0 10px 10px 0;
+            margin: 1.5rem 0;
+            font-size: 0.98rem;
+        }
+
+        .highlight-box.warning {
+            background-color: #fffbeb;
+            border-left-color: var(--warning);
+        }
+
+        .highlight-box.success {
+            background-color: #ecfdf5;
+            border-left-color: var(--success);
+        }
+
+        .highlight-box.purple {
+            background-color: #f5f3ff;
+            border-left-color: var(--purple);
+        }
+
+        .highlight-box.teal {
+            background-color: #f0fdfa;
+            border-left-color: var(--teal);
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .grid-3 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.25rem;
+            margin: 1.5rem 0;
+        }
+
+        .feature-box {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.25s ease;
+        }
+
+        .feature-box:hover {
+            border-color: var(--accent);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        .feature-box h4 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.95rem;
+            background: #ffffff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid var(--border);
+        }
+
+        th, td {
+            padding: 1rem 1.25rem;
+            text-align: left;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+
+        th {
+            background-color: #f8fafc;
+            font-weight: 700;
+            color: var(--primary);
+            border-bottom: 2px solid var(--border);
+        }
+
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background-color: #f8fafc; }
+
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.82rem;
+            font-weight: 600;
+        }
+
+        .badge-blue { background: #dbeafe; color: #1e40af; }
+        .badge-green { background: #d1fae5; color: #065f46; }
+        .badge-purple { background: #ede9fe; color: #5b21b6; }
+        .badge-amber { background: #fef3c7; color: #92400e; }
+        .badge-red { background: #fee2e2; color: #991b1b; }
+        .badge-teal { background: #ccfbf1; color: #115e59; }
+        .badge-indigo { background: #e0e7ff; color: #3730a3; }
+
+        .time-badge {
+            background: var(--primary);
+            color: #ffffff;
+            padding: 0.35rem 0.85rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .svg-container {
+            width: 100%;
+            overflow-x: auto;
+            margin: 2rem 0;
+            border-radius: 12px;
+            background: #ffffff;
+            border: 1px solid var(--border);
+            box-shadow: var(--shadow-sm);
+            padding: 1.5rem 1rem;
+            text-align: center;
+        }
+
+        .svg-container svg {
+            max-width: 100%;
+            height: auto;
+            display: inline-block;
+        }
+
+        .code-block {
+            background: #0f172a;
+            color: #f8fafc;
+            padding: 1.5rem;
+            border-radius: 12px;
+            font-family: 'JetBrains Mono', Consolas, Monaco, monospace;
+            font-size: 0.9rem;
+            line-height: 1.65;
+            overflow-x: auto;
+            margin: 1.5rem 0;
+            border: 1px solid #1e293b;
+            box-shadow: var(--shadow-md);
+        }
+
+        .code-comment { color: #64748b; font-style: italic; }
+        .code-keyword { color: #38bdf8; font-weight: bold; }
+        .code-func { color: #a78bfa; }
+        .code-string { color: #34d399; }
+        .code-num { color: #fbbf24; }
+
+        .quiz-option {
+            background: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem 1.25rem;
+            margin-bottom: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+        }
+
+        .quiz-option:hover {
+            border-color: var(--accent);
+            background: #f8fafc;
+        }
+
+        .quiz-explanation {
+            display: none;
+            margin-top: 1.25rem;
+            padding: 1.25rem;
+            border-radius: 8px;
+            background: #f8fafc;
+            border: 1px solid var(--border);
+        }
+
+        .footer {
+            text-align: center;
+            padding: 2.5rem 0;
+            color: var(--text-muted);
+            font-size: 0.92rem;
+            border-top: 1px solid var(--border);
+            margin-top: 3rem;
+        }
+
+        @media (max-width: 768px) {
+            .header { padding: 2rem 1.5rem; }
+            .header h1 { font-size: 1.6rem; }
+            .card { padding: 1.5rem; }
+            .tab-btn { padding: 0.7rem 1.1rem; font-size: 0.88rem; }
+            .grid-2, .grid-3 { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <a href="../index.html" class="nav-back">
+        <i class="fas fa-arrow-left"></i> กลับสู่หน้าหลักรายวิชา
+    </a>
+
+    <!-- Header Section -->
+    <header class="header">
+        <div class="header-badge">
+            <i class="fas fa-trophy"></i> สัปดาห์ที่ 15 • Final Project Showcase & Synthesis
+        </div>
+        <h1>การนำเสนอโครงงานนวัตกรรมสื่อวิทยาการคำนวณ การประเมินสมรรถนะแบบ 360 องศา และการสรุปสังเคราะห์องค์ความรู้รอบรู้<br><span style="font-size: 1.35rem; font-weight: 500; opacity: 0.92;">Final Project Showcase, Triangulated 360° Assessment, Course Synthesis & Digital Teaching Portfolio</span></h1>
+        <p class="subtitle">
+            มหกรรมการนำเสนอโครงงานนวัตกรรมสื่อและแบบจำลองวิทยาการคำนวณ (Computational Science Innovation Expo) การประเมินผลสมรรถนะแบบ 360 องศา (Master Coach, Peer Assessment & Self-Reflection 20%) การสังเคราะห์องค์ความรู้รวบยอด 15 สัปดาห์ การจัดทำแฟ้มสะสมงานดิจิทัล (Digital Teaching Portfolio) และการเตรียมความพร้อมสู่การประเมินผลปลายภาค
+        </p>
+        <div class="course-info">
+            <span><i class="fas fa-book-open text-accent"></i> <strong>รหัสวิชา:</strong> 4124941</span>
+            <span><i class="fas fa-graduation-cap text-accent"></i> <strong>รายวิชา:</strong> วิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์</span>
+            <span><i class="fas fa-user-tie text-accent"></i> <strong>ผู้สอน:</strong> ผศ.ดร.ชีวะ ทัศนา</span>
+            <span><i class="fas fa-clock text-accent"></i> <strong>เวลาเรียน:</strong> 4 ชั่วโมง (นำเสนอและสาธิต 3 ชม. / สังเคราะห์บทเรียน 1 ชม.)</span>
+        </div>
+    </header>
+
+    <!-- Navigation Tabs (The 6-Tab Standard) -->
+    <div class="tabs">
+        <button class="tab-btn active" onclick="showTab('tab1', this)">
+            <i class="fas fa-bullseye"></i> 1. ผลลัพธ์การเรียนรู้ (WLOs)
+        </button>
+        <button class="tab-btn" onclick="showTab('tab2', this)">
+            <i class="fas fa-book-bookmark"></i> 2. สาระสำคัญ & สื่อทัศนศิลป์
+        </button>
+        <button class="tab-btn" onclick="showTab('tab3', this)">
+            <i class="fas fa-hands-holding-circle"></i> 3. กิจกรรมการเรียนรู้ 5E
+        </button>
+        <button class="tab-btn" onclick="showTab('tab4', this)">
+            <i class="fas fa-chart-simple"></i> 4. การวัดและประเมินผล
+        </button>
+        <button class="tab-btn" onclick="showTab('tab5', this)">
+            <i class="fas fa-clipboard-question"></i> 5. ข้อสอบวัดสมรรถนะ HOTS
+        </button>
+        <button class="tab-btn" onclick="showTab('tab6', this)">
+            <i class="fas fa-quote-left"></i> 6. เอกสารอ้างอิง APA 7th
+        </button>
+    </div>
+
+    <!-- ==================== TAB 1: ผลลัพธ์การเรียนรู้ ==================== -->
+    <div id="tab1" class="content-section active">
+        <div class="card">
+            <h2 class="card-title">
+                <i class="fas fa-bullseye"></i> ผลลัพธ์การเรียนรู้รายสัปดาห์ (Weekly Learning Outcomes: WLOs)
+            </h2>
+            <p style="margin-bottom: 1.5rem; color: var(--text-muted);">
+                เมื่อสิ้นสุดการเรียนรู้ในสัปดาห์ที่ 15 นักศึกษาครูวิทยาศาสตร์สามารถแสดงสมรรถนะตามกรอบผลลัพธ์การเรียนรู้ 4 มิติ (K-P-A-PCK) สอดคล้องตามเกณฑ์ OBE, TQF และ Bloom's Revised Taxonomy ดังนี้:
+            </p>
+
+            <div class="grid-2">
+                <div class="feature-box">
+                    <h4><i class="fas fa-brain text-accent"></i> 1. ด้านความรู้เชิงทฤษฎี (Knowledge - K)</h4>
+                    <p>อธิบายหลักการประเมินโครงงานแบบองค์รวม (Holistic Assessment) และแบบจำแนกประเด็น (Analytic Rubrics), วิเคราะห์โครงสร้างนวัตกรรมการสอนวิทยาการคำนวณตามกรอบ 5 เสาหลัก (Scientific Rigor, CT Architecture, Software Robustness, 5E Pedagogy, Presentation & Q&A), เข้าใจหลักการสังเคราะห์ข้อมูลย้อนกลับแบบ 360 องศา (Triangulated Assessment), และระบุสาระสำคัญรวบยอดตลอด 15 สัปดาห์เพื่อเตรียมตัวสอบปลายภาค</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4><i class="fas fa-laptop-code text-secondary"></i> 2. ด้านทักษะและการปฏิบัติการ (Skills - P)</h4>
+                    <p>นำเสนอผลงานโครงงานนวัตกรรมสื่อวิทยาการคำนวณ (Final Project Showcase) หน้าชั้นเรียนและสาธิตการทำงานจริง (Live Demonstration) ของโปรแกรมได้อย่างคล่องแคล่วและตอบคำถามเชิงลึกได้ชัดเจน, ปฏิบัติการประเมินผลงานของเพื่อนร่วมชั้น (Peer Assessment) ตามเกณฑ์รูบริกส์ได้อย่างเที่ยงธรรม, และจัดทำแฟ้มสะสมงานดิจิทัล (Digital Teaching Portfolio) รวบรวมหลักฐานเชิงประจักษ์ตลอดภาคการศึกษา</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4><i class="fas fa-heart-pulse text-rose"></i> 3. ด้านเจตคติและจริยธรรมวิชาชีพ (Attitude - A)</h4>
+                    <p>ยึดมั่นในความซื่อสัตย์ทางวิชาการ (Academic Integrity) และจริยธรรมทรัพย์สินทางปัญญา (Open Source Licensing, Creative Commons, No Plagiarism), แสดงความพร้อมในการรับฟังและนำคำวิจารณ์เชิงสร้างสรรค์ (Constructive Feedback) ไปปรับปรุงผลงาน, มีจิตวิญญาณแห่งความร่วมมือแบบกัลยาณมิตรทางวิชาชีพ, และแสดงความมุ่งมั่นในการเป็นครูผู้นำนวัตกรรมวิทยาศาสตร์ในยุคดิจิทัล</p>
+                </div>
+
+                <div class="feature-box">
+                    <h4><i class="fas fa-chalkboard-user text-purple"></i> 4. ด้านความรู้เนื้อหาผสานวิธีสอนและเทคโนโลยี (PCK)</h4>
+                    <p>บูรณาการเชื่อมโยงเนื้อหาวิทยาศาสตร์ (CK), กระบวนการสืบเสาะ 5E (PK) และโปรแกรมคอมพิวเตอร์/แบบจำลองเชิงคำนวณ (TK) เข้าด้วยกันอย่างสมดุล (Balanced TPACK Framework), วิเคราะห์และออกแบบแนวทางการถ่ายทอดแนวคิดเชิงคำนวณสู่ผู้เรียนในบริบทโรงเรียนที่มีทรัพยากรจำกัด (Unplugged & Plugged Adaptation), และประยุกต์ใช้โมเดลคอมพิวเตอร์เพื่อแก้ปัญหาความเข้าใจคลาดเคลื่อนทางวิทยาศาสตร์ (Misconceptions)</p>
+                </div>
+            </div>
+
+            <div class="highlight-box teal">
+                <div style="display: flex; gap: 0.75rem; align-items: flex-start;">
+                    <i class="fas fa-award fa-lg text-teal" style="margin-top: 0.2rem;"></i>
+                    <div>
+                        <strong>จุดมุ่งหมายสูงสุดของสัปดาห์ที่ 15 (Grand Milestone):</strong>
+                        การเปลี่ยนผ่านจาก "นักศึกษาผู้เรียนโค้ดและทฤษฎี" สู่ "ครูนักนวัตกรรมวิทยาการคำนวณ (Computational Science Teacher-Innovator)" ที่สามารถสร้างสรรค์สื่อซอฟต์แวร์ ออกแบบแผนการสอน 5E ถ่ายทอดตรรกะเชิงคำนวณ และสะท้อนคิดรอบรู้เพื่อพัฒนาวิชาชีพครูอย่างยั่งยืน
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== TAB 2: สาระสำคัญ & สื่อทัศนศิลป์ ==================== -->
+    <div id="tab2" class="content-section">
+        <div class="card">
+            <h2 class="card-title">
+                <i class="fas fa-book-bookmark"></i> สาระสำคัญเชิงวิชาการ & สื่อทัศนศิลป์ (Core Content & Academic Visuals)
+            </h2>
+            <p style="margin-bottom: 1.5rem; color: var(--text-muted);">
+                นำเสนอสาระสำคัญของโครงงานนวัตกรรม การประเมินแบบ 360 องศา และการสังเคราะห์องค์ความรู้ ภายใต้กฎ <strong>No Text-Wall Rule</strong> บูรณาการ Infographics SVG 3 ชุด, ตารางวิเคราะห์เชิงวิชาการ 2 ชุด และตัวแบบจำลองภาษา Python 3.11 ที่รันได้จริง 100%:
+            </p>
+
+            <!-- 2.1 SVG 1: Final Project Innovation Architecture -->
+            <div class="feature-box" style="margin-bottom: 2rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <h4><i class="fas fa-cubes text-accent"></i> 2.1 สถาปัตยกรรมโครงงานนวัตกรรมและการสังเคราะห์องค์ความรู้ (Final Project Architecture & Synthesis Lifecycle)</h4>
+                    <span class="badge badge-blue"><i class="fas fa-sitemap"></i> Project Lifecycle</span>
+                </div>
+                <p>
+                    โครงงานนวัตกรรมสื่อวิทยาการคำนวณไม่ได้เป็นเพียงการเขียนโปรแกรมเดี่ยวๆ แต่คือ <strong>"การหลอมรวม 5 แกนหลักทางการศึกษา"</strong> เข้าด้วยกันอย่างเป็นระบบ ดังแสดงในแผนผังสถาปัตยกรรม:
+                </p>
+
+                <div class="svg-container">
+                    <svg viewBox="0 0 960 500" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="bgGrad15" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#0f172a"/>
+                                <stop offset="100%" stop-color="#1e293b"/>
+                            </linearGradient>
+                            <linearGradient id="centerGrad15" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#2563eb"/>
+                                <stop offset="100%" stop-color="#0891b2"/>
+                            </linearGradient>
+                            <linearGradient id="nodeGrad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#3b82f6"/>
+                                <stop offset="100%" stop-color="#1d4ed8"/>
+                            </linearGradient>
+                            <linearGradient id="nodeGrad2" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#8b5cf6"/>
+                                <stop offset="100%" stop-color="#6d28d9"/>
+                            </linearGradient>
+                            <linearGradient id="nodeGrad3" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#10b981"/>
+                                <stop offset="100%" stop-color="#047857"/>
+                            </linearGradient>
+                            <linearGradient id="nodeGrad4" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#f59e0b"/>
+                                <stop offset="100%" stop-color="#d97706"/>
+                            </linearGradient>
+                            <linearGradient id="nodeGrad5" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#ec4899"/>
+                                <stop offset="100%" stop-color="#be185d"/>
+                            </linearGradient>
+                            <filter id="shadow15" x="-10%" y="-10%" width="120%" height="120%">
+                                <feDropShadow dx="0" dy="8" stdDeviation="6" flood-color="#000000" flood-opacity="0.45"/>
+                            </filter>
+                        </defs>
+
+                        <!-- Canvas Background -->
+                        <rect x="0" y="0" width="960" height="500" rx="16" fill="url(#bgGrad15)"/>
+
+                        <!-- Decorative Outer Orbit -->
+                        <circle cx="480" cy="250" r="185" fill="none" stroke="#334155" stroke-width="2" stroke-dasharray="6,6"/>
+                        <circle cx="480" cy="250" r="120" fill="none" stroke="#1e293b" stroke-width="4"/>
+
+                        <!-- Connecting Beams from Center -->
+                        <line x1="480" y1="250" x2="480" y2="75" stroke="#38bdf8" stroke-width="3" opacity="0.75"/>
+                        <line x1="480" y1="250" x2="665" y2="175" stroke="#a78bfa" stroke-width="3" opacity="0.75"/>
+                        <line x1="480" y1="250" x2="595" y2="390" stroke="#34d399" stroke-width="3" opacity="0.75"/>
+                        <line x1="480" y1="250" x2="365" y2="390" stroke="#fbbf24" stroke-width="3" opacity="0.75"/>
+                        <line x1="480" y1="250" x2="295" y2="175" stroke="#f472b6" stroke-width="3" opacity="0.75"/>
+
+                        <!-- Central Core: TPACK & Synthesis Hub -->
+                        <circle cx="480" cy="250" r="75" fill="url(#centerGrad15)" filter="url(#shadow15)"/>
+                        <circle cx="480" cy="250" r="68" fill="none" stroke="#ffffff" stroke-width="2" opacity="0.4"/>
+                        <text x="480" y="235" text-anchor="middle" fill="#ffffff" font-size="16" font-weight="bold" font-family="'Sarabun', sans-serif">TPACK &amp; CT</text>
+                        <text x="480" y="255" text-anchor="middle" fill="#ffffff" font-size="14" font-weight="bold" font-family="'Sarabun', sans-serif">SYNTHESIS</text>
+                        <text x="480" y="275" text-anchor="middle" fill="#93c5fd" font-size="12" font-family="'Sarabun', sans-serif">แกนสังเคราะห์โครงงาน</text>
+
+                        <!-- Node 1: Top (Problem Formulation) -->
+                        <g filter="url(#shadow15)">
+                            <rect x="375" y="30" width="210" height="75" rx="12" fill="url(#nodeGrad1)"/>
+                            <text x="480" y="58" text-anchor="middle" fill="#ffffff" font-size="14" font-weight="bold" font-family="'Sarabun', sans-serif">1. ปัญหาวิทยาศาสตร์ (CK)</text>
+                            <text x="480" y="78" text-anchor="middle" fill="#dbeafe" font-size="12" font-family="'Sarabun', sans-serif">โจทย์ฟิสิกส์ เคมี ชีววิทยา ดาราศาสตร์</text>
+                            <text x="480" y="93" text-anchor="middle" fill="#bfdbfe" font-size="11" font-family="'Sarabun', sans-serif">แก้ Misconception นักเรียน</text>
+                        </g>
+
+                        <!-- Node 2: Top-Right (CT Architecture) -->
+                        <g filter="url(#shadow15)">
+                            <rect x="665" y="140" width="225" height="75" rx="12" fill="url(#nodeGrad2)"/>
+                            <text x="777" y="168" text-anchor="middle" fill="#ffffff" font-size="14" font-weight="bold" font-family="'Sarabun', sans-serif">2. สถาปัตยกรรม CT (4 เสา)</text>
+                            <text x="777" y="188" text-anchor="middle" fill="#ede9fe" font-size="12" font-family="'Sarabun', sans-serif">Decomposition, Abstraction,</text>
+                            <text x="777" y="203" text-anchor="middle" fill="#ddd6fe" font-size="11" font-family="'Sarabun', sans-serif">Pattern, Algorithm Design</text>
+                        </g>
+
+                        <!-- Node 3: Bottom-Right (Interactive Software) -->
+                        <g filter="url(#shadow15)">
+                            <rect x="585" y="355" width="225" height="75" rx="12" fill="url(#nodeGrad3)"/>
+                            <text x="697" y="383" text-anchor="middle" fill="#ffffff" font-size="14" font-weight="bold" font-family="'Sarabun', sans-serif">3. สื่อซอฟต์แวร์จริง (TK)</text>
+                            <text x="697" y="403" text-anchor="middle" fill="#d1fae5" font-size="12" font-family="'Sarabun', sans-serif">Python / Pygame / Web Canvas</text>
+                            <text x="697" y="418" text-anchor="middle" fill="#a7f3d0" font-size="11" font-family="'Sarabun', sans-serif">ซิมูเลเตอร์เสมือนจริง 100%</text>
+                        </g>
+
+                        <!-- Node 4: Bottom-Left (5E Pedagogical Plan) -->
+                        <g filter="url(#shadow15)">
+                            <rect x="150" y="355" width="225" height="75" rx="12" fill="url(#nodeGrad4)"/>
+                            <text x="262" y="383" text-anchor="middle" fill="#ffffff" font-size="14" font-weight="bold" font-family="'Sarabun', sans-serif">4. แผนการสอน 5E (PK)</text>
+                            <text x="262" y="403" text-anchor="middle" fill="#fef3c7" font-size="12" font-family="'Sarabun', sans-serif">กระบวนการสืบเสาะ Active Learning</text>
+                            <text x="262" y="418" text-anchor="middle" fill="#fde68a" font-size="11" font-family="'Sarabun', sans-serif">ใบงานวิเคราะห์ &amp; คำถาม HOTS</text>
+                        </g>
+
+                        <!-- Node 5: Top-Left (Empirical Testing & 360 AAR) -->
+                        <g filter="url(#shadow15)">
+                            <rect x="70" y="140" width="225" height="75" rx="12" fill="url(#nodeGrad5)"/>
+                            <text x="182" y="168" text-anchor="middle" fill="#ffffff" font-size="14" font-weight="bold" font-family="'Sarabun', sans-serif">5. การทดสอบจริง &amp; AAR</text>
+                            <text x="182" y="188" text-anchor="middle" fill="#fce7f3" font-size="12" font-family="'Sarabun', sans-serif">ผลการทดลองในห้องเรียนจำลอง</text>
+                            <text x="182" y="203" text-anchor="middle" fill="#fbcfe8" font-size="11" font-family="'Sarabun', sans-serif">การปรับปรุงแก้ไขตาม Feedback</text>
+                        </g>
+
+                        <!-- Outer Cycle Flow Arrows -->
+                        <path d="M 590 65 Q 640 90 665 140" fill="none" stroke="#60a5fa" stroke-width="2" stroke-dasharray="4,4"/>
+                        <path d="M 770 220 Q 770 290 730 355" fill="none" stroke="#a78bfa" stroke-width="2" stroke-dasharray="4,4"/>
+                        <path d="M 585 400 Q 480 435 375 400" fill="none" stroke="#34d399" stroke-width="2" stroke-dasharray="4,4"/>
+                        <path d="M 230 355 Q 190 290 190 220" fill="none" stroke="#fbbf24" stroke-width="2" stroke-dasharray="4,4"/>
+                        <path d="M 295 140 Q 330 90 375 65" fill="none" stroke="#f472b6" stroke-width="2" stroke-dasharray="4,4"/>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- 2.2 SVG 2: Triangulated 360-Degree Assessment Framework -->
+            <div class="feature-box" style="margin-bottom: 2rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <h4><i class="fas fa-arrows-to-circle text-secondary"></i> 2.2 แผนผังระบบประเมินโครงงานแบบ 360 องศา (Triangulated 360° Assessment Framework)</h4>
+                    <span class="badge badge-purple"><i class="fas fa-compass"></i> Multi-Perspective</span>
+                </div>
+                <p>
+                    เพื่อป้องกันอคติ (Evaluation Bias) และสร้างความโปร่งใสในสัดส่วนคะแนนโครงงาน 20% รายวิชาได้ใช้ระบบ <strong>Triangulated 360° Assessment</strong> ประสาน 3 แหล่งประเมิน พร้อมกลไกตรวจสอบส่วนต่างคะแนน (Divergence Check):
+                </p>
+
+                <div class="svg-container">
+                    <svg viewBox="0 0 960 480" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="bgGrad360" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#0f172a"/>
+                                <stop offset="100%" stop-color="#1e1b4b"/>
+                            </linearGradient>
+                            <linearGradient id="coachGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#2563eb"/>
+                                <stop offset="100%" stop-color="#1e40af"/>
+                            </linearGradient>
+                            <linearGradient id="peerGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#059669"/>
+                                <stop offset="100%" stop-color="#065f46"/>
+                            </linearGradient>
+                            <linearGradient id="selfGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#d97706"/>
+                                <stop offset="100%" stop-color="#b45309"/>
+                            </linearGradient>
+                            <linearGradient id="coreGradeGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#e11d48"/>
+                                <stop offset="100%" stop-color="#be123c"/>
+                            </linearGradient>
+                        </defs>
+
+                        <!-- Background -->
+                        <rect x="0" y="0" width="960" height="480" rx="16" fill="url(#bgGrad360)"/>
+
+                        <!-- Triangular Connection Lines -->
+                        <polygon points="480,85 760,370 200,370" fill="rgba(30, 41, 59, 0.6)" stroke="#475569" stroke-width="3" stroke-dasharray="6,6"/>
+
+                        <!-- Central Node: Final 20% Grade & Competency Profile -->
+                        <g filter="url(#shadow15)">
+                            <circle cx="480" cy="280" r="72" fill="url(#coreGradeGrad)"/>
+                            <circle cx="480" cy="280" r="65" fill="none" stroke="#ffffff" stroke-width="2" opacity="0.4"/>
+                            <text x="480" y="265" text-anchor="middle" fill="#ffffff" font-size="16" font-weight="bold" font-family="'Sarabun', sans-serif">SUMMATIVE</text>
+                            <text x="480" y="285" text-anchor="middle" fill="#ffffff" font-size="18" font-weight="bold" font-family="'Sarabun', sans-serif">20% GRADE</text>
+                            <text x="480" y="305" text-anchor="middle" fill="#fecdd3" font-size="12" font-family="'Sarabun', sans-serif">คะแนนโครงงานรายวิชา</text>
+                        </g>
+
+                        <!-- Top Apex: Master Coach (ผศ.ดร.ชีวะ ทัศนา) - 60% -->
+                        <g filter="url(#shadow15)">
+                            <rect x="340" y="30" width="280" height="95" rx="14" fill="url(#coachGrad)"/>
+                            <text x="480" y="58" text-anchor="middle" fill="#ffffff" font-size="16" font-weight="bold" font-family="'Sarabun', sans-serif">1. Master Coach Evaluation (60%)</text>
+                            <text x="480" y="80" text-anchor="middle" fill="#bfdbfe" font-size="13" font-family="'Sarabun', sans-serif">ผศ.ดร.ชีวะ ทัศนา (อาจารย์ผู้รับผิดชอบรายวิชา)</text>
+                            <text x="480" y="100" text-anchor="middle" fill="#e0e7ff" font-size="12" font-family="'Sarabun', sans-serif">ความถูกต้องวิทย์, สถาปัตยกรรม CT, แผน 5E, TPACK</text>
+                        </g>
+
+                        <!-- Bottom-Right: Peer Assessment - 30% -->
+                        <g filter="url(#shadow15)">
+                            <rect x="620" y="330" width="280" height="95" rx="14" fill="url(#peerGrad)"/>
+                            <text x="760" y="358" text-anchor="middle" fill="#ffffff" font-size="16" font-weight="bold" font-family="'Sarabun', sans-serif">2. Peer Assessment (30%)</text>
+                            <text x="760" y="380" text-anchor="middle" fill="#a7f3d0" font-size="13" font-family="'Sarabun', sans-serif">เพื่อนร่วมชั้นเรียน (กลุ่ม 1–8 ร่วมประเมิน)</text>
+                            <text x="760" y="400" text-anchor="middle" fill="#d1fae5" font-size="12" font-family="'Sarabun', sans-serif">Live Demo, ความลื่นไหล, UI/UX, การตอบคำถาม</text>
+                        </g>
+
+                        <!-- Bottom-Left: Self-Reflection & Portfolio - 10% -->
+                        <g filter="url(#shadow15)">
+                            <rect x="60" y="330" width="280" height="95" rx="14" fill="url(#selfGrad)"/>
+                            <text x="200" y="358" text-anchor="middle" fill="#ffffff" font-size="16" font-weight="bold" font-family="'Sarabun', sans-serif">3. Self-Reflection (10%)</text>
+                            <text x="200" y="380" text-anchor="middle" fill="#fde68a" font-size="13" font-family="'Sarabun', sans-serif">การประเมินตนเอง &amp; AAR Analysis</text>
+                            <text x="200" y="400" text-anchor="middle" fill="#fef3c7" font-size="12" font-family="'Sarabun', sans-serif">บทเรียนที่ได้รับ, การแก้ปัญหา, Digital Portfolio</text>
+                        </g>
+
+                        <!-- Quality Gates / Divergence Checker Badges -->
+                        <rect x="520" y="180" width="180" height="36" rx="18" fill="#1e293b" stroke="#38bdf8" stroke-width="1.5"/>
+                        <text x="610" y="203" text-anchor="middle" fill="#38bdf8" font-size="12" font-weight="bold" font-family="'Sarabun', sans-serif">Coach vs Peer Check (≤15%)</text>
+
+                        <rect x="260" y="180" width="180" height="36" rx="18" fill="#1e293b" stroke="#f59e0b" stroke-width="1.5"/>
+                        <text x="350" y="203" text-anchor="middle" fill="#f59e0b" font-size="12" font-weight="bold" font-family="'Sarabun', sans-serif">Authentic Artifact Audit</text>
+
+                        <rect x="390" y="405" width="180" height="36" rx="18" fill="#1e293b" stroke="#10b981" stroke-width="1.5"/>
+                        <text x="480" y="428" text-anchor="middle" fill="#10b981" font-size="12" font-weight="bold" font-family="'Sarabun', sans-serif">Double-Blind Rubric Form</text>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- 2.3 SVG 3: TPACK & Computational Pedagogy Progression Roadmap -->
+            <div class="feature-box" style="margin-bottom: 2rem;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <h4><i class="fas fa-route text-rose"></i> 2.3 เส้นทางการพัฒนาสมรรถนะครูวิทยาการคำนวณตลอด 15 สัปดาห์ (15-Week Mastery Roadmap)</h4>
+                    <span class="badge badge-rose"><i class="fas fa-timeline"></i> Cumulative Growth</span>
+                </div>
+                <p>
+                    การสรุปบทเรียน (Course Wrap-up) สะท้อนให้เห็นพัฒนาการอย่างเป็นขั้นบันได จากระดับแนวคิดพื้นฐานสู่การเป็นผู้สร้างสรรค์นวัตกรรมการสอน:
+                </p>
+
+                <div class="svg-container">
+                    <svg viewBox="0 0 960 440" width="100%" height="auto" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <linearGradient id="bgGradRoad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#0f172a"/>
+                                <stop offset="100%" stop-color="#1e293b"/>
+                            </linearGradient>
+                            <linearGradient id="phase1Grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#3b82f6"/>
+                                <stop offset="100%" stop-color="#1d4ed8"/>
+                            </linearGradient>
+                            <linearGradient id="phase2Grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#8b5cf6"/>
+                                <stop offset="100%" stop-color="#6d28d9"/>
+                            </linearGradient>
+                            <linearGradient id="phase3Grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#0891b2"/>
+                                <stop offset="100%" stop-color="#0e7490"/>
+                            </linearGradient>
+                            <linearGradient id="phase4Grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                                <stop offset="0%" stop-color="#059669"/>
+                                <stop offset="100%" stop-color="#047857"/>
+                            </linearGradient>
+                        </defs>
+
+                        <!-- Canvas Background -->
+                        <rect x="0" y="0" width="960" height="440" rx="16" fill="url(#bgGradRoad)"/>
+
+                        <!-- Central Progression Line -->
+                        <line x1="80" y1="210" x2="880" y2="210" stroke="#334155" stroke-width="6" stroke-linecap="round"/>
+                        <line x1="80" y1="210" x2="880" y2="210" stroke="#38bdf8" stroke-width="2" stroke-dasharray="8,8"/>
+
+                        <!-- Step 1: Weeks 1-4 -->
+                        <g filter="url(#shadow15)">
+                            <rect x="50" y="60" width="195" height="110" rx="12" fill="url(#phase1Grad)"/>
+                            <text x="147" y="88" text-anchor="middle" fill="#ffffff" font-size="14" font-weight="bold" font-family="'Sarabun', sans-serif">ระยะที่ 1: CT Foundations</text>
+                            <text x="147" y="108" text-anchor="middle" fill="#dbeafe" font-size="12" font-family="'Sarabun', sans-serif">สัปดาห์ที่ 01 – 04</text>
+                            <text x="147" y="130" text-anchor="middle" fill="#ffffff" font-size="11" font-family="'Sarabun', sans-serif">• 4 เสาหลักแนวคิดเชิงคำนวณ</text>
+                            <text x="147" y="148" text-anchor="middle" fill="#ffffff" font-size="11" font-family="'Sarabun', sans-serif">• Unplugged, Pseudocode &amp; Flowchart</text>
+                            <circle cx="147" cy="210" r="16" fill="#3b82f6" stroke="#ffffff" stroke-width="3"/>
+                            <text x="147" y="215" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="bold">1</text>
+                        </g>
+
+                        <!-- Step 2: Weeks 5-8 -->
+                        <g filter="url(#shadow15)">
+                            <rect x="270" y="250" width="195" height="110" rx="12" fill="url(#phase2Grad)"/>
+                            <text x="367" y="278" text-anchor="middle" fill="#ffffff" font-size="14" font-weight="bold" font-family="'Sarabun', sans-serif">ระยะที่ 2: Core Coding</text>
+                            <text x="367" y="298" text-anchor="middle" fill="#ede9fe" font-size="12" font-family="'Sarabun', sans-serif">สัปดาห์ที่ 05 – 08</text>
+                            <text x="367" y="320" text-anchor="middle" fill="#ffffff" font-size="11" font-family="'Sarabun', sans-serif">• Python ตัวแปร, เงื่อนไข, วนซ้ำ</text>
+                            <text x="367" y="338" text-anchor="middle" fill="#ffffff" font-size="11" font-family="'Sarabun', sans-serif">• ฟังก์ชัน &amp; สอบวัดกลางภาค</text>
+                            <circle cx="367" cy="210" r="16" fill="#8b5cf6" stroke="#ffffff" stroke-width="3"/>
+                            <text x="367" y="215" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="bold">2</text>
+                        </g>
+
+                        <!-- Step 3: Weeks 9-12 -->
+                        <g filter="url(#shadow15)">
+                            <rect x="490" y="60" width="195" height="110" rx="12" fill="url(#phase3Grad)"/>
+                            <text x="587" y="88" text-anchor="middle" fill="#ffffff" font-size="14" font-weight="bold" font-family="'Sarabun', sans-serif">ระยะที่ 3: Virtual Science</text>
+                            <text x="587" y="108" text-anchor="middle" fill="#cffafe" font-size="12" font-family="'Sarabun', sans-serif">สัปดาห์ที่ 09 – 12</text>
+                            <text x="587" y="130" text-anchor="middle" fill="#ffffff" font-size="11" font-family="'Sarabun', sans-serif">• ซิมูเลชันฟิสิกส์ &amp; เคมี-ชีวะ</text>
+                            <text x="587" y="148" text-anchor="middle" fill="#ffffff" font-size="11" font-family="'Sarabun', sans-serif">• แผน 5E, สื่อ AR &amp; PhET Labs</text>
+                            <circle cx="587" cy="210" r="16" fill="#0891b2" stroke="#ffffff" stroke-width="3"/>
+                            <text x="587" y="215" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="bold">3</text>
+                        </g>
+
+                        <!-- Step 4: Weeks 13-15 -->
+                        <g filter="url(#shadow15)">
+                            <rect x="710" y="250" width="205" height="110" rx="12" fill="url(#phase4Grad)"/>
+                            <text x="812" y="278" text-anchor="middle" fill="#ffffff" font-size="14" font-weight="bold" font-family="'Sarabun', sans-serif">ระยะที่ 4: Practicum &amp; Expo</text>
+                            <text x="812" y="298" text-anchor="middle" fill="#d1fae5" font-size="12" font-family="'Sarabun', sans-serif">สัปดาห์ที่ 13 – 15</text>
+                            <text x="812" y="320" text-anchor="middle" fill="#ffffff" font-size="11" font-family="'Sarabun', sans-serif">• จุลการสอน (Micro-teaching 1-2)</text>
+                            <text x="812" y="338" text-anchor="middle" fill="#ffffff" font-size="11" font-family="'Sarabun', sans-serif">• PDPA, Cyber Safety &amp; Expo 20%</text>
+                            <circle cx="812" cy="210" r="16" fill="#059669" stroke="#ffffff" stroke-width="3"/>
+                            <text x="812" y="215" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="bold">4</text>
+                        </g>
+
+                        <!-- Destination Flag: Week 16 Final Exam -->
+                        <path d="M 910 190 L 935 200 L 910 210 Z" fill="#f59e0b"/>
+                        <line x1="910" y1="190" x2="910" y2="230" stroke="#f59e0b" stroke-width="3"/>
+                        <text x="925" y="245" text-anchor="middle" fill="#fbbf24" font-size="11" font-weight="bold" font-family="'Sarabun', sans-serif">สัปดาห์ 16: Final</text>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- 2.4 Academic Tables -->
+            <h3 style="color: var(--primary); margin: 2rem 0 1rem 0; font-size: 1.25rem;">
+                <i class="fas fa-table-list text-accent"></i> 2.4 ตารางวิเคราะห์เชิงวิชาการ (Academic Taxonomies & Standards Mapping)
+            </h3>
+
+            <!-- Table 1 -->
+            <p><strong>ตารางที่ 1: เกณฑ์จำแนกประเภทโครงงานนวัตกรรมการสอนวิทยาศาสตร์ (Computational Science Education Project Taxonomies)</strong></p>
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 20%;">ประเภทโครงงาน</th>
+                        <th style="width: 25%;">จุดเน้นแนวคิดเชิงคำนวณ (Core CT)</th>
+                        <th style="width: 25%;">เทคโนโลยีและซอฟต์แวร์ต้นแบบ</th>
+                        <th style="width: 30%;">บริบทการนำไปใช้ &amp; ข้อควรระวัง (Cognitive Load)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>1. Pure Numerical Simulation</strong><br><span class="badge badge-blue">การจำลองเชิงตัวเลข</span></td>
+                        <td>• <strong>Abstraction:</strong> ตัดทอนแรงเสียดทานอากาศ<br>• <strong>Algorithm:</strong> สมการออยเลอร์ / Runge-Kutta คำนวณตำแหน่ง \(ec{r}(t+\Delta t)\)</td>
+                        <td>Python (NumPy, Matplotlib), VPython, PhET Simulation APIs</td>
+                        <td>เหมาะกับนักเรียน ม.ปลาย (ฟิสิกส์กลศาสตร์/ดาราศาสตร์) ข้อควรระวัง: อย่าแสดงกราฟตัวเลขพร้อมกันมากเกินไปจนเกิด Cognitive Overload</td>
+                    </tr>
+                    <tr>
+                        <td><strong>2. Interactive Virtual Lab</strong><br><span class="badge badge-green">แล็บเสมือนเชิงโต้ตอบ</span></td>
+                        <td>• <strong>Decomposition:</strong> แยกขั้นตอนการทดลองและอุปกรณ์<br>• <strong>Pattern Recognition:</strong> ตรวจจับจุดสมมูล (Equivalence Point)</td>
+                        <td>HTML5 Canvas, Three.js, Python Tkinter/Pygame, WebGL</td>
+                        <td>ใช้ทดแทนการทดลองอันตรายหรือสารเคมีราคาแพง (เช่น ไทเทรต, ไฟฟ้าแรงสูง) ครูต้องเตรียมใบงานสืบเสาะ 5E กำกับ มิฉะนั้นเด็กจะเล่นสนุกอย่างไร้เป้าหมาย</td>
+                    </tr>
+                    <tr>
+                        <td><strong>3. Chemo-Bio Data Engine</strong><br><span class="badge badge-purple">เครื่องมือประมวลผลข้อมูลชีวภาพ</span></td>
+                        <td>• <strong>Pattern Recognition:</strong> วิเคราะห์แนวโน้มประชากร/การเจริญเติบโต<br>• <strong>Algorithm:</strong> การคำนวณอัตราเร็วปฏิกิริยาเคมี</td>
+                        <td>Python (Pandas, Seaborn), Google Sheets API, Micro:bit Sensors</td>
+                        <td>ช่วยให้นักเรียนเห็นข้อมูลเชิงประจักษ์ (Empirical Data) เชื่อมโยงเซนเซอร์วัดค่าจริงกับการพล็อตกราฟอัตโนมัติ ลดเวลาจดบันทึก เพิ่มเวลาคิดวิเคราะห์</td>
+                    </tr>
+                    <tr>
+                        <td><strong>4. Gamified Science Inquiry</strong><br><span class="badge badge-amber">เกมสืบเสาะทางวิทยาศาสตร์</span></td>
+                        <td>• <strong>Decomposition:</strong> วิเคราะห์กฎเกณฑ์และเงื่อนไขด่าน<br>• <strong>Algorithm:</strong> ตรรกะแบบมีเงื่อนไข (If-Else State Machine)</td>
+                        <td>Scratch 3.0, Godot Engine, Python Pygame Arcade</td>
+                        <td>เหมาะกับนักเรียนระดับประถมศึกษาและ ม.ต้น สร้างแรงจูงใจสูง ครูต้องตั้งคำถาม Debriefing ทุกครั้งเพื่อสะท้อนหลักการวิทยาศาสตร์ที่ซ่อนอยู่</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Table 2 -->
+            <p style="margin-top: 2rem;"><strong>ตารางที่ 2: เมทริกซ์การสังเคราะห์สมรรถนะผู้เรียนตลอด 15 สัปดาห์ เทียบกับมาตรฐานวิชาชีพครูระดับชาติและสากล</strong></p>
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 18%;">มิติสมรรถนะ</th>
+                        <th style="width: 27%;">มาตรฐาน TQF &amp; คุรุสภา (2562)</th>
+                        <th style="width: 27%;">มาตรฐาน สสวท. วิทยาการคำนวณ</th>
+                        <th style="width: 28%;">ISTE Standards for Educators</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>ความรู้ (Knowledge)</strong></td>
+                        <td>รอบรู้ในเนื้อหาวิชาที่สอน และทฤษฎีการจัดการเรียนรู้ร่วมสมัย</td>
+                        <td>เข้าใจหลักการแนวคิดเชิงคำนวณและการออกแบบอัลกอริทึมแก้ปัญหา</td>
+                        <td><strong>Learner:</strong> พัฒนาความรู้ด้านเทคโนโลยีและศาสตร์การสอนอย่างต่อเนื่อง</td>
+                    </tr>
+                    <tr>
+                        <td><strong>ทักษะ (Skills)</strong></td>
+                        <td>สามารถออกแบบสื่อนวัตกรรม จัดการเรียนรู้เชิงรุก (Active Learning)</td>
+                        <td>เขียนโปรแกรมภาษาและประยุกต์ใช้แบบจำลองคอมพิวเตอร์ในโครงงานวิทย์</td>
+                        <td><strong>Designer &amp; Facilitator:</strong> ออกแบบและจัดกิจกรรมดิจิทัลที่ยึดผู้เรียนเป็นศูนย์กลาง</td>
+                    </tr>
+                    <tr>
+                        <td><strong>จริยธรรม (Ethics)</strong></td>
+                        <td>มีจรรยาบรรณวิชาชีพครู เคารพกฎหมายและสิทธิส่วนบุคคล</td>
+                        <td>ใช้เทคโนโลยีอย่างปลอดภัย รู้เท่าทันสื่อ เคารพ พ.ร.บ. คอมพ์ฯ และ PDPA</td>
+                        <td><strong>Citizen:</strong> สร้างความตระหนักรู้ด้านรอยเท้าดิจิทัลและความเป็นพลเมืองไซเบอร์</td>
+                    </tr>
+                    <tr>
+                        <td><strong>ลักษณะบุคคล (Character)</strong></td>
+                        <td>มีภาวะผู้นำทางวิชาการ มุ่งมั่น ยอมรับความเห็นต่าง และทำงานเป็นทีม</td>
+                        <td>มีความคิดยืดหยุ่น ปรับตัวตามการเปลี่ยนแปลงของเทคโนโลยี</td>
+                        <td><strong>Collaborator &amp; Leader:</strong> ร่วมมือกับเพื่อนครูและชี้นำการใช้นวัตกรรมการศึกษา</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- 2.5 Python 3.11 Model Engine -->
+            <h3 style="color: var(--primary); margin: 2rem 0 1rem 0; font-size: 1.25rem;">
+                <i class="fab fa-python text-success"></i> 2.5 ตัวแบบจำลองภาษา Python 3.11: เครื่องมือประเมินและวิเคราะห์คะแนนโครงงาน 360 องศา (Final Project &amp; Portfolio Evaluator Engine)
+            </h3>
+            <p style="margin-bottom: 1rem;">
+                เพื่อความเที่ยงตรงและโปร่งใสในการตัดสินผลคะแนนโครงงาน 20% จึงได้พัฒนาโมดูล Python 3.11 ที่รันได้จริง 100% สำหรับคำนวณคะแนนถ่วงน้ำหนัก 5 มิติรูบริกส์ ประสานการประเมิน 3 มิติ (Coach 60%, Peer 30%, Self 10%) พร้อมระบบแจ้งเตือนส่วนต่างคะแนน (Divergence Check) และจัดระดับสมรรถนะนวัตกรรม:
+            </p>
+
+            <div class="code-block">
+<span class="code-comment"># ==============================================================================</span>
+<span class="code-comment"># โปรแกรม: Final Project &amp; Digital Portfolio Evaluator Engine</span>
+<span class="code-comment"># รายวิชา: 4124941 วิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์ (Computational Science)</span>
+<span class="code-comment"># อาจารย์ผู้สอน: ผู้ช่วยศาสตราจารย์ ดร.ชีวะ ทัศนา | มหาวิทยาลัยราชภัฏรำไพพรรณี</span>
+<span class="code-comment"># มาตรฐาน: Python 3.11 Standard Library (100% Deterministic Verification)</span>
+<span class="code-comment"># ==============================================================================</span>
+
+<span class="code-keyword">import</span> unittest
+<span class="code-keyword">from</span> typing <span class="code-keyword">import</span> Dict, Any, List
+
+<span class="code-keyword">class</span> <span class="code-func">FinalProjectAndPortfolioEvaluator</span>:
+    <span class="code-comment"># ระบบคำนวณและประเมินผลคะแนนโครงงานนวัตกรรมสื่อวิทยาการคำนวณตามเกณฑ์ 360 องศา</span>
+    
+    RUBRIC_WEIGHTS = {
+        <span class="code-string">'scientific_rigor'</span>: <span class="code-num">0.20</span>,       <span class="code-comment"># มิติที่ 1: ความถูกต้องและคุณค่าทางวิทยาศาสตร์</span>
+        <span class="code-string">'ct_integration'</span>: <span class="code-num">0.20</span>,         <span class="code-comment"># มิติที่ 2: สถาปัตยกรรมแนวคิดเชิงคำนวณ 4 เสาหลัก</span>
+        <span class="code-string">'software_quality'</span>: <span class="code-num">0.20</span>,       <span class="code-comment"># มิติที่ 3: ประสิทธิภาพและความสมบูรณ์ของโปรแกรม/สื่อ</span>
+        <span class="code-string">'pedagogical_design'</span>: <span class="code-num">0.20</span>,     <span class="code-comment"># มิติที่ 4: คุณภาพแผนการสอน 5E และใบงานกิจกรรม</span>
+        <span class="code-string">'presentation_qna'</span>: <span class="code-num">0.20</span>        <span class="code-comment"># มิติที่ 5: ทักษะการนำเสนอ สาธิตสด และการตอบคำถาม</span>
+    }
+    
+    EVALUATOR_WEIGHTS = {
+        <span class="code-string">'coach'</span>: <span class="code-num">0.60</span>,      <span class="code-comment"># อาจารย์ผู้สอน (ผศ.ดร.ชีวะ ทัศนา)</span>
+        <span class="code-string">'peer'</span>: <span class="code-num">0.30</span>,       <span class="code-comment"># เพื่อนร่วมชั้นเรียน (Peer Assessment)</span>
+        <span class="code-string">'self'</span>: <span class="code-num">0.10</span>        <span class="code-comment"># การประเมินตนเอง (Self-Reflection &amp; AAR)</span>
+    }
+
+    <span class="code-keyword">def</span> <span class="code-func">__init__</span>(self):
+        <span class="code-keyword">pass</span>
+
+    <span class="code-keyword">def</span> <span class="code-func">evaluate_dimension_score</span>(self, scores: Dict[str, float]) -&gt; float:
+        <span class="code-comment"># คำนวณคะแนนเฉลี่ยถ่วงน้ำหนักของ 5 มิติรูบริกส์ (คะแนนเต็ม 100)</span>
+        total = <span class="code-num">0.0</span>
+        <span class="code-keyword">for</span> dim, weight <span class="code-keyword">in</span> self.RUBRIC_WEIGHTS.items():
+            <span class="code-keyword">if</span> dim <span class="code-keyword">not in</span> scores:
+                <span class="code-keyword">raise</span> ValueError(f<span class="code-string">"Missing rubric dimension: {dim}"</span>)
+            total += scores[dim] * weight
+        <span class="code-keyword">return</span> round(total, <span class="code-num">2</span>)
+
+    <span class="code-keyword">def</span> <span class="code-func">calculate_project_grade</span>(self, coach_scores: Dict[str, float],
+                                peer_scores: Dict[str, float],
+                                self_scores: Dict[str, float]) -&gt; Dict[str, Any]:
+        <span class="code-comment"># คำนวณคะแนนรวม 360 องศา และแปลงเป็นสัดส่วน 20 คะแนนจริงของรายวิชา</span>
+        coach_total = self.evaluate_dimension_score(coach_scores)
+        peer_total = self.evaluate_dimension_score(peer_scores)
+        self_total = self.evaluate_dimension_score(self_scores)
+
+        weighted_100 = (coach_total * self.EVALUATOR_WEIGHTS[<span class="code-string">'coach'</span>] +
+                        peer_total * self.EVALUATOR_WEIGHTS[<span class="code-string">'peer'</span>] +
+                        self_total * self.EVALUATOR_WEIGHTS[<span class="code-string">'self'</span>])
+        weighted_100 = round(weighted_100, <span class="code-num">2</span>)
+
+        <span class="code-comment"># คำนวณคะแนนตามสัดส่วน 20%</span>
+        course_points = round((weighted_100 / <span class="code-num">100.0</span>) * <span class="code-num">20.0</span>, <span class="code-num">2</span>)
+
+        <span class="code-comment"># ตรวจสอบส่วนต่างคะแนนระหว่าง Coach กับ Peer (Divergence Check)</span>
+        divergence = abs(coach_total - peer_total)
+        flag_divergence = divergence &gt; <span class="code-num">15.0</span>
+
+        <span class="code-comment"># จำแนกระดับเกียรตินิยมโครงงาน (Honor Classification)</span>
+        <span class="code-keyword">if</span> weighted_100 &gt;= <span class="code-num">85.0</span>:
+            classification = <span class="code-string">"EXEMPLARY_INNOVATION"</span>
+            status_desc = <span class="code-string">"ผลงานนวัตกรรมมีคุณภาพยอดเยี่ยม บูรณาการ TPACK สมบูรณ์แบบ พร้อมเผยแพร่สู่โรงเรียนเครือข่าย"</span>
+        <span class="code-keyword">elif</span> weighted_100 &gt;= <span class="code-num">70.0</span>:
+            classification = <span class="code-string">"PROFICIENT_INNOVATION"</span>
+            status_desc = <span class="code-string">"ผลงานมีคุณภาพดี บูรณาการ CT และวิทยาศาสตร์ได้ชัดเจน มีจุดปรับปรุงเล็กน้อยก่อนนำไปใช้จริง"</span>
+        <span class="code-keyword">elif</span> weighted_100 &gt;= <span class="code-num">55.0</span>:
+            classification = <span class="code-string">"DEVELOPING"</span>
+            status_desc = <span class="code-string">"ผ่านเกณฑ์ขั้นต่ำ แต่ต้องปรับแก้โค้ดหรือสื่อใบงานประกอบให้สมบูรณ์"</span>
+        <span class="code-keyword">else</span>:
+            classification = <span class="code-string">"NEEDS_REVISION"</span>
+            status_desc = <span class="code-string">"ไม่ผ่านเกณฑ์ขั้นต่ำ ต้องเข้าคลินิกพัฒนาสมรรถนะและส่งงานรอบแก้ไข"</span>
+
+        <span class="code-keyword">return</span> {
+            <span class="code-string">"coach_raw"</span>: coach_total,
+            <span class="code-string">"peer_raw"</span>: peer_total,
+            <span class="code-string">"self_raw"</span>: self_total,
+            <span class="code-string">"final_score_100"</span>: weighted_100,
+            <span class="code-string">"course_points_20"</span>: course_points,
+            <span class="code-string">"classification"</span>: classification,
+            <span class="code-string">"status_description"</span>: status_desc,
+            <span class="code-string">"divergence_detected"</span>: flag_divergence,
+            <span class="code-string">"divergence_gap"</span>: round(divergence, <span class="code-num">2</span>)
+        }
+
+<span class="code-comment"># ==============================================================================</span>
+<span class="code-comment"># ระบบการทดสอบ Unit Test อัตโนมัติ (100% Deterministic Verification)</span>
+<span class="code-comment"># ==============================================================================</span>
+
+<span class="code-keyword">class</span> <span class="code-func">TestProjectEvaluator</span>(unittest.TestCase):
+    
+    <span class="code-keyword">def</span> <span class="code-func">setUp</span>(self):
+        self.evaluator = FinalProjectAndPortfolioEvaluator()
+        self.exemplary_scores = {
+            <span class="code-string">'scientific_rigor'</span>: <span class="code-num">95.0</span>,
+            <span class="code-string">'ct_integration'</span>: <span class="code-num">92.0</span>,
+            <span class="code-string">'software_quality'</span>: <span class="code-num">90.0</span>,
+            <span class="code-string">'pedagogical_design'</span>: <span class="code-num">94.0</span>,
+            <span class="code-string">'presentation_qna'</span>: <span class="code-num">96.0</span>
+        }
+
+    <span class="code-keyword">def</span> <span class="code-func">test_perfect_project_evaluation</span>(self):
+        res = self.evaluator.calculate_project_grade(
+            self.exemplary_scores, self.exemplary_scores, self.exemplary_scores
+        )
+        self.assertEqual(res[<span class="code-string">'classification'</span>], <span class="code-string">'EXEMPLARY_INNOVATION'</span>)
+        self.assertGreaterEqual(res[<span class="code-string">'final_score_100'</span>], <span class="code-num">90.0</span>)
+        self.assertGreaterEqual(res[<span class="code-string">'course_points_20'</span>], <span class="code-num">18.0</span>)
+        self.assertFalse(res[<span class="code-string">'divergence_detected'</span>])
+
+    <span class="code-keyword">def</span> <span class="code-func">test_weighted_scoring_calculation</span>(self):
+        c = {k: <span class="code-num">100.0</span> <span class="code-keyword">for</span> k <span class="code-keyword">in</span> self.evaluator.RUBRIC_WEIGHTS}
+        p = {k: <span class="code-num">80.0</span> <span class="code-keyword">for</span> k <span class="code-keyword">in</span> self.evaluator.RUBRIC_WEIGHTS}
+        s = {k: <span class="code-num">90.0</span> <span class="code-keyword">for</span> k <span class="code-keyword">in</span> self.evaluator.RUBRIC_WEIGHTS}
+        res = self.evaluator.calculate_project_grade(c, p, s)
+        self.assertEqual(res[<span class="code-string">'final_score_100'</span>], <span class="code-num">93.0</span>)
+        self.assertEqual(res[<span class="code-string">'course_points_20'</span>], <span class="code-num">18.6</span>)
+
+    <span class="code-keyword">def</span> <span class="code-func">test_peer_coach_divergence_flag</span>(self):
+        c = {k: <span class="code-num">90.0</span> <span class="code-keyword">for</span> k <span class="code-keyword">in</span> self.evaluator.RUBRIC_WEIGHTS}
+        p = {k: <span class="code-num">70.0</span> <span class="code-keyword">for</span> k <span class="code-keyword">in</span> self.evaluator.RUBRIC_WEIGHTS}
+        s = {k: <span class="code-num">85.0</span> <span class="code-keyword">for</span> k <span class="code-keyword">in</span> self.evaluator.RUBRIC_WEIGHTS}
+        res = self.evaluator.calculate_project_grade(c, p, s)
+        self.assertTrue(res[<span class="code-string">'divergence_detected'</span>])
+        self.assertEqual(res[<span class="code-string">'divergence_gap'</span>], <span class="code-num">20.0</span>)
+
+    <span class="code-keyword">def</span> <span class="code-func">test_category_breakdown_validation</span>(self):
+        score = self.evaluator.evaluate_dimension_score(self.exemplary_scores)
+        self.assertEqual(score, <span class="code-num">93.4</span>)
+
+    <span class="code-keyword">def</span> <span class="code-func">test_minimum_threshold_and_remedial</span>(self):
+        low = {k: <span class="code-num">45.0</span> <span class="code-keyword">for</span> k <span class="code-keyword">in</span> self.evaluator.RUBRIC_WEIGHTS}
+        res = self.evaluator.calculate_project_grade(low, low, low)
+        self.assertEqual(res[<span class="code-string">'classification'</span>], <span class="code-string">'NEEDS_REVISION'</span>)
+        self.assertEqual(res[<span class="code-string">'course_points_20'</span>], <span class="code-num">9.0</span>)
+
+<span class="code-keyword">if</span> __name__ == <span class="code-string">"__main__"</span>:
+    suite = unittest.TestLoader().loadTestsFromTestCase(TestProjectEvaluator)
+    runner = unittest.TextTestRunner(verbosity=<span class="code-num">2</span>)
+    result = runner.run(suite)
+    print(f<span class="code-string">"Unit Test Results: Ran {result.testsRun} tests, Errors: {len(result.errors)}, Failures: {len(result.failures)}"</span>)
+            </div>
+        </div>
+    
+        <!-- ปฏิบัติการจำลองเสมือนจริงประจำสัปดาห์ (Interactive Science Simulator & 180 Labs) -->
+        <div class="card" id="sim-section" style="border: 2px solid #0284c7; box-shadow: 0 8px 24px rgba(2, 132, 199, 0.12); margin-top: 1.5rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; flex-wrap: wrap; gap: 0.75rem;">
+                <h2 class="card-title" style="margin-bottom: 0; color: #0284c7;">
+                    <i class="fas fa-cube"></i> ปฏิบัติการจำลองเสมือนจริง: 10.0 แกลเลอรีจัดแสดงโครงงานนวัตกรรม (Innovation Showcase Gallery AR) — AR MediaPipe Lab • RBRU MOOC
+                </h2>
+                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                    <a href="../simulations/chapter10_innovation_gallery.html" target="_blank" class="nav-back" style="margin-bottom: 0; padding: 0.45rem 0.9rem; font-size: 0.85rem; background: #0284c7; color: #fff;">
+                        <i class="fas fa-external-link-alt"></i> เปิดแบบจำลองเต็มหน้าจอ
+                    </a>
+                    
+                </div>
+            </div>
+
+            <p style="font-size: 0.95rem; color: #334155; margin-bottom: 1rem;">
+                <strong>แบบจำลองเชิงโต้ตอบสำหรับห้องเรียนวิทยาศาสตร์:</strong> ให้นักศึกษาทดลองปรับค่าพารามิเตอร์ สังเกตการณ์เปลี่ยนแปลง และวิเคราะห์ข้อมูลตามกระบวนการคิดเชิงคำนวณ (Computational Thinking):
+            </p>
+
+            <div style="margin: 1rem 0; border-radius: 12px; overflow: hidden; border: 1px solid #cbd5e1; height: 600px; box-shadow: var(--shadow-md);">
+                <iframe src="../simulations/chapter10_innovation_gallery.html" style="width: 100%; height: 100%; border: none;"></iframe>
+            </div>
+
+            <div style="margin: 0.85rem 0; display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;"><span style="font-size: 0.85rem; font-weight: 600; color: #64748b;"><i class="fas fa-cubes"></i> แบบจำลองเสริมในบท:</span> <a href="../simulations/chapter10_poster_pitch_exam.html" target="_blank" style="display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.35rem 0.75rem; background: #e0f2fe; color: #0284c7; border-radius: 6px; font-size: 0.82rem; font-weight: 600; text-decoration: none; border: 1px solid #bae6fd;"><i class="fas fa-play-circle"></i> 10.4 พรีวิวโปสเตอร์ 16:9 และแบบทดสอบประมวลความรู้ MOOC (Synthesis Lab AR) — AR MediaPipe Lab • RBRU MOOC</a></div>
+
+            <!-- คลังใบงานปฏิบัติการที่สอดคล้องจาก 180 Labs Manual -->
+            <div style="margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid #e2e8f0;">
+                <h3 style="font-size: 1.05rem; font-weight: 700; color: #0f172a; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+                    <i class="fas fa-flask" style="color: #10b981;"></i> ใบงานปฏิบัติการที่สอดคล้อง (จากคู่มือปฏิบัติการ ๑๘๐ การทดลอง):
+                </h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem;">
+                    
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.1rem; border-left: 4px solid #10b981; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem; flex-wrap: wrap; gap: 0.25rem;">
+                    <span style="background: #10b981; color: #fff; font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.55rem; border-radius: 4px;">LAB 5.1.1</span>
+                    <span style="font-size: 0.78rem; color: #64748b;"><i class="far fa-clock"></i> 45 นาที | C3 (ประยุกต์ใช้)</span>
+                </div>
+                <h4 style="font-size: 0.98rem; font-weight: 700; color: #0f172a; margin-bottom: 0.2rem;">การพิสูจน์มโนทัศน์พื้นฐาน พื้นฐานคณิตศาสตร์และการปรับสเกลสำหรับ AI</h4>
+                <p style="font-size: 0.82rem; color: #64748b; font-style: italic; margin-bottom: 0.5rem;">Foundational Verification: Math & Data Preprocessing for AI</p>
+                <div style="background: #ffffff; border: 1px dashed #cbd5e1; border-radius: 6px; padding: 0.45rem 0.75rem; font-size: 0.85rem; margin-bottom: 0.5rem; overflow-x: auto;"><strong>สมการทฤษฎี:</strong> $$\text{ตัวแปรสถานะแกนกลาง}: \mathcal{S}_{5.1.1} = f(\mathbf{x}, \mathbf{p}) \quad \text{โดยที่ } \mathbf{x} \in \mathbb{R}^n$$</div>
+                <div style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.25rem;"><i class="fas fa-question-circle" style="color: #3b82f6;"></i> คำถามท้ายการทดลอง:</div>
+                <ul style="font-size: 0.82rem; color: #475569; margin-bottom: 0; padding-left: 1.25rem; line-height: 1.5;">
+                    <li style="margin-bottom: 0.25rem;">จงอธิบายความสอดคล้องระหว่างค่าที่วัดได้กับทฤษฎีใน พื้นฐานคณิตศาสตร์และการปรับสเกลสำหรับ AI</li><li style="margin-bottom: 0.25rem;">หากปรับเปลี่ยนสภาวะแวดล้อม ตัวแปรควบคุมใดส่งผลต่อความไว (Sensitivity) ของระบบมากที่สุด?</li>
+                </ul>
+            </div>
+        
+
+            <div style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 1.1rem; border-left: 4px solid #10b981; box-shadow: 0 1px 3px rgba(0,0,0,0.05);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem; flex-wrap: wrap; gap: 0.25rem;">
+                    <span style="background: #10b981; color: #fff; font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.55rem; border-radius: 4px;">LAB 5.1.2</span>
+                    <span style="font-size: 0.78rem; color: #64748b;"><i class="far fa-clock"></i> 60 นาที | C4 (วิเคราะห์)</span>
+                </div>
+                <h4 style="font-size: 0.98rem; font-weight: 700; color: #0f172a; margin-bottom: 0.2rem;">การวิเคราะห์สมรรถนะและขั้นตอนวิธี พื้นฐานคณิตศาสตร์และการปรับสเกลสำหรับ AI</h4>
+                <p style="font-size: 0.82rem; color: #64748b; font-style: italic; margin-bottom: 0.5rem;">Performance & Algorithmic Analysis: Math & Data Preprocessing for AI</p>
+                <div style="background: #ffffff; border: 1px dashed #cbd5e1; border-radius: 6px; padding: 0.45rem 0.75rem; font-size: 0.85rem; margin-bottom: 0.5rem; overflow-x: auto;"><strong>สมการทฤษฎี:</strong> $$\text{ประสิทธิภาพเชิงเวลาและความคลาดเคลื่อน}: \varepsilon = \frac{|y_{\text{measured}} - y_{\text{model}}|}{y_{\text{model}}} \times 100\%$$</div>
+                <div style="font-size: 0.85rem; font-weight: 600; color: #334155; margin-bottom: 0.25rem;"><i class="fas fa-question-circle" style="color: #3b82f6;"></i> คำถามท้ายการทดลอง:</div>
+                <ul style="font-size: 0.82rem; color: #475569; margin-bottom: 0; padding-left: 1.25rem; line-height: 1.5;">
+                    <li style="margin-bottom: 0.25rem;">อัตราการเพิ่มขึ้นของเวลาประมวลผลสอดคล้องกับความซับซ้อน Big-O ระดับใด?</li><li style="margin-bottom: 0.25rem;">เสนอแนะแนวทางการปรับปรุงขั้นตอนวิธีเพื่อลดการใช้หน่วยความจำลงอย่างน้อย 30%</li>
+                </ul>
+            </div>
+        
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- ==================== TAB 3: กิจกรรมการเรียนรู้ 5E ==================== -->
+    <div id="tab3" class="content-section">
+        <div class="card">
+            <h2 class="card-title">
+                <i class="fas fa-hands-holding-circle"></i> กิจกรรมการเรียนรู้เชิงรุก (Active Learning 5E Model: รวม 4 ชั่วโมง / 240 นาที)
+            </h2>
+            <p style="margin-bottom: 1.5rem; color: var(--text-muted);">
+                โครงสร้างการจัดกิจกรรมในงาน "Computational Science Innovation Expo 2026" แบ่งออกเป็น 2 ช่วงหลัก: ภาคปฏิบัติการนำเสนอ Showcase 8 กลุ่ม (3 ชม. / 180 นาที) และภาคการสังเคราะห์บทเรียนรวบยอด &amp; Reflection (1 ชม. / 60 นาที):
+            </p>
+
+            <!-- Phase 1 & 2 -->
+            <div class="feature-box" style="margin-bottom: 1.5rem; border-left: 4px solid var(--accent);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                    <h4 style="margin: 0; color: var(--accent);"><i class="fas fa-flag-checkered"></i> ขั้นที่ 1 &amp; 2: Engagement &amp; Exploration (พิธีเปิด Expo &amp; การเตรียมความพร้อม Showcase)</h4>
+                    <span class="time-badge"><i class="fas fa-clock"></i> 45 นาที (ชั่วโมงที่ 1: 08:30 - 09:15)</span>
+                </div>
+                <p><strong>1.1 ขั้นสร้างความสนใจ (Engagement - 15 นาที):</strong></p>
+                <ul style="padding-left: 1.5rem; margin-bottom: 0.75rem;">
+                    <li>อาจารย์ผู้สอน (ผศ.ดร.ชีวะ ทัศนา) กล่าวเปิดงาน <strong>"Computational Science Innovation Expo 2026"</strong> พร้อมฉายวิดีโอประมวลภาพการเรียนรู้ตั้งแต่สัปดาห์ที่ 01 (Unplugged CT) จนถึงสัปดาห์ที่ 14 (Micro-teaching)</li>
+                    <li>กระตุ้นพลังแห่งการเป็นครูผู้นำการเปลี่ยนแปลง: <em>"ชิ้นงานที่ท่านจะนำเสนอในวันนี้ คือบทพิสูจน์ว่าครูวิทยาศาสตร์แห่งมหาวิทยาลัยราชภัฏรำไพพรรณี ไม่เพียงสอนทฤษฎีได้ แต่คือผู้สร้างสรรค์นวัตกรรมดิจิทัลเพื่อเด็กไทยในศตวรรษที่ 21"</em></li>
+                </ul>
+                <p><strong>1.2 ขั้นสำรวจและเตรียมพร้อมระบบ (Exploration - 30 นาที):</strong></p>
+                <ul style="padding-left: 1.5rem; margin-bottom: 0;">
+                    <li>เปิดระบบประเมินผลออนไลน์ <strong>Live Triangulated Rubric System</strong> ผ่าน QR Code หน้าจอ ให้ทุกกลุ่มล็อกอินบัญชีเพื่อทำหน้าที่ผู้ประเมินเพื่อน (Peer Reviewers)</li>
+                    <li>ทดสอบสัญญาณภาพ หน้าจอแสดงผล และเครื่องโปรเจกเตอร์ พร้อมชี้แจงกติกานำเสนอ: กลุ่มละ 15 นาทีตรง (นำเสนอและ Live Demo 10 นาที + Q&amp;A 4 นาที + รวมคะแนน 1 นาที) มีสัญญาณไฟเตือนเมื่อเหลือ 2 นาทีสุดท้าย</li>
+                    <li>ตรวจสอบความพร้อมของลิงก์ Digital Teaching Portfolio (GitHub Repository / Google Drive / Google Sites)</li>
+                </ul>
+            </div>
+
+            <!-- Phase 3 & 4 -->
+            <div class="feature-box" style="margin-bottom: 1.5rem; border-left: 4px solid var(--secondary);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                    <h4 style="margin: 0; color: var(--secondary);"><i class="fas fa-chalkboard-user"></i> ขั้นที่ 3 &amp; 4: Explanation &amp; Elaboration (Final Project Showcase &amp; Live Demo 8 กลุ่ม)</h4>
+                    <span class="time-badge"><i class="fas fa-clock"></i> 135 นาที (ชั่วโมงที่ 1-3: 09:15 - 11:30)</span>
+                </div>
+                <p><strong>ตารางกำหนดการนำเสนอและสาระสำคัญของแต่ละกลุ่ม (กลุ่มละ 15 นาที):</strong></p>
+                <table>
+                    <thead>
+                        <tr>
+                            <th style="width: 15%;">เวลา &amp; กลุ่ม</th>
+                            <th style="width: 25%;">ชื่อโครงงานนวัตกรรม</th>
+                            <th style="width: 30%;">จุดเน้นทางวิทยาศาสตร์ &amp; สถาปัตยกรรม CT</th>
+                            <th style="width: 30%;">ภาระงานของทีม &amp; ผู้ฟัง</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>09:15 - 09:30</strong><br><span class="badge badge-blue">กลุ่มที่ 1</span></td>
+                            <td><strong>OrbitSim 3D:</strong> แบบจำลองการโคจรของดาวเคราะห์และแรงดึงดูดโน้มถ่วงสากล</td>
+                            <td>กฎแรงโน้มถ่วงของนิวตัน ผสาน Euler Method ในการคำนวณตำแหน่งวงโคจรดาวเคราะห์ในระบบสุริยะ (Abstraction &amp; Algorithm)</td>
+                            <td>• Demo สด: ปรับค่ามวลของดวงอาทิตย์แล้วสังเกตวงโคจรหลุด/พุ่งชน<br>• เพื่อนร่วมชั้นประเมิน Peer Rubric</td>
+                        </tr>
+                        <tr>
+                            <td><strong>09:30 - 09:45</strong><br><span class="badge badge-blue">กลุ่มที่ 2</span></td>
+                            <td><strong>RadioDecay Engine:</strong> ซิมูเลเตอร์การสลายตัวของสารกัมมันตรังสีและการครึ่งชีวิต</td>
+                            <td>การสลายตัวแบบสุ่มเชิงความน่าจะเป็น (Monte Carlo Algorithm) คำนวณกราฟ Exponential Decay แบบเรียลไทม์ (Pattern Recognition)</td>
+                            <td>• Demo สด: จำลองอะตอม 1,000 อะตอมและสังเกตการเปลี่ยนสถานะ<br>• Q&amp;A: การแก้ความเข้าใจผิดเรื่องครึ่งชีวิต</td>
+                        </tr>
+                        <tr>
+                            <td><strong>09:45 - 10:00</strong><br><span class="badge badge-blue">กลุ่มที่ 3</span></td>
+                            <td><strong>HarmonicWave Lab:</strong> การจำลองการเคลื่อนที่แบบฮาร์มอนิกอย่างง่ายและคลื่นกล</td>
+                            <td>สมการการแกว่งลูกตุ้มและสปริง \(T = 2\pi\sqrt{m/k}\) การแปลงสมการอนุพันธ์สู่โค้ดคอมพิวเตอร์ (Decomposition)</td>
+                            <td>• Demo สด: ปรับแดมปิ้ง (Damping Factor) และเฟสของคลื่น<br>• Coach Feedback ด้าน TPACK</td>
+                        </tr>
+                        <tr>
+                            <td><strong>10:00 - 10:15</strong><br><span class="badge badge-blue">กลุ่มที่ 4</span></td>
+                            <td><strong>EcoQuest:</strong> เกมการเรียนรู้สายใยอาหารและการถ่ายทอดพลังงานพีระมิด</td>
+                            <td>กฎ 10 เปอร์เซ็นต์ทางนิเวศวิทยา การสร้างเกมสืบเสาะจำลองการล่าและการรักษาสมดุลชีวภาพ (Gamified Algorithm)</td>
+                            <td>• Demo สด: ให้ตัวแทนผู้เรียนเล่นด่านการสูญพันธุ์ของผู้ล่า<br>• ตรวจสอบความถูกต้องทางชีววิทยา</td>
+                        </tr>
+                        <tr>
+                            <td><strong>10:15 - 10:30</strong><br><span class="badge badge-blue">กลุ่มที่ 5</span></td>
+                            <td><strong>TitrationMaster:</strong> แพลตฟอร์มจำลองการไทเทรตกรด-เบสและเส้นโค้ง pH</td>
+                            <td>สมดุลกรด-เบส สมการ Henderson-Hasselbalch และการคำนวณกราฟ Titration Curve จากปริมาตรหยดสารละลาย (Algorithm)</td>
+                            <td>• Demo สด: หยดอินดิเคเตอร์สังเกตการเปลี่ยนสีที่จุดยุติ<br>• ผู้ฟังซักถามการจัดการแล็บใน รร. ขาดแคลน</td>
+                        </tr>
+                        <tr>
+                            <td><strong>10:30 - 10:45</strong><br><span class="badge badge-blue">กลุ่มที่ 6</span></td>
+                            <td><strong>CellOsmosis Sim:</strong> แบบจำลองเสมือนการแพร่และออสโมซิสในเซลล์พืชและสัตว์</td>
+                            <td>แรงดันออสโมติก สภาพตึงตัว (Isotonic, Hypotonic, Hypertonic) และการเคลื่อนที่อนุภาคน้ำผ่านเยื่อเลือกผ่าน (Abstraction)</td>
+                            <td>• Demo สด: ปรับความเข้มข้นสารละลายภายนอก ดูเซลล์เต่ง/เหี่ยว<br>• Master Coach ให้คะแนนมิติที่ 1-5</td>
+                        </tr>
+                        <tr>
+                            <td><strong>10:45 - 11:00</strong><br><span class="badge badge-blue">กลุ่มที่ 7</span></td>
+                            <td><strong>CircuitsCraft:</strong> สตูดิโอจำลองวงจรไฟฟ้ากระแสตรงและกฎของโอห์ม</td>
+                            <td>กฎของโอห์ม \(V=IR\) และกฎของเคอร์ชอฟฟ์ วงจรอนุกรม-ขนาน และการคำนวณกำลังไฟฟ้าสูญเสีย (Decomposition &amp; Algorithm)</td>
+                            <td>• Demo สด: ต่อวงจรลัดวงจรและวัดกระแสด้วยแอมมิเตอร์เสมือน<br>• Peer Reviewer บันทึกจุดเด่น-จุดควรปรับ</td>
+                        </tr>
+                        <tr>
+                            <td><strong>11:00 - 11:15</strong><br><span class="badge badge-blue">กลุ่มที่ 8</span></td>
+                            <td><strong>PhotoSensor BioLab:</strong> ระบบตรวจวัดความเข้มแสงกับการสังเคราะห์ด้วยแสง</td>
+                            <td>การวัดอัตราการผลิตก๊าซออกซิเจนสัมพันธ์กับความเข้มแสง เชื่อมต่อเซนเซอร์วัดค่าจริงสู่โปรแกรมวิเคราะห์ข้อมูล (Pattern)</td>
+                            <td>• Demo สด: ฉายแสงความยาวคลื่นต่างกันและพลอตกราฟอัตโนมัติ<br>• ตอบคำถามเรื่องความปลอดภัยของอุปกรณ์</td>
+                        </tr>
+                        <tr>
+                            <td><strong>11:15 - 11:30</strong><br><span class="badge badge-amber">พัก &amp; รวมคะแนน</span></td>
+                            <td colspan="3"><strong>การประมวลผลคะแนนอัตโนมัติ (Live 360° Data Aggregation):</strong> ระบบประมวลผลคะแนน Coach + Peer + Self คำนวณส่วนต่าง และจัดลำดับผลงานยอดเยี่ยม</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Phase 5 -->
+            <div class="feature-box" style="margin-bottom: 1.5rem; border-left: 4px solid var(--purple);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.75rem;">
+                    <h4 style="margin: 0; color: var(--purple);"><i class="fas fa-trophy"></i> ขั้นที่ 5: Evaluation, Course Synthesis &amp; Grand Reflection (การสรุปบทเรียนและมอบรางวัล)</h4>
+                    <span class="time-badge"><i class="fas fa-clock"></i> 60 นาที (ชั่วโมงที่ 4: 11:30 - 12:30)</span>
+                </div>
+                <p><strong>5.1 พิธีมอบรางวัลนวัตกรรมยอดเยี่ยม (Award Ceremony - 20 นาที):</strong></p>
+                <ul style="padding-left: 1.5rem; margin-bottom: 0.75rem;">
+                    <li>ประกาศผลรางวัล <strong>Best Computational Science Innovation Award 2026</strong> (คะแนนรวมสูงสุดตาม Rubric 360 องศา)</li>
+                    <li>ประกาศผลรางวัล <strong>Outstanding TPACK Pedagogical Design Award</strong> (แผนการจัดการเรียนรู้ 5E ยอดเยี่ยม)</li>
+                    <li>ประกาศผลรางวัล <strong>People's Choice Innovation Award</strong> (คะแนนโหวตสูงสุดจากเพื่อนร่วมชั้นเรียน)</li>
+                    <li>ผศ.ดร.ชีวะ ทัศนา มอบประกาศนียบัตรดิจิทัล (Digital Credential Badge) และกล่าวชื่นชมความทุ่มเทของทุกกลุ่ม</li>
+                </ul>
+
+                <p><strong>5.2 การสังเคราะห์บทเรียนรวบยอดตลอดภาคการศึกษา (Course Synthesis - 25 นาที):</strong></p>
+                <ul style="padding-left: 1.5rem; margin-bottom: 0.75rem;">
+                    <li><strong>Grand Reflection Activity:</strong> ให้นักศึกษาทุกคนเปิด Digital Teaching Portfolio ของตนเอง บันทึกประเด็น <em>"3 สิ่งที่เปลี่ยนไปในวิธีคิดเชิงวิชาชีพครูวิทยาศาสตร์ของฉัน"</em></li>
+                    <li>สรุปแก่นแท้: วิทยาการคำนวณไม่ใช่การเปลี่ยนครูวิทย์ให้เป็นโปรแกรมเมอร์ แต่คือการติดอาวุธทางความคิด (Mindset &amp; Toolset) ให้ครูสามารถอธิบายปรากฏการณ์ธรรมชาติที่ซับซ้อนได้อย่างเป็นรูปธรรมและทรงพลัง</li>
+                    <li>ชี้แนะแนวทางการต่อยอดสู่การทำวิจัยในชั้นเรียน (Classroom Action Research - CAR) ในช่วงฝึกประสบการณ์วิชาชีพครู</li>
+                </ul>
+
+                <p><strong>5.3 ชี้แจงแนวทางการสอบปลายภาคในสัปดาห์ที่ 16 (Final Exam Briefing - 15 นาที):</strong></p>
+                <ul style="padding-left: 1.5rem; margin-bottom: 0;">
+                    <li><strong>ขอบเขตเนื้อหา:</strong> ครอบคลุมการประยุกต์ใช้วิทยาการคำนวณในการสอนวิทยาศาสตร์ (สัปดาห์ที่ 09–15), กฎหมาย PDPA และจริยธรรมไซเบอร์, และการออกแบบแผน 5E บูรณาการ CT</li>
+                    <li><strong>รูปแบบข้อสอบ:</strong> ข้อสอบอัตนัยประยุกต์เชิงสถานการณ์วิชาชีพครู (Authentic Problem Solving) 10% ของคะแนนรวม</li>
+                    <li><strong>กำหนดส่งงานปิดภาคเรียน:</strong> ให้แต่ละกลุ่มปรับแก้เล่มรายงานฉบับสมบูรณ์ (Final Project Report) และอัปเดตไฟล์ลงใน Digital Portfolio ภายใน 7 วันหลังการสอบเสร็จสิ้น</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== TAB 4: การวัดและประเมินผล ==================== -->
+    <div id="tab4" class="content-section">
+        <div class="card">
+            <h2 class="card-title">
+                <i class="fas fa-chart-simple"></i> การวัดและประเมินผล (Rubrics 4 ระดับแบบจำแนกประเด็น สำหรับโครงงาน 20%)
+            </h2>
+            <p style="margin-bottom: 1.5rem; color: var(--text-muted);">
+                เกณฑ์การประเมินโครงงานนวัตกรรมสื่อวิทยาการคำนวณ (Final Project &amp; Showcase) คิดเป็นน้ำหนัก <strong>20% ของผลการเรียนทั้งหมด</strong> ใช้เกณฑ์รูบริกส์แบบจำแนกประเด็น (Analytic Rubrics) 4 ระดับคุณภาพ ครอบคลุม 5 มิติสมรรถนะ:
+            </p>
+
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 18%;">มิติการประเมิน (น้ำหนักมิติละ 20%)</th>
+                        <th style="width: 20%;"><span class="badge badge-green">ดีเยี่ยม (4: 85-100%)</span></th>
+                        <th style="width: 20%;"><span class="badge badge-blue">ดี (3: 70-84%)</span></th>
+                        <th style="width: 21%;"><span class="badge badge-amber">พอใช้ (2: 55-69%)</span></th>
+                        <th style="width: 21%;"><span class="badge badge-red">ปรับปรุง (1: &lt; 55%)</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>1. ความถูกต้องและคุณค่าทางวิทยาศาสตร์</strong><br>(Scientific Rigor)</td>
+                        <td>ทฤษฎีและสมการวิทยาศาสตร์ถูกต้อง 100% แก้ไข Misconception ได้ตรงจุด มีหลักฐานอ้างอิงระดับสากล</td>
+                        <td>เนื้อหาวิทยาศาสตร์ถูกต้องเป็นส่วนใหญ่ มีจุดคลาดเคลื่อนเล็กน้อยแต่ไม่กระทบสาระสำคัญ</td>
+                        <td>มีข้อผิดพลาดทางวิทยาศาสตร์บางจุด คำอธิบายปรากฏการณ์ยังไม่ชัดเจน</td>
+                        <td>หลักการวิทยาศาสตร์ไม่ถูกต้อง มีความเข้าใจผิดเชิงมโนทัศน์ร้ายแรง ไม่น่าเชื่อถือ</td>
+                    </tr>
+                    <tr>
+                        <td><strong>2. สถาปัตยกรรม CT 4 เสาหลัก</strong><br>(CT Integration)</td>
+                        <td>บูรณาการ Decomposition, Pattern, Abstraction, Algorithm ครบถ้วน ลึกซึ้ง และสอดรับกับโปรแกรม</td>
+                        <td>บูรณาการองค์ประกอบ CT ได้ครบ 4 เสาหลัก แต่อาจมีบางส่วนที่อธิบายความเชื่อมโยงไม่ลึกซึ้ง</td>
+                        <td>แสดงองค์ประกอบ CT ไม่ครบ (1-2 เสาหลัก) หรือแนวคิดยังแยกส่วนจากโปรแกรม</td>
+                        <td>ไม่ปรากฏร่องรอยการคิดเชิงคำนวณ เป็นเพียงการคัดลอกโค้ดมาแสดงโดยไร้สถาปัตยกรรม</td>
+                    </tr>
+                    <tr>
+                        <td><strong>3. คุณภาพโปรแกรม/สื่อซอฟต์แวร์</strong><br>(Software Quality &amp; UX)</td>
+                        <td>โปรแกรมทำงานได้สมบูรณ์ 100% ไม่มีบั๊ก UI/UX สวยงาม โต้ตอบได้ลื่นไหล มี Error Handling</td>
+                        <td>โปรแกรมทำงานได้ดีตามเป้าหมาย มีบั๊กเล็กน้อยที่ไม่กระทบการนำเสนอ UI เข้าใจง่าย</td>
+                        <td>โปรแกรมค้างหรือทำงานผิดพลาดบางฟังก์ชัน UI ใช้งานยาก ตัวเลขรกหน้าจอ</td>
+                        <td>โปรแกรมรันไม่ผ่าน เกิด Error ล้มเหลวระหว่างสาธิตสด และไม่สามารถแก้ไขได้</td>
+                    </tr>
+                    <tr>
+                        <td><strong>4. แผนการสอน 5E &amp; ใบงานกิจกรรม</strong><br>(Pedagogical Design)</td>
+                        <td>แผน 5E เชื่อมโยงโปรแกรมเข้ากับกิจกรรมสืบเสาะอย่างกลมกลืน ใบงานกระตุ้น HOTS ได้ยอดเยี่ยม</td>
+                        <td>แผน 5E ถูกต้องตามโครงสร้าง นำโปรแกรมไปใช้ในการจัดการเรียนรู้ได้ดี ใบงานครบถ้วน</td>
+                        <td>แผน 5E ไม่สมบูรณ์ในบางขั้น โปรแกรมเป็นเพียงสื่อประกอบที่ไม่ได้เน้นให้ผู้เรียนลงมือทำ</td>
+                        <td>ไม่มีแผนการสอน 5E หรือแผนไม่สอดคล้องกับตัวชี้วัดและตัวโปรแกรม</td>
+                    </tr>
+                    <tr>
+                        <td><strong>5. ทักษะการนำเสนอ &amp; Q&amp;A</strong><br>(Showcase &amp; Defense)</td>
+                        <td>นำเสนออย่างมืออาชีพ บริหารเวลา 15 นาทีเป๊ะ สาธิตชัดเจน ตอบคำถามเชิงทฤษฎีและเทคนิคได้กระจ่าง</td>
+                        <td>นำเสนอได้น่าสนใจ สาธิตการทำงานได้คล่องแคล่ว ตอบคำถามได้ดี ใช้เวลาตรงตามกำหนด</td>
+                        <td>นำเสนอติดขัด เกินเวลาที่กำหนด ตอบคำถามได้ไม่ตรงประเด็นหรือขาดความมั่นใจ</td>
+                        <td>อ่านสไลด์ตลอดเวลา ไม่สามารถสาธิตสดได้ และไม่สามารถตอบคำถามของอาจารย์และเพื่อนได้</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="highlight-box purple" style="margin-top: 2rem;">
+                <h4 style="margin-bottom: 0.5rem; color: var(--purple);"><i class="fas fa-calculator"></i> สูตรการคำนวณคะแนนโครงงาน 20% ของรายวิชา:</h4>
+                <p>
+                    \[ 	ext{Score}_{100} = (0.60 	imes 	ext{Coach}) + (0.30 	imes 	ext{Peer}) + (0.10 	imes 	ext{Self}) \]
+                    \[ 	ext{Final Course Points (20\%)} = rac{	ext{Score}_{100}}{100} 	imes 20 \]
+                </p>
+                <p style="font-size: 0.9rem; margin-top: 0.5rem; color: var(--text-muted);">
+                    * หมายเหตุ: หากคะแนนของ Master Coach และ Peer Assessment มีส่วนต่าง (\(\Delta\)) มากกว่า 15 คะแนน ระบบจะแจ้งเตือน (Divergence Flag) เพื่อให้อาจารย์ผู้สอนทบทวนและตรวจสอบหลักฐานเชิงประจักษ์ใน Digital Portfolio อีกครั้ง
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== TAB 5: ข้อสอบวัดสมรรถนะ HOTS ==================== -->
+    <div id="tab5" class="content-section">
+        <div class="card">
+            <h2 class="card-title">
+                <i class="fas fa-clipboard-question"></i> ข้อสอบวัดสมรรถนะ HOTS สสวท. ประจำสัปดาห์ (พร้อมระบบเฉลยละเอียดและกล่องเปิดโต้ตอบ)
+            </h2>
+            <p style="margin-bottom: 1.5rem; color: var(--text-muted);">
+                แบบทดสอบวัดสมรรถนะความคิดขั้นสูง (Higher-Order Thinking Skills: HOTS) ตามแนวทางของสถาบันส่งเสริมการสอนวิทยาศาสตร์และเทคโนโลยี (สสวท.) จำนวน 2 ข้อ ในระดับ <strong>การประเมินค่า (Evaluating)</strong> และ <strong>การสร้างสรรค์ (Creating)</strong>:
+            </p>
+
+            <!-- HOTS Question 1 -->
+            <div class="feature-box" style="margin-bottom: 2rem; border-left: 4px solid var(--accent);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <h4 style="margin: 0; color: var(--primary);"><i class="fas fa-question-circle text-accent"></i> ข้อที่ 1 (ระดับการประเมินค่าและการปรับปรุงเชิงวิศวกรรมการสอน - Evaluating &amp; Refining)</h4>
+                    <span class="badge badge-blue">สสวท. HOTS • 5 คะแนน</span>
+                </div>
+                <div style="background: #f8fafc; padding: 1.25rem; border-radius: 8px; margin-bottom: 1.25rem; border: 1px solid var(--border);">
+                    <p><strong>สถานการณ์จำลอง:</strong></p>
+                    <p>
+                        นักศึกษาครูกลุ่มหนึ่งพัฒนาโปรแกรมแบบจำลอง <em>"การชนของวัตถุใน 2 มิติ (2D Collision Simulation)"</em> เพื่อนำไปใช้สอนนักเรียนชั้น ม.4 ในขั้น Exploration ของแผนการสอน 5E เมื่อนำไปทดลองสอนจริงในชั่วโมง Micro-teaching พบว่า นักเรียนเกิด <strong>ภาวะภาระทางปัญญาเกิน (Cognitive Overload)</strong> อย่างรุนแรง เนื่องจากบนหน้าจอโปรแกรมมีการแสดงผลตัวเลขเวกเตอร์ความเร็ว โมเมนตัม พลังงานจลน์ และมุมตกกระทบพร้อมกันถึง 12 ค่า อีกทั้งมีตัวเลื่อน (Slider) ให้ปรับแต่งตัวแปรถึง 8 ตัว ส่งผลให้นักเรียนสับสน ไม่สามารถสรุป <em>"กฎการอนุรักษ์โมเมนตัม"</em> ได้ตามเป้าหมาย
+                    </p>
+                </div>
+
+                <p><strong>คำถาม:</strong> ในฐานะครูผู้นำนวัตกรรมวิทยาการคำนวณ ท่านจะใช้แนวคิดเชิงนามธรรม (Abstraction) และการออกแบบขั้นตอนวิธี (Algorithm Design) เข้ามาปรับปรุงโปรแกรมและจัดลำดับกิจกรรมการเรียนรู้นี้อย่างไรเพื่อลด Extraneous Cognitive Load ตามหลักจิตวิทยาการเรียนรู้?</p>
+
+                <ul style="list-style: none; padding: 0; margin: 1.25rem 0;">
+                    <li class="quiz-option" onclick="toggleExplanation('exp1', false, this)">
+                        <span style="font-weight: bold; margin-right: 0.5rem;">ก.</span>
+                        <span>ยกเลิกการใช้โปรแกรมคอมพิวเตอร์ แล้วเปลี่ยนกลับไปให้นักเรียนท่องจำสูตรคำนวณและทำโจทย์ฝึกหัดบนกระดาษแทน เพื่อตัดปัญหาความซับซ้อนของเทคโนโลยี</span>
+                    </li>
+                    <li class="quiz-option" onclick="toggleExplanation('exp1', true, this)">
+                        <span style="font-weight: bold; margin-right: 0.5rem;">ข.</span>
+                        <span>ใช้ Abstraction ซ่อนตัวแปรที่ไม่จำเป็นในระยะแรก (Scaffolding UI) โดยเริ่มจากการแสดงเฉพาะเวกเตอร์โมเมนตัมรวมก่อนและหลังชน และจัด Algorithm การเรียนรู้เป็น 3 ลำดับขั้น: 1) สังเกตทิศทางเวกเตอร์ลัพธ์ 2) ปรับมวล 3) จึงเปิดเผยตัวเลขสเกลาร์และมุม</span>
+                    </li>
+                    <li class="quiz-option" onclick="toggleExplanation('exp1', false, this)">
+                        <span style="font-weight: bold; margin-right: 0.5rem;">ค.</span>
+                        <span>เพิ่มคำอธิบายทฤษฎีขนาดยาวแบบข้อความตัวหนังสือวิ่ง (Scrolling Text) แทรกไว้ด้านล่างของหน้าจอ เพื่อให้นักเรียนสามารถอ่านทฤษฎีควบคู่ไปกับการดูตัวเลขทั้ง 12 ค่า</span>
+                    </li>
+                    <li class="quiz-option" onclick="toggleExplanation('exp1', false, this)">
+                        <span style="font-weight: bold; margin-right: 0.5rem;">ง.</span>
+                        <span>สั่งให้นักเรียนไปเรียนรู้การเขียนโค้ดภาษา Python เพิ่มเติมหลังเลิกเรียน เพื่อให้เข้าใจโครงสร้างของโปรแกรมก่อนกลับมาทดลองใช้ใหม่ในสัปดาห์ถัดไป</span>
+                    </li>
+                </ul>
+
+                <div id="exp1" class="quiz-explanation">
+                    <h5 style="color: var(--success); margin-bottom: 0.5rem;"><i class="fas fa-check-circle"></i> เฉลยข้อ ข. อย่างละเอียด (Mastery Level Explanation):</h5>
+                    <p>
+                        ตามทฤษฎี <strong>Cognitive Load Theory (Sweller, 2011)</strong> การที่นักเรียนได้รับข้อมูลพร้อมกันมากเกินไป (ตัวเลข 12 ค่า + ตัวเลื่อน 8 ตัว) จัดเป็น <em>Extraneous Cognitive Load</em> ซึ่งขัดขวางการประมวลผลในหน่วยความจำใช้งาน (Working Memory):
+                    </p>
+                    <ul style="padding-left: 1.5rem; margin-top: 0.5rem;">
+                        <li><strong>การประยุกต์ Abstraction (การคัดกรองสาระสำคัญ):</strong> หน้าจอโปรแกรมที่ดีต้องใช้หลัก <em>Progressive Disclosure</em> ซ่อนตัวแปรที่ไม่เกี่ยวข้องโดยตรงกับมโนทัศน์หลักในขั้นแรก เหลือไว้เพียงเวกเตอร์ลูกศรโมเมนตัมก่อนและหลังชน ซึ่งช่วยให้นักเรียนเห็นการอนุรักษ์เชิงประจักษ์ด้วยสายตา (Visual Abstraction)</li>
+                        <li><strong>การประยุกต์ Algorithm Design (การจัดลำดับการเรียนรู้):</strong> การจัดลำดับขั้นเป็น Scaffolding จากเชิงคุณภาพ (Qualitative Vector) สู่เชิงปริมาณ (Quantitative Scalar &amp; Angles) จะช่วยพยุงการรับรู้ของสมองให้อยู่ในระดับที่จัดการได้</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- HOTS Question 2 -->
+            <div class="feature-box" style="margin-bottom: 1.5rem; border-left: 4px solid var(--secondary);">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                    <h4 style="margin: 0; color: var(--primary);"><i class="fas fa-question-circle text-secondary"></i> ข้อที่ 2 (ระดับการสร้างสรรค์และการออกแบบเชิงสังเคราะห์ - Creating &amp; Synthesizing)</h4>
+                    <span class="badge badge-purple">สสวท. HOTS • 5 คะแนน</span>
+                </div>
+                <div style="background: #f8fafc; padding: 1.25rem; border-radius: 8px; margin-bottom: 1.25rem; border: 1px solid var(--border);">
+                    <p><strong>สถานการณ์จำลอง:</strong></p>
+                    <p>
+                        ท่านได้รับการบรรจุเป็นครูวิทยาศาสตร์ในโรงเรียนขยายโอกาสขนาดเล็ก ซึ่งมีห้องคอมพิวเตอร์เก่าเพียง 6 เครื่อง (อัตราส่วน 1 เครื่องต่อนักเรียน 6 คน) และไม่มีสัญญาณอินเทอร์เน็ตความเร็วสูง แต่ท่านต้องการนำโครงงาน <em>"แบบจำลองการแพร่และออสโมซิส (CellOsmosis Sim)"</em> ไปจัดการเรียนรู้ให้นักเรียน ม.1 ได้เรียนรู้ทั้งเนื้อหาวิทยาศาสตร์และแนวคิดเชิงคำนวณอย่างลึกซึ้ง
+                    </p>
+                </div>
+
+                <p><strong>คำถาม:</strong> จงออกแบบกลยุทธ์การจัดการเรียนรู้แบบ Hybrid (Unplugged ผสาน Plugged) พร้อมทั้งระบุแนวทางการเก็บหลักฐานใน Digital Teaching Portfolio ของครูเพื่อสะท้อนสมรรถนะ TPACK ภายใต้บริบทความขาดแคลนนี้ได้อย่างมีประสิทธิผลสูงสุด?</p>
+
+                <ul style="list-style: none; padding: 0; margin: 1.25rem 0;">
+                    <li class="quiz-option" onclick="toggleExplanation('exp2', false, this)">
+                        <span style="font-weight: bold; margin-right: 0.5rem;">ก.</span>
+                        <span>ให้นักเรียน 6 คนที่มีผลการเรียนดีที่สุดได้ใช้งานคอมพิวเตอร์ ส่วนนักเรียนที่เหลือให้นั่งอ่านหนังสือเรียน เพื่อหลีกเลี่ยงความวุ่นวายในห้องปฏิบัติการ</span>
+                    </li>
+                    <li class="quiz-option" onclick="toggleExplanation('exp2', true, this)">
+                        <span style="font-weight: bold; margin-right: 0.5rem;">ข.</span>
+                        <span>จัดกิจกรรมแบบ Station Rotation: สถานี Unplugged ให้นักเรียนเล่นบทบาทสมมติ (Role-play) เป็นโมเลกุลน้ำและสารละลายเพื่อสกัดกฎเกณฑ์ (Pattern &amp; Algorithm) สลับกับสถานี Plugged ให้แต่ละกลุ่มผลัดกันนำกฎที่ค้นพบไปป้อนค่าในโปรแกรมจำลองออฟไลน์บนคอมพิวเตอร์ 6 เครื่อง พร้อมบันทึกภาพและคลิปสะท้อนคิดลงใน Portfolio</span>
+                    </li>
+                    <li class="quiz-option" onclick="toggleExplanation('exp2', false, this)">
+                        <span style="font-weight: bold; margin-right: 0.5rem;">ค.</span>
+                        <span>งดใช้แบบจำลองคอมพิวเตอร์ทั้งหมด แล้วเปลี่ยนไปทำการทดลองผ่าหัวไชเท้าแช่น้ำเกลือเพียงอย่างเดียว เพราะเทคโนโลยีไม่มีความจำเป็นสำหรับการเรียนรู้วิทยาศาสตร์พื้นฐาน</span>
+                    </li>
+                    <li class="quiz-option" onclick="toggleExplanation('exp2', false, this)">
+                        <span style="font-weight: bold; margin-right: 0.5rem;">ง.</span>
+                        <span>ครูนั่งเปิดโปรแกรมบนหน้าจอคอมพิวเตอร์ของครูเพียงเครื่องเดียว แล้วบรรยายให้นักเรียนฟังหน้าชั้นเรียนโดยไม่ต้องให้นักเรียนสัมผัสเครื่องคอมพิวเตอร์หรือทำกิจกรรมกลุ่ม</span>
+                    </li>
+                </ul>
+
+                <div id="exp2" class="quiz-explanation">
+                    <h5 style="color: var(--success); margin-bottom: 0.5rem;"><i class="fas fa-check-circle"></i> เฉลยข้อ ข. อย่างละเอียด (Mastery Level Explanation):</h5>
+                    <p>
+                        ข้อ ข. เป็นคำตอบที่สะท้อนสมรรถนะ <strong>Contextual TPACK (Mishra &amp; Koehler, 2006)</strong> อย่างแท้จริง:
+                    </p>
+                    <ul style="padding-left: 1.5rem; margin-top: 0.5rem;">
+                        <li><strong>การแก้ปัญหาข้อจำกัดทางกายภาพ (Resource Management):</strong> การใช้โมเดล <em>Station Rotation (Unplugged + Plugged)</em> ช่วยให้นักเรียนทุกคนมีส่วนร่วม 100% กิจกรรม Unplugged Role-play ช่วยสร้างฐานคิดทางกายภาพ (Embodied Cognition) และการสกัดอัลกอริทึม ก่อนที่จะนำไปทดสอบยืนยันผลกับโปรแกรมออฟไลน์ในสถานี Plugged</li>
+                        <li><strong>การสะท้อนสมรรถนะใน Digital Portfolio:</strong> การเก็บหลักฐานเชิงประจักษ์ (Artifacts) ทั้งภาพกิจกรรม แผนการสอนแบบปรับตามบริบท (Contextualized Lesson Plan) และคลิปสะท้อนคิดของนักเรียน เป็นหลักฐานที่ทรงพลังที่สุดในการประเมินวิทยฐานะและการเป็นครูผู้นำการเปลี่ยนแปลง</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ==================== TAB 6: เอกสารอ้างอิง APA 7th ==================== -->
+    <div id="tab6" class="content-section">
+        <div class="card">
+            <h2 class="card-title">
+                <i class="fas fa-quote-left"></i> เอกสารอ้างอิงทางวิชาการมาตรฐานสากล (References - APA 7th Edition)
+            </h2>
+            <p style="margin-bottom: 1.5rem; color: var(--text-muted);">
+                รายการเอกสารอ้างอิงทางวิชาการระดับชาติและนานาชาติ (Q1 / มาตรฐานหลักสูตร) ที่ใช้ในการสังเคราะห์เนื้อหาและออกแบบระบบการเรียนรู้สัปดาห์ที่ 15 พร้อมลิงก์ DOI ที่สืบค้นได้จริง:
+            </p>
+
+            <ul style="list-style: none; padding-left: 0;">
+                <li style="margin-bottom: 1.25rem; padding-left: 1.75rem; text-indent: -1.75rem;">
+                    <i class="fas fa-bookmark text-accent" style="margin-right: 0.5rem;"></i>
+                    International Society for Technology in Education. (2023). <em>ISTE Standards for Educators: A guide for digital age pedagogy and computational empowerment</em>. International Society for Technology in Education. <a href="https://www.iste.org/standards/iste-standards-for-teachers" target="_blank" style="color: var(--accent); text-decoration: underline;">https://www.iste.org/standards/iste-standards-for-teachers</a>
+                </li>
+
+                <li style="margin-bottom: 1.25rem; padding-left: 1.75rem; text-indent: -1.75rem;">
+                    <i class="fas fa-bookmark text-accent" style="margin-right: 0.5rem;"></i>
+                    Mishra, P., &amp; Koehler, M. J. (2006). Technological pedagogical content knowledge: A framework for teacher knowledge. <em>Teachers College Record</em>, 108(6), 1017–1054. <a href="https://doi.org/10.1111/j.1467-9620.2006.00684.x" target="_blank" style="color: var(--accent); text-decoration: underline;">https://doi.org/10.1111/j.1467-9620.2006.00684.x</a>
+                </li>
+
+                <li style="margin-bottom: 1.25rem; padding-left: 1.75rem; text-indent: -1.75rem;">
+                    <i class="fas fa-bookmark text-accent" style="margin-right: 0.5rem;"></i>
+                    Resnick, M., Maloney, J., Monroy-Hernández, A., Rusk, N., Eastmond, E., Brennan, K., Millner, A., Rosenbaum, E., Silver, J., Silverman, B., &amp; Kafai, Y. (2009). Scratch: Programming for all. <em>Communications of the ACM</em>, 52(11), 60–67. <a href="https://doi.org/10.1145/1592761.1592779" target="_blank" style="color: var(--accent); text-decoration: underline;">https://doi.org/10.1145/1592761.1592779</a>
+                </li>
+
+                <li style="margin-bottom: 1.25rem; padding-left: 1.75rem; text-indent: -1.75rem;">
+                    <i class="fas fa-bookmark text-accent" style="margin-right: 0.5rem;"></i>
+                    Sweller, J. (2011). Cognitive load theory. In J. P. Mestre &amp; B. H. Ross (Eds.), <em>The Psychology of Learning and Motivation: Cognition in Education</em> (Vol. 55, pp. 37–76). Academic Press. <a href="https://doi.org/10.1016/B978-0-12-387691-1.00002-8" target="_blank" style="color: var(--accent); text-decoration: underline;">https://doi.org/10.1016/B978-0-12-387691-1.00002-8</a>
+                </li>
+
+                <li style="margin-bottom: 1.25rem; padding-left: 1.75rem; text-indent: -1.75rem;">
+                    <i class="fas fa-bookmark text-accent" style="margin-right: 0.5rem;"></i>
+                    Wing, J. M. (2006). Computational thinking. <em>Communications of the ACM</em>, 49(3), 33–35. <a href="https://doi.org/10.1145/1118178.1118215" target="_blank" style="color: var(--accent); text-decoration: underline;">https://doi.org/10.1145/1118178.1118215</a>
+                </li>
+
+                <li style="margin-bottom: 1.25rem; padding-left: 1.75rem; text-indent: -1.75rem;">
+                    <i class="fas fa-book text-accent" style="margin-right: 0.5rem;"></i>
+                    คุรุสภา. (2562). <em>ข้อบังคับคุรุสภา ว่าด้วยมาตรฐานวิชาชีพ (ฉบับที่ 4) พ.ศ. 2562</em>. ราชกิจจานุเบกษา เล่ม 136 ตอนพิเศษ 68 ง หน้า 16–21.
+                </li>
+
+                <li style="margin-bottom: 1.25rem; padding-left: 1.75rem; text-indent: -1.75rem;">
+                    <i class="fas fa-book text-accent" style="margin-right: 0.5rem;"></i>
+                    สถาบันส่งเสริมการสอนวิทยาศาสตร์และเทคโนโลยี. (2561). <em>คู่มือการใช้หลักสูตรรายวิชาพื้นฐานวิทยาศาสตร์ สาระเทคโนโลยี (วิทยาการคำนวณ) ตามมาตรฐานการเรียนรู้และตัวชี้วัด กลุ่มสาระการเรียนรู้วิทยาศาสตร์ (ฉบับปรับปรุง พ.ศ. 2560)</em>. โรงพิมพ์แห่งจุฬาลงกรณ์มหาวิทยาลัย.
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>© 2026 รายวิชา 4124941 วิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์ | <strong>ผู้ช่วยศาสตราจารย์ ดร.ชีวะ ทัศนา</strong></p>
+        <p>คณะวิทยาศาสตร์และเทคโนโลยี มหาวิทยาลัยราชภัฏรำไพพรรณี</p>
+    </footer>
+</div>
+
+<!-- Interactive Scripts -->
+<script>
+    function showTab(tabId, btnElement) {
+        document.querySelectorAll('.content-section').forEach(function(section) {
+            section.classList.remove('active');
+        });
+        document.querySelectorAll('.tab-btn').forEach(function(btn) {
+            btn.classList.remove('active');
+        });
+        document.getElementById(tabId).classList.add('active');
+        btnElement.classList.add('active');
+        window.scrollTo({ top: 120, behavior: 'smooth' });
+    }
+
+    function toggleExplanation(expId, isCorrect, element) {
+        var expBox = document.getElementById(expId);
+        if (expBox) {
+            expBox.style.display = 'block';
+        }
+        var parentUl = element.parentElement;
+        var options = parentUl.querySelectorAll('.quiz-option');
+        options.forEach(function(opt) {
+            opt.style.borderColor = '#e2e8f0';
+            opt.style.backgroundColor = '#ffffff';
+        });
+        if (isCorrect) {
+            element.style.borderColor = '#10b981';
+            element.style.backgroundColor = '#ecfdf5';
+        } else {
+            element.style.borderColor = '#ef4444';
+            element.style.backgroundColor = '#fef2f2';
+        }
+    }
+</script>
+
+</body>
+</html>

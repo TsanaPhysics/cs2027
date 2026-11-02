@@ -1,0 +1,653 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ห้องทดลอง 3D: การรู้จำรูปแบบสัญญาณและคลื่นวิทยาศาสตร์ (Pattern Recognition Lab)</title>
+
+  <!-- Google Fonts & FontAwesome 6 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Three.js & OrbitControls -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+  <style>
+    :root {
+      --bg-dark: #030712;
+      --card-bg: rgba(11, 19, 43, 0.94);
+      --card-border: rgba(0, 240, 255, 0.25);
+      --cyan: #00f0ff;
+      --emerald: #10b981;
+      --amber: #f59e0b;
+      --rose: #f43f5e;
+      --indigo: #6366f1;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+    body {
+      background: var(--bg-dark);
+      color: #f8fafc;
+      font-family: 'Prompt', 'Sarabun', sans-serif;
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+    }
+    #webgl-container {
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+    }
+    .hud-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      pointer-events: none;
+      z-index: 10;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .hud-overlay * { pointer-events: auto; }
+
+    /* Top Bar */
+    .top-header {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.7);
+    }
+    .header-title-group h1 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Chakra Petch', sans-serif;
+    }
+    .header-title-group h1 i { color: var(--cyan); }
+    .header-subtitle {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      margin-top: 3px;
+    }
+    .header-actions { display: flex; gap: 8px; }
+    .btn-header {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: #e2e8f0;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-family: inherit;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+    }
+    .btn-header:hover {
+      background: rgba(0, 240, 255, 0.15);
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+
+    /* Left Control Dock */
+    .left-dock {
+      position: absolute;
+      top: 90px;
+      left: 16px;
+      width: 320px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 16px;
+      backdrop-filter: blur(14px);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-height: calc(100vh - 170px);
+      overflow-y: auto;
+    }
+    .section-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--cyan);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .pattern-btn-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .pat-btn {
+      background: rgba(15, 23, 42, 0.7);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 8px;
+      padding: 8px 10px;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      color: #cbd5e1;
+      font-size: 0.82rem;
+      font-family: inherit;
+    }
+    .pat-btn:hover {
+      background: rgba(2, 132, 199, 0.25);
+      border-color: var(--cyan);
+    }
+    .pat-btn.active {
+      background: linear-gradient(135deg, rgba(2, 132, 199, 0.4), rgba(0, 240, 255, 0.2));
+      border: 1.5px solid var(--cyan);
+      color: #fff;
+      font-weight: 600;
+    }
+    .control-box {
+      background: rgba(15, 23, 42, 0.55);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 10px;
+      padding: 10px 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .slider-row {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .slider-label {
+      font-size: 0.75rem;
+      color: #94a3b8;
+      display: flex;
+      justify-content: space-between;
+    }
+    .slider-val {
+      color: var(--cyan);
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+    }
+    input[type=range] {
+      width: 100%;
+      height: 5px;
+      background: #1e293b;
+      border-radius: 4px;
+      outline: none;
+      -webkit-appearance: none;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--cyan);
+      cursor: pointer;
+      box-shadow: 0 0 10px var(--cyan);
+    }
+    .toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 0.78rem;
+      color: #cbd5e1;
+    }
+
+    /* Right Step-by-Step Guide Dock */
+    .right-dock {
+      position: absolute;
+      top: 90px;
+      right: 16px;
+      width: 310px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 16px;
+      backdrop-filter: blur(14px);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .step-item {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+      background: rgba(15, 23, 42, 0.45);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 8px;
+      padding: 8px 10px;
+    }
+    .step-num {
+      width: 22px;
+      height: 22px;
+      border-radius: 50%;
+      background: var(--cyan);
+      color: #030712;
+      font-size: 0.72rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      margin-top: 2px;
+    }
+    .step-content h4 {
+      font-size: 0.8rem;
+      color: #fff;
+      margin-bottom: 2px;
+    }
+    .step-content p {
+      font-size: 0.72rem;
+      color: #94a3b8;
+      line-height: 1.4;
+    }
+
+    /* Bottom Telemetry Bar */
+    .bottom-bar {
+      margin-top: auto;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.7);
+    }
+    .telemetry-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+    .telemetry-label {
+      font-size: 0.7rem;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+    .telemetry-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <div id="webgl-container"></div>
+
+  <div class="hud-overlay">
+    <!-- Top Bar -->
+    <header class="top-header">
+      <div class="header-title-group">
+        <h1><i class="fas fa-wave-square"></i> การรู้จำรูปแบบสัญญาณและคลื่นวิทยาศาสตร์ (Pattern Recognition)</h1>
+        <div class="header-subtitle">วิชา 4124941 วิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์ | ผศ.ดร.ชีวะ ทัศนา (มรภ.รำไพพรรณี)</div>
+      </div>
+      <div class="header-actions">
+        <button class="btn-header" onclick="resetSim()"><i class="fas fa-rotate-left"></i> รีเซ็ต</button>
+        <a href="../lessons/week_03.html" class="btn-header"><i class="fas fa-arrow-left"></i> กลับสู่บทเรียน สัปดาห์ที่ 3</a>
+      </div>
+    </header>
+
+    <!-- Left Controls -->
+    <div class="left-dock">
+      <div class="section-title"><i class="fas fa-shapes"></i> 1. เลือกรูปแบบปรากฏการณ์ (Data Pattern)</div>
+      <div class="pattern-btn-list">
+        <button class="pat-btn active" onclick="setPattern('sine')">
+          <span><i class="fas fa-water"></i> คลื่นฮาร์มอนิกเดี่ยว (Sine Wave)</span>
+          <span style="font-size: 0.7rem; color: var(--cyan);">y=A sin(ωt)</span>
+        </button>
+        <button class="pat-btn" onclick="setPattern('damped')">
+          <span><i class="fas fa-chart-line"></i> การสั่นแบบหน่วง (Damped Wave)</span>
+          <span style="font-size: 0.7rem; color: var(--amber);">e^(-γt)</span>
+        </button>
+        <button class="pat-btn" onclick="setPattern('beats')">
+          <span><i class="fas fa-compress-alt"></i> การแทรกสอดบีตส์ (Beats Wave)</span>
+          <span style="font-size: 0.7rem; color: var(--emerald);">f1 ± f2</span>
+        </button>
+        <button class="pat-btn" onclick="setPattern('sensor')">
+          <span><i class="fas fa-temperature-high"></i> ข้อมูลเซนเซอร์จริง (IoT Temp)</span>
+          <span style="font-size: 0.7rem; color: var(--rose);">Noisy Spikes</span>
+        </button>
+      </div>
+
+      <div class="section-title"><i class="fas fa-sliders-h"></i> 2. ปรับตัวแปรคลื่น & สัญญาณรบกวน</div>
+      <div class="control-box">
+        <div class="slider-row">
+          <div class="slider-label"><span>ความถี่สัญญาณ (Frequency f):</span> <span class="slider-val" id="valFreq">1.5 Hz</span></div>
+          <input type="range" id="sliderFreq" min="0.5" max="4.0" step="0.1" value="1.5" oninput="updateParams()">
+        </div>
+        <div class="slider-row">
+          <div class="slider-label"><span>ระดับ Noise สัญญาณรบกวน (σ):</span> <span class="slider-val" id="valNoise">0.25</span></div>
+          <input type="range" id="sliderNoise" min="0" max="0.8" step="0.05" value="0.25" oninput="updateParams()">
+        </div>
+      </div>
+
+      <div class="section-title"><i class="fas fa-filter"></i> 3. อัลกอริทึมการรู้จำรูปแบบ (Pattern Filter)</div>
+      <div class="control-box">
+        <div class="slider-row">
+          <div class="slider-label"><span>ขนาดหน้าต่างกรอง Moving Average (k):</span> <span class="slider-val" id="valWindow">7</span></div>
+          <input type="range" id="sliderWindow" min="1" max="21" step="2" value="7" oninput="updateParams()">
+        </div>
+        <div class="toggle-row">
+          <span><i class="fas fa-eye"></i> แสดงเส้นข้อมูลดิบ (Raw Noisy Data)</span>
+          <input type="checkbox" id="chkRaw" checked onchange="updateVis()">
+        </div>
+        <div class="toggle-row">
+          <span><i class="fas fa-magic" style="color: var(--cyan);"></i> แสดงเส้นกรองอัลกอริทึม (Filtered)</span>
+          <input type="checkbox" id="chkFiltered" checked onchange="updateVis()">
+        </div>
+        <div class="toggle-row">
+          <span><i class="fas fa-check-circle" style="color: var(--emerald);"></i> ทาบแบบจำลองทำนาย (Pattern Fit)</span>
+          <input type="checkbox" id="chkFit" checked onchange="updateVis()">
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Guide Dock -->
+    <div class="right-dock">
+      <div class="section-title"><i class="fas fa-graduation-cap"></i> แนวคิดเชิงคำนวณ: การหารูปแบบ</div>
+      
+      <div class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-content">
+          <h4>สังเกตข้อมูลที่มีสัญญาณรบกวน (Noise)</h4>
+          <p>ข้อมูลจากการทดลองจริง (เช่น คลื่นเสียง, เซนเซอร์) จะมีสัญญาณรบกวนปะปนอยู่เสมอ คอมพิวเตอร์มองไม่เห็นสมการโดยตรง</p>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-content">
+          <h4>ประยุกต์อัลกอริทึมกรอง (Filtering)</h4>
+          <p>ใช้อัลกอริทึม <strong>Moving Average</strong> หรือ <strong>Peak Detection</strong> เพื่อสกัดแก่นของสัญญาณที่แท้จริงออกมา</p>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-content">
+          <h4>สร้างสมการคณิตศาสตร์ทำนาย (Model)</h4>
+          <p>เมื่อรู้จำคาบเวลา (Period $T$) และความถี่ ($f$) ได้แล้ว สามารถแปลงเป็นสมการ $y = A \sin(\omega t)$ เพื่อทำนายอนาคตได้ 100%</p>
+        </div>
+      </div>
+
+      <div style="background: rgba(16, 185, 129, 0.15); border: 1px solid var(--emerald); border-radius: 8px; padding: 10px; font-size: 0.75rem; color: #a7f3d0;">
+        <i class="fas fa-lightbulb"></i> <strong>คำแนะนำ:</strong> ใช้เมาส์คลิกซ้ายลากหมุนดูคลื่น 3D ในมุมมองต่างๆ กลิ้งล้อซูมเข้า-ออก และคลิกขวาลากแพนตำแหน่งได้อิสระ
+      </div>
+    </div>
+
+    <!-- Bottom Telemetry -->
+    <div class="bottom-bar">
+      <div class="telemetry-item">
+        <span class="telemetry-label">รูปแบบที่เลือก (Pattern Class)</span>
+        <span class="telemetry-value" id="telPattern" style="color: var(--cyan);">Sine Harmonic</span>
+      </div>
+      <div class="telemetry-item">
+        <span class="telemetry-label">ความถี่หลักที่ตรวจพบ (Detected f)</span>
+        <span class="telemetry-value" id="telFreq">1.50 Hz</span>
+      </div>
+      <div class="telemetry-item">
+        <span class="telemetry-label">คาบเวลาของคลื่น (Period T)</span>
+        <span class="telemetry-value" id="telPeriod">0.67 s</span>
+      </div>
+      <div class="telemetry-item">
+        <span class="telemetry-label">ความคลาดเคลื่อนหลังกรอง (MSE Loss)</span>
+        <span class="telemetry-value" id="telMSE" style="color: var(--emerald);">0.018</span>
+      </div>
+      <div class="telemetry-item">
+        <span class="telemetry-label">ความแม่นยำการรู้จำ (Pattern Match)</span>
+        <span class="telemetry-value" id="telAccuracy" style="color: var(--cyan);">98.4 %</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Three.js Scene Setup
+    let scene, camera, renderer, controls;
+    let rawLine, filteredLine, fitLine, gridHelper;
+    let currentPattern = 'sine';
+    let freq = 1.5;
+    let noiseAmp = 0.25;
+    let windowSize = 7;
+    const NUM_POINTS = 300;
+    const TIME_SPAN = 6.0;
+
+    function init() {
+      const container = document.getElementById('webgl-container');
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x030712);
+      scene.fog = new THREE.FogExp2(0x030712, 0.04);
+
+      camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+      camera.position.set(0, 4, 9);
+
+      renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      container.appendChild(renderer.domElement);
+
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
+      controls.maxPolarAngle = Math.PI / 2 + 0.1;
+
+      // Lights
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+      scene.add(ambientLight);
+
+      const dirLight = new THREE.DirectionalLight(0x00f0ff, 1.2);
+      dirLight.position.set(5, 10, 7);
+      scene.add(dirLight);
+
+      // Sci-Fi Ground Grid
+      gridHelper = new THREE.GridHelper(16, 32, 0x00f0ff, 0x1e293b);
+      gridHelper.position.y = -1.5;
+      scene.add(gridHelper);
+
+      // Create Wave Geometry Lines
+      createWaveLines();
+
+      window.addEventListener('resize', onWindowResize);
+      animate();
+    }
+
+    function createWaveLines() {
+      // 1. Raw Noisy Line (Red/Pink dashed or glowing dots)
+      const rawGeom = new THREE.BufferGeometry();
+      const rawPos = new Float32Array(NUM_POINTS * 3);
+      rawGeom.setAttribute('position', new THREE.BufferAttribute(rawPos, 3));
+      const rawMat = new THREE.LineBasicMaterial({ color: 0xf43f5e, transparent: true, opacity: 0.65, linewidth: 1 });
+      rawLine = new THREE.Line(rawGeom, rawMat);
+      scene.add(rawLine);
+
+      // 2. Filtered Line (Cyan glowing solid line)
+      const filtGeom = new THREE.BufferGeometry();
+      const filtPos = new Float32Array(NUM_POINTS * 3);
+      filtGeom.setAttribute('position', new THREE.BufferAttribute(filtPos, 3));
+      const filtMat = new THREE.LineBasicMaterial({ color: 0x00f0ff, linewidth: 3 });
+      filteredLine = new THREE.Line(filtGeom, filtMat);
+      scene.add(filteredLine);
+
+      // 3. Mathematical Pattern Fit Line (Emerald smooth theoretical curve)
+      const fitGeom = new THREE.BufferGeometry();
+      const fitPos = new Float32Array(NUM_POINTS * 3);
+      fitGeom.setAttribute('position', new THREE.BufferAttribute(fitPos, 3));
+      const fitMat = new THREE.LineBasicMaterial({ color: 0x10b981, linewidth: 2, transparent: true, opacity: 0.85 });
+      fitLine = new THREE.Line(fitGeom, fitMat);
+      scene.add(fitLine);
+
+      updateData();
+    }
+
+    function computeSignal(t, pType, f) {
+      const omega = 2 * Math.PI * f;
+      if (pType === 'sine') {
+        return Math.sin(omega * t);
+      } else if (pType === 'damped') {
+        return Math.exp(-0.4 * t) * Math.cos(omega * t) * 1.5;
+      } else if (pType === 'beats') {
+        return 0.6 * (Math.sin(omega * t) + Math.sin((omega + 0.8) * t));
+      } else if (pType === 'sensor') {
+        let base = 0.5 * Math.sin(omega * 0.3 * t);
+        if (Math.sin(omega * t) > 0.85) base += 0.8; // spike
+        return base;
+      }
+      return 0;
+    }
+
+    let timeOffset = 0;
+
+    function updateData() {
+      const rawPos = rawLine.geometry.attributes.position.array;
+      const filtPos = filteredLine.geometry.attributes.position.array;
+      const fitPos = fitLine.geometry.attributes.position.array;
+
+      const rawVals = [];
+      const fitVals = [];
+
+      for (let i = 0; i < NUM_POINTS; i++) {
+        const t = (i / NUM_POINTS) * TIME_SPAN;
+        const x = ((i / NUM_POINTS) - 0.5) * 12; // Spread across X [-6, +6]
+        
+        // Pure theoretical signal
+        const pureY = computeSignal(t + timeOffset, currentPattern, freq);
+        fitVals.push(pureY);
+
+        // Add Pseudo-random Gaussian-like noise
+        const n = (Math.random() - 0.5) * 2 * noiseAmp;
+        const noisyY = pureY + n;
+        rawVals.push(noisyY);
+
+        // Z depth oscillation for 3D ribbon effect
+        const z = Math.sin(t * 1.5) * 0.4;
+
+        rawPos[i * 3] = x;
+        rawPos[i * 3 + 1] = noisyY;
+        rawPos[i * 3 + 2] = z;
+
+        fitPos[i * 3] = x;
+        fitPos[i * 3 + 1] = pureY;
+        fitPos[i * 3 + 2] = z;
+      }
+
+      // Moving Average Filter
+      let mseSum = 0;
+      const halfW = Math.floor(windowSize / 2);
+
+      for (let i = 0; i < NUM_POINTS; i++) {
+        let sum = 0;
+        let count = 0;
+        for (let j = -halfW; j <= halfW; j++) {
+          const idx = i + j;
+          if (idx >= 0 && idx < NUM_POINTS) {
+            sum += rawVals[idx];
+            count++;
+          }
+        }
+        const filteredY = sum / count;
+        const x = ((i / NUM_POINTS) - 0.5) * 12;
+        const z = Math.sin(((i / NUM_POINTS) * TIME_SPAN) * 1.5) * 0.4;
+
+        filtPos[i * 3] = x;
+        filtPos[i * 3 + 1] = filteredY;
+        filtPos[i * 3 + 2] = z;
+
+        const diff = filteredY - fitVals[i];
+        mseSum += diff * diff;
+      }
+
+      rawLine.geometry.attributes.position.needsUpdate = true;
+      filteredLine.geometry.attributes.position.needsUpdate = true;
+      fitLine.geometry.attributes.position.needsUpdate = true;
+
+      // Telemetry Calculation
+      const mse = (mseSum / NUM_POINTS).toFixed(3);
+      const accuracy = Math.max(0, Math.min(100, (1 - (mse / 0.5)) * 100)).toFixed(1);
+      const period = (1 / freq).toFixed(2);
+
+      document.getElementById('telFreq').innerText = freq.toFixed(2) + ' Hz';
+      document.getElementById('telPeriod').innerText = period + ' s';
+      document.getElementById('telMSE').innerText = mse;
+      document.getElementById('telAccuracy').innerText = accuracy + ' %';
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+      timeOffset += 0.015;
+      updateData();
+      controls.update();
+      renderer.render(scene, camera);
+    }
+
+    function setPattern(p) {
+      currentPattern = p;
+      document.querySelectorAll('.pat-btn').forEach(b => b.classList.remove('active'));
+      event.currentTarget.classList.add('active');
+
+      const names = {
+        'sine': 'Sine Harmonic Wave',
+        'damped': 'Damped Oscillation',
+        'beats': 'Interference Beats',
+        'sensor': 'IoT Sensor Time-Series'
+      };
+      document.getElementById('telPattern').innerText = names[p];
+    }
+
+    function updateParams() {
+      freq = parseFloat(document.getElementById('sliderFreq').value);
+      noiseAmp = parseFloat(document.getElementById('sliderNoise').value);
+      windowSize = parseInt(document.getElementById('sliderWindow').value);
+
+      document.getElementById('valFreq').innerText = freq.toFixed(1) + ' Hz';
+      document.getElementById('valNoise').innerText = noiseAmp.toFixed(2);
+      document.getElementById('valWindow').innerText = windowSize;
+    }
+
+    function updateVis() {
+      rawLine.visible = document.getElementById('chkRaw').checked;
+      filteredLine.visible = document.getElementById('chkFiltered').checked;
+      fitLine.visible = document.getElementById('chkFit').checked;
+    }
+
+    function resetSim() {
+      document.getElementById('sliderFreq').value = 1.5;
+      document.getElementById('sliderNoise').value = 0.25;
+      document.getElementById('sliderWindow').value = 7;
+      document.getElementById('chkRaw').checked = true;
+      document.getElementById('chkFiltered').checked = true;
+      document.getElementById('chkFit').checked = true;
+      updateParams();
+      updateVis();
+      camera.position.set(0, 4, 9);
+      controls.target.set(0, 0, 0);
+    }
+
+    function onWindowResize() {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    window.onload = init;
+  </script>
+</body>
+</html>

@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ห้องทดลอง 3D: การเคลื่อนที่แบบโพรเจกไทล์และแบบจำลองเชิงคำนวณ (3D Projectile Cannon)</title>
+
+  <!-- Google Fonts & FontAwesome 6 -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chakra+Petch:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600;700&family=Prompt:wght@300;400;500;600;700&family=Sarabun:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+  <!-- Three.js & OrbitControls -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+
+  <style>
+    :root {
+      --bg-dark: #030712;
+      --card-bg: rgba(11, 19, 43, 0.94);
+      --card-border: rgba(0, 240, 255, 0.25);
+      --cyan: #00f0ff;
+      --emerald: #10b981;
+      --amber: #f59e0b;
+      --rose: #f43f5e;
+      --indigo: #6366f1;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+    body {
+      background: var(--bg-dark);
+      color: #f8fafc;
+      font-family: 'Prompt', 'Sarabun', sans-serif;
+      overflow: hidden;
+      height: 100vh;
+      width: 100vw;
+    }
+    #webgl-container { position: absolute; inset: 0; z-index: 1; }
+    .hud-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      pointer-events: none;
+      z-index: 10;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .hud-overlay * { pointer-events: auto; }
+
+    /* Top Bar */
+    .top-header {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.7);
+    }
+    .header-title-group h1 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Chakra Petch', sans-serif;
+    }
+    .header-title-group h1 i { color: var(--cyan); }
+    .header-subtitle { font-size: 0.8rem; color: #94a3b8; margin-top: 3px; }
+    .header-actions { display: flex; gap: 8px; }
+    .btn-header {
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: #e2e8f0;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-family: inherit;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+    .btn-header:hover {
+      background: rgba(0, 240, 255, 0.15);
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+
+    /* Left Control Dock */
+    .left-dock {
+      position: absolute;
+      top: 90px;
+      left: 16px;
+      width: 320px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 16px;
+      backdrop-filter: blur(14px);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      max-height: calc(100vh - 170px);
+      overflow-y: auto;
+    }
+    .section-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--cyan);
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .slider-row {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+    .slider-lbl {
+      font-size: 0.75rem;
+      color: #94a3b8;
+      display: flex;
+      justify-content: space-between;
+    }
+    .slider-val {
+      color: var(--cyan);
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+    }
+    input[type=range] {
+      width: 100%;
+      height: 5px;
+      background: #1e293b;
+      border-radius: 4px;
+      outline: none;
+      -webkit-appearance: none;
+    }
+    input[type=range]::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      width: 14px;
+      height: 14px;
+      border-radius: 50%;
+      background: var(--cyan);
+      cursor: pointer;
+    }
+
+    .btn-launch {
+      background: linear-gradient(135deg, #0284c7, #00f0ff);
+      color: #030712;
+      border: none;
+      padding: 10px;
+      border-radius: 8px;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s;
+    }
+    .btn-launch:hover { filter: brightness(1.15); box-shadow: 0 0 16px var(--cyan); }
+
+    /* Right Guide */
+    .right-dock {
+      position: absolute;
+      top: 90px;
+      right: 16px;
+      width: 310px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 16px;
+      backdrop-filter: blur(14px);
+      box-shadow: 0 15px 40px rgba(0,0,0,0.8);
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+    .guide-box {
+      background: rgba(15, 23, 42, 0.5);
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 8px;
+      padding: 10px;
+      font-size: 0.76rem;
+      color: #cbd5e1;
+      line-height: 1.5;
+    }
+
+    /* Bottom Telemetry */
+    .bottom-bar {
+      margin-top: auto;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 10px 20px;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      backdrop-filter: blur(12px);
+      box-shadow: 0 10px 25px rgba(0,0,0,0.7);
+    }
+    .tel-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2px;
+    }
+    .tel-lbl {
+      font-size: 0.7rem;
+      color: #64748b;
+      text-transform: uppercase;
+      letter-spacing: 0.6px;
+    }
+    .tel-val {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #fff;
+    }
+  </style>
+</head>
+<body>
+  <div id="webgl-container"></div>
+
+  <div class="hud-overlay">
+    <!-- Header -->
+    <header class="top-header">
+      <div class="header-title-group">
+        <h1><i class="fas fa-crosshairs"></i> ห้องทดลอง 3D: การเคลื่อนที่แบบโพรเจกไทล์และแบบจำลองเชิงคำนวณ</h1>
+        <div class="header-subtitle">วิชา 4124941 วิทยาการคำนวณสำหรับการสอนวิทยาศาสตร์ | ผศ.ดร.ชีวะ ทัศนา (มรภ.รำไพพรรณี)</div>
+      </div>
+      <div class="header-actions">
+        <button class="btn-header" onclick="resetSim()"><i class="fas fa-rotate-left"></i> รีเซ็ตมุมมอง</button>
+        <a href="../lessons/week_09.html" class="btn-header"><i class="fas fa-arrow-left"></i> กลับสู่บทเรียน สัปดาห์ที่ 9</a>
+      </div>
+    </header>
+
+    <!-- Left Controls -->
+    <div class="left-dock">
+      <div class="section-title"><i class="fas fa-sliders-h"></i> 1. ตั้งค่าการยิงปืนใหญ่</div>
+      
+      <div class="slider-row">
+        <div class="slider-lbl"><span>ความเร็วต้น (v0):</span> <span class="slider-val" id="valV0">25 m/s</span></div>
+        <input type="range" id="sliderV0" min="10" max="50" value="25" oninput="updateCannonParams()">
+      </div>
+
+      <div class="slider-row">
+        <div class="slider-lbl"><span>มุมยิง (Angle θ):</span> <span class="slider-val" id="valAngle">45°</span></div>
+        <input type="range" id="sliderAngle" min="10" max="85" value="45" oninput="updateCannonParams()">
+      </div>
+
+      <div class="slider-row">
+        <div class="slider-lbl"><span>แรงต้านอากาศ (Air Drag Cd):</span> <span class="slider-val" id="valDrag">0.05</span></div>
+        <input type="range" id="sliderDrag" min="0" max="0.2" step="0.01" value="0.05" oninput="updateCannonParams()">
+      </div>
+
+      <div class="slider-row">
+        <div class="slider-lbl"><span>ดาวเคราะห์ (Gravity g):</span> <span class="slider-val" id="valG">Earth (9.8)</span></div>
+        <select id="selPlanet" onchange="updatePlanet()" style="width: 100%; background: #0f172a; border: 1px solid #334155; color: #fff; padding: 6px; border-radius: 6px; font-family: inherit; font-size: 0.8rem;">
+          <option value="9.8">โลก Earth (g = 9.8 m/s²)</option>
+          <option value="1.62">ดวงจันทร์ Moon (g = 1.62 m/s²)</option>
+          <option value="3.71">ดาวอังคาร Mars (g = 3.71 m/s²)</option>
+          <option value="24.79">ดาวพฤหัสบดี Jupiter (g = 24.79 m/s²)</option>
+        </select>
+      </div>
+
+      <button class="btn-launch" onclick="launchCannon()"><i class="fas fa-rocket"></i> สั่งยิงกระสุนปืนใหญ่ (Launch!)</button>
+    </div>
+
+    <!-- Right Guide -->
+    <div class="right-dock">
+      <div class="section-title"><i class="fas fa-brain"></i> การบูรณาการวิทยาการคำนวณ</div>
+      <div class="guide-box">
+        <strong style="color: var(--cyan);">แบบจำลองเชิงวิเคราะห์ vs เชิงตัวเลข:</strong><br>
+        ในวิชาฟิสิกส์ทั่วไปเราใช้สูตร $R = \frac{v_0^2 \sin 2\theta}{g}$ ซึ่ง <em>ละเลยแรงต้านอากาศ</em> แต่วิทยาการคำนวณใช้ <strong>Euler's Method / Runge-Kutta</strong> ในการจำลองแรงต้านอากาศจริง $F_d = \frac{1}{2}\rho v^2 C_d A$
+      </div>
+      <div class="guide-box">
+        <strong style="color: var(--amber);">มุมที่ยิงได้ไกลที่สุด:</strong><br>
+        หากไม่มีแรงต้านอากาศ มุม 45° จะยิงได้ไกลที่สุด แต่เมื่อมีแรงต้านอากาศ มุมยิงที่เหมาะสมที่สุดจะลดลงเหลือประมาณ 38° – 42°!
+      </div>
+    </div>
+
+    <!-- Bottom Telemetry -->
+    <div class="bottom-bar">
+      <div class="tel-item">
+        <span class="tel-lbl">ระยะตกไกลสุด (Max Range R)</span>
+        <span class="tel-val" id="telR" style="color: var(--cyan);">0.00 m</span>
+      </div>
+      <div class="tel-item">
+        <span class="tel-lbl">ความสูงสูงสุด (Max Height H)</span>
+        <span class="tel-val" id="telH" style="color: var(--amber);">0.00 m</span>
+      </div>
+      <div class="tel-item">
+        <span class="tel-lbl">เวลาลอยในอากาศ (Flight Time t)</span>
+        <span class="tel-val" id="telT">0.00 s</span>
+      </div>
+      <div class="tel-item">
+        <span class="tel-lbl">ความเร็วขณะกระทบ (Impact Velocity)</span>
+        <span class="tel-val" id="telV" style="color: var(--emerald);">0.00 m/s</span>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let scene, camera, renderer, controls;
+    let cannonGroup, barrelMesh, ballMesh, trajLine, targetMesh;
+    let v0 = 25;
+    let angleDeg = 45;
+    let airDrag = 0.05;
+    let g = 9.8;
+
+    let isFlying = false;
+    let ballPos = new THREE.Vector3();
+    let ballVel = new THREE.Vector3();
+    let trajPoints = [];
+    let flightTime = 0;
+    let maxHeight = 0;
+
+    function init() {
+      const container = document.getElementById('webgl-container');
+      scene = new THREE.Scene();
+      scene.background = new THREE.Color(0x030712);
+
+      camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 1000);
+      camera.position.set(-15, 20, 60);
+
+      renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      container.appendChild(renderer.domElement);
+
+      controls = new THREE.OrbitControls(camera, renderer.domElement);
+      controls.enableDamping = true;
+      controls.dampingFactor = 0.05;
+      controls.target.set(30, 5, 0);
+
+      scene.add(new THREE.AmbientLight(0xffffff, 0.6));
+      const dLight = new THREE.DirectionalLight(0x00f0ff, 1.2);
+      dLight.position.set(10, 30, 20);
+      scene.add(dLight);
+
+      // Grid Ground
+      const grid = new THREE.GridHelper(140, 70, 0x00f0ff, 0x1e293b);
+      grid.position.set(40, 0, 0);
+      scene.add(grid);
+
+      buildCannon();
+      buildBall();
+      buildTrajectoryLine();
+
+      window.addEventListener('resize', onWindowResize);
+      animate();
+    }
+
+    function buildCannon() {
+      cannonGroup = new THREE.Group();
+      cannonGroup.position.set(0, 0, 0);
+
+      // Cannon Base
+      const baseGeom = new THREE.CylinderGeometry(1.5, 2, 1, 16);
+      const baseMat = new THREE.MeshStandardMaterial({ color: 0x1e293b, metalness: 0.8, roughness: 0.2 });
+      const baseMesh = new THREE.Mesh(baseGeom, baseMat);
+      baseMesh.position.y = 0.5;
+      cannonGroup.add(baseMesh);
+
+      // Barrel
+      const barrelGeom = new THREE.CylinderGeometry(0.5, 0.6, 5, 16);
+      barrelGeom.translate(0, 2.5, 0);
+      const barrelMat = new THREE.MeshStandardMaterial({ color: 0x00f0ff, metalness: 0.9, roughness: 0.1 });
+      barrelMesh = new THREE.Mesh(barrelGeom, barrelMat);
+      barrelMesh.position.set(0, 1, 0);
+      cannonGroup.add(barrelMesh);
+
+      scene.add(cannonGroup);
+      updateBarrelAngle();
+    }
+
+    function buildBall() {
+      const geom = new THREE.SphereGeometry(0.4, 16, 16);
+      const mat = new THREE.MeshStandardMaterial({ color: 0xf43f5e, emissive: 0xf43f5e, emissiveIntensity: 0.4 });
+      ballMesh = new THREE.Mesh(geom, mat);
+      ballMesh.visible = false;
+      scene.add(ballMesh);
+    }
+
+    function buildTrajectoryLine() {
+      const geom = new THREE.BufferGeometry();
+      const mat = new THREE.LineBasicMaterial({ color: 0x00f0ff, linewidth: 2 });
+      trajLine = new THREE.Line(geom, mat);
+      scene.add(trajLine);
+    }
+
+    function updateBarrelAngle() {
+      const rad = (90 - angleDeg) * Math.PI / 180;
+      barrelMesh.rotation.z = -rad;
+    }
+
+    function updateCannonParams() {
+      v0 = parseFloat(document.getElementById('sliderV0').value);
+      angleDeg = parseFloat(document.getElementById('sliderAngle').value);
+      airDrag = parseFloat(document.getElementById('sliderDrag').value);
+
+      document.getElementById('valV0').innerText = v0 + ' m/s';
+      document.getElementById('valAngle').innerText = angleDeg + '°';
+      document.getElementById('valDrag').innerText = airDrag.toFixed(2);
+
+      updateBarrelAngle();
+    }
+
+    function updatePlanet() {
+      g = parseFloat(document.getElementById('selPlanet').value);
+    }
+
+    function launchCannon() {
+      const rad = angleDeg * Math.PI / 180;
+      ballPos.set(0, 1 + 5 * Math.sin(rad), 0);
+      ballVel.set(v0 * Math.cos(rad), v0 * Math.sin(rad), 0);
+
+      trajPoints = [ballPos.clone()];
+      isFlying = true;
+      ballMesh.position.copy(ballPos);
+      ballMesh.visible = true;
+      flightTime = 0;
+      maxHeight = ballPos.y;
+    }
+
+    function animate() {
+      requestAnimationFrame(animate);
+
+      if (isFlying) {
+        const dt = 0.03; // simulation delta time
+        flightTime += dt;
+
+        // Euler integration with drag: a = g - (drag/m) * |v| * v
+        const speed = ballVel.length();
+        const dragAccX = -airDrag * speed * ballVel.x;
+        const dragAccY = -g - (airDrag * speed * ballVel.y);
+
+        ballVel.x += dragAccX * dt;
+        ballVel.y += dragAccY * dt;
+
+        ballPos.x += ballVel.x * dt;
+        ballPos.y += ballVel.y * dt;
+
+        if (ballPos.y > maxHeight) maxHeight = ballPos.y;
+
+        ballMesh.position.copy(ballPos);
+        trajPoints.push(ballPos.clone());
+
+        // Update line geometry
+        const positions = new Float32Array(trajPoints.length * 3);
+        for (let i = 0; i < trajPoints.length; i++) {
+          positions[i * 3] = trajPoints[i].x;
+          positions[i * 3 + 1] = trajPoints[i].y;
+          positions[i * 3 + 2] = trajPoints[i].z;
+        }
+        trajLine.geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        trajLine.geometry.attributes.position.needsUpdate = true;
+
+        // Ground collision
+        if (ballPos.y <= 0) {
+          ballPos.y = 0;
+          isFlying = false;
+
+          document.getElementById('telR').innerText = ballPos.x.toFixed(2) + ' m';
+          document.getElementById('telH').innerText = maxHeight.toFixed(2) + ' m';
+          document.getElementById('telT').innerText = flightTime.toFixed(2) + ' s';
+          document.getElementById('telV').innerText = ballVel.length().toFixed(2) + ' m/s';
+        }
+      }
+
+      controls.update();
+      renderer.render(scene, camera);
+    }
+
+    function resetSim() {
+      camera.position.set(-15, 20, 60);
+      controls.target.set(30, 5, 0);
+    }
+
+    function onWindowResize() {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    }
+
+    window.onload = init;
+  </script>
+</body>
+</html>

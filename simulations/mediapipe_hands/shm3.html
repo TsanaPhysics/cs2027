@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AR Hands + SHM 3D</title>
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family: 'Sarabun', sans-serif; background:#0b1a2a; color:#fff; height:100vh; overflow:hidden; }
+        #app {
+            display: flex;
+            height: 100vh;
+            gap: 10px;
+            padding: 10px;
+        }
+        #left-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #1a2e3f;
+            border-radius: 16px;
+            padding: 10px;
+            overflow: hidden;
+            min-width: 300px;
+        }
+        #video-container {
+            position: relative;
+            width: 100%;
+            aspect-ratio: 4/3;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+        #videoElement { width:100%; height:100%; display:block; transform:scaleX(1); }
+        #canvasElement { position:absolute; top:0; left:0; width:100%; height:100%; pointer-events:none; }
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin: 10px 0 6px;
+        }
+        .controls button {
+            background: #2b7be4;
+            border: none;
+            color: #fff;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.2s;
+            font-family: inherit;
+        }
+        .controls button:hover { background: #1a5bb5; transform:scale(1.03); }
+        .controls button.secondary { background:#5e7a9a; }
+        .controls button.secondary:hover { background:#3d5a7a; }
+        .info {
+            display: flex;
+            gap: 20px;
+            font-size: 0.9rem;
+            padding: 4px 8px;
+        }
+        .info span { color: #8fcbff; }
+        #right-panel {
+            flex: 1.2;
+            background: #0f1f2e;
+            border-radius: 16px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            min-width: 300px;
+        }
+        #three-container {
+            flex: 1;
+            width: 100%;
+            border-radius: 12px;
+            overflow: hidden;
+            background: #000;
+        }
+        #shm-info {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            padding: 8px 0;
+            font-size: 0.95rem;
+            background: #1a2e3f;
+            border-radius: 10px;
+            margin-top: 8px;
+        }
+        #shm-info p { margin:0; }
+        #shm-info .val { color: #f1c40f; font-weight:700; }
+        @media (max-width: 800px) {
+            #app { flex-direction: column; height: auto; }
+            #left-panel, #right-panel { flex: none; height: 50vh; min-height: 300px; }
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <div id="left-panel">
+        <div id="video-container">
+            <video id="videoElement" autoplay playsinline></video>
+            <canvas id="canvasElement"></canvas>
+        </div>
+        <div class="controls">
+            <button id="mirrorBtn">🔄 Mirror</button>
+            <button id="selectHandBtn" class="secondary">✋ มือ: ขวา</button>
+            <button id="modeBtn" class="secondary">🎯 โหมด: A,ω</button>
+            <button id="reset3DBtn">↺ รีเซ็ต 3D</button>
+        </div>
+        <div class="info">
+            <span>📷 สถานะ: <span id="statusText">กำลังเริ่ม...</span></span>
+            <span>✋ มือ: <span id="handCount">0</span></span>
+            <span>🔄 Mirror: <span id="mirrorStatus">ปิด</span></span>
+        </div>
+    </div>
+    <div id="right-panel">
+        <div id="three-container"></div>
+        <div id="shm-info">
+            <p>มุม θ: <span class="val" id="angleDisplay">0.0</span>°</p>
+            <p>A: <span class="val" id="ampDisplay">0.0</span>°</p>
+            <p>ω: <span class="val" id="omegaDisplay">0.00</span> rad/s</p>
+        </div>
+    </div>
+</div>
+
+<!-- MediaPipe CDN -->
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils@0.3/camera_utils.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils@0.3/drawing_utils.js" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4/hands.js" crossorigin="anonymous"></script>
+
+<!-- Three.js Import Map -->
+<script type="importmap">
+{
+    "imports": {
+        "three": "https://unpkg.com/three@0.160.0/build/three.module.js",
+        "three/addons/": "https://unpkg.com/three@0.160.0/examples/jsm/"
+    }
+}
+</script>
+
+<script>
+    // -----------------------------------------------------------------
+    // ส่วน MediaPipe และการตรวจจับมือ (แบบเดิม)
+    // -----------------------------------------------------------------
+    (function() {
+        const video = document.getElementById('videoElement');
+        const canvas = document.getElementById('canvasElement');
+        const ctx = canvas.getContext('2d');
+        const statusText = document.getElementById('statusText');
+        const handCountSpan = document.getElementById('handCount');
+        const mirrorStatusSpan = document.getElementById('mirrorStatus');
+
+        let mirrorMode = false;
+        let showLabels = true;
+
+        // ปรับขนาด canvas
+        function resizeCanvas() {
+            const rect = document.getElementById('video-container').getBoundingClientRect();
+            canvas.width = rect.width;
+            canvas.height = rect.height;
+        }
+        window.addEventListener('resize', resizeCanvas);
+
+        // ตัวแปร global สำหรับส่งข้อมูลไปยัง Three.js module
+        window.handData = {
+            landmarks: null,       // array of landmarks for selected hand
+            handedness: null,      // 'Left' or 'Right'
+            timestamp: 0,
+            available: false
+        };
+
+        // ตัวแปรเลือกมือที่ใช้ควบคุม (default: ขวา)
+        let selectedHand = 'Right'; // 'Left' or 'Right'
+
+        // ฟังก์ชันวาดมือ
+        function drawHands(results) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            if (!results.multiHandLandmarks || results.multiHandLandmarks.length === 0) {
+                handCountSpan.textContent = '0';
+                window.handData.available = false;
+                return;
+            }
+
+            const w = canvas.width;
+            const h = canvas.height;
+            const handCount = results.multiHandLandmarks.length;
+            handCountSpan.textContent = handCount;
+
+            // หามือที่เลือก (ตาม selectedHand)
+            let selectedLandmarks = null;
+            let selectedHandedness = null;
+            for (let i = 0; i < handCount; i++) {
+                const handedness = results.multiHandedness?.[i]?.label || 'Unknown';
+                if (handedness === selectedHand) {
+                    selectedLandmarks = results.multiHandLandmarks[i];
+                    selectedHandedness = handedness;
+                    break;
+                }
+            }
+            // ถ้าไม่เจอ ให้ใช้มือแรก
+            if (!selectedLandmarks && handCount > 0) {
+                selectedLandmarks = results.multiHandLandmarks[0];
+                selectedHandedness = results.multiHandedness?.[0]?.label || 'Unknown';
+            }
+
+            // อัปเดต handData สำหรับ Three.js
+            if (selectedLandmarks) {
+                window.handData.landmarks = selectedLandmarks;
+                window.handData.handedness = selectedHandedness;
+                window.handData.available = true;
+                window.handData.timestamp = performance.now();
+            } else {
+                window.handData.available = false;
+            }
+
+            // วาดมือทั้งหมด (เพื่อให้เห็นทั้ง 2 มือ)
+            const connections = [
+                [0,1],[1,2],[2,3],[3,4],[0,5],[5,6],[6,7],[7,8],
+                [0,9],[9,10],[10,11],[11,12],[0,13],[13,14],[14,15],[15,16],
+                [0,17],[17,18],[18,19],[19,20],[5,9],[9,13],[13,17]
+            ];
+            const fingerNames = ['Thumb','Index','Middle','Ring','Pinky'];
+            const tipIndices = [4,8,12,16,20];
+
+            for (let idx = 0; idx < handCount; idx++) {
+                const landmarks = results.multiHandLandmarks[idx];
+                const pts = landmarks.map(lm => {
+                    let x = lm.x * w;
+                    let y = lm.y * h;
+                    if (mirrorMode) x = w - x;
+                    return { x, y };
+                });
+
+                // วาดเส้น
+                ctx.strokeStyle = '#00FFAA';
+                ctx.lineWidth = 2;
+                for (let conn of connections) {
+                    const [i,j] = conn;
+                    if (i < pts.length && j < pts.length) {
+                        ctx.beginPath();
+                        ctx.moveTo(pts[i].x, pts[i].y);
+                        ctx.lineTo(pts[j].x, pts[j].y);
+                        ctx.stroke();
+                    }
+                }
+                // วาดจุด
+                pts.forEach((p, i) => {
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, 5, 0, 2*Math.PI);
+                    ctx.fillStyle = '#FFD700';
+                    ctx.fill();
+                    ctx.strokeStyle = '#000';
+                    ctx.lineWidth = 1;
+                    ctx.stroke();
+                    if (showLabels) {
+                        ctx.fillStyle = '#fff';
+                        ctx.font = '9px Sarabun';
+                        ctx.shadowColor = 'rgba(0,0,0,0.8)';
+                        ctx.shadowBlur = 4;
+                        ctx.fillText(i, p.x+6, p.y-6);
+                        ctx.shadowBlur = 0;
+                    }
+                });
+                // แสดงชื่อนิ้ว
+                if (showLabels) {
+                    tipIndices.forEach((tip, i) => {
+                        if (tip < pts.length) {
+                            const p = pts[tip];
+                            ctx.fillStyle = '#fff';
+                            ctx.font = 'bold 11px Sarabun';
+                            ctx.shadowColor = 'rgba(0,0,0,0.9)';
+                            ctx.shadowBlur = 6;
+                            ctx.fillText(fingerNames[i], p.x-14, p.y-20);
+                            ctx.shadowBlur = 0;
+                        }
+                    });
+                }
+                // แสดงซ้าย/ขวา
+                if (pts.length > 0) {
+                    const wrist = pts[0];
+                    const label = results.multiHandedness?.[idx]?.label || '';
+                    ctx.fillStyle = '#FFD700';
+                    ctx.font = 'bold 14px Sarabun';
+                    ctx.shadowColor = 'rgba(0,0,0,0.9)';
+                    ctx.shadowBlur = 8;
+                    ctx.fillText(label === 'Left' ? '👈 ซ้าย' : '👉 ขวา', wrist.x-20, wrist.y-30);
+                    ctx.shadowBlur = 0;
+                }
+            }
+        }
+
+        // ตั้ง MediaPipe Hands
+        const hands = new Hands({
+            locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4/${file}`
+        });
+        hands.setOptions({
+            maxNumHands: 2,
+            modelComplexity: 1,
+            minDetectionConfidence: 0.5,
+            minTrackingConfidence: 0.5
+        });
+        hands.onResults((results) => {
+            drawHands(results);
+            statusText.textContent = 'ตรวจจับ...';
+        });
+
+        // เปิดกล้อง
+        const camera = new Camera(video, {
+            onFrame: async () => {
+                await hands.send({ image: video });
+            },
+            width: 640,
+            height: 480
+        });
+        camera.start().then(() => {
+            statusText.textContent = 'กล้องพร้อม';
+            resizeCanvas();
+        }).catch(err => {
+            statusText.textContent = '❌ ' + err.message;
+        });
+
+        // ปุ่ม Mirror
+        document.getElementById('mirrorBtn').addEventListener('click', () => {
+            mirrorMode = !mirrorMode;
+            video.style.transform = mirrorMode ? 'scaleX(-1)' : 'scaleX(1)';
+            mirrorStatusSpan.textContent = mirrorMode ? 'เปิด' : 'ปิด';
+        });
+
+        // ปุ่มเลือกมือ
+        const selectHandBtn = document.getElementById('selectHandBtn');
+        selectHandBtn.addEventListener('click', () => {
+            if (selectedHand === 'Right') {
+                selectedHand = 'Left';
+                selectHandBtn.textContent = '✋ มือ: ซ้าย';
+            } else {
+                selectedHand = 'Right';
+                selectHandBtn.textContent = '✋ มือ: ขวา';
+            }
+        });
+
+        // ปุ่มโหมด (ไม่ต้องใช้ใน MediaPipe แต่ส่งไปให้ Three.js)
+        // เราจะใช้ปุ่ม modeBtn เพื่อเปลี่ยนโหมดใน Three.js โดยเก็บค่าใน window
+        window.mode = 'A_omega'; // 'A_omega' หรือ 'theta_direct'
+        document.getElementById('modeBtn').addEventListener('click', () => {
+            if (window.mode === 'A_omega') {
+                window.mode = 'theta_direct';
+                document.getElementById('modeBtn').textContent = '🎯 โหมด: θ direct';
+            } else {
+                window.mode = 'A_omega';
+                document.getElementById('modeBtn').textContent = '🎯 โหมด: A,ω';
+            }
+        });
+
+        // ปุ่มรีเซ็ต 3D (จะให้ Three.js จัดการ)
+        document.getElementById('reset3DBtn').addEventListener('click', () => {
+            if (window.resetThree) window.resetThree();
+        });
+
+        // resize canvas เมื่อโหลด
+        window.addEventListener('load', () => setTimeout(resizeCanvas, 500));
+    })();
+</script>
+
+<!-- ส่วน Three.js (module) -->
+<script type="module">
+    import * as THREE from 'three';
+    import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+
+    // รับ container
+    const container = document.getElementById('three-container');
+    const angleDisplay = document.getElementById('angleDisplay');
+    const ampDisplay = document.getElementById('ampDisplay');
+    const omegaDisplay = document.getElementById('omegaDisplay');
+
+    // --- สร้าง scene, camera, renderer ---
+    const scene = new THREE.Scene();
+    scene.background = new THREE.Color(0x111122);
+
+    const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 100);
+    camera.position.set(3, 2, 5);
+    camera.lookAt(0, 0.5, 0);
+
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(container.clientWidth, container.clientHeight);
+    renderer.setPixelRatio(window.devicePixelRatio);
+    container.appendChild(renderer.domElement);
+
+    // OrbitControls
+    const controls = new OrbitControls(camera, renderer.domElement);
+    controls.target.set(0, 0.5, 0);
+    controls.update();
+
+    // --- แสง ---
+    const ambient = new THREE.AmbientLight(0x404060);
+    scene.add(ambient);
+    const dirLight = new THREE.DirectionalLight(0xffffff, 1.2);
+    dirLight.position.set(2, 5, 3);
+    scene.add(dirLight);
+    const backLight = new THREE.DirectionalLight(0x4466ff, 0.5);
+    backLight.position.set(-2, 1, -3);
+    scene.add(backLight);
+
+    // --- พื้น ---
+    const gridHelper = new THREE.GridHelper(4, 10, 0x88aaff, 0x335588);
+    gridHelper.position.y = -0.5;
+    scene.add(gridHelper);
+
+    // --- วัตถุลูกตุ้ม ---
+    const pivotHeight = 2.0;
+    const rodLength = 1.8;
+    const sphereRadius = 0.25;
+
+    // จุดยึด
+    const pivot = new THREE.Mesh(
+        new THREE.SphereGeometry(0.12, 16, 16),
+        new THREE.MeshStandardMaterial({ color: 0xffaa44, emissive: 0x442200 })
+    );
+    pivot.position.set(0, pivotHeight, 0);
+    scene.add(pivot);
+
+    // เชือก (ใช้ Cylinder หรือ Line)
+    const rodGeo = new THREE.CylinderGeometry(0.02, 0.02, rodLength, 6);
+    const rodMat = new THREE.MeshStandardMaterial({ color: 0xcccccc, emissive: 0x224466 });
+    const rod = new THREE.Mesh(rodGeo, rodMat);
+    // จะหมุนและปรับตำแหน่งในแต่ละ frame
+
+    // ลูกตุ้ม (sphere)
+    const sphereGeo = new THREE.SphereGeometry(sphereRadius, 32, 32);
+    const sphereMat = new THREE.MeshStandardMaterial({ color: 0xff6600, emissive: 0x442200 });
+    const bob = new THREE.Mesh(sphereGeo, sphereMat);
+    bob.castShadow = true;
+
+    // เพิ่มกลุ่มให้ลูกตุ้ม (เพื่อให้หมุนง่าย)
+    const pendulumGroup = new THREE.Group();
+    pendulumGroup.add(rod);
+    pendulumGroup.add(bob);
+    scene.add(pendulumGroup);
+
+    // กำหนดให้จุดหมุนอยู่ที่ (0, pivotHeight, 0) แต่เราจะให้ group อยู่ที่ pivot แล้วหมุนรอบแกน Z
+    // โดยให้แกนหมุนผ่าน pivot
+    pendulumGroup.position.set(0, pivotHeight, 0);
+
+    // ตำแหน่งเริ่มต้น: rod ชี้ลง (0, -rodLength, 0)
+    // เราจะหมุน group รอบแกน Z เพื่อให้ลูกตุ้มแกว่งในระนาบ XY (มุม θ)
+    // เมื่อ θ=0, bob อยู่ที่ (0, pivotHeight - rodLength, 0)
+    // เราจะให้ rod และ bob อยู่ในกลุ่ม โดย rod มีความยาว rodLength และ bob อยู่ปลาย
+    // เราจะสร้าง rod ให้ยาว rodLength และวางให้ยื่นลงมาจากจุดหมุน
+    rod.position.set(0, -rodLength/2, 0);
+    bob.position.set(0, -rodLength, 0);
+
+    // เก็บตัวแปร
+    let currentAngle = 0;      // rad
+    let targetAngle = 0;
+    let amplitude = 0;         // rad
+    let omega = 1.0;          // rad/s
+    let time = 0;
+
+    // โหมด
+    let mode = 'A_omega'; // หรือ 'theta_direct'
+
+    // ฟังก์ชันรีเซ็ต
+    window.resetThree = () => {
+        time = 0;
+        currentAngle = 0;
+        targetAngle = 0;
+        amplitude = 0;
+        omega = 1.0;
+        pendulumGroup.rotation.z = 0;
+    };
+
+    // ฟังก์ชันอัปเดตจาก handData
+    function updateFromHand() {
+        const hand = window.handData;
+        if (!hand || !hand.available || !hand.landmarks) {
+            return;
+        }
+        // ใช้ landmark 8 (ปลายนิ้วชี้) และ 0 (ข้อมือ) หรือใช้ 8 อย่างเดียว
+        const lm = hand.landmarks[8]; // index finger tip
+        if (!lm) return;
+
+        // พิกัด x,y normalized (0-1)
+        const x = lm.x;
+        const y = lm.y;
+
+        // อ่านโหมดจาก window.mode
+        const currentMode = window.mode || 'A_omega';
+        mode = currentMode;
+
+        if (mode === 'theta_direct') {
+            // แมป x (0-1) เป็นมุม -60° ถึง 60°
+            const angleDeg = (x - 0.5) * 120;
+            targetAngle = THREE.MathUtils.degToRad(angleDeg);
+            // ไม่ใช้ amplitude และ omega ในโหมดนี้
+        } else {
+            // โหมด A_omega: x ควบคุม amplitude (0-60°), y ควบคุม omega (0.5-3.0)
+            const ampDeg = x * 60; // 0-60 องศา
+            amplitude = THREE.MathUtils.degToRad(ampDeg);
+            omega = 0.5 + y * 2.5; // 0.5 - 3.0 rad/s
+            // targetAngle จะถูกคำนวณจากสมการ SHM ในแต่ละ frame
+        }
+    }
+
+    // Animation loop
+    let prevTime = performance.now() / 1000;
+    function animate() {
+        const now = performance.now() / 1000;
+        const dt = Math.min(now - prevTime, 0.05);
+        prevTime = now;
+
+        // อัปเดตจากมือ
+        updateFromHand();
+
+        // คำนวณมุม
+        if (mode === 'theta_direct') {
+            // ใช้ targetAngle โดยตรง และ interpolate เพื่อความนุ่มนวล
+            const lerpFactor = 0.08; // ความเร็วในการปรับ
+            currentAngle += (targetAngle - currentAngle) * lerpFactor;
+        } else {
+            // SHM: θ(t) = A * sin(ω * t)
+            time += dt;
+            const theta = amplitude * Math.sin(omega * time);
+            currentAngle = theta;
+            // แสดงผล
+            ampDisplay.textContent = THREE.MathUtils.radToDeg(amplitude).toFixed(1);
+            omegaDisplay.textContent = omega.toFixed(2);
+        }
+
+        // หมุนลูกตุ้มรอบแกน Z
+        pendulumGroup.rotation.z = currentAngle;
+
+        // แสดงมุม
+        angleDisplay.textContent = THREE.MathUtils.radToDeg(currentAngle).toFixed(1);
+
+        // อัปเดต OrbitControls
+        controls.update();
+
+        // Render
+        renderer.render(scene, camera);
+        requestAnimationFrame(animate);
+    }
+
+    // เริ่ม animation
+    animate();
+
+    // Resize handler
+    function resizeThree() {
+        const w = container.clientWidth;
+        const h = container.clientHeight;
+        camera.aspect = w / h;
+        camera.updateProjectionMatrix();
+        renderer.setSize(w, h);
+    }
+    window.addEventListener('resize', resizeThree);
+    // initial resize after layout
+    setTimeout(resizeThree, 100);
+
+    // รับการรีเซ็ตจากปุ่ม
+    window.resetThree = () => {
+        time = 0;
+        currentAngle = 0;
+        targetAngle = 0;
+        amplitude = 0;
+        omega = 1.0;
+        pendulumGroup.rotation.z = 0;
+    };
+
+    console.log('Three.js SHM 3D started');
+</script>
+
+</body>
+</html>

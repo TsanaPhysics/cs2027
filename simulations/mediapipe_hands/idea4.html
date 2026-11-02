@@ -1,0 +1,1095 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Co-op Dual Authentication – ปลดล็อค Fusion Reactor</title>
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- MediaPipe -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils@0.3/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils@0.3/drawing_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4/hands.js" crossorigin="anonymous"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&display=swap');
+
+        body {
+            font-family: 'Orbitron', 'Sarabun', sans-serif;
+            background: #05080f;
+            color: #fff;
+            overflow: hidden;
+            height: 100vh;
+            user-select: none;
+        }
+
+        #container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(ellipse at center, #0a0a1a, #05080f);
+            overflow: hidden;
+        }
+
+        video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            opacity: 0.25;
+            filter: blur(3px) brightness(0.4);
+        }
+        #mediapipe-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+        }
+        #three-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* ===== AUTH STATUS PANEL ===== */
+        #auth-panel {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            display: flex;
+            gap: 30px;
+            background: rgba(0, 10, 30, 0.75);
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(0, 200, 255, 0.15);
+            border-radius: 20px;
+            padding: 16px 32px;
+            box-shadow: 0 0 60px rgba(0, 100, 255, 0.08);
+        }
+        .auth-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            min-width: 120px;
+        }
+        .auth-item .icon {
+            font-size: 1.8rem;
+        }
+        .auth-item .label {
+            font-size: 0.6rem;
+            color: rgba(150, 200, 255, 0.5);
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+        .auth-item .status {
+            font-size: 0.7rem;
+            font-weight: 700;
+            padding: 4px 14px;
+            border-radius: 20px;
+            transition: all 0.3s ease;
+            letter-spacing: 1px;
+        }
+        .status.waiting {
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .status.ready {
+            background: rgba(0, 255, 200, 0.15);
+            color: #00ffcc;
+            border: 1px solid rgba(0, 255, 200, 0.2);
+            animation: pulseStatus 0.8s infinite alternate;
+        }
+        .status.locked {
+            background: rgba(255, 0, 68, 0.15);
+            color: #ff0044;
+            border: 1px solid rgba(255, 0, 68, 0.2);
+        }
+        .status.unlocked {
+            background: rgba(255, 215, 0, 0.25);
+            color: #ffd700;
+            border: 1px solid rgba(255, 215, 0, 0.4);
+            animation: pulseStatus 0.4s infinite alternate;
+        }
+        @keyframes pulseStatus {
+            0% { transform: scale(1); opacity: 0.8; }
+            100% { transform: scale(1.05); opacity: 1; }
+        }
+
+        .auth-divider {
+            width: 1px;
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        /* ===== FUSION PROGRESS BAR ===== */
+        #fusion-bar-container {
+            position: absolute;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            width: 400px;
+            background: rgba(0, 10, 30, 0.6);
+            backdrop-filter: blur(8px);
+            border-radius: 30px;
+            padding: 4px;
+            border: 1px solid rgba(0, 200, 255, 0.08);
+            box-shadow: 0 0 30px rgba(0, 100, 255, 0.05);
+            transition: all 0.5s ease;
+        }
+        #fusion-bar-container .label {
+            position: absolute;
+            top: -24px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.55rem;
+            color: rgba(150, 200, 255, 0.3);
+            letter-spacing: 3px;
+            white-space: nowrap;
+        }
+        #fusion-bar {
+            height: 8px;
+            border-radius: 30px;
+            background: linear-gradient(90deg, #004466, #00ddff, #aa66ff, #ff66aa);
+            background-size: 300% 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+            box-shadow: 0 0 20px rgba(0, 200, 255, 0.2);
+        }
+        #fusion-bar.active {
+            animation: shimmer 1.5s infinite alternate;
+        }
+        @keyframes shimmer {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+
+        /* ===== STATUS BAR ===== */
+        #status-bar {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            background: rgba(0, 10, 30, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 200, 255, 0.15);
+            border-radius: 40px;
+            padding: 10px 28px;
+            font-family: 'Orbitron', monospace;
+            font-size: 0.7rem;
+            color: rgba(0, 255, 200, 0.8);
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        .dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; margin-right: 8px; }
+        .dot.green { background: #00ff88; box-shadow: 0 0 20px #00ff88; }
+        .dot.yellow { background: #ffcc00; box-shadow: 0 0 20px #ffcc00; }
+        .dot.purple { background: #aa66ff; box-shadow: 0 0 20px #aa66ff; animation: pulse 0.8s infinite alternate; }
+        .dot.red { background: #ff0044; box-shadow: 0 0 20px #ff0044; animation: blink 0.5s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); } 100% { transform: scale(1.3); } }
+        @keyframes blink { 0%,100% { opacity:1; } 50% { opacity:0.2; } }
+
+        /* ===== TITLE OVERLAY ===== */
+        #title-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 20;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            pointer-events: none;
+            background: rgba(0,0,0,0.1);
+        }
+        #title-overlay.show { display: flex; animation: fadeInTitle 1.8s cubic-bezier(0.2,0.9,0.3,1.2) forwards; }
+        @keyframes fadeInTitle { 0% { opacity:0; transform: scale(0.7) rotateY(10deg); } 100% { opacity:1; transform: scale(1) rotateY(0); } }
+        #title-overlay .main {
+            font-size: 4.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #ff6b6b, #ffd93d, #6bcb77, #4d96ff, #aa66ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 0 0 80px rgba(255, 215, 0, 0.2);
+            letter-spacing: 8px;
+            text-align: center;
+            padding: 0 20px;
+        }
+        #title-overlay .sub { font-size: 2.2rem; color: #ffd700; text-shadow: 0 0 40px rgba(255,215,0,0.3); margin-top: 10px; letter-spacing: 8px; }
+        #title-overlay .theme { font-size: 1.1rem; color: rgba(255,255,255,0.4); margin-top: 16px; letter-spacing: 4px; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 16px; }
+
+        @media (max-width: 900px) {
+            #auth-panel { gap: 16px; padding: 12px 20px; top: 12px; }
+            .auth-item { min-width: 80px; }
+            .auth-item .icon { font-size: 1.2rem; }
+            .auth-item .status { font-size: 0.55rem; padding: 2px 10px; }
+            #fusion-bar-container { width: 250px; bottom: 80px; }
+            #title-overlay .main { font-size: 2.5rem; }
+            #title-overlay .sub { font-size: 1.4rem; }
+            #status-bar { font-size: 0.55rem; padding: 6px 14px; gap: 10px; bottom: 15px; }
+        }
+        @media (max-width: 500px) {
+            #auth-panel { gap: 8px; padding: 8px 12px; }
+            .auth-item { min-width: 60px; }
+            .auth-item .icon { font-size: 0.9rem; }
+            .auth-item .label { font-size: 0.4rem; }
+            .auth-item .status { font-size: 0.4rem; padding: 2px 6px; }
+            #fusion-bar-container { width: 150px; bottom: 70px; }
+            #fusion-bar-container .label { font-size: 0.4rem; top: -18px; }
+            #title-overlay .main { font-size: 1.6rem; }
+            #title-overlay .sub { font-size: 1rem; }
+            #status-bar { font-size: 0.4rem; padding: 4px 10px; }
+        }
+    </style>
+</head>
+<body>
+<div id="container">
+    <video id="video" autoplay playsinline></video>
+    <canvas id="mediapipe-canvas"></canvas>
+    <canvas id="three-canvas"></canvas>
+
+    <!-- ===== AUTH PANEL ===== -->
+    <div id="auth-panel">
+        <div class="auth-item">
+            <span class="icon">🔺</span>
+            <span class="label">Person 1 • Triangle</span>
+            <span class="status waiting" id="triangleStatus">⏳ รอ...</span>
+        </div>
+        <div class="auth-divider"></div>
+        <div class="auth-item">
+            <span class="icon">🔵</span>
+            <span class="label">Person 2 • Circle</span>
+            <span class="status waiting" id="circleStatus">⏳ รอ...</span>
+        </div>
+        <div class="auth-divider"></div>
+        <div class="auth-item">
+            <span class="icon">⚛</span>
+            <span class="label">Fusion</span>
+            <span class="status waiting" id="fusionStatus">⏸ LOCKED</span>
+        </div>
+    </div>
+
+    <!-- ===== FUSION PROGRESS BAR ===== -->
+    <div id="fusion-bar-container">
+        <span class="label">⟡ FUSION REACTOR CHARGE ⟡</span>
+        <div id="fusion-bar"></div>
+    </div>
+
+    <!-- ===== STATUS BAR ===== -->
+    <div id="status-bar">
+        <span><span class="dot green" id="statusDot"></span><span id="statusText">ระบบพร้อม</span></span>
+        <span>|</span>
+        <span>👥 <span id="handCount">0</span> มือ</span>
+        <span>|</span>
+        <span><span id="authMessage">รอปลดล็อค</span></span>
+    </div>
+
+    <!-- ===== TITLE OVERLAY ===== -->
+    <div id="title-overlay">
+        <div class="main">⚡ FUSION UNLOCKED</div>
+        <div class="sub">SCIENCE WEEK 2026</div>
+        <div class="theme">✦ INTELLIGENCE SCIENCE FOR A SUSTAINABLE FUTURE ✦</div>
+    </div>
+</div>
+
+<script>
+    (function() {
+        // ========================================================================
+        // DOM REFS
+        // ========================================================================
+        const video = document.getElementById('video');
+        const mpCanvas = document.getElementById('mediapipe-canvas');
+        const mpCtx = mpCanvas.getContext('2d');
+        const threeCanvas = document.getElementById('three-canvas');
+        const titleOverlay = document.getElementById('title-overlay');
+        const statusText = document.getElementById('statusText');
+        const statusDot = document.getElementById('statusDot');
+        const handCountSpan = document.getElementById('handCount');
+        const authMessage = document.getElementById('authMessage');
+
+        const triangleStatus = document.getElementById('triangleStatus');
+        const circleStatus = document.getElementById('circleStatus');
+        const fusionStatus = document.getElementById('fusionStatus');
+        const fusionBar = document.getElementById('fusion-bar');
+
+        // ========================================================================
+        // STATE
+        // ========================================================================
+        let isCeremonyActive = false;
+        let isUnlocked = false;
+        let leftHand = null;
+        let rightHand = null;
+        let triangleDetected = false;
+        let circleDetected = false;
+        let fusionProgress = 0;
+
+        // ========================================================================
+        // AUDIO
+        // ========================================================================
+        let audioCtx = null;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            return audioCtx;
+        }
+
+        function playFusionSound() {
+            const ctx = initAudio();
+            const now = ctx.currentTime;
+
+            // Build-up sweep
+            const osc1 = ctx.createOscillator();
+            const gain1 = ctx.createGain();
+            osc1.type = 'sawtooth';
+            osc1.frequency.setValueAtTime(100, now);
+            osc1.frequency.exponentialRampToValueAtTime(600, now + 1.5);
+            gain1.gain.setValueAtTime(0.01, now);
+            gain1.gain.linearRampToValueAtTime(0.2, now + 0.8);
+            gain1.gain.exponentialRampToValueAtTime(0.01, now + 2.0);
+            osc1.connect(gain1);
+            gain1.connect(ctx.destination);
+            osc1.start(now);
+            osc1.stop(now + 2.2);
+
+            // Resonance
+            const osc2 = ctx.createOscillator();
+            const gain2 = ctx.createGain();
+            osc2.type = 'square';
+            osc2.frequency.setValueAtTime(200, now + 0.5);
+            osc2.frequency.exponentialRampToValueAtTime(100, now + 1.8);
+            gain2.gain.setValueAtTime(0.01, now + 0.5);
+            gain2.gain.linearRampToValueAtTime(0.3, now + 1.0);
+            gain2.gain.exponentialRampToValueAtTime(0.01, now + 2.2);
+            osc2.connect(gain2);
+            gain2.connect(ctx.destination);
+            osc2.start(now + 0.5);
+            osc2.stop(now + 2.4);
+
+            // Impact
+            const osc3 = ctx.createOscillator();
+            const gain3 = ctx.createGain();
+            osc3.type = 'sine';
+            osc3.frequency.setValueAtTime(80, now + 1.6);
+            osc3.frequency.exponentialRampToValueAtTime(30, now + 2.2);
+            gain3.gain.setValueAtTime(0.01, now + 1.6);
+            gain3.gain.linearRampToValueAtTime(0.5, now + 1.9);
+            gain3.gain.exponentialRampToValueAtTime(0.01, now + 2.6);
+            osc3.connect(gain3);
+            gain3.connect(ctx.destination);
+            osc3.start(now + 1.6);
+            osc3.stop(now + 2.8);
+
+            // High ping
+            const osc4 = ctx.createOscillator();
+            const gain4 = ctx.createGain();
+            osc4.type = 'sine';
+            osc4.frequency.setValueAtTime(1500, now + 1.2);
+            osc4.frequency.exponentialRampToValueAtTime(800, now + 1.6);
+            gain4.gain.setValueAtTime(0.01, now + 1.2);
+            gain4.gain.linearRampToValueAtTime(0.1, now + 1.4);
+            gain4.gain.exponentialRampToValueAtTime(0.01, now + 1.8);
+            osc4.connect(gain4);
+            gain4.connect(ctx.destination);
+            osc4.start(now + 1.2);
+            osc4.stop(now + 2.0);
+        }
+
+        // ========================================================================
+        // THREE.JS – FUSION REACTOR EFFECTS
+        // ========================================================================
+        const scene = new THREE.Scene();
+        scene.background = new THREE.Color(0x05080f);
+
+        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.01, 100);
+        camera.position.set(0, 0, 2.5);
+        camera.lookAt(0, 0, 0);
+
+        const renderer = new THREE.WebGLRenderer({
+            canvas: threeCanvas,
+            alpha: false,
+            antialias: true
+        });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+        // ========================================================================
+        // 1. BACKGROUND STARS
+        // ========================================================================
+        const starCount = 600;
+        const starGeo = new THREE.BufferGeometry();
+        const starPos = new Float32Array(starCount * 3);
+        for (let i = 0; i < starCount; i++) {
+            starPos[i*3] = (Math.random() - 0.5) * 10;
+            starPos[i*3+1] = (Math.random() - 0.5) * 8;
+            starPos[i*3+2] = (Math.random() - 0.5) * 6 - 2;
+        }
+        starGeo.setAttribute('position', new THREE.BufferAttribute(starPos, 3));
+        const starMat = new THREE.PointsMaterial({
+            color: 0x4466aa,
+            size: 0.006,
+            transparent: true,
+            opacity: 0.5,
+            blending: THREE.AdditiveBlending
+        });
+        const stars = new THREE.Points(starGeo, starMat);
+        scene.add(stars);
+
+        // ========================================================================
+        // 2. FUSION REACTOR (visible when unlocked)
+        // ========================================================================
+        const reactorGroup = new THREE.Group();
+        reactorGroup.visible = false;
+        scene.add(reactorGroup);
+
+        // Outer plasma ring
+        const plasmaMat = new THREE.MeshBasicMaterial({
+            color: 0x00ddff,
+            transparent: true,
+            opacity: 0.3,
+            blending: THREE.AdditiveBlending,
+            side: THREE.DoubleSide
+        });
+        const plasmaRing = new THREE.Mesh(
+            new THREE.TorusGeometry(0.6, 0.02, 16, 64),
+            plasmaMat
+        );
+        plasmaRing.rotation.x = Math.PI / 2;
+        reactorGroup.add(plasmaRing);
+
+        // Inner plasma ring
+        const plasmaMat2 = new THREE.MeshBasicMaterial({
+            color: 0xaa66ff,
+            transparent: true,
+            opacity: 0.4,
+            blending: THREE.AdditiveBlending,
+            side: THREE.DoubleSide
+        });
+        const plasmaRing2 = new THREE.Mesh(
+            new THREE.TorusGeometry(0.4, 0.015, 16, 64),
+            plasmaMat2
+        );
+        plasmaRing2.rotation.x = Math.PI / 2;
+        reactorGroup.add(plasmaRing2);
+
+        // Core glow
+        const coreMat = new THREE.MeshBasicMaterial({
+            color: 0xffd700,
+            transparent: true,
+            opacity: 0.2,
+            blending: THREE.AdditiveBlending
+        });
+        const core = new THREE.Mesh(
+            new THREE.SphereGeometry(0.2, 16, 16),
+            coreMat
+        );
+        reactorGroup.add(core);
+
+        // Plasma particles
+        const plasmaCount = 300;
+        const plasmaGeo = new THREE.BufferGeometry();
+        const plasmaPos = new Float32Array(plasmaCount * 3);
+        const plasmaColors = new Float32Array(plasmaCount * 3);
+        const plasmaSizes = new Float32Array(plasmaCount);
+        const plasmaData = [];
+
+        for (let i = 0; i < plasmaCount; i++) {
+            const angle = Math.random() * Math.PI * 2;
+            const radius = 0.2 + Math.random() * 0.8;
+            const height = (Math.random() - 0.5) * 0.3;
+            plasmaPos[i*3] = radius * Math.cos(angle);
+            plasmaPos[i*3+1] = height;
+            plasmaPos[i*3+2] = radius * Math.sin(angle);
+            const col = new THREE.Color().setHSL(0.55 + Math.random()*0.3, 0.9, 0.5 + Math.random()*0.4);
+            plasmaColors[i*3] = col.r;
+            plasmaColors[i*3+1] = col.g;
+            plasmaColors[i*3+2] = col.b;
+            plasmaSizes[i] = 0.01 + Math.random() * 0.03;
+            plasmaData.push({
+                angle: angle,
+                radius: radius,
+                speed: 0.5 + Math.random() * 1.5,
+                height: height,
+                hSpeed: (Math.random() - 0.5) * 0.3,
+                phase: Math.random() * Math.PI * 2
+            });
+        }
+        plasmaGeo.setAttribute('position', new THREE.BufferAttribute(plasmaPos, 3));
+        plasmaGeo.setAttribute('color', new THREE.BufferAttribute(plasmaColors, 3));
+        plasmaGeo.setAttribute('size', new THREE.BufferAttribute(plasmaSizes, 1));
+
+        const plasmaMat3 = new THREE.PointsMaterial({
+            size: 0.025,
+            vertexColors: true,
+            transparent: true,
+            opacity: 0,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false
+        });
+        const plasmaPoints = new THREE.Points(plasmaGeo, plasmaMat3);
+        reactorGroup.add(plasmaPoints);
+
+        // ========================================================================
+        // 3. FIREWORKS (for ceremony)
+        // ========================================================================
+        function createFirework(x, y, z) {
+            const count = 200;
+            const colors = [0x00ddff, 0xaa88ff, 0xff66aa, 0xffd700, 0x00ff88, 0xff4444];
+            const geo = new THREE.BufferGeometry();
+            const positions = new Float32Array(count * 3);
+            const colorArray = new Float32Array(count * 3);
+            const particles = [];
+
+            for (let i = 0; i < count; i++) {
+                const r = 0.1 + Math.random() * 2.0;
+                const theta = Math.random() * Math.PI * 2;
+                const phi = Math.acos(2 * Math.random() - 1);
+                positions[i*3] = x + r * Math.sin(phi) * Math.cos(theta);
+                positions[i*3+1] = y + r * Math.cos(phi);
+                positions[i*3+2] = z + r * Math.sin(phi) * Math.sin(theta);
+                const col = new THREE.Color(colors[Math.floor(Math.random() * colors.length)]);
+                colorArray[i*3] = col.r;
+                colorArray[i*3+1] = col.g;
+                colorArray[i*3+2] = col.b;
+                particles.push({
+                    vx: (Math.random() - 0.5) * 2.5,
+                    vy: (Math.random() - 0.5) * 2.5 + 1.5,
+                    vz: (Math.random() - 0.5) * 2.5,
+                    life: 1,
+                    decay: 0.005 + Math.random() * 0.02
+                });
+            }
+            geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geo.setAttribute('color', new THREE.BufferAttribute(colorArray, 3));
+
+            const mat = new THREE.PointsMaterial({
+                size: 0.05,
+                vertexColors: true,
+                transparent: true,
+                opacity: 1,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false
+            });
+            const points = new THREE.Points(geo, mat);
+            scene.add(points);
+
+            let frame = 0;
+            const maxFrames = 130;
+            const animId = setInterval(() => {
+                frame++;
+                const pos = points.geometry.attributes.position.array;
+                let allDead = true;
+                for (let i = 0; i < count; i++) {
+                    particles[i].life -= particles[i].decay;
+                    if (particles[i].life > 0) {
+                        allDead = false;
+                        pos[i*3] += particles[i].vx * 0.035;
+                        pos[i*3+1] += particles[i].vy * 0.035 - 0.025;
+                        pos[i*3+2] += particles[i].vz * 0.035;
+                        particles[i].vy -= 0.035;
+                    } else {
+                        pos[i*3] = 0;
+                        pos[i*3+1] = -10;
+                        pos[i*3+2] = 0;
+                    }
+                }
+                points.geometry.attributes.position.needsUpdate = true;
+                mat.opacity = Math.max(0, 1 - frame / maxFrames);
+                if (allDead || frame > maxFrames) {
+                    clearInterval(animId);
+                    scene.remove(points);
+                    points.geometry.dispose();
+                    mat.dispose();
+                }
+            }, 16);
+        }
+
+        // ========================================================================
+        // 4. FUSION REACTOR EXPLOSION
+        // ========================================================================
+        function triggerFusionExplosion() {
+            // Show reactor
+            reactorGroup.visible = true;
+            plasmaMat3.opacity = 1;
+
+            // Animate reactor
+            const startTime = Date.now();
+            const duration = 3000;
+
+            function animateReactor() {
+                const elapsed = (Date.now() - startTime) / 1000;
+                const progress = Math.min(elapsed / (duration/1000), 1);
+
+                // Spinning rings
+                plasmaRing.rotation.z = elapsed * 1.5;
+                plasmaRing2.rotation.z = -elapsed * 2.0;
+
+                // Pulsing
+                const pulse = 1 + 0.15 * Math.sin(elapsed * 4);
+                plasmaRing.scale.set(pulse, pulse, pulse);
+                plasmaRing2.scale.set(1 + 0.1 * Math.sin(elapsed * 5 + 1), 1 + 0.1 * Math.sin(elapsed * 5 + 1), 1);
+                core.scale.set(1 + 0.2 * Math.sin(elapsed * 3), 1 + 0.2 * Math.sin(elapsed * 3), 1);
+
+                // Opacity pulse
+                plasmaRing.material.opacity = 0.2 + 0.2 * Math.sin(elapsed * 2);
+                plasmaRing2.material.opacity = 0.3 + 0.2 * Math.sin(elapsed * 2.5 + 1);
+                core.material.opacity = 0.15 + 0.15 * Math.sin(elapsed * 3);
+
+                // Update plasma particles
+                const pos = plasmaPoints.geometry.attributes.position.array;
+                for (let i = 0; i < plasmaCount; i++) {
+                    const data = plasmaData[i];
+                    data.angle += data.speed * 0.02;
+                    const r = data.radius + 0.1 * Math.sin(elapsed * 1.5 + data.phase);
+                    pos[i*3] = r * Math.cos(data.angle);
+                    pos[i*3+1] = data.height + 0.05 * Math.sin(elapsed * 0.8 + data.phase);
+                    pos[i*3+2] = r * Math.sin(data.angle);
+                }
+                plasmaPoints.geometry.attributes.position.needsUpdate = true;
+
+                // Fade out after peak
+                if (progress > 0.7) {
+                    const fade = 1 - (progress - 0.7) / 0.3;
+                    plasmaMat3.opacity = Math.max(0, fade);
+                    plasmaRing.material.opacity = Math.max(0, fade * 0.4);
+                    plasmaRing2.material.opacity = Math.max(0, fade * 0.5);
+                    core.material.opacity = Math.max(0, fade * 0.3);
+                }
+
+                if (progress < 1) {
+                    requestAnimationFrame(animateReactor);
+                } else {
+                    reactorGroup.visible = false;
+                    // Show title
+                    titleOverlay.classList.add('show');
+                    // Fireworks
+                    setTimeout(() => createFirework(0, 0.5, 0), 200);
+                    setTimeout(() => createFirework(-0.8, 0.3, 0.8), 600);
+                    setTimeout(() => createFirework(0.8, 0.4, -0.6), 1000);
+                    setTimeout(() => createFirework(0.4, 0.7, -0.9), 1400);
+                    // Reset after 6s
+                    setTimeout(() => {
+                        titleOverlay.classList.remove('show');
+                        isCeremonyActive = false;
+                        isUnlocked = false;
+                        statusText.textContent = 'ระบบพร้อม';
+                        statusDot.className = 'dot green';
+                        authMessage.textContent = 'รอปลดล็อค';
+                        fusionStatus.textContent = '⏸ LOCKED';
+                        fusionStatus.className = 'status waiting';
+                        fusionBar.style.width = '0%';
+                        fusionBar.classList.remove('active');
+                        triangleDetected = false;
+                        circleDetected = false;
+                        triangleStatus.textContent = '⏳ รอ...';
+                        triangleStatus.className = 'status waiting';
+                        circleStatus.textContent = '⏳ รอ...';
+                        circleStatus.className = 'status waiting';
+                    }, 6000);
+                }
+            }
+            animateReactor();
+        }
+
+        // ========================================================================
+        // GESTURE DETECTION
+        // ========================================================================
+
+        // Helper: get distance between two landmarks
+        function dist(lm1, lm2) {
+            return Math.sqrt(
+                Math.pow(lm1.x - lm2.x, 2) +
+                Math.pow(lm1.y - lm2.y, 2) +
+                Math.pow(lm1.z - lm2.z, 2)
+            );
+        }
+
+        // Helper: check if finger is extended (tip higher than MCP in y)
+        function isFingerExtended(landmarks, tipIdx, mcpIdx) {
+            return landmarks[tipIdx].y < landmarks[mcpIdx].y - 0.03;
+        }
+
+        // Triangle gesture: thumb + index pinch, other fingers extended (left hand)
+        function detectTriangle(landmarks) {
+            if (!landmarks) return false;
+            const thumbTip = landmarks[4];
+            const indexTip = landmarks[8];
+            const middleTip = landmarks[12];
+            const ringTip = landmarks[16];
+            const pinkyTip = landmarks[20];
+            const middleMcp = landmarks[9];
+            const ringMcp = landmarks[13];
+            const pinkyMcp = landmarks[17];
+
+            // Thumb and index touching
+            const pinchDist = dist(thumbTip, indexTip);
+            const isPinch = pinchDist < 0.05;
+
+            // Other fingers extended
+            const middleExt = middleTip.y < middleMcp.y - 0.02;
+            const ringExt = ringTip.y < ringMcp.y - 0.02;
+            const pinkyExt = pinkyTip.y < pinkyMcp.y - 0.02;
+
+            return isPinch && middleExt && ringExt && pinkyExt;
+        }
+
+        // Circle gesture: all fingers curled into fist (right hand)
+        function detectCircle(landmarks) {
+            if (!landmarks) return false;
+            const thumbTip = landmarks[4];
+            const indexTip = landmarks[8];
+            const middleTip = landmarks[12];
+            const ringTip = landmarks[16];
+            const pinkyTip = landmarks[20];
+
+            // All fingertips should be close to thumb
+            const d1 = dist(thumbTip, indexTip);
+            const d2 = dist(thumbTip, middleTip);
+            const d3 = dist(thumbTip, ringTip);
+            const d4 = dist(thumbTip, pinkyTip);
+
+            // All fingers curled in (tips close to palm center)
+            const palmCenter = landmarks[9]; // middle MCP as reference
+            const allCloseToPalm =
+                dist(indexTip, palmCenter) < 0.12 &&
+                dist(middleTip, palmCenter) < 0.12 &&
+                dist(ringTip, palmCenter) < 0.12 &&
+                dist(pinkyTip, palmCenter) < 0.12;
+
+            // All fingers close to thumb (fist)
+            const allCloseToThumb = d1 < 0.08 && d2 < 0.08 && d3 < 0.08 && d4 < 0.08;
+
+            // Also check that fingers are not extended (tips lower than MCP)
+            const indexExt = landmarks[8].y < landmarks[5].y - 0.03;
+            const middleExt = landmarks[12].y < landmarks[9].y - 0.03;
+            const ringExt = landmarks[16].y < landmarks[13].y - 0.03;
+            const pinkyExt = landmarks[20].y < landmarks[17].y - 0.03;
+            const notExtended = !indexExt && !middleExt && !ringExt && !pinkyExt;
+
+            return (allCloseToThumb || allCloseToPalm) && notExtended;
+        }
+
+        // ========================================================================
+        // MEDIAPIPE HANDS
+        // ========================================================================
+        const hands = new Hands({
+            locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4/${file}`
+        });
+        hands.setOptions({
+            maxNumHands: 2,
+            modelComplexity: 1,
+            minDetectionConfidence: 0.6,
+            minTrackingConfidence: 0.5
+        });
+
+        hands.onResults((results) => {
+            const w = mpCanvas.width;
+            const h = mpCanvas.height;
+            mpCtx.clearRect(0, 0, w, h);
+
+            // Reset detection per frame
+            let newTriangle = false;
+            let newCircle = false;
+            let handLabels = [];
+
+            if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
+                handCountSpan.textContent = results.multiHandLandmarks.length;
+
+                // Process each hand
+                results.multiHandLandmarks.forEach((landmarks, idx) => {
+                    const handedness = results.multiHandedness?.[idx]?.label || 'Unknown';
+                    handLabels.push(handedness);
+
+                    const pts = landmarks.map(lm => ({
+                        x: lm.x * w,
+                        y: lm.y * h,
+                        z: lm.z
+                    }));
+
+                    // Draw hand
+                    const connections = [
+                        [0,1],[1,2],[2,3],[3,4],[0,5],[5,6],[6,7],[7,8],
+                        [0,9],[9,10],[10,11],[11,12],[0,13],[13,14],[14,15],[15,16],
+                        [0,17],[17,18],[18,19],[19,20],[5,9],[9,13],[13,17]
+                    ];
+
+                    // Determine color based on gesture detection
+                    const isTriangle = detectTriangle(landmarks);
+                    const isCircle = detectCircle(landmarks);
+                    let color = '#4488aa';
+                    let label = '';
+
+                    if (isTriangle) {
+                        color = '#00ffcc';
+                        label = '🔺 TRIANGLE';
+                        newTriangle = true;
+                    } else if (isCircle) {
+                        color = '#ff66aa';
+                        label = '🔵 CIRCLE';
+                        newCircle = true;
+                    }
+
+                    mpCtx.strokeStyle = color;
+                    mpCtx.lineWidth = 2;
+                    for (let conn of connections) {
+                        const [i, j] = conn;
+                        if (i < pts.length && j < pts.length) {
+                            mpCtx.beginPath();
+                            mpCtx.moveTo(pts[i].x, pts[i].y);
+                            mpCtx.lineTo(pts[j].x, pts[j].y);
+                            mpCtx.stroke();
+                        }
+                    }
+
+                    // Draw landmarks
+                    pts.forEach((p, i) => {
+                        const size = i === 4 || i === 8 ? 8 : 5;
+                        mpCtx.beginPath();
+                        mpCtx.arc(p.x, p.y, size, 0, 2 * Math.PI);
+                        mpCtx.fillStyle = color;
+                        mpCtx.shadowColor = color;
+                        mpCtx.shadowBlur = 15;
+                        mpCtx.fill();
+                        mpCtx.shadowBlur = 0;
+                    });
+
+                    // Label
+                    if (pts.length > 0) {
+                        const wrist = pts[0];
+                        mpCtx.fillStyle = color;
+                        mpCtx.font = 'bold 12px Orbitron, monospace';
+                        mpCtx.shadowColor = 'rgba(0,0,0,0.8)';
+                        mpCtx.shadowBlur = 6;
+                        mpCtx.fillText(`${handedness} ${label}`, wrist.x - 40, wrist.y - 28);
+                        mpCtx.shadowBlur = 0;
+                    }
+                });
+
+                // Update detection state
+                triangleDetected = newTriangle;
+                circleDetected = newCircle;
+
+                // Update UI
+                updateUI();
+
+                // Check if both are detected -> UNLOCK!
+                if (triangleDetected && circleDetected && !isUnlocked && !isCeremonyActive) {
+                    isUnlocked = true;
+                    isCeremonyActive = true;
+                    triggerUnlock();
+                }
+
+                statusText.textContent = 'ตรวจจับมือ';
+                statusDot.className = 'dot green';
+            } else {
+                handCountSpan.textContent = '0';
+                triangleDetected = false;
+                circleDetected = false;
+                if (!isCeremonyActive && !isUnlocked) {
+                    triangleStatus.textContent = '⏳ รอ...';
+                    triangleStatus.className = 'status waiting';
+                    circleStatus.textContent = '⏳ รอ...';
+                    circleStatus.className = 'status waiting';
+                    fusionBar.style.width = '0%';
+                    fusionBar.classList.remove('active');
+                    authMessage.textContent = 'รอปลดล็อค';
+                    fusionStatus.textContent = '⏸ LOCKED';
+                    fusionStatus.className = 'status waiting';
+                }
+                statusText.textContent = 'รอตรวจจับ...';
+                statusDot.className = 'dot yellow';
+            }
+        });
+
+        // ========================================================================
+        // UI UPDATE
+        // ========================================================================
+        function updateUI() {
+            // Triangle status
+            if (triangleDetected) {
+                triangleStatus.textContent = '✅ DETECTED';
+                triangleStatus.className = 'status ready';
+            } else {
+                triangleStatus.textContent = '⏳ รอมือซ้าย...';
+                triangleStatus.className = 'status waiting';
+            }
+
+            // Circle status
+            if (circleDetected) {
+                circleStatus.textContent = '✅ DETECTED';
+                circleStatus.className = 'status ready';
+            } else {
+                circleStatus.textContent = '⏳ รอมือขวา...';
+                circleStatus.className = 'status waiting';
+            }
+
+            // Fusion progress
+            if (triangleDetected || circleDetected) {
+                let progress = 0;
+                if (triangleDetected) progress += 50;
+                if (circleDetected) progress += 50;
+                fusionBar.style.width = progress + '%';
+                if (progress > 0) fusionBar.classList.add('active');
+                authMessage.textContent = `🔓 ${progress}%`;
+                if (progress === 100) {
+                    fusionStatus.textContent = '⚡ UNLOCKED!';
+                    fusionStatus.className = 'status unlocked';
+                } else {
+                    fusionStatus.textContent = '⏳ CHARGING';
+                    fusionStatus.className = 'status ready';
+                }
+            } else {
+                fusionBar.style.width = '0%';
+                fusionBar.classList.remove('active');
+                authMessage.textContent = 'รอปลดล็อค';
+                fusionStatus.textContent = '⏸ LOCKED';
+                fusionStatus.className = 'status waiting';
+            }
+        }
+
+        // ========================================================================
+        // TRIGGER UNLOCK
+        // ========================================================================
+        function triggerUnlock() {
+            statusText.textContent = '⚡ FUSION UNLOCKED!';
+            statusDot.className = 'dot purple';
+            authMessage.textContent = '⚡ UNLOCKED!';
+            fusionStatus.textContent = '⚡ FUSION!';
+            fusionStatus.className = 'status unlocked';
+
+            // Sound
+            playFusionSound();
+
+            // Visual effects
+            triggerFusionExplosion();
+
+            // Extra fireworks
+            setTimeout(() => createFirework(0, 0.3, 0), 300);
+            setTimeout(() => createFirework(-0.6, 0.2, 0.6), 700);
+            setTimeout(() => createFirework(0.6, 0.3, -0.5), 1100);
+
+            // Status updates
+            setTimeout(() => {
+                statusText.textContent = '🎉 เปิดงานสำเร็จ!';
+                statusDot.className = 'dot green';
+            }, 2000);
+        }
+
+        // ========================================================================
+        // CAMERA
+        // ========================================================================
+        const cameraHelper = new Camera(video, {
+            onFrame: async () => {
+                await hands.send({ image: video });
+            },
+            width: 640,
+            height: 480
+        });
+        cameraHelper.start().then(() => {
+            statusText.textContent = 'กล้องพร้อม';
+            statusDot.className = 'dot green';
+        }).catch(err => {
+            statusText.textContent = '❌ ' + err.message;
+            statusDot.className = 'dot red';
+        });
+
+        // ========================================================================
+        // RESIZE
+        // ========================================================================
+        function resizeAll() {
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+            mpCanvas.width = w;
+            mpCanvas.height = h;
+            threeCanvas.width = w;
+            threeCanvas.height = h;
+            renderer.setSize(w, h);
+            camera.aspect = w / h;
+            camera.updateProjectionMatrix();
+        }
+        window.addEventListener('resize', resizeAll);
+
+        // ========================================================================
+        // ANIMATION
+        // ========================================================================
+        function animate() {
+            stars.rotation.y += 0.001;
+
+            // Animate fusion reactor if visible
+            if (reactorGroup.visible) {
+                const time = Date.now() / 1000;
+                plasmaRing.rotation.z = time * 0.5;
+                plasmaRing2.rotation.z = -time * 0.7;
+                plasmaRing.material.opacity = 0.2 + 0.15 * Math.sin(time * 1.5);
+                plasmaRing2.material.opacity = 0.3 + 0.15 * Math.sin(time * 2 + 1);
+                core.material.opacity = 0.15 + 0.1 * Math.sin(time * 2.5);
+            }
+
+            renderer.render(scene, camera);
+            requestAnimationFrame(animate);
+        }
+        animate();
+
+        // ========================================================================
+        // EVENT LISTENERS
+        // ========================================================================
+        document.addEventListener('click', () => initAudio(), { once: true });
+
+        // Keyboard shortcut: 'U' to simulate unlock (testing)
+        document.addEventListener('keydown', (e) => {
+            if ((e.key === 'u' || e.key === 'U') && !isCeremonyActive) {
+                triangleDetected = true;
+                circleDetected = true;
+                updateUI();
+                triggerUnlock();
+            }
+        });
+
+        // Double-click to reset (for testing)
+        document.getElementById('container').addEventListener('dblclick', () => {
+            if (isCeremonyActive) {
+                // Reset everything
+                titleOverlay.classList.remove('show');
+                reactorGroup.visible = false;
+                isCeremonyActive = false;
+                isUnlocked = false;
+                triangleDetected = false;
+                circleDetected = false;
+                triangleStatus.textContent = '⏳ รอ...';
+                triangleStatus.className = 'status waiting';
+                circleStatus.textContent = '⏳ รอ...';
+                circleStatus.className = 'status waiting';
+                fusionStatus.textContent = '⏸ LOCKED';
+                fusionStatus.className = 'status waiting';
+                fusionBar.style.width = '0%';
+                fusionBar.classList.remove('active');
+                authMessage.textContent = 'รอปลดล็อค';
+                statusText.textContent = 'ระบบพร้อม';
+                statusDot.className = 'dot green';
+            }
+        });
+
+        setTimeout(resizeAll, 500);
+        setInterval(resizeAll, 3000);
+    })();
+</script>
+</body>
+</html>

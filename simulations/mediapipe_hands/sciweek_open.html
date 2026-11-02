@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NEON CEREMONY – AR เปิดงานไซไฟ</title>
+    <!-- Three.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- MediaPipe -->
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils@0.3/camera_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils@0.3/drawing_utils.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4/hands.js" crossorigin="anonymous"></script>
+    <style>
+        /* ========== GLOBAL ========== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        @import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700;900&display=swap');
+
+        body {
+            font-family: 'Orbitron', 'Sarabun', sans-serif;
+            background: #0a0e1a;
+            color: #fff;
+            overflow: hidden;
+            height: 100vh;
+            user-select: none;
+        }
+
+        #container {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(ellipse at center, #0f1a2e, #05080f);
+            overflow: hidden;
+        }
+
+        /* ========== วิดีโอ + Canvas ========== */
+        video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            opacity: 0.5;
+            filter: blur(2px) brightness(0.6);
+            transform: scaleX(1);
+            transition: transform 0.5s ease;
+        }
+        #mediapipe-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            pointer-events: none;
+        }
+        #three-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* ========== HUD สไตล์ไซไฟ ========== */
+        #hud {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 10;
+            background: rgba(0, 20, 40, 0.6);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(0, 200, 255, 0.2);
+            border-radius: 12px;
+            padding: 14px 20px;
+            min-width: 200px;
+            font-family: 'Orbitron', monospace;
+            box-shadow: 0 0 40px rgba(0, 100, 255, 0.1);
+        }
+        #hud .line {
+            font-size: 0.7rem;
+            color: rgba(100, 200, 255, 0.7);
+            letter-spacing: 2px;
+            display: flex;
+            justify-content: space-between;
+            padding: 3px 0;
+        }
+        #hud .line .val {
+            color: #00ffcc;
+            font-weight: 600;
+        }
+        #hud .title-line {
+            font-size: 0.85rem;
+            color: #00ccff;
+            font-weight: 700;
+            border-bottom: 1px solid rgba(0, 200, 255, 0.2);
+            padding-bottom: 6px;
+            margin-bottom: 6px;
+            letter-spacing: 3px;
+        }
+        #hud .blink {
+            animation: blinkHUD 1.2s infinite;
+        }
+        @keyframes blinkHUD {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.2; }
+        }
+
+        /* ========== STATUS BAR ========== */
+        #status-bar {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            background: rgba(0, 10, 30, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0, 200, 255, 0.15);
+            border-radius: 40px;
+            padding: 10px 28px;
+            font-family: 'Orbitron', monospace;
+            font-size: 0.8rem;
+            color: rgba(0, 255, 200, 0.8);
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        #status-bar .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 8px;
+        }
+        #status-bar .dot.green { background: #00ff88; box-shadow: 0 0 20px #00ff88; }
+        #status-bar .dot.yellow { background: #ffcc00; box-shadow: 0 0 20px #ffcc00; }
+        #status-bar .dot.red { background: #ff0044; box-shadow: 0 0 20px #ff0044; animation: blink 0.6s infinite; }
+
+        /* ========== TITLE OVERLAY (ไซไฟ) ========== */
+        #title-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 20;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            pointer-events: none;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(6px);
+        }
+        #title-overlay.show {
+            display: flex;
+            animation: fadeInSciFi 1.8s cubic-bezier(0.2, 0.9, 0.3, 1.2) forwards;
+        }
+        #title-overlay .glow-text {
+            font-family: 'Orbitron', monospace;
+            font-weight: 900;
+            text-align: center;
+            padding: 0 20px;
+        }
+        #title-overlay .main-title {
+            font-size: 4.5rem;
+            color: #00ddff;
+            text-shadow: 0 0 40px rgba(0, 220, 255, 0.6), 0 0 80px rgba(0, 220, 255, 0.3), 0 0 150px rgba(0, 100, 255, 0.2);
+            letter-spacing: 6px;
+            animation: titlePulse 2s ease-in-out infinite alternate;
+        }
+        #title-overlay .sub-title {
+            font-size: 2.2rem;
+            color: #ffd700;
+            text-shadow: 0 0 30px rgba(255, 215, 0, 0.4);
+            margin-top: 10px;
+            letter-spacing: 8px;
+        }
+        #title-overlay .theme {
+            font-size: 1.2rem;
+            color: rgba(255, 255, 255, 0.6);
+            margin-top: 16px;
+            letter-spacing: 4px;
+            font-weight: 400;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 16px;
+        }
+        #title-overlay .year {
+            font-size: 5rem;
+            color: rgba(0, 255, 200, 0.15);
+            position: absolute;
+            bottom: 80px;
+            right: 60px;
+            font-weight: 900;
+            letter-spacing: 10px;
+        }
+        @keyframes fadeInSciFi {
+            0% { opacity: 0; transform: scale(0.8) rotateX(10deg); }
+            100% { opacity: 1; transform: scale(1) rotateX(0); }
+        }
+        @keyframes titlePulse {
+            0% { text-shadow: 0 0 40px rgba(0, 220, 255, 0.6), 0 0 80px rgba(0, 220, 255, 0.3); }
+            100% { text-shadow: 0 0 60px rgba(0, 220, 255, 0.9), 0 0 120px rgba(0, 220, 255, 0.5), 0 0 200px rgba(0, 100, 255, 0.3); }
+        }
+        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 900px) {
+            #title-overlay .main-title { font-size: 2.8rem; }
+            #title-overlay .sub-title { font-size: 1.5rem; }
+            #title-overlay .theme { font-size: 0.9rem; }
+            #title-overlay .year { font-size: 3rem; bottom: 40px; right: 30px; }
+            #hud { font-size: 0.6rem; padding: 10px 14px; min-width: 140px; top: 12px; left: 12px; }
+            #status-bar { font-size: 0.6rem; padding: 6px 16px; gap: 10px; bottom: 15px; }
+        }
+        @media (max-width: 500px) {
+            #title-overlay .main-title { font-size: 1.8rem; }
+            #title-overlay .sub-title { font-size: 1rem; }
+            #hud { display: none; }
+            #status-bar { font-size: 0.5rem; padding: 4px 12px; }
+        }
+    </style>
+</head>
+<body>
+<div id="container">
+    <video id="video" autoplay playsinline></video>
+    <canvas id="mediapipe-canvas"></canvas>
+    <canvas id="three-canvas"></canvas>
+
+    <!-- HUD ไซไฟ -->
+    <div id="hud">
+        <div class="title-line">⟡ SYS.READY</div>
+        <div class="line"><span>HAND TRACK</span><span class="val" id="handStatus">—</span></div>
+        <div class="line"><span>FPS</span><span class="val" id="fpsDisplay">60</span></div>
+        <div class="line"><span>UPTIME</span><span class="val" id="uptimeDisplay">00:00</span></div>
+        <div class="line"><span>STATUS</span><span class="val blink" id="sysStatus">🟢 ONLINE</span></div>
+    </div>
+
+    <!-- Status Bar -->
+    <div id="status-bar">
+        <span><span class="dot green" id="statusDot"></span><span id="statusText">ระบบพร้อม</span></span>
+        <span>|</span>
+        <span>👆 <span id="fingerStatus">รอมือ</span></span>
+        <span>|</span>
+        <span>🎯 <span id="buttonStatus">รอการกด</span></span>
+    </div>
+
+    <!-- Title Overlay -->
+    <div id="title-overlay">
+        <div class="glow-text main-title">🚀 SCIENCE WEEK</div>
+        <div class="glow-text sub-title">2569</div>
+        <div class="glow-text theme">✦ INTELLIGENCE SCIENCE FOR A SUSTAINABLE FUTURE ✦</div>
+        <div class="year">2026</div>
+    </div>
+</div>
+
+<script>
+    (function() {
+        // ========================================================================
+        //  DOM REFS
+        // ========================================================================
+        const container = document.getElementById('container');
+        const video = document.getElementById('video');
+        const mpCanvas = document.getElementById('mediapipe-canvas');
+        const mpCtx = mpCanvas.getContext('2d');
+        const threeCanvas = document.getElementById('three-canvas');
+        const titleOverlay = document.getElementById('title-overlay');
+        const statusText = document.getElementById('statusText');
+        const statusDot = document.getElementById('statusDot');
+        const handStatus = document.getElementById('handStatus');
+        const fingerStatus = document.getElementById('fingerStatus');
+        const buttonStatus = document.getElementById('buttonStatus');
+        const fpsDisplay = document.getElementById('fpsDisplay');
+        const uptimeDisplay = document.getElementById('uptimeDisplay');
+        const sysStatus = document.getElementById('sysStatus');
+
+        // ========================================================================
+        //  STATE
+        // ========================================================================
+        let isCeremonyActive = false;
+        let handLandmarks = null;
+        let startTime = Date.now();
+        let frameCount = 0;
+        let lastFpsUpdate = Date.now();
+
+        // ========================================================================
+        //  AUDIO (Sci-Fi Sound)
+        // ========================================================================
+        let audioCtx = null;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (audioCtx.state === 'suspended') {
+                audioCtx.resume();
+            }
+            return audioCtx;
+        }
+
+        function playSciFiSound() {
+            const ctx = initAudio();
+            const now = ctx.currentTime;
+
+            // Layer 1: Bass Rise
+            const osc1 = ctx.createOscillator();
+            const gain1 = ctx.createGain();
+            osc1.type = 'sawtooth';
+            osc1.frequency.setValueAtTime(80, now);
+            osc1.frequency.exponentialRampToValueAtTime(300, now + 1.0);
+            gain1.gain.setValueAtTime(0.01, now);
+            gain1.gain.linearRampToValueAtTime(0.25, now + 0.6);
+            gain1.gain.exponentialRampToValueAtTime(0.01, now + 1.6);
+            osc1.connect(gain1);
+            gain1.connect(ctx.destination);
+            osc1.start(now);
+            osc1.stop(now + 1.8);
+
+            // Layer 2: High Sweep
+            const osc2 = ctx.createOscillator();
+            const gain2 = ctx.createGain();
+            osc2.type = 'sine';
+            osc2.frequency.setValueAtTime(400, now);
+            osc2.frequency.exponentialRampToValueAtTime(1200, now + 1.2);
+            gain2.gain.setValueAtTime(0.01, now);
+            gain2.gain.linearRampToValueAtTime(0.15, now + 0.8);
+            gain2.gain.exponentialRampToValueAtTime(0.01, now + 1.8);
+            osc2.connect(gain2);
+            gain2.connect(ctx.destination);
+            osc2.start(now);
+            osc2.stop(now + 2.0);
+
+            // Layer 3: Impact (Boom)
+            const osc3 = ctx.createOscillator();
+            const gain3 = ctx.createGain();
+            osc3.type = 'square';
+            osc3.frequency.setValueAtTime(60, now + 0.9);
+            osc3.frequency.exponentialRampToValueAtTime(30, now + 1.6);
+            gain3.gain.setValueAtTime(0.01, now + 0.9);
+            gain3.gain.linearRampToValueAtTime(0.5, now + 1.2);
+            gain3.gain.exponentialRampToValueAtTime(0.01, now + 2.2);
+            osc3.connect(gain3);
+            gain3.connect(ctx.destination);
+            osc3.start(now + 0.9);
+            osc3.stop(now + 2.4);
+
+            // Layer 4: Reverb-like pad
+            const osc4 = ctx.createOscillator();
+            const gain4 = ctx.createGain();
+            osc4.type = 'sine';
+            osc4.frequency.setValueAtTime(200, now);
+            osc4.frequency.exponentialRampToValueAtTime(150, now + 2.0);
+            gain4.gain.setValueAtTime(0.01, now);
+            gain4.gain.linearRampToValueAtTime(0.08, now + 1.0);
+            gain4.gain.exponentialRampToValueAtTime(0.01, now + 2.5);
+            osc4.connect(gain4);
+            gain4.connect(ctx.destination);
+            osc4.start(now);
+            osc4.stop(now + 2.8);
+        }
+
+        // ========================================================================
+        //  THREE.JS – PARTICLE BACKGROUND
+        // ========================================================================
+        const scene = new THREE.Scene();
+        scene.background = null;
+        const camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 100);
+        camera.position.set(0, 0, 6);
+        camera.lookAt(0, 0, 0);
+
+        const renderer = new THREE.WebGLRenderer({
+            canvas: threeCanvas,
+            alpha: true,
+            antialias: true
+        });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+        // Particle System
+        const particleCount = 600;
+        const particleGeo = new THREE.BufferGeometry();
+        const particlePos = new Float32Array(particleCount * 3);
+        const particleColors = new Float32Array(particleCount * 3);
+        const particleSizes = new Float32Array(particleCount);
+        const particleVel = [];
+
+        for (let i = 0; i < particleCount; i++) {
+            particlePos[i*3] = (Math.random() - 0.5) * 12;
+            particlePos[i*3+1] = (Math.random() - 0.5) * 8;
+            particlePos[i*3+2] = (Math.random() - 0.5) * 6;
+            const c = new THREE.Color().setHSL(0.55 + Math.random() * 0.2, 0.8, 0.5 + Math.random() * 0.4);
+            particleColors[i*3] = c.r;
+            particleColors[i*3+1] = c.g;
+            particleColors[i*3+2] = c.b;
+            particleSizes[i] = 0.01 + Math.random() * 0.03;
+            particleVel.push({
+                x: (Math.random() - 0.5) * 0.005,
+                y: (Math.random() - 0.5) * 0.005,
+                z: (Math.random() - 0.5) * 0.005
+            });
+        }
+        particleGeo.setAttribute('position', new THREE.BufferAttribute(particlePos, 3));
+        particleGeo.setAttribute('color', new THREE.BufferAttribute(particleColors, 3));
+        particleGeo.setAttribute('size', new THREE.BufferAttribute(particleSizes, 1));
+
+        const particleMat = new THREE.PointsMaterial({
+            size: 0.04,
+            vertexColors: true,
+            transparent: true,
+            opacity: 0.6,
+            blending: THREE.AdditiveBlending,
+            depthWrite: false
+        });
+        const particles = new THREE.Points(particleGeo, particleMat);
+        scene.add(particles);
+
+        // ========================================================================
+        //  THREE.JS – BUTTON RING (Decorative)
+        // ========================================================================
+        const ringGroup = new THREE.Group();
+        scene.add(ringGroup);
+
+        // Outer ring
+        const ringGeo = new THREE.TorusGeometry(1.2, 0.02, 16, 64);
+        const ringMat = new THREE.MeshBasicMaterial({
+            color: 0x00ccff,
+            transparent: true,
+            opacity: 0.4
+        });
+        const ring1 = new THREE.Mesh(ringGeo, ringMat);
+        ring1.rotation.x = Math.PI / 2;
+        ring1.position.y = -0.1;
+        ringGroup.add(ring1);
+
+        // Inner ring
+        const ringMat2 = new THREE.MeshBasicMaterial({
+            color: 0xffd700,
+            transparent: true,
+            opacity: 0.3
+        });
+        const ring2 = new THREE.Mesh(new THREE.TorusGeometry(0.9, 0.015, 16, 64), ringMat2);
+        ring2.rotation.x = Math.PI / 2;
+        ring2.position.y = 0.1;
+        ringGroup.add(ring2);
+
+        // Pulsing glow sphere
+        const glowMat = new THREE.MeshBasicMaterial({
+            color: 0x00ddff,
+            transparent: true,
+            opacity: 0.08
+        });
+        const glowSphere = new THREE.Mesh(new THREE.SphereGeometry(0.4, 16, 16), glowMat);
+        glowSphere.position.y = 0;
+        ringGroup.add(glowSphere);
+
+        // ========================================================================
+        //  CEREMONY FUNCTIONS
+        // ========================================================================
+        function createExplosion() {
+            const count = 500;
+            const colors = [0x00ddff, 0xffd700, 0xff0066, 0x00ff88, 0xaa66ff, 0xff4400];
+            const particles3 = [];
+            const geo = new THREE.BufferGeometry();
+            const positions = new Float32Array(count * 3);
+            const sizes = new Float32Array(count);
+            const colorArray = new Float32Array(count * 3);
+
+            for (let i = 0; i < count; i++) {
+                const r = 0.2 + Math.random() * 2.5;
+                const theta2 = Math.random() * Math.PI * 2;
+                const phi = Math.acos(2 * Math.random() - 1);
+                positions[i*3] = r * Math.sin(phi) * Math.cos(theta2);
+                positions[i*3+1] = r * Math.cos(phi);
+                positions[i*3+2] = r * Math.sin(phi) * Math.sin(theta2);
+                sizes[i] = 0.03 + Math.random() * 0.08;
+                const col = new THREE.Color(colors[Math.floor(Math.random() * colors.length)]);
+                colorArray[i*3] = col.r;
+                colorArray[i*3+1] = col.g;
+                colorArray[i*3+2] = col.b;
+                particles3.push({
+                    vx: (Math.random() - 0.5) * 4,
+                    vy: (Math.random() - 0.5) * 4 + 1.5,
+                    vz: (Math.random() - 0.5) * 4,
+                    life: 1.0,
+                    decay: 0.004 + Math.random() * 0.015
+                });
+            }
+
+            geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geo.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
+            geo.setAttribute('color', new THREE.BufferAttribute(colorArray, 3));
+
+            const mat = new THREE.PointsMaterial({
+                size: 0.07,
+                vertexColors: true,
+                transparent: true,
+                opacity: 1,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false
+            });
+            const points = new THREE.Points(geo, mat);
+            points.position.set(0, 0.2, 0);
+            scene.add(points);
+
+            let frame = 0;
+            const maxFrames = 130;
+            const animId = setInterval(() => {
+                frame++;
+                const pos = points.geometry.attributes.position.array;
+                let allDead = true;
+                for (let i = 0; i < count; i++) {
+                    particles3[i].life -= particles3[i].decay;
+                    if (particles3[i].life > 0) {
+                        allDead = false;
+                        pos[i*3] += particles3[i].vx * 0.04;
+                        pos[i*3+1] += particles3[i].vy * 0.04 - 0.025;
+                        pos[i*3+2] += particles3[i].vz * 0.04;
+                        particles3[i].vy -= 0.045;
+                    } else {
+                        pos[i*3] = 0;
+                        pos[i*3+1] = -10;
+                        pos[i*3+2] = 0;
+                    }
+                }
+                points.geometry.attributes.position.needsUpdate = true;
+                mat.opacity = Math.max(0, 1 - frame / maxFrames);
+                if (allDead || frame > maxFrames) {
+                    clearInterval(animId);
+                    scene.remove(points);
+                    points.geometry.dispose();
+                    mat.dispose();
+                }
+            }, 16);
+        }
+
+        function createFirework() {
+            const count = 180;
+            const colors = [0x00ddff, 0xffd700, 0xff0066, 0x00ff88, 0xaa66ff];
+            const geo = new THREE.BufferGeometry();
+            const positions = new Float32Array(count * 3);
+            const colorArray = new Float32Array(count * 3);
+            const particles3 = [];
+
+            const cx = (Math.random() - 0.5) * 2.5;
+            const cy = Math.random() * 1.8 + 0.3;
+            const cz = (Math.random() - 0.5) * 2.5;
+
+            for (let i = 0; i < count; i++) {
+                const r = 0.1 + Math.random() * 1.8;
+                const theta2 = Math.random() * Math.PI * 2;
+                const phi = Math.acos(2 * Math.random() - 1);
+                positions[i*3] = cx + r * Math.sin(phi) * Math.cos(theta2);
+                positions[i*3+1] = cy + r * Math.cos(phi);
+                positions[i*3+2] = cz + r * Math.sin(phi) * Math.sin(theta2);
+                const col = new THREE.Color(colors[Math.floor(Math.random() * colors.length)]);
+                colorArray[i*3] = col.r;
+                colorArray[i*3+1] = col.g;
+                colorArray[i*3+2] = col.b;
+                particles3.push({
+                    vx: (Math.random() - 0.5) * 2.5,
+                    vy: (Math.random() - 0.5) * 2.5 + 1.2,
+                    vz: (Math.random() - 0.5) * 2.5,
+                    life: 1.0,
+                    decay: 0.006 + Math.random() * 0.02
+                });
+            }
+
+            geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+            geo.setAttribute('color', new THREE.BufferAttribute(colorArray, 3));
+
+            const mat = new THREE.PointsMaterial({
+                size: 0.05,
+                vertexColors: true,
+                transparent: true,
+                opacity: 1,
+                blending: THREE.AdditiveBlending,
+                depthWrite: false
+            });
+            const points = new THREE.Points(geo, mat);
+            scene.add(points);
+
+            let frame = 0;
+            const maxFrames = 110;
+            const animId = setInterval(() => {
+                frame++;
+                const pos = points.geometry.attributes.position.array;
+                let allDead = true;
+                for (let i = 0; i < count; i++) {
+                    particles3[i].life -= particles3[i].decay;
+                    if (particles3[i].life > 0) {
+                        allDead = false;
+                        pos[i*3] += particles3[i].vx * 0.035;
+                        pos[i*3+1] += particles3[i].vy * 0.035 - 0.02;
+                        pos[i*3+2] += particles3[i].vz * 0.035;
+                        particles3[i].vy -= 0.035;
+                    } else {
+                        pos[i*3] = 0;
+                        pos[i*3+1] = -10;
+                        pos[i*3+2] = 0;
+                    }
+                }
+                points.geometry.attributes.position.needsUpdate = true;
+                mat.opacity = Math.max(0, 1 - frame / maxFrames);
+                if (allDead || frame > maxFrames) {
+                    clearInterval(animId);
+                    scene.remove(points);
+                    points.geometry.dispose();
+                    mat.dispose();
+                }
+            }, 16);
+        }
+
+        function playCeremony() {
+            if (isCeremonyActive) return;
+            isCeremonyActive = true;
+            statusText.textContent = '🎉 เปิดงาน!';
+            statusDot.className = 'dot yellow';
+            sysStatus.textContent = '🔶 CEREMONY';
+
+            // Sound
+            playSciFiSound();
+
+            // Explosion
+            createExplosion();
+
+            // Title
+            titleOverlay.classList.add('show');
+
+            // Fireworks
+            setTimeout(() => createFirework(), 400);
+            setTimeout(() => createFirework(), 1000);
+            setTimeout(() => createFirework(), 1600);
+            setTimeout(() => createFirework(), 2200);
+
+            // Reset after 7 seconds
+            setTimeout(() => {
+                titleOverlay.classList.remove('show');
+                isCeremonyActive = false;
+                statusText.textContent = 'ระบบพร้อม';
+                statusDot.className = 'dot green';
+                sysStatus.textContent = '🟢 ONLINE';
+                buttonStatus.textContent = 'รอการกด';
+            }, 7000);
+        }
+
+        // ========================================================================
+        //  MEDIAPIPE HANDS
+        // ========================================================================
+        const hands = new Hands({
+            locateFile: (file) => `https://cdn.jsdelivr.net/npm/@mediapipe/hands@0.4/${file}`
+        });
+        hands.setOptions({
+            maxNumHands: 1,
+            modelComplexity: 1,
+            minDetectionConfidence: 0.5,
+            minTrackingConfidence: 0.5
+        });
+
+        hands.onResults((results) => {
+            const w = mpCanvas.width;
+            const h = mpCanvas.height;
+            mpCtx.clearRect(0, 0, w, h);
+
+            // Draw Sci-Fi Button
+            drawSciFiButton(w, h);
+
+            if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
+                const landmarks = results.multiHandLandmarks[0];
+                handLandmarks = landmarks;
+                handStatus.textContent = '✓';
+
+                const pts = landmarks.map(lm => ({
+                    x: lm.x * w,
+                    y: lm.y * h
+                }));
+
+                // Draw hand
+                const connections = [
+                    [0,1],[1,2],[2,3],[3,4],[0,5],[5,6],[6,7],[7,8],
+                    [0,9],[9,10],[10,11],[11,12],[0,13],[13,14],[14,15],[15,16],
+                    [0,17],[17,18],[18,19],[19,20],[5,9],[9,13],[13,17]
+                ];
+                mpCtx.strokeStyle = 'rgba(0, 255, 200, 0.6)';
+                mpCtx.lineWidth = 2;
+                for (let conn of connections) {
+                    const [i, j] = conn;
+                    if (i < pts.length && j < pts.length) {
+                        mpCtx.beginPath();
+                        mpCtx.moveTo(pts[i].x, pts[i].y);
+                        mpCtx.lineTo(pts[j].x, pts[j].y);
+                        mpCtx.stroke();
+                    }
+                }
+                pts.forEach((p, i) => {
+                    const glow = i === 8 ? '#00ffcc' : '#00ccff';
+                    mpCtx.beginPath();
+                    mpCtx.arc(p.x, p.y, i === 8 ? 8 : 5, 0, 2 * Math.PI);
+                    mpCtx.fillStyle = glow;
+                    mpCtx.shadowColor = 'rgba(0, 255, 200, 0.5)';
+                    mpCtx.shadowBlur = 15;
+                    mpCtx.fill();
+                    mpCtx.shadowBlur = 0;
+                    mpCtx.strokeStyle = '#000';
+                    mpCtx.lineWidth = 0.5;
+                    mpCtx.stroke();
+                });
+
+                // Detect click
+                const indexTip = pts[8];
+                const thumbTip = pts[4];
+                if (indexTip && thumbTip) {
+                    const cx = w / 2;
+                    const cy = h / 2 + 20;
+                    const radius = Math.min(w, h) * 0.1;
+
+                    const dist = Math.hypot(indexTip.x - thumbTip.x, indexTip.y - thumbTip.y);
+                    const isPinch = dist < 30;
+                    const isOver = Math.hypot(indexTip.x - cx, indexTip.y - cy) < radius;
+
+                    if (isOver) {
+                        buttonStatus.textContent = '🟡 แตะปุ่ม';
+                        fingerStatus.textContent = '✋ เหนือปุ่ม';
+                        if (isPinch) {
+                            buttonStatus.textContent = '✅ คลิก!';
+                            fingerStatus.textContent = '👆 คลิก!';
+                            if (!isCeremonyActive) {
+                                playCeremony();
+                            }
+                        }
+                    } else {
+                        buttonStatus.textContent = 'รอการกด';
+                        fingerStatus.textContent = '🖐️ ชี้นิ้ว';
+                    }
+                }
+                statusText.textContent = 'ตรวจจับมือ';
+                statusDot.className = 'dot green';
+            } else {
+                handLandmarks = null;
+                handStatus.textContent = '✗';
+                fingerStatus.textContent = '⏳ รอมือ';
+                buttonStatus.textContent = 'รอการกด';
+                statusText.textContent = 'รอตรวจจับ...';
+                statusDot.className = 'dot yellow';
+            }
+        });
+
+        // ========================================================================
+        //  DRAW SCI-FI BUTTON
+        // ========================================================================
+        function drawSciFiButton(w, h) {
+            const cx = w / 2;
+            const cy = h / 2 + 20;
+            const radius = Math.min(w, h) * 0.1;
+
+            // Outer glow ring
+            const grad = mpCtx.createRadialGradient(cx, cy, radius * 0.5, cx, cy, radius * 1.6);
+            grad.addColorStop(0, 'rgba(0, 200, 255, 0.05)');
+            grad.addColorStop(0.5, 'rgba(0, 200, 255, 0.02)');
+            grad.addColorStop(1, 'rgba(0, 200, 255, 0)');
+            mpCtx.beginPath();
+            mpCtx.arc(cx, cy, radius * 1.6, 0, 2 * Math.PI);
+            mpCtx.fillStyle = grad;
+            mpCtx.fill();
+
+            // Pulsing ring
+            const pulse = 1 + 0.03 * Math.sin(Date.now() / 800);
+            mpCtx.beginPath();
+            mpCtx.arc(cx, cy, radius * pulse, 0, 2 * Math.PI);
+            mpCtx.strokeStyle = 'rgba(0, 200, 255, 0.15)';
+            mpCtx.lineWidth = 2;
+            mpCtx.setLineDash([8, 8]);
+            mpCtx.stroke();
+            mpCtx.setLineDash([]);
+
+            // Main button
+            const grad2 = mpCtx.createRadialGradient(cx-12, cy-12, 10, cx, cy, radius);
+            grad2.addColorStop(0, '#00ddff');
+            grad2.addColorStop(0.5, '#0088cc');
+            grad2.addColorStop(1, '#004466');
+            mpCtx.shadowColor = 'rgba(0, 200, 255, 0.4)';
+            mpCtx.shadowBlur = 30;
+            mpCtx.beginPath();
+            mpCtx.arc(cx, cy, radius, 0, 2 * Math.PI);
+            mpCtx.fillStyle = grad2;
+            mpCtx.fill();
+            mpCtx.shadowBlur = 0;
+            mpCtx.strokeStyle = 'rgba(0, 255, 200, 0.6)';
+            mpCtx.lineWidth = 2;
+            mpCtx.stroke();
+
+            // Text
+            mpCtx.fillStyle = '#fff';
+            mpCtx.font = `bold ${radius * 0.4}px Orbitron, Sarabun`;
+            mpCtx.textAlign = 'center';
+            mpCtx.textBaseline = 'middle';
+            mpCtx.shadowColor = 'rgba(0, 0, 0, 0.8)';
+            mpCtx.shadowBlur = 8;
+            mpCtx.fillText('▶ OPEN', cx, cy - 4);
+            mpCtx.shadowBlur = 0;
+
+            // Sub text
+            mpCtx.fillStyle = 'rgba(0, 255, 200, 0.5)';
+            mpCtx.font = `${radius * 0.15}px Orbitron, Sarabun`;
+            mpCtx.fillText('⌘ PINCH TO ACTIVATE', cx, cy + radius + 28);
+
+            // Decorative corner marks
+            const d = radius * 1.4;
+            mpCtx.strokeStyle = 'rgba(0, 200, 255, 0.15)';
+            mpCtx.lineWidth = 1;
+            const corners = [[-1,-1],[1,-1],[1,1],[-1,1]];
+            corners.forEach(([sx, sy]) => {
+                mpCtx.beginPath();
+                mpCtx.moveTo(cx + sx * d, cy + sy * d);
+                mpCtx.lineTo(cx + sx * (d - 15), cy + sy * d);
+                mpCtx.stroke();
+                mpCtx.beginPath();
+                mpCtx.moveTo(cx + sx * d, cy + sy * d);
+                mpCtx.lineTo(cx + sx * d, cy + sy * (d - 15));
+                mpCtx.stroke();
+            });
+        }
+
+        // ========================================================================
+        //  CAMERA
+        // ========================================================================
+        const cameraHelper = new Camera(video, {
+            onFrame: async () => {
+                await hands.send({ image: video });
+            },
+            width: 640,
+            height: 480
+        });
+        cameraHelper.start().then(() => {
+            statusText.textContent = 'กล้องพร้อม';
+            statusDot.className = 'dot green';
+        }).catch(err => {
+            statusText.textContent = '❌ ' + err.message;
+            statusDot.className = 'dot red';
+        });
+
+        // ========================================================================
+        //  RESIZE
+        // ========================================================================
+        function resizeAll() {
+            const w = window.innerWidth;
+            const h = window.innerHeight;
+            mpCanvas.width = w;
+            mpCanvas.height = h;
+            threeCanvas.width = w;
+            threeCanvas.height = h;
+            renderer.setSize(w, h);
+            camera.aspect = w / h;
+            camera.updateProjectionMatrix();
+            // Update particle positions if needed
+        }
+        window.addEventListener('resize', resizeAll);
+
+        // ========================================================================
+        //  ANIMATION LOOP
+        // ========================================================================
+        let lastFrameTime = 0;
+
+        function animate(time) {
+            // Update FPS
+            frameCount++;
+            if (time - lastFpsUpdate > 1000) {
+                fpsDisplay.textContent = frameCount;
+                frameCount = 0;
+                lastFpsUpdate = time;
+            }
+
+            // Uptime
+            const elapsed = Math.floor((Date.now() - startTime) / 1000);
+            const mins = String(Math.floor(elapsed / 60)).padStart(2, '0');
+            const secs = String(elapsed % 60).padStart(2, '0');
+            uptimeDisplay.textContent = `${mins}:${secs}`;
+
+            // Animate rings
+            const now = Date.now() / 1000;
+            ringGroup.rotation.z = now * 0.15;
+            const pulse = 1 + 0.05 * Math.sin(now * 1.5);
+            ring1.scale.set(pulse, pulse, pulse);
+            ring2.scale.set(1 + 0.03 * Math.sin(now * 2 + 1), 1 + 0.03 * Math.sin(now * 2 + 1), 1);
+
+            // Animate particles
+            const pos = particles.geometry.attributes.position.array;
+            for (let i = 0; i < particleCount; i++) {
+                pos[i*3] += particleVel[i].x;
+                pos[i*3+1] += particleVel[i].y;
+                pos[i*3+2] += particleVel[i].z;
+                if (Math.abs(pos[i*3]) > 6) particleVel[i].x *= -1;
+                if (Math.abs(pos[i*3+1]) > 4) particleVel[i].y *= -1;
+                if (Math.abs(pos[i*3+2]) > 3) particleVel[i].z *= -1;
+            }
+            particles.geometry.attributes.position.needsUpdate = true;
+
+            renderer.render(scene, camera);
+            requestAnimationFrame(animate);
+        }
+        animate(0);
+
+        // ========================================================================
+        //  INIT
+        // ========================================================================
+        document.addEventListener('click', () => initAudio(), { once: true });
+        setTimeout(resizeAll, 500);
+        setInterval(resizeAll, 3000);
+    })();
+</script>
+</body>
+</html>
