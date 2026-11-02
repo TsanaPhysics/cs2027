@@ -11,3 +11,4 @@ Thumbs.db
 # Database Journals
 *.sqlite3-journal
 database/*.sqlite3-journal
+
